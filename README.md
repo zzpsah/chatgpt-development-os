@@ -24,24 +24,24 @@ project/
     ├── ARCHITECTURE.md
     ├── DECISIONS.md
     ├── TASKS.md
+    ├── CHANGELOG.md
     └── SESSIONS/
 ```
 
 This makes project context portable between ChatGPT, Codex, Claude, Gemini, Cursor, other AI tools, GitHub accounts, Git providers, and local machines.
 
-## Automatic initialization
+## Automatic context synchronization
 
-The repository includes:
+The Development OS now supports automatic GitHub-side `.ai/` synchronization:
 
+- `.github/workflows/context-sync.yml` — reusable workflow that records repository changes in `.ai/CHANGELOG.md` and updates `.ai/CURRENT-STATE.md` for meaningful application changes.
+- `templates/project/.github/workflows/devos-context-sync.yml` — ready-to-copy caller workflow for managed projects.
+- `templates/project/.ai/CHANGELOG.md` — portable change-record template.
 - `tools/init-project.ps1` — idempotent initializer for an existing local project.
 - `tools/watch-projects.ps1` — Windows recursive watcher that detects project activity and initializes missing `.ai/` context.
 - `tools/install-windows.ps1` — installs the watcher at Windows logon for configured project roots.
-- `templates/project/` — portable project-context starter files.
-- `project-context-spec/` — the context specification shared by all projects.
 
-See `tools/AUTOMATION.md` for setup and safety details.
-
-> **Current scope:** the `.ai/` automation is the priority. A future local resident worker can remove routine local-PC interaction, but the project itself must remain independent of that worker.
+The automatic GitHub sync records verified repository facts. It does **not** invent architecture or decisions from a commit. AI agents remain responsible for updating semantic context such as architecture, decisions, requirements, and task state after meaningful work.
 
 ## Human-language first
 
@@ -64,12 +64,6 @@ Open the project and say:
 > **Open this project, read `AGENTS.md` and `.ai/manifest.yaml`, recover the current project state, and tell me what we should do next.**
 
 Then continue naturally: `Continue`, `Fix this`, `Make it professional`, `Check it`, `Go ahead`, etc.
-
-### If the new AI needs explicit bootstrap instructions
-
-Say:
-
-> **This repository uses ChatGPT Development OS. Treat `AGENTS.md` as the project entry point and `.ai/manifest.yaml` plus the `.ai/` files as portable project context. Inspect those files before substantial work. Do not depend on chat history or AI-account memory. Preserve existing context, follow the project's instructions, and update durable `.ai/` state after meaningful changes.**
 
 Full onboarding guidance: [`docs/NEW-AI-ONBOARDING.md`](docs/NEW-AI-ONBOARDING.md).
 
@@ -113,11 +107,10 @@ chatgpt-development-os/
 ├── projects/
 ├── memory/
 ├── adapters/
-└── docs/
-    ├── ARCHITECTURE.md
-    └── NEW-AI-ONBOARDING.md
+├── docs/
+└── .github/workflows/
 ```
 
 ## Version
 
-0.3 — portable project memory, automatic initialization foundation, flow/architecture documentation, and new-AI onboarding.
+0.4 — automatic GitHub durable-context synchronization.
