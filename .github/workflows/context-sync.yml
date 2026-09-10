@@ -1,0 +1,83 @@
+# Reusable GitHub-side durable context synchronizer.
+name: Development OS Context Sync
+
+on:
+  workflow_call:
+    inputs:
+      context_directory:
+        required: false
+        type: string
+        default: .ai
+      meaningful_path_patterns:
+        required: false
+        type: string
+        default: 'src/**,app/**,pages/**,components/**,api/**,supabase/**,migrations/**,prisma/**,package.json,pyproject.toml,requirements.txt,Cargo.toml,go.mod,Dockerfile,.github/workflows/**'
+    permissions:
+      contents: write
+
+jobs:
+  sync-context:
+    if: ${{ !contains(github.event.head_commit.message, '[devos-context-sync]') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Update durable project change record
+        shell: bash
+        env:
+          CONTEXT_DIR: ${{ inputs.context_directory }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$CONTEXT_DIR"
+          CHANGELOG="$CONTEXT_DIR/CHANGELOG.md"
+          STATE="$CONTEXT_DIR/CURRENT-STATE.md"
+          commit_sha="$(git rev-parse HEAD)"
+          commit_subject="$(git log -1 --pretty=%s)"
+          commit_author="$(git log -1 --pretty='%an')"
+          commit_date="$(git log -1 --date=short --pretty='%ad')"
+          changed_files="$(git diff-tree --no-commit-id --name-only -r HEAD | sed '/^\.ai\//d' | head -200)"
+
+          meaningful=false
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            case "$file" in
+              src/*|app/*|pages/*|components/*|api/*|supabase/*|migrations/*|prisma/*|package.json|pyproject.toml|requirements.txt|Cargo.toml|go.mod|Dockerfile|.github/workflows/*)
+                meaningful=true; break;;
+            esac
+          done <<< "$changed_files"
+
+          [ -f "$CHANGELOG" ] || printf '%s\n' '# Project Change Log' '' 'Automatically maintained by Development OS.' '' > "$CHANGELOG"
+          tmp="$(mktemp)"
+          {
+            printf '%s\n' "## $commit_date — $commit_subject" "- Commit: $commit_sha" "- Author: $commit_author" "- Classification: $([ "$meaningful" = true ] && echo meaningful || echo routine)" '- Changed files:'
+            if [ -n "$changed_files" ]; then
+              sed 's/^/- `/' <<< "$changed_files" | sed 's/$/`/'
+            else
+              printf '%s\n' '- (no application files detected)'
+            fi
+            printf '%s\n' ''
+            cat "$CHANGELOG"
+          } > "$tmp"
+          mv "$tmp" "$CHANGELOG"
+
+          if [ "$meaningful" = true ] && [ -f "$STATE" ]; then
+            tmp_state="$(mktemp)"
+            awk -v date="$commit_date" -v sha="$commit_sha" -v subject="$commit_subject" '
+              BEGIN{done=0}
+              /^Last verified:/ && !done {print "Last verified: " date; print ""; print "## Last automated change"; print "- Commit: " sha; print "- Change: " subject; print "- Durable context synchronization: completed"; print ""; done=1; next}
+              {print}
+            ' "$STATE" > "$tmp_state"
+            mv "$tmp_state" "$STATE"
+          fi
+
+          if git diff --quiet -- "$CHANGELOG" "$STATE" 2>/dev/null; then exit 0; fi
+          git config user.name 'development-os[bot]'
+          git config user.email 'development-os[bot]@users.noreply.github.com'
+          git add "$CHANGELOG" "$STATE"
+          git commit -m 'chore: sync project AI context [devos-context-sync]'
+          git push
