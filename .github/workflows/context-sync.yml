@@ -33,15 +33,18 @@ jobs:
         env:
           CONTEXT_DIR: ${{ inputs.context_directory }}
           BEFORE_SHA: ${{ github.event.before }}
+          MEANINGFUL_PATTERNS: ${{ inputs.meaningful_path_patterns }}
         run: |
           set -euo pipefail
           mkdir -p "$CONTEXT_DIR"
           CHANGELOG="$CONTEXT_DIR/CHANGELOG.md"
           STATE="$CONTEXT_DIR/CURRENT-STATE.md"
+          INDEX="$CONTEXT_DIR/STATE-INDEX.md"
           commit_sha="$(git rev-parse HEAD)"
           commit_subject="$(git log -1 --pretty=%s)"
           commit_author="$(git log -1 --pretty='%an')"
           commit_date="$(git log -1 --date=short --pretty='%ad')"
+          branch="${GITHUB_REF_NAME:-unknown}"
 
           if git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
             changed_files="$(git diff --name-only "$BEFORE_SHA" "$commit_sha" | sed '/^\.ai\//d' | head -500)"
@@ -53,7 +56,7 @@ jobs:
           while IFS= read -r file; do
             [ -z "$file" ] && continue
             case "$file" in
-              src/*|app/*|pages/*|components/*|api/*|supabase/*|migrations/*|prisma/*|package.json|pyproject.toml|requirements.txt|Cargo.toml|go.mod|Dockerfile|.github/workflows/*)
+              src/*|app/*|pages/*|components/*|api/*|lib/*|public/*|supabase/*|migrations/*|prisma/*|db/*|database/*|package.json|package-lock.json|pnpm-lock.yaml|yarn.lock|pyproject.toml|requirements.txt|poetry.lock|Cargo.toml|Cargo.lock|go.mod|go.sum|composer.json|pom.xml|build.gradle|Dockerfile|*.csproj|*.sln|.github/workflows/*)
                 meaningful=true; break;;
             esac
           done <<< "$changed_files"
@@ -86,10 +89,64 @@ jobs:
             mv "$tmp_state" "$STATE"
           fi
 
-          if git diff --quiet -- "$CHANGELOG" "$STATE"; then exit 0; fi
+          active=0; planned=0; blocked=0
+          if [ -f "$CONTEXT_DIR/TASKS.md" ]; then
+            active="$(awk '/^## Active/{flag=1;next}/^## /{flag=0} flag && /^- / && $0 !~ /^- *$/ {n++} END{print n+0}' "$CONTEXT_DIR/TASKS.md")"
+            planned="$(awk '/^## Planned/{flag=1;next}/^## /{flag=0} flag && /^- / && $0 !~ /^- *$/ {n++} END{print n+0}' "$CONTEXT_DIR/TASKS.md")"
+            blocked="$(awk '/^## Blocked/{flag=1;next}/^## /{flag=0} flag && /^- / && $0 !~ /^- *$/ {n++} END{print n+0}' "$CONTEXT_DIR/TASKS.md")"
+          fi
+          latest_session="$(find "$CONTEXT_DIR/SESSIONS" -maxdepth 1 -type f -name '*.md' -printf '%f\n' 2>/dev/null | sort | tail -1 || true)"
+          context_status="healthy"
+          for required in AGENTS.md "$CONTEXT_DIR/manifest.yaml" "$CONTEXT_DIR/PROJECT.md" "$STATE" "$CONTEXT_DIR/TASKS.md"; do
+            [ -f "$required" ] || context_status="incomplete"
+          done
+
+          cat > "$INDEX" <<EOF
+# Project State Index
+
+Generated automatically by Development OS.
+
+> This file contains deterministic repository/context evidence. It is not semantic project understanding. AI must inspect \\`CURRENT-STATE.md\`, \\`TASKS.md\`, source code, and Git history before making important claims or decisions.
+
+## Repository
+- Branch: $branch
+- HEAD: $commit_sha
+- Last commit: $commit_subject
+- Last commit date: $commit_date
+- Last commit author: $commit_author
+
+## Context health
+- Overall: $context_status
+- \\`AGENTS.md\`: $([ -f AGENTS.md ] && echo present || echo missing)
+- \\`manifest.yaml\`: $([ -f "$CONTEXT_DIR/manifest.yaml" ] && echo present || echo missing)
+- \\`PROJECT.md\`: $([ -f "$CONTEXT_DIR/PROJECT.md" ] && echo present || echo missing)
+- \\`CURRENT-STATE.md\`: $([ -f "$STATE" ] && echo present || echo missing)
+- \\`ARCHITECTURE.md\`: $([ -f "$CONTEXT_DIR/ARCHITECTURE.md" ] && echo present || echo missing)
+- \\`DECISIONS.md\`: $([ -f "$CONTEXT_DIR/DECISIONS.md" ] && echo present || echo missing)
+- \\`TASKS.md\`: $([ -f "$CONTEXT_DIR/TASKS.md" ] && echo present || echo missing)
+- \\`CHANGELOG.md\`: $([ -f "$CHANGELOG" ] && echo present || echo missing)
+- \\`SESSIONS/\`: $([ -d "$CONTEXT_DIR/SESSIONS" ] && echo present || echo missing)
+
+## Task signals
+- Active tasks: $active
+- Planned tasks: $planned
+- Blocked tasks: $blocked
+
+## Recent activity
+- Latest session: ${latest_session:-none}
+- Meaningful change detected in this synchronization: $meaningful
+
+## Recovery
+1. Read \\`AGENTS.md\` and \\`.ai/manifest.yaml\`.
+2. Read \\`.ai/CURRENT-STATE.md\`, \\`.ai/TASKS.md\`, and relevant decisions/architecture.
+3. Inspect the actual source code and Git history.
+4. Treat this index as deterministic evidence, not a substitute for project understanding.
+EOF
+
+          if git diff --quiet -- "$CHANGELOG" "$STATE" "$INDEX"; then exit 0; fi
           git config user.name 'development-os[bot]'
           git config user.email 'development-os[bot]@users.noreply.github.com'
-          git add "$CHANGELOG"
+          git add "$CHANGELOG" "$INDEX"
           [ -f "$STATE" ] && git add "$STATE"
           git commit -m 'chore: sync project AI context [devos-context-sync]'
           git push
