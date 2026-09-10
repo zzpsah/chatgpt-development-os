@@ -1,0 +1,14 @@
+context_version: 1
+specification: portable-project-context
+project_id: REPLACE_ME
+name: REPLACE_ME
+managed_by: development-os
+context_directory: .ai
+read_first:
+  - PROJECT.md
+  - CURRENT-STATE.md
+recommended:
+  - ARCHITECTURE.md
+  - DECISIONS.md
+  - TASKS.md
+secrets_policy: never-store-secrets
