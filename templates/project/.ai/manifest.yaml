@@ -5,6 +5,7 @@ name: REPLACE_ME
 managed_by: development-os
 context_directory: .ai
 read_first:
+  - STATE-INDEX.md
   - PROJECT.md
   - CURRENT-STATE.md
 recommended:
@@ -12,6 +13,9 @@ recommended:
   - DECISIONS.md
   - TASKS.md
   - CHANGELOG.md
+state_index:
+  generated: true
+  authority: repository-evidence-only
 session_records:
   directory: SESSIONS
   format: session-template.md
