@@ -32,14 +32,12 @@ jobs:
         shell: bash
         env:
           CONTEXT_DIR: ${{ inputs.context_directory }}
-          PATTERNS: ${{ inputs.meaningful_path_patterns }}
           BEFORE_SHA: ${{ github.event.before }}
         run: |
           set -euo pipefail
           mkdir -p "$CONTEXT_DIR"
           CHANGELOG="$CONTEXT_DIR/CHANGELOG.md"
           STATE="$CONTEXT_DIR/CURRENT-STATE.md"
-
           commit_sha="$(git rev-parse HEAD)"
           commit_subject="$(git log -1 --pretty=%s)"
           commit_author="$(git log -1 --pretty='%an')"
@@ -56,23 +54,14 @@ jobs:
             [ -z "$file" ] && continue
             case "$file" in
               src/*|app/*|pages/*|components/*|api/*|supabase/*|migrations/*|prisma/*|package.json|pyproject.toml|requirements.txt|Cargo.toml|go.mod|Dockerfile|.github/workflows/*)
-                meaningful=true
-                break
-                ;;
+                meaningful=true; break;;
             esac
           done <<< "$changed_files"
 
-          if [ ! -f "$CHANGELOG" ]; then
-            printf '%s\n' '# Project Change Log' '' 'Automatically maintained by Development OS.' '' > "$CHANGELOG"
-          fi
-
+          [ -f "$CHANGELOG" ] || printf '%s\n' '# Project Change Log' '' 'Automatically maintained by Development OS.' '' > "$CHANGELOG"
           tmp="$(mktemp)"
           {
-            printf '%s\n' "## $commit_date — $commit_subject" \
-              "- Commit: $commit_sha" \
-              "- Author: $commit_author" \
-              "- Classification: $([ "$meaningful" = true ] && echo meaningful || echo routine)" \
-              '- Changed files:'
+            printf '%s\n' "## $commit_date — $commit_subject" "- Commit: $commit_sha" "- Author: $commit_author" "- Classification: $([ "$meaningful" = true ] && echo meaningful || echo routine)" '- Changed files:'
             if [ -n "$changed_files" ]; then
               sed 's/^/- `/' <<< "$changed_files" | sed 's/$/`/'
             else
@@ -84,10 +73,7 @@ jobs:
           mv "$tmp" "$CHANGELOG"
 
           if [ "$meaningful" = true ]; then
-            if [ ! -f "$STATE" ]; then
-              printf '%s\n' '# Current State' '' 'Last verified: never' '' '## Working' '- ' '' '## In progress' '- ' '' '## Known issues' '- ' '' '## Next actions' '- ' '' '## Verification' '- Automated repository context synchronization has not run project tests.' > "$STATE"
-            fi
-
+            [ -f "$STATE" ] || printf '%s\n' '# Current State' '' 'Last verified: never' '' '## Working' '- ' '' '## In progress' '- ' '' '## Known issues' '- ' '' '## Next actions' '- ' '' '## Verification' '- Automated context synchronization does not run project tests.' > "$STATE"
             tmp_state="$(mktemp)"
             awk -v date="$commit_date" -v sha="$commit_sha" -v subject="$commit_subject" '
               BEGIN { inserted=0; skip=0 }
@@ -100,11 +86,7 @@ jobs:
             mv "$tmp_state" "$STATE"
           fi
 
-          if git diff --quiet -- "$CHANGELOG" "$STATE"; then
-            echo 'No durable context changes required.'
-            exit 0
-          fi
-
+          if git diff --quiet -- "$CHANGELOG" "$STATE"; then exit 0; fi
           git config user.name 'development-os[bot]'
           git config user.email 'development-os[bot]@users.noreply.github.com'
           git add "$CHANGELOG"
