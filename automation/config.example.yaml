@@ -1,0 +1,47 @@
+# Copy/customize for a local worker deployment.
+# This file is configuration documentation; it contains no credentials.
+
+version: 1
+
+# Only these roots are watched. Do not watch the whole disk by default.
+project_roots:
+  - "C:/Projects"
+  - "D:/Projects"
+
+# Evidence that a directory is likely a software project.
+project_markers:
+  - .git
+  - package.json
+  - pyproject.toml
+  - requirements.txt
+  - Cargo.toml
+  - go.mod
+  - composer.json
+  - pom.xml
+  - build.gradle
+  - '*.csproj'
+  - '*.sln'
+  - Dockerfile
+
+context_directory: .ai
+
+# Existing context is never replaced automatically.
+create_missing_context: true
+preserve_existing_context: true
+
+# Source changes do not automatically trigger an AI rewrite on every save.
+meaningful_events:
+  - git_commit
+  - pull_request
+  - dependency_manifest_change
+  - architecture_file_change
+  - explicit_ai_session
+
+# Never collect these into project memory.
+secret_patterns:
+  - .env
+  - '*.pem'
+  - '*.key'
+  - '*secret*'
+  - '*password*'
+  - '*token*'
