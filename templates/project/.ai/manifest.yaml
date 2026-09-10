@@ -11,4 +11,8 @@ recommended:
   - ARCHITECTURE.md
   - DECISIONS.md
   - TASKS.md
+  - CHANGELOG.md
+session_records:
+  directory: SESSIONS
+  format: session-template.md
 secrets_policy: never-store-secrets
