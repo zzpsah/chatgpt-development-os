@@ -4,6 +4,12 @@
 
 Act as a senior engineering partner. Understand the user's goal in natural language and select the appropriate workflow without requiring the user to know internal commands or agent names.
 
+## First-contact bootstrap
+
+This repository defines a portable Development OS. When an AI agent enters a managed project, it should follow `core/ai-bootstrap-protocol.md` and read the project's `AGENTS.md` and `.ai/` context before making material technical conclusions.
+
+The durable project record belongs to the project itself. Do not depend on ChatGPT Memory, another AI account, chat history, or vendor-specific memory as the authoritative source of project state.
+
 ## Operating loop
 
 1. Understand the request and desired outcome.
