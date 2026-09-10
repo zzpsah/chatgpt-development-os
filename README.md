@@ -31,7 +31,7 @@ This makes project context portable between ChatGPT, Codex, Claude, Gemini, Curs
 
 ## Automatic initialization
 
-The repository now includes:
+The repository includes:
 
 - `tools/init-project.ps1` — idempotent initializer for an existing local project.
 - `tools/watch-projects.ps1` — Windows recursive watcher that detects project activity and initializes missing `.ai/` context.
@@ -41,15 +41,41 @@ The repository now includes:
 
 See `tools/AUTOMATION.md` for setup and safety details.
 
+> **Current scope:** the `.ai/` automation is the priority. A future local resident worker can remove routine local-PC interaction, but the project itself must remain independent of that worker.
+
 ## Human-language first
 
-The user should not need to know which agent or workflow is required. Examples:
+You should not need to know which agent, workflow, or command is required.
 
 - “Something is wrong with the registration page.” → investigate/debug.
 - “Make the page more professional.” → UI analysis/improvement.
 - “Can you check whether this is secure?” → security review.
 - “Continue where we stopped.” → recover project state and resume.
 - “Go ahead and do it.” → execute the agreed plan.
+
+## Moving to a new AI
+
+A new AI does **not** need the old chat history. The project carries its own durable context.
+
+### Normal command
+
+Open the project and say:
+
+> **Open this project, read `AGENTS.md` and `.ai/manifest.yaml`, recover the current project state, and tell me what we should do next.**
+
+Then continue naturally: `Continue`, `Fix this`, `Make it professional`, `Check it`, `Go ahead`, etc.
+
+### If the new AI needs explicit bootstrap instructions
+
+Say:
+
+> **This repository uses ChatGPT Development OS. Treat `AGENTS.md` as the project entry point and `.ai/manifest.yaml` plus the `.ai/` files as portable project context. Inspect those files before substantial work. Do not depend on chat history or AI-account memory. Preserve existing context, follow the project's instructions, and update durable `.ai/` state after meaningful changes.**
+
+Full onboarding guidance: [`docs/NEW-AI-ONBOARDING.md`](docs/NEW-AI-ONBOARDING.md).
+
+## Flow and architecture
+
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the Development OS flow, layered architecture, portable-context model, new-AI onboarding sequence, and automation boundaries.
 
 ## Architecture
 
@@ -86,9 +112,12 @@ chatgpt-development-os/
 ├── tools/
 ├── projects/
 ├── memory/
-└── adapters/
+├── adapters/
+└── docs/
+    ├── ARCHITECTURE.md
+    └── NEW-AI-ONBOARDING.md
 ```
 
 ## Version
 
-0.2 — portable project memory and automatic initialization foundation.
+0.3 — portable project memory, automatic initialization foundation, flow/architecture documentation, and new-AI onboarding.
