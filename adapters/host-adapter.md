@@ -50,7 +50,7 @@ Verification commands come from project configuration or an explicitly selected 
 
 ## External integration rules
 
-Remote GitHub or CI mutations require an actual supported integration and applicable authorization. A textual instruction to perform an external action is not evidence that the action happened.
+Remote GitHub or CI mutations require an actual supported integration and applicable authorization. A textual instruction to perform an external action is not evidence that the action happened. Unsupported capabilities are `MISSING` and are never simulated.
 
 ## Security
 
