@@ -1,11 +1,9 @@
-# DevOS repository-side caller used to exercise the reusable context synchronizer.
 name: Development OS Context Sync Project Caller
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main
-      - master
+    branches: [main]
 
 permissions:
   contents: write
@@ -13,5 +11,6 @@ permissions:
 jobs:
   sync:
     uses: zzpsah/chatgpt-development-os/.github/workflows/context-sync.yml@main
-    permissions:
-      contents: write
+    with:
+      context_directory: .ai
+    secrets: inherit
