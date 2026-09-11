@@ -160,7 +160,7 @@ See [`adapters/adapter-contract.md`](../adapters/adapter-contract.md) and [`docs
 
 Agent Orchestration is a coordination layer for work that benefits from multiple internal engineering responsibilities. It decomposes objectives into minimal work units, assigns roles, manages dependencies and safe parallelism, carries evidence between units, handles failures, and reconciles the integrated result.
 
-It does **not** imply multiple physical AI models, unrestricted autonomy, automatic production deployment, or permission to bypass user authorization. The Verification / Test Engine and Security Gate remain authoritative for their respective decisions.
+It does **not** imply multiple physical AI models, unrestricted autonomy, automatic production deployment, or permission to bypass user authorization. It does not replace the existing safety, evidence, verification, security, or persistence contracts.
 
 See [`core/agent-orchestration.md`](../core/agent-orchestration.md) and [`workflows/orchestration.md`](../workflows/orchestration.md).
 
