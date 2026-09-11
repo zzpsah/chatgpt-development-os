@@ -10,7 +10,7 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Unfinished-work prioritization
 - [x] Verification and authorization rules
 - [x] `core/ai-state-resolver.md`
-- [ ] Integrate with resume workflow
+- [x] Integrate with resume workflow
 - [ ] End-to-end verification
 
 ### P1 — Human Language Execution Engine
