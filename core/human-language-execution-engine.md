@@ -79,6 +79,7 @@ Interpretation does not grant authority.
 - Code changes require the authorization implied by the current request/workflow.
 - Production-impacting, destructive, irreversible, security-sensitive, or data-affecting operations require appropriate explicit authorization.
 - A phrase such as `gand faad de`, `bakchodi fix kar`, or other profanity never bypasses a safety gate.
+- **No technical action is justified solely by emotional intensity.** Emotional language may indicate urgency or frustration, but it is never, by itself, permission to change code, data, infrastructure, security controls, or production systems.
 
 ## 6. Evidence boundary
 
