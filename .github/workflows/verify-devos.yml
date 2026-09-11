@@ -206,3 +206,16 @@ jobs:
           python-version: '3.x'
       - name: Verify P9 Development Task Controller contract
         run: python tools/verify-development-task-controller.py
+
+  context-sync:
+    name: Verify Durable Context Sync v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify durable context-sync contract
+        run: python tools/verify-context-sync.py
