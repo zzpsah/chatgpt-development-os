@@ -15,6 +15,7 @@ REQUIRED = [
     Path("core/ai-bootstrap-protocol.md"),
     Path("docs/DEVOS-STANCE-CODES.md"),
     Path("docs/CROSS-AI-HANDSHAKE.md"),
+    Path("docs/P11-FEDERATION-SELF-HEALING.md"),
 ]
 
 
@@ -41,13 +42,16 @@ def main() -> None:
     decisions = text(Path(".ai/DECISIONS.md"))
     manifest = text(Path(".ai/manifest.yaml"))
     stance = text(Path("docs/DEVOS-STANCE-CODES.md"))
+    federation = text(Path("docs/P11-FEDERATION-SELF-HEALING.md"))
 
     require("source tree + Git" in current or "Git" in current, "current-state must identify implementation authority")
     require("ChatGPT Memory" in current or "chat history" in current, "current-state must preserve account-memory boundary")
     require("P11" in current and "P11" in tasks, "fresh AI must be able to recover current milestone")
     require("## Active" in tasks, "fresh AI must recover active work")
     require("revalidation" in stance.lower(), "stance contract must require repository revalidation")
-    require("Recovery precedence" in text(Path("docs/P11-FEDERATION-SELF-HEALING.md")), "P11 must define recovery precedence")
+    require("repository revalidation" in federation.lower(), "fresh AI recovery must explicitly require repository revalidation")
+    require("current source tree and Git" in federation, "repository revalidation must target current source tree and Git")
+    require("Recovery precedence" in federation, "P11 must define recovery precedence")
 
     manifest_project = re.search(r"^project_id:\s*(.+)$", manifest, flags=re.MULTILINE)
     manifest_name = re.search(r"^name:\s*(.+)$", manifest, flags=re.MULTILINE)
@@ -61,6 +65,7 @@ def main() -> None:
     print("PASS: project identity and current milestone are recoverable")
     print("PASS: active work and decision history are recoverable")
     print("PASS: account-memory/chat-history boundary is explicit")
+    print("PASS: repository revalidation against current source tree and Git is explicit")
     print("PASS: preferred GOD+DESI stance is discoverable")
     print("PASS: recovery can begin from repository evidence alone")
 
