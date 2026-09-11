@@ -245,3 +245,20 @@ jobs:
           python-version: '3.x'
       - name: Verify project identity discovery contract
         run: python tools/verify-project-identity.py
+
+  context-integrity:
+    name: Verify DevOS Context Freshness and Integrity v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify context integrity checker contract
+        run: python tools/verify-context-integrity.py
+      - name: Run context freshness and integrity check
+        run: python tools/check-context-integrity.py
