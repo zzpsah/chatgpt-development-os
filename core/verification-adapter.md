@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Verification Adapter gives the Executable Development Runtime a controlled way to invoke project-defined verification commands and convert their real results into DevOS evidence.
+The Verification Adapter gives the Executable Development Runtime a controlled way to invoke **configured project verification commands** and convert their real results into DevOS evidence.
 
 ## Contract
 
@@ -63,7 +63,7 @@ evidence:
   limitations: []
 ```
 
-The evidence describes what actually ran. A planned command or expected result is not evidence.
+The evidence describes what actually ran. A planned command or expected result is not evidence. The adapter must not invent command output or claim a check ran when it did not.
 
 ## Runtime integration
 
