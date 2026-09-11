@@ -25,7 +25,8 @@ def main() -> None:
         "Checkpoint intelligence", "Failure classification", "Evidence intelligence",
         "CAPABILITY_MISSING", "UNKNOWN", "does not authorize",
         "deterministic task graph construction", "dependency-aware prioritization",
-        "checkpoint signals", "raw evidence", "freshness",
+        "checkpoint signals", "raw evidence", "freshness", "ADVISORY_ONLY",
+        "no_action", "never executes, authorizes, mutates",
     ):
         assert needle in contract, f"missing contract marker: {needle}"
 
@@ -52,6 +53,12 @@ def main() -> None:
     reasons = next(x["reasons"] for x in result["priority"] if x["id"] == "test")
     assert "explicit_priority=10" in reasons and "dependent_count=1" in reasons
 
+    recommendation = result["advisory_next_action"]
+    assert recommendation["task_id"] == "test"
+    assert recommendation["action"] == "work_on:test"
+    assert recommendation["authority"] == "ADVISORY_ONLY"
+    assert "explicit_priority=10" in recommendation["reason"]
+
     assert result["failures"][0]["class"] == "VERIFICATION_FAILED"
     assert result["failures"][0]["confidence"] == "status"
     assert result["failures"][0]["raw_evidence"]["run"] == "ci-1"
@@ -69,7 +76,15 @@ def main() -> None:
         raise AssertionError("missing dependencies must fail explicitly")
     assert oi.checkpoint_signals([{"type": "UNKNOWN_EVENT"}])[0]["checkpoint"] is False
     assert oi.classify_failure({"class": "made_up", "evidence": "x"})["class"] == "UNKNOWN"
-    print("Operational Intelligence v3 contract and executable checks: PASS")
+
+    approval_only = oi.analyze([{"id": "approval", "status": "NEEDS_APPROVAL", "priority": 99}])
+    assert approval_only["advisory_next_action"]["action"] == "resolve:approval"
+    assert approval_only["advisory_next_action"]["authority"] == "ADVISORY_ONLY"
+
+    complete_only = oi.analyze([{"id": "done", "status": "COMPLETE", "priority": 99}])
+    assert complete_only["advisory_next_action"]["action"] == "no_action"
+    assert complete_only["advisory_next_action"]["authority"] == "ADVISORY_ONLY"
+    print("Operational Intelligence v4 contract and executable checks: PASS")
 
 
 if __name__ == "__main__":
