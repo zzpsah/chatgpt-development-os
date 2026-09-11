@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Runtime–Adapter Execution Bridge connects an authorized DevOS work unit to a concrete host adapter without allowing the adapter to bypass runtime controls.
+The Runtime–Adapter Execution Bridge connects an authorized DevOS work unit to a concrete host or external integration adapter without allowing the adapter to bypass runtime controls.
 
 ## Contract
 
@@ -25,7 +25,7 @@ Authorized work unit
 request:
   id: unique-request-id
   work_unit: unique-unit-id
-  operation: filesystem.read | filesystem.write_scoped | git.inspect | verification.run | other-declared-capability
+  operation: filesystem.read | filesystem.write_scoped | git.inspect | verification.run | github.inspect.repository | github.inspect.commit | github.inspect.workflow_run | other-declared-capability
   target: "explicit target"
   scope: "explicit bounded scope"
   authorization: NOT_REQUIRED | REQUIRED | ALREADY_GRANTED
@@ -61,13 +61,34 @@ The bridge must enforce:
 - no secret persistence;
 - no simulated adapter result.
 
+## External integration bridge
+
+The reference bridge may route declared read-only GitHub operations to the provider-backed GitHub adapter:
+
+- `github.inspect.repository` — inspect a repository identified by `owner/name`;
+- `github.inspect.commit` — inspect a commit within a declared repository;
+- `github.inspect.workflow_run` — inspect a workflow run within a declared repository.
+
+For these operations the bridge must:
+
+1. validate the repository and operation-specific scope;
+2. resolve the external capability as `AVAILABLE`, `DELEGATABLE`, or `MISSING`;
+3. treat read-only inspection as `NOT_REQUIRED` authorization;
+4. pass the request only to the declared provider adapter;
+5. return only the actual provider response as execution evidence;
+6. preserve bounded retry semantics owned by the external adapter;
+7. never accept or persist provider credentials in the request/checkpoint.
+
+Remote mutation operations remain unavailable in the reference bridge until their explicit authorization, Security Gate, idempotency, and provider-backed implementation are defined.
+
 ## Reference implementation boundary
 
 The v1 reference bridge supports the safe reference adapter operations:
 
 - read text within the project root;
 - write explicitly scoped text within the project root;
-- inspect Git status/diff/log/HEAD.
+- inspect Git status/diff/log/HEAD;
+- bounded read-only GitHub repository, commit, and workflow-run inspection through the external adapter.
 
 Verification command execution and remote GitHub mutations remain separate capabilities and require their own adapter implementation and controls.
 
@@ -77,4 +98,4 @@ When resuming, the bridge uses checkpoint evidence and current repository state 
 
 ## Non-goals
 
-The bridge is not a shell escape hatch, permission escalation mechanism, production deployment controller, or secret transport layer.
+The bridge is not a shell escape hatch, permission escalation mechanism, production deployment controller, remote mutation bypass, or secret transport layer.
