@@ -2,6 +2,8 @@
 
 The system should infer the user's intent from meaning rather than exact keywords. Informal language, Hinglish, slang, humor, sarcasm, frustration, and profanity are valid input styles; route them by underlying intent.
 
+Routing answers **what kind of work the user is asking for**. The detailed normalization, authorization, evidence, composition, and verification contract is defined by `core/human-language-execution-engine.md`.
+
 ## Common intent families
 
 | User intent | Internal response |
@@ -43,3 +45,14 @@ The exact words are not the command language. The semantic engineering intent is
 - If the user clearly asks for execution, proceed within safe boundaries.
 - When a request combines intents, perform them in a sensible sequence.
 - Keep the user informed about important decisions without exposing unnecessary internal machinery.
+- Do not infer authorization from frustration, urgency, profanity, praise, or emotional intensity alone.
+
+## Delegation boundary
+
+This routing document identifies the broad semantic intent and should delegate detailed execution behavior to `core/human-language-execution-engine.md`.
+
+The Human Language Execution Engine determines:
+
+`Human phrase → Canonical intent → Workflow → Scope → Authorization → Evidence → Action → Verification → Persistence`
+
+Project selection remains the responsibility of `core/project-router.md`; routing must not guess between multiple plausible projects.
