@@ -25,6 +25,9 @@ def _load_module(name: str, path: Path):
 adapter = _load_module("reference_host", ROOT / "adapters" / "reference-host.py")
 github_adapter = _load_module("github_reference", ROOT / "adapters" / "github-reference.py")
 
+# Remote mutation capability currently enabled by the reference bridge.
+GITHUB_FILE_MUTATION_OPERATION = "github.mutate.file"
+
 
 def _github_execute(request: dict[str, Any], client: Any) -> dict[str, Any]:
     operation = request["operation"]
