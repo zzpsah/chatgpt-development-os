@@ -79,6 +79,13 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Define end-to-end evidence aggregation
 - [x] Build contract verification harness and CI integration
 
+### P5 — Executable Development Runtime
+- [x] Runtime execution contract
+- [x] Work-unit execution and capability registry
+- [x] Checkpoint and resume contract
+- [x] Evidence capture and safety boundaries
+- [x] Runtime workflow and verification harness
+
 ## Cross-cutting
 
 - [x] `.ai` remains durable project-local memory
@@ -91,6 +98,7 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Auto-Onboarding architecture, tooling, and validation synchronized
 - [x] Agent Orchestration architecture, workflow, and validation synchronized
 - [x] Autonomous Development Loop architecture, workflow, and validation synchronized
+- [x] Executable Runtime architecture, workflow, and validation synchronized
 - [x] This roadmap and Git/project state do not contradict each other
 
 ## Execution rule
@@ -99,4 +107,4 @@ Complete the current milestone before advancing to the next milestone. Do not ma
 
 ## Next planned capability
 
-No next milestone is defined yet. P4 establishes the bounded autonomous execution contract; future capabilities should build on it without weakening authorization, security, verification, portability, or durable-state guarantees.
+No next milestone is defined yet. P5 establishes the executable runtime contract; future capabilities should build on it without weakening authorization, security, verification, portability, or durable-state guarantees.
