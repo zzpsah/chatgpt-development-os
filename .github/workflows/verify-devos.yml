@@ -296,3 +296,16 @@ jobs:
         run: python tools/verify-ai-handoff.py
       - name: Generate vendor-neutral handoff packet
         run: python tools/generate-ai-handoff.py
+
+  stance-codes:
+    name: Verify DevOS Stance Codes v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify stance-code entry point
+        run: python tools/verify-stance-codes.py
