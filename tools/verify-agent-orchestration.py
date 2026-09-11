@@ -35,6 +35,14 @@ require(workflow, [
 
 require(roles, ["Planner", "Architect", "Developer", "Tester", "Security Reviewer", "Code Reviewer"], "agents/roles.md")
 require(arch, ["Agent Orchestration", "coordinates work", "does not replace the existing safety"], "docs/ARCHITECTURE.md")
-require(roadmap, ["### P3 — Agent Orchestration", "[x] Orchestration contract", "[x] Dependency and parallelism rules", "[x] Evidence handoff and failure recovery", "[x] Verification harness and CI integration"], "docs/ROADMAP.md")
+require(roadmap, [
+    "### P3 — Agent Orchestration",
+    "[x] Orchestration contract and role coordination",
+    "[x] Work-unit, dependency, and parallelism rules",
+    "[x] Evidence handoff and failure recovery",
+    "[x] Authorization, scope, verification, and security boundaries",
+    "[x] Orchestration workflow",
+    "[x] Verification harness and CI integration",
+], "docs/ROADMAP.md")
 
 print("Agent Orchestration v1 contract checks passed.")
