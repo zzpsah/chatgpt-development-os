@@ -1,9 +1,10 @@
 # DevOS Tasks
 
 ## Active
-- P12: extend Operational Intelligence with failure classification/evidence intelligence and prove fresh-repository recovery determinism.
+- P12: prove failure/evidence intelligence across fresh repository recovery, then strengthen controller integration and advisory next-action generation without granting authority.
 
 ## Planned
+- P12: fresh-repository recovery proof for deterministic operational analysis.
 - P12: strengthen controller integration and advisory next-action generation without granting authority.
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
 
@@ -39,6 +40,9 @@
 - P12 deterministic dependency-aware prioritization implemented with explicit scoring reasons and bounded operational signals.
 - P12 deterministic checkpoint event intelligence implemented with explicit recognized events and safe handling of unknown events.
 - P12 Operational Intelligence advisory integration documented in the Development Task Controller without granting authority.
+- P12 deterministic failure classification implemented with explicit/status mapping, confidence, and raw-evidence preservation.
+- P12 evidence intelligence implemented with provenance/freshness normalization and an explicit execution-evidence boundary.
+- P12 Operational Intelligence v3 contract checks added for failure and evidence behavior.
 
 ## Verification note
-P11 is closed. P12 graph/readiness and prioritization/checkpoint slices are repository-backed. The next P12 slice is failure classification/evidence intelligence plus fresh-repository recovery proof.
+P11 is closed. P12 graph/readiness, prioritization/checkpoint, and failure/evidence slices are repository-backed. Fresh-repository determinism and stronger advisory controller integration are the next verification targets.
