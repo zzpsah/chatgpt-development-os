@@ -124,6 +124,10 @@ The user should not normally need to name internal file paths. The active AI sho
 
 A stance or style code is an instruction to adopt an operating posture/presentation style, not a substitute for project context. A new AI must still recover the repository-local `.ai` context and current source state before acting.
 
+## Repository revalidation rule
+
+A handoff or stance is not authoritative project state. Before acting, the receiving AI must perform **repository revalidation** against the current source tree and Git. If the handoff commit differs from current `HEAD`, semantic decisions changed, or confidence is insufficient, revalidate the material conclusions before execution.
+
 ## Safety invariant
 
 No stance code or style code grants permission that the underlying project, user request, security gate, or execution policy does not already grant. In particular, `GOD`, `DEVIL`, and `FUCK` never authorize destructive or irreversible changes by themselves.
