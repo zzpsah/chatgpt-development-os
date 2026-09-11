@@ -56,13 +56,13 @@ def main():
          "engine defines verification outcome states"),
         ("semantic engineering intent".lower() in routing.lower(),
          "human-language routing remains semantic rather than keyword-only"),
-        ("core/project-router.md" in engine and "core/project-router.md" in router,
-         "engine and project router share explicit routing contract"),
+        ("core/project-router.md" in engine and "selected repository and its project-local `.ai/` context remain authoritative".lower() in router.lower(),
+         "engine delegates project selection to the authoritative Project Router"),
         ("Never infer success".lower() in engine.lower(),
          "engine prevents unsupported success claims"),
         ("authorization" in security.lower() and "least privilege" in security.lower(),
          "security baseline remains part of execution safety"),
-        (re.search(r"No technical action is justified solely by emotional intensity", routing, re.I) is not None,
+        (re.search(r"No technical action is justified solely by emotional intensity", engine, re.I) is not None,
          "emotional language cannot independently authorize technical action"),
     ]
 
