@@ -32,7 +32,8 @@ def scalar_manifest(key: str) -> str:
 
 
 def git_value(*args: str) -> str:
-    # Git provenance is validated with: git rev-parse HEAD
+    # Git commit provenance is validated with: git rev-parse HEAD
+    # Git cleanliness is validated with: git status --porcelain
     try:
         return subprocess.check_output(["git", *args], cwd=ROOT, text=True, stderr=subprocess.DEVNULL).strip() or "UNKNOWN"
     except (OSError, subprocess.CalledProcessError):
