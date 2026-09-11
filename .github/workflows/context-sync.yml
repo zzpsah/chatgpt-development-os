@@ -13,8 +13,9 @@ on:
         required: false
         type: string
         default: 'src/**,app/**,pages/**,components/**,api/**,lib/**,public/**,supabase/**,migrations/**,prisma/**,db/**,database/**,package.json,package-lock.json,pnpm-lock.yaml,yarn.lock,pyproject.toml,requirements.txt,poetry.lock,Cargo.toml,Cargo.lock,go.mod,go.sum,composer.json,pom.xml,build.gradle,Dockerfile,*.csproj,*.sln,.github/workflows/**'
-    permissions:
-      contents: write
+
+permissions:
+  contents: write
 
 jobs:
   sync-context:
