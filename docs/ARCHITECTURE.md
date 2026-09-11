@@ -58,10 +58,15 @@ flowchart LR
     AL --> AO
     AL --> ER
     ER --> CAP[Capability + Authorization checks]
+    ER --> HA[Host Execution Adapters]
+    HA --> FS[Filesystem]
+    HA --> GI[Git]
+    HA --> VT[Verification tooling]
+    HA --> GH[GitHub / CI integrations]
     PM --> SRC[Project source code]
     SRC --> V[Verification / Test Engine]
     V --> SG[Security Gate]
-    V --> GH[Git / CI / GitHub / test providers]
+    V --> GH
     GH --> PM
     OS[Development OS] --> R
     OS -.-> AD[AI Adapter Contract]
@@ -82,6 +87,7 @@ flowchart LR
 | Agent Orchestration | Coordinate internal work units, roles, dependencies, handoffs, and recovery | Orchestration contract |
 | Autonomous Development Loop | Run bounded iterations, checkpoints, capability/approval gates, and continue/stop/escalate decisions | Autonomous-loop control contract |
 | Executable Development Runtime | Execute one authorized bounded work unit, capture evidence, checkpoint, and return an outcome | Execution boundary |
+| Host Execution Adapters | Expose real host capabilities through bounded, honest operations and normalized evidence | Host integration boundary |
 | Development OS | How work should be performed | Workflow, safety, routing |
 | AI Adapter Contract | Connect a host AI to portable DevOS capabilities | Host integration boundary |
 | Auto-Onboarding | Safely establish missing DevOS project infrastructure | Onboarding state/change scope |
@@ -130,6 +136,7 @@ sequenceDiagram
     participant AO as Orchestrator
     participant AL as Autonomous Loop
     participant ER as Runtime
+    participant HA as Host Adapter
     participant V as Verification Engine
 
     U->>A: "Continue / work on this project"
@@ -146,6 +153,8 @@ sequenceDiagram
     A->>AO: Coordinate multi-unit work when useful
     AO->>AL: Supply bounded work plan
     AL->>ER: Request authorized work unit execution
+    ER->>HA: Request bounded host operation
+    HA->>ER: Actual result + normalized evidence
     ER->>A: Outcome + evidence + checkpoint
     A->>V: Select and run/delegate checks
     V->>A: Verification status + evidence + limitations
@@ -181,7 +190,7 @@ See [`docs/AUTO-ONBOARDING.md`](AUTO-ONBOARDING.md).
 
 ## 8. Automation boundary
 
-The GitHub repository can provide the portable `.ai/` contract and automation scripts. A local computer cannot be silently controlled by a cloud AI session. Therefore local filesystem watching is an optional resident worker concern, not a project-memory dependency.
+The GitHub repository can provide the portable `.ai` contract and automation scripts. A local computer cannot be silently controlled by a cloud AI session. Therefore local filesystem watching is an optional resident worker concern, not a project-memory dependency.
 
 The important invariant is:
 
@@ -205,7 +214,17 @@ The runtime separates AI decisions from execution evidence. A planned action is 
 
 See [`core/execution-runtime.md`](../core/execution-runtime.md) and [`workflows/execution-runtime.md`](../workflows/execution-runtime.md).
 
-## 11. Safety boundaries
+## 11. Host Execution Adapters
+
+Host Execution Adapters turn runtime capability declarations into real operations supplied by the current machine, AI host, CI environment, or external integration. The adapter must discover and report capability state before use, validate explicit target scope, preserve authorization and Security Gate decisions, execute only bounded operations, and return actual normalized evidence.
+
+The initial adapter boundary covers filesystem inspection/scoped writes, Git inspection/authorized commits, configured verification commands, and GitHub/CI inspection or explicitly authorized mutations. Shell execution is not implied by filesystem or Git access; a host must separately declare and bound any command-execution capability.
+
+Adapters report `AVAILABLE`, `DELEGATABLE`, or `MISSING` honestly. `BLOCKED`, `FAILED`, and `UNAVAILABLE` remain distinct outcomes. They must never fabricate command output, file changes, test results, or external responses.
+
+See [`core/host-adapter-contract.md`](../core/host-adapter-contract.md) and [`adapters/host-adapter.md`](../adapters/host-adapter.md).
+
+## 12. Safety boundaries
 
 - `.ai/` must never contain secrets merely to preserve context.
 - Existing project context must not be overwritten blindly.
@@ -220,3 +239,4 @@ See [`core/execution-runtime.md`](../core/execution-runtime.md) and [`workflows/
 - Orchestration coordinates work but never creates authority.
 - Autonomous looping never creates authority, and bounded continuation cannot override a missing capability, approval, verification condition, or security gate.
 - The Executable Runtime cannot claim execution, external results, or completion without actual host evidence.
+- Host adapters cannot grant authorization, silently expand scope, simulate unavailable capabilities, or persist secrets as execution evidence.
