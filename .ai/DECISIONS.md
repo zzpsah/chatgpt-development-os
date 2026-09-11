@@ -15,9 +15,16 @@
 
 ## P10 milestone status
 
-- P10 Context Continuity & Recovery v1 is explicitly established from the post-P9 recovery incident and the documented context-sync verification gap.
-- P10 focuses on repository-first recovery, durable session persistence, context-sync correctness, and evidence-backed continuity.
+- P10 Context Continuity & Recovery v1 is complete.
+- P10 was closed only after fresh primary CI evidence and a real external project-side reusable workflow execution successfully generated durable context files.
+- The validated external test project was `zzpsah/automation-suite` on branch `devos-p10-context-sync-test`.
 - P10 does not imply completion of higher-impact P8 remote mutations.
+
+## P11 milestone decision
+
+- P11 is the current milestone: DevOS Federation & Self-Healing Context v1.
+- P11 exists to make repository-first project continuity resilient across AI tools/accounts, chat loss, connectivity interruptions, stale generated state, and handoffs.
+- P11 prioritizes versioned project identity, compatibility, freshness/integrity detection, safe reconciliation, cross-AI handoff, provenance, and deterministic self-healing.
 
 ## Future persistence rule
 
@@ -29,4 +36,5 @@
 ## Verification boundary
 
 - Static context-sync verification proves the repository contract is structurally present; it does not prove that GitHub Actions executed successfully or that a managed project's tests passed.
-- P10 is complete only after fresh CI evidence and an actual project-side context-sync execution establish the end-to-end path.
+- External-project execution evidence is required before declaring reusable context synchronization operational.
+- P11 is complete only when a fresh AI/account can recover from repository evidence alone and deterministic context can self-heal without silently changing semantic project intent.
