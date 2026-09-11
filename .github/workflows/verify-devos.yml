@@ -99,6 +99,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Python
+        uses: actions/checkout@v4
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
@@ -307,6 +309,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+      - name: Install stance verifier dependency
+        run: python -m pip install pyyaml
       - name: Verify stance-code entry point
         run: python tools/verify-stance-codes.py
       - name: Test composable DevOS stance parser
