@@ -219,3 +219,16 @@ jobs:
           python-version: '3.x'
       - name: Verify durable context-sync contract
         run: python tools/verify-context-sync.py
+
+  project-manifest:
+    name: Verify DevOS Project Manifest v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify project manifest compatibility contract
+        run: python tools/verify-project-manifest.py
