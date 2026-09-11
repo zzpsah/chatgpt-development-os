@@ -1,0 +1,10 @@
+name: DevOS Reusable Smoke Test
+
+on:
+  workflow_call:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "DevOS reusable workflow OK"
