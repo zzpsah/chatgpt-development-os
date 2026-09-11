@@ -19,7 +19,7 @@ executions:
       - security-sensitive
       - ambiguous
   BUILD:
-    purpose: implement the smallest complete authorized change with appropriate verification
+    purpose: implementation-focused engineering that delivers the smallest complete authorized change with appropriate verification
     write_allowed_by_stance: true
   FIX:
     purpose: diagnose, repair, and verify an active failure
