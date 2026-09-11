@@ -67,6 +67,16 @@ The Verification / Test Engine makes verification an evidence-based stage rather
 
 See [`core/verification-engine.md`](core/verification-engine.md) and [`workflows/verification.md`](workflows/verification.md).
 
+## Multi-AI portability
+
+The project repository is the durable continuity layer. A new AI should not need the previous chat history or account memory to recover the project.
+
+The portable adapter contract defines the minimum capabilities for a compatible AI: bootstrap project context, inspect source/Git, route human intent, resolve evidence and unfinished work, execute authorized workflows, verify with evidence, and persist meaningful state.
+
+Host-specific capabilities belong in `adapters/`. The adapter is an integration boundary, not a second project-memory system.
+
+See [`adapters/adapter-contract.md`](adapters/adapter-contract.md) and [`docs/MULTI-AI-PORTABILITY.md`](docs/MULTI-AI-PORTABILITY.md).
+
 ## Moving to a new AI
 
 A new AI does **not** need the old chat history. The project carries its own durable context.
@@ -127,4 +137,4 @@ chatgpt-development-os/
 
 ## Version
 
-0.5 — human-language execution and evidence-based verification contracts.
+0.6 — multi-AI portability contract and repository-only recovery.
