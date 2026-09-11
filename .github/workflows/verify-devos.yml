@@ -73,6 +73,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Python
+        uses: actions/checkout@v4
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
@@ -158,3 +160,16 @@ jobs:
         run: python tools/verify-host-adapter.py
       - name: Run reference host adapter integration checks
         run: python tools/test-reference-host-adapter.py
+
+  external-adapter:
+    name: Verify External Integration Adapter v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify External Integration Adapter contract
+        run: python tools/verify-external-adapter.py
