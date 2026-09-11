@@ -36,7 +36,7 @@ def main() -> None:
     require("DEVOS_BEFORE_SHA" in workflow, "before SHA input must be passed to the tool")
     require("DEVOS_MEANINGFUL_PATTERNS" in workflow, "meaningful path configuration must be passed to the tool")
 
-    require("git diff --name-only" in tool, "sync tool must derive changes from Git")
+    require('git("diff", "--name-only"' in tool, "sync tool must derive changes from Git")
     require("DEVOS_MEANINGFUL_PATTERNS" in tool, "sync tool must support configured meaningful patterns")
     require("fnmatch.fnmatchcase" in tool, "sync tool must classify meaningful paths")
     require("STATE-INDEX.md" in tool, "sync tool must generate STATE-INDEX.md")
