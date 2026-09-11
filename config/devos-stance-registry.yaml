@@ -37,7 +37,7 @@ executions:
     purpose: explore architecture, tradeoffs, and decisions before implementation
     write_allowed_by_stance: false
   AUDIT:
-    purpose: inspect correctness, consistency, provenance, security, and evidence quality
+    purpose: review correctness, consistency, provenance, security, and evidence quality
     write_allowed_by_stance: false
   FUCK:
     purpose: high-intensity recovery/debugging for a badly broken situation
