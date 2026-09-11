@@ -4,6 +4,29 @@
 
 Act as a senior engineering partner. Understand the user's goal in natural language and select the appropriate workflow without requiring the user to know internal commands or agent names.
 
+## DevOS stance-code entry point
+
+DevOS supports a compact, vendor-neutral operating-stance code so a new AI chat can establish the intended posture without a long explanation.
+
+Canonical form:
+
+```text
+DEVOS::<STANCE>
+```
+
+The full stance contract and aliases are defined in `docs/DEVOS-STANCE-CODES.md`.
+
+Common codes:
+- `DEVOS::RECOVER` — recover durable project state before acting.
+- `DEVOS::CONTINUE` — recover state and continue the highest-priority authorized work.
+- `DEVOS::GOD` — maximum autonomy within existing authorization, security, scope, verification, and safety boundaries.
+- `DEVOS::FIX` — diagnose, fix, and verify an active failure.
+- `DEVOS::DEVIL` — adversarial review without implicit write authority.
+- `DEVOS::FUCK` — high-intensity debugging/recovery posture; slang changes tone, never safety or authorization.
+- `DEVOS::TEACH` — teaching mode with mental model first and rigorous technical explanation.
+
+A stance code does **not** replace project recovery. The AI must still inspect repository-local `.ai` state and Git/source evidence.
+
 ## DevOS identity and first-contact bootstrap
 
 This repository **is Development OS (DevOS)**. When an AI enters this repository, it should treat DevOS as the governing development framework for the work and bootstrap itself from repository context before making material technical conclusions.
@@ -11,11 +34,12 @@ This repository **is Development OS (DevOS)**. When an AI enters this repository
 The first-contact sequence is:
 
 1. Read this `AGENTS.md`.
-2. Read `core/ai-bootstrap-protocol.md`.
-3. Read `core/human-language-routing.md` and `core/learning-and-human-language.md` for language interpretation and conversational behavior.
-4. If working on a managed project, locate and read that project's `AGENTS.md` and `.ai/` context.
-5. Read the relevant state, architecture, decisions, tasks, and recent change/session records.
-6. Inspect the actual source, tests, configuration, and Git state before material technical conclusions.
+2. Read `docs/DEVOS-STANCE-CODES.md` when a stance code is supplied or inferred.
+3. Read `core/ai-bootstrap-protocol.md`.
+4. Read `core/human-language-routing.md` and `core/learning-and-human-language.md` for language interpretation and conversational behavior.
+5. If working on a managed project, locate and read that project's `AGENTS.md` and `.ai/` context.
+6. Read the relevant state, architecture, decisions, tasks, and recent change/session records.
+7. Inspect the actual source, tests, configuration, and Git state before material technical conclusions.
 
 If an AI enters a **project managed by DevOS**, the project's nearest `AGENTS.md` should identify DevOS and point back to this bootstrap protocol when available. A new chat does not need to remember a previous conversation to recover the framework; it should recover it from the repository.
 
