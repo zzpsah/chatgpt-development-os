@@ -101,8 +101,8 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Define actual-response evidence and safe retry semantics
 - [x] Add GitHub external adapter profile
 - [x] Add contract verification harness and CI integration
-- [ ] Implement provider-backed reference operations
-- [ ] Add external integration end-to-end tests
+- [x] Implement provider-backed reference operations
+- [x] Add external integration end-to-end tests
 
 ## Cross-cutting
 
@@ -120,6 +120,7 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Host Adapter architecture and contract synchronized
 - [x] Verification Adapter architecture and reference implementation synchronized
 - [x] External Integration Adapter architecture and contract synchronized
+- [x] External Integration Adapter connected to the Executable Runtime for read-only GitHub operations
 - [x] This roadmap and Git/project state do not contradict each other
 
 ## Execution rule
@@ -128,6 +129,6 @@ Complete the current milestone before advancing to the next milestone. Do not ma
 
 ## Next planned capability
 
-### P7 — External Integration Adapters
+### P8 — Remote Mutation Controls
 
-P7 adds controlled adapters for remote GitHub/CI operations and other external systems where supported. These adapters must preserve explicit authorization, provider capability discovery, actual-response evidence, bounded retries, and Security Gate enforcement. Remote mutation must never be implied by local repository access.
+P8 should add remote mutation only after explicit authorization, Security Gate integration, target/scope validation, idempotency or safe retry semantics, provider-backed implementation, and end-to-end verification are defined. Examples include controlled GitHub file/branch/pull-request/workflow mutations. Read-only external inspection remains available through P7.
