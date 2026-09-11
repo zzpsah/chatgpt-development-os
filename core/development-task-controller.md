@@ -12,6 +12,7 @@ User request
   -> P11 repository-first recovery / revalidation
   -> Durable state resolution
   -> P12 operational analysis (advisory)
+  -> Advisory next-action signal
   -> Objective + acceptance criteria
   -> Orchestration / work units
   -> Capability + authorization checks
@@ -31,18 +32,21 @@ User request
 2. Preserve the canonical intent produced by the Human Language Execution Engine.
 3. Run P11 repository-first recovery and revalidation before material work.
 4. Resolve current project state before material work.
-5. Run P12 Operational Intelligence against the current task inventory to expose dependency readiness, advisory priority, and checkpoint signals.
-6. Treat P12 recommendations as advisory only; never convert a ranking or checkpoint signal into authority.
-7. Convert the objective into bounded work units through Agent Orchestration.
-8. Require capability and authorization checks before execution.
-9. Execute only supported, bounded actions through the runtime/adapters.
-10. Collect evidence from actual execution and provider responses.
-11. Invoke applicable verification and Security Gate checks.
-12. Prevent a successful subtask from being mistaken for overall task completion.
-13. When derived context is missing or malformed, invoke only deterministic P11 self-healing; never overwrite semantic decisions.
-14. Persist meaningful semantic state and leave deterministic state generation to automation.
-15. Produce a provenance-aware handoff containing the current Git/source reference and revalidation requirements when a session boundary is reached.
-16. Produce a final result with completion status, evidence, limitations, blockers, and next action.
+5. Run P12 Operational Intelligence against the current task inventory to expose dependency readiness, advisory priority, checkpoint signals, failure/evidence analysis, and an advisory next action.
+6. Treat P12 recommendations as advisory only; never convert a ranking, checkpoint signal, or next-action recommendation into authority.
+7. Treat an OI `work_on:<task>` result only as a candidate work item; the controller must independently validate scope, dependencies, capability, authorization, and current repository state before execution.
+8. If OI recommends `resolve:<task>`, route the blocker through the existing dependency, capability, authorization, verification, security, or recovery authority instead of bypassing it.
+9. If OI returns `no_action`, preserve the explicit no-action/unknown state rather than inventing work.
+10. Convert the objective into bounded work units through Agent Orchestration.
+11. Require capability and authorization checks before execution.
+12. Execute only supported, bounded actions through the runtime/adapters.
+13. Collect evidence from actual execution and provider responses.
+14. Invoke applicable verification and Security Gate checks.
+15. Prevent a successful subtask from being mistaken for overall task completion.
+16. When derived context is missing or malformed, invoke only deterministic P11 self-healing; never overwrite semantic decisions.
+17. Persist meaningful semantic state and leave deterministic state generation to automation.
+18. Produce a provenance-aware handoff containing the current Git/source reference and revalidation requirements when a session boundary is reached.
+19. Produce a final result with completion status, evidence, limitations, blockers, and next action.
 
 ## Task state
 
@@ -63,6 +67,12 @@ task:
   authorization: NOT_REQUIRED | REQUIRED | ALREADY_GRANTED
   recovery: REVALIDATED | RECONCILED | ESCALATED
   next_action: "specific next action or none"
+  operational_intelligence:
+    advisory_next_action: null
+    priority_reasons: []
+    checkpoint_signals: []
+    failure_classifications: []
+    evidence_records: []
 ```
 
 ## Completion semantics
@@ -76,7 +86,7 @@ task:
 - meaningful progress is persisted;
 - material conclusions have been revalidated against current repository/source evidence after a recovery or handoff boundary.
 
-A task is not complete merely because code was changed, a work unit succeeded, or a provider returned success.
+A task is not complete merely because code was changed, a work unit succeeded, a provider returned success, or Operational Intelligence ranked the work highly.
 
 ## Failure and recovery
 
@@ -86,9 +96,9 @@ A resumed task must run repository revalidation and P11 recovery precedence befo
 
 ## Authorization boundary
 
-The controller never manufactures authority. Planning, testing, prior low-risk approval, or provider credentials do not authorize a new high-risk operation. Remote mutation continues to be governed by Remote Mutation Controls.
+The controller never manufactures authority. Planning, testing, prior low-risk approval, provider credentials, OI priority, or an OI next-action recommendation do not authorize a new high-risk operation. Remote mutation continues to be governed by Remote Mutation Controls.
 
-P12 priority and checkpoint signals are never authorization. `UNAUTHORIZED` readiness must continue through the existing approval/capability path rather than being bypassed by a high priority score.
+P12 priority, checkpoint, failure classification, evidence normalization, and next-action signals are never authorization. `UNAUTHORIZED` readiness must continue through the existing approval/capability path rather than being bypassed by a high priority score.
 
 ## Evidence boundary
 
@@ -101,7 +111,7 @@ Only actual repository, runtime, test, security, or provider responses are execu
 - AI State Resolver: current-state reasoning
 - Agent Orchestration: decomposition and role coordination
 - Autonomous Development Loop: bounded continuation
-- Operational Intelligence: dependency/readiness analysis, advisory prioritization, checkpoint signals, and later failure/evidence intelligence
+- Operational Intelligence: dependency/readiness analysis, advisory prioritization, checkpoint signals, failure/evidence intelligence, and advisory next-action generation
 - Execution Runtime: executable actions
 - Host/External Adapters: capabilities and provider boundaries
 - Verification Engine: verification authority
