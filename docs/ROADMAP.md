@@ -118,6 +118,20 @@ This is the authoritative high-level implementation order for the Development OS
 - [ ] Add controlled workflow trigger/mutation
 - [ ] Add operation-specific rollback/recovery contracts for higher-impact mutations
 
+### P9 — Development Task Controller v1
+- [x] Define end-to-end task lifecycle and task states
+- [x] Resolve project, canonical intent, durable state, objective, acceptance criteria, scope, and budget
+- [x] Integrate orchestration/work units with capability and authorization checks
+- [x] Connect bounded execution, checkpoints, verification, Security Gate, review, and durable persistence
+- [x] Define evidence-backed final outcomes and blocker/escalation semantics
+- [x] Implement the Development Task Controller
+- [x] Add the P9 development task workflow
+- [x] Add the P9 contract verifier
+- [x] Wire P9 verification into CI
+- [x] Verify current repository HEAD through the primary Development OS verification workflows
+
+P9 is implemented and verified at the current repository HEAD. Higher-impact remote mutations from P8 remain separately incomplete and must not be inferred as part of P9.
+
 ## Cross-cutting
 
 - [x] `.ai` remains durable project-local memory
@@ -136,6 +150,7 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] External Integration Adapter architecture and contract synchronized
 - [x] External Integration Adapter connected to the Executable Runtime for read-only GitHub operations
 - [x] Remote Mutation Controls connected to the Executable Runtime for controlled GitHub file updates
+- [x] Development Task Controller integrated into the runtime/orchestration/verification path
 - [x] This roadmap and Git/project state do not contradict each other
 
 ## Execution rule
@@ -144,6 +159,6 @@ Complete the current milestone before advancing to the next milestone. Do not ma
 
 ## Current milestone
 
-### P8 — Remote Mutation Controls v1
+### P9 — Development Task Controller v1 — COMPLETED
 
-P8 is intentionally incremental. The reference implementation proves the authorization, Security Gate, target/scope, optimistic-concurrency, and uncertain-outcome controls for one GitHub file-update operation. Higher-impact remote mutations remain disabled until their operation-specific controls and evidence paths are implemented and verified.
+P9 is implemented in the repository and the current `main` HEAD has completed successfully in the primary DevOS verification workflows. No P10 milestone is currently established. The next milestone must be explicitly defined from repository evidence after P9 reconciliation; do not infer it from numbering alone.
