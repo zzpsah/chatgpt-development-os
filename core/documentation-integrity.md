@@ -39,4 +39,4 @@ All three are required. If documentation is missing, the work unit is not comple
 
 ## Enforcement
 
-Repository verification checks the latest commit boundary. Material implementation changes must be accompanied by a durable repository record in that same commit. This is a deterministic guard against documentation drift; it does not claim to prove semantic completeness.
+Repository verification checks the latest commit boundary. Material implementation changes must be accompanied by a durable repository record in that same commit. The documentation-integrity guard **does not authorize** execution, mutation, or completion; it only enforces the documentation boundary. This is a deterministic guard against documentation drift; it does not claim to prove semantic completeness.
