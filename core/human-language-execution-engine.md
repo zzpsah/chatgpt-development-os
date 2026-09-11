@@ -20,7 +20,7 @@ Natural-language variants should normalize to a small set of stable engineering 
 | `BUG_FIX` | fix this, this is broken, remove this bug | `workflows/bug-fix.md` |
 | `FEATURE_CHANGE` | add, build, change, implement | `workflows/feature.md` |
 | `VALIDATION` | check it, test it, is it correct? | `workflows/review.md` + applicable tests |
-| `SECURITY_REVIEW` | security dekh, check security | `workflows/review.md` + security rules |
+| `SECURITY_REVIEW` | security dekh, check security | `workflows/security.md` |
 | `INVESTIGATE` | why is this happening? what is wrong? | inspect → diagnose → explain |
 | `QUALITY_IMPROVEMENT` | make it better/professional | inspect → prioritize → improve |
 | `DATABASE_IMPLEMENTATION` | db bana de, database change | inspect schema → design → migration → verify |
