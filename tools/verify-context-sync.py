@@ -33,7 +33,9 @@ def main() -> None:
     require("git diff --name-only" in workflow, "context-sync must derive changed paths from Git")
     require("git push" in workflow, "context-sync must persist generated context")
     require("MEANINGFUL_PATTERNS" in workflow, "meaningful path input must be wired into the workflow")
-    require("case \"$file\" in" not in workflow, "meaningful path classification must not silently ignore its configured input")
+    require("IFS=',' read -r -a meaningful_patterns" in workflow, "configured meaningful patterns must be parsed")
+    require("for pattern in \"${meaningful_patterns[@]}\"" in workflow, "configured meaningful patterns must be iterated")
+    require("src/*|app/*|pages/*|components/*" not in workflow, "old hardcoded meaningful-path classifier must not remain")
     require("zzpsah/chatgpt-development-os/.github/workflows/context-sync.yml@main" in caller, "project caller must use the reusable DevOS workflow")
     require("contents: write" in caller, "project caller must grant the reusable workflow write permission")
 
