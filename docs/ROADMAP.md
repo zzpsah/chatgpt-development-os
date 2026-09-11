@@ -148,15 +148,17 @@ P9 is implemented and verified. Higher-impact remote mutations from P8 remain se
 Goal: make DevOS context portable, self-identifying, recoverable, and resistant to stale/partial context across AI tools, accounts, projects, and connectivity interruptions.
 
 - [x] Define a versioned DevOS project manifest and compatibility contract
-- [ ] Add automatic project identity/registration discovery
-- [ ] Add context freshness and integrity checks
-- [ ] Detect and reconcile stale `.ai` state against Git/source evidence
+- [x] Add automatic project identity/registration discovery
+- [x] Add context freshness and integrity checks
+- [x] Detect and reconcile stale `.ai` state against Git/source evidence
 - [ ] Add cross-AI bootstrap/recovery handshake
 - [ ] Persist AI-session handoff summaries with provenance
 - [ ] Add safe self-healing for missing derived context files
-- [ ] Define recovery precedence when ChatGPT memory, `.ai`, Git, and generated indexes disagree
+- [x] Define recovery precedence when ChatGPT memory, `.ai`, Git, and generated indexes disagree
 - [x] Add P11 contract verification and CI coverage
 - [ ] Prove recovery from a fresh AI/account context using repository-only evidence
+
+P11 identity, freshness/integrity, and safe derived-state reconciliation are implemented and covered by fresh primary CI evidence. Cross-AI handoff and fresh-account recovery remain open.
 
 ## Cross-cutting
 
@@ -179,6 +181,7 @@ Goal: make DevOS context portable, self-identifying, recoverable, and resistant 
 - [x] Development Task Controller integrated into the runtime/orchestration/verification path
 - [x] Durable context continuity work completed as P10
 - [x] P11 continuity/federation scope recorded
+- [x] P11 identity, integrity, and safe reconciliation gates verified by fresh CI
 
 ## Execution rule
 
