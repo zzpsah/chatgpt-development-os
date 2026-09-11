@@ -22,7 +22,7 @@ executions:
     purpose: implementation-focused engineering that delivers the smallest complete authorized change with appropriate verification
     write_allowed_by_stance: true
   FIX:
-    purpose: diagnose, repair, and verify an active failure
+    purpose: fix active failures by diagnosing, repairing, and verifying the smallest safe correction
     write_allowed_by_stance: true
   DEBUG:
     purpose: investigate and establish evidence before changing behavior
