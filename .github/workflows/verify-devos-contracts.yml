@@ -22,3 +22,6 @@ jobs:
 
       - name: Verify AI State Resolver
         run: python tools/verify-state-resolver.py
+
+      - name: Verify Verification / Test Engine
+        run: python tools/verify-verification-engine.py
