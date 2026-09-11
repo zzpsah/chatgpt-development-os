@@ -14,11 +14,13 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] End-to-end verification
 
 ### P1 — Human Language Execution Engine
-- [ ] Normalize natural language into engineering intents
-- [ ] Map intents to workflows
-- [ ] Safely combine multiple intents
-- [ ] Preserve authorization boundaries
-- [ ] Define verification expectations
+- [x] Normalize natural language into engineering intents
+- [x] Map intents to workflows
+- [x] Safely combine multiple intents
+- [x] Preserve authorization boundaries
+- [x] Define verification expectations
+- [x] Integrate routing and architecture documentation
+- [x] Contract verification harness
 
 ### P1 — Verification / Test Engine
 - [ ] Define verification levels and evidence model
@@ -59,7 +61,7 @@ This is the authoritative high-level implementation order for the Development OS
 - [ ] Git/source remains implementation authority
 - [ ] `STATE-INDEX.md` remains deterministic
 - [ ] DevOS tooling/workflows gain validation tests
-- [ ] README and architecture docs stay synchronized with implemented behavior
+- [x] README and architecture docs synchronized for the Human Language Execution Engine
 - [ ] This roadmap and Git/project state do not contradict each other
 
 ## Execution rule
