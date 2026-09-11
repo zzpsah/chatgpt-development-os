@@ -86,6 +86,15 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Evidence capture and safety boundaries
 - [x] Runtime workflow and verification harness
 
+### P6 — Host Execution Adapters
+- [x] Define host adapter contract
+- [x] Define capability discovery and honest availability states
+- [x] Define scoped filesystem, Git, verification, and GitHub/CI boundaries
+- [x] Define normalized execution evidence and failure semantics
+- [ ] Implement portable reference adapters
+- [ ] Execute real bounded operations through adapters
+- [ ] Add adapter integration tests and end-to-end runtime verification
+
 ## Cross-cutting
 
 - [x] `.ai` remains durable project-local memory
@@ -99,6 +108,7 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Agent Orchestration architecture, workflow, and validation synchronized
 - [x] Autonomous Development Loop architecture, workflow, and validation synchronized
 - [x] Executable Runtime architecture, workflow, and validation synchronized
+- [x] Host Adapter architecture and contract synchronized
 - [x] This roadmap and Git/project state do not contradict each other
 
 ## Execution rule
@@ -107,4 +117,8 @@ Complete the current milestone before advancing to the next milestone. Do not ma
 
 ## Next planned capability
 
-No next milestone is defined yet. P5 establishes the executable runtime contract; future capabilities should build on it without weakening authorization, security, verification, portability, or durable-state guarantees.
+### P6 — Host Execution Adapters
+
+P6 turns the runtime's capability boundary into real host integrations. The first reference implementation should prioritize read-only filesystem/Git inspection and explicitly scoped file changes, followed by verification execution and carefully gated remote operations.
+
+P6 must preserve the existing guarantees: no simulated execution, no implicit authorization, no secret persistence, bounded retries, checkpoint/resume, evidence-based verification, and Security Gate enforcement.
