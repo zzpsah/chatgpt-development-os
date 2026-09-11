@@ -23,6 +23,10 @@ require("core/development-task-controller.md", [
     "Security review",
     "Durable state persistence",
     "Final evidence-backed outcome",
+    "P11 repository-first recovery",
+    "P11 derived-context self-healing",
+    "provenance-aware handoff",
+    "repository revalidation",
     "COMPLETE",
     "BLOCKED",
     "ESCALATED",
@@ -34,10 +38,14 @@ require("workflows/development-task.md", [
     "Development Task Workflow v1",
     "Normalize the user's request",
     "Load durable context",
+    "P11 repository-first recovery",
+    "context freshness/integrity",
     "acceptance criteria",
     "execution budget",
     "capability and authorization",
     "actual changes and evidence",
+    "P11 self-healing",
+    "repository revalidation",
     "Run applicable verification",
     "Security Gate",
     "COMPLETE",
@@ -47,3 +55,4 @@ require("workflows/development-task.md", [
 ])
 
 print("Development Task Controller v1 contract: PASS")
+print("P11 recovery/self-healing lifecycle integration: PASS")
