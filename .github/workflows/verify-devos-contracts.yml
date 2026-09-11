@@ -43,3 +43,6 @@ jobs:
 
       - name: Verify Autonomous Development Loop
         run: python tools/verify-autonomous-loop.py
+
+      - name: Verify DevOS Stance Codes and DESI Style
+        run: python tools/verify-stance-codes.py
