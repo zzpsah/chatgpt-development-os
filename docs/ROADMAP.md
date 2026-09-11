@@ -130,7 +130,18 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Wire P9 verification into CI
 - [x] Verify current repository HEAD through the primary Development OS verification workflows
 
-P9 is implemented and verified at the current repository HEAD. Higher-impact remote mutations from P8 remain separately incomplete and must not be inferred as part of P9.
+P9 is implemented and verified. Higher-impact remote mutations from P8 remain separately incomplete.
+
+### P10 — Context Continuity & Recovery v1 — IN PROGRESS
+- [x] Define repository-first continuity and recovery rules
+- [x] Preserve an engineering-relevant chat recovery snapshot
+- [x] Add durable context-sync contract verification
+- [x] Make configurable meaningful-path patterns effective in context-sync
+- [x] Wire context-sync verification into primary CI
+- [ ] Verify the repaired reusable context-sync workflow through an actual project-side caller run
+- [ ] Verify generated `STATE-INDEX.md` and `CHANGELOG.md` synchronization end-to-end
+- [ ] Document and validate future-session persistence expectations
+- [ ] Complete P10 with fresh CI and context-sync evidence
 
 ## Cross-cutting
 
@@ -151,7 +162,7 @@ P9 is implemented and verified at the current repository HEAD. Higher-impact rem
 - [x] External Integration Adapter connected to the Executable Runtime for read-only GitHub operations
 - [x] Remote Mutation Controls connected to the Executable Runtime for controlled GitHub file updates
 - [x] Development Task Controller integrated into the runtime/orchestration/verification path
-- [x] This roadmap and Git/project state do not contradict each other
+- [x] Durable context continuity work is explicitly tracked as P10
 
 ## Execution rule
 
@@ -159,6 +170,6 @@ Complete the current milestone before advancing to the next milestone. Do not ma
 
 ## Current milestone
 
-### P9 — Development Task Controller v1 — COMPLETED
+### P10 — Context Continuity & Recovery v1 — IN PROGRESS
 
-P9 is implemented in the repository and the current `main` HEAD has completed successfully in the primary DevOS verification workflows. No P10 milestone is currently established. The next milestone must be explicitly defined from repository evidence after P9 reconciliation; do not infer it from numbering alone.
+P10 is the evidence-driven next stage after P9. It is not an assumption based only on numbering: it is established from the post-P9 recovery incident and the documented context-sync verification gap. Higher-impact P8 remote mutations remain independently incomplete.
