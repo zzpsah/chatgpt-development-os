@@ -12,7 +12,7 @@ on:
       meaningful_path_patterns:
         required: false
         type: string
-        default: 'src/**,app/**,pages/**,components/**,api/**,supabase/**,migrations/**,prisma/**,package.json,pyproject.toml,requirements.txt,Cargo.toml,go.mod,Dockerfile,.github/workflows/**'
+        default: 'src/**,app/**,pages/**,components/**,api/**,lib/**,public/**,supabase/**,migrations/**,prisma/**,db/**,database/**,package.json,package-lock.json,pnpm-lock.yaml,yarn.lock,pyproject.toml,requirements.txt,poetry.lock,Cargo.toml,Cargo.lock,go.mod,go.sum,composer.json,pom.xml,build.gradle,Dockerfile,*.csproj,*.sln,.github/workflows/**'
     permissions:
       contents: write
 
@@ -53,12 +53,17 @@ jobs:
           fi
 
           meaningful=false
+          IFS=',' read -r -a meaningful_patterns <<< "$MEANINGFUL_PATTERNS"
           while IFS= read -r file; do
             [ -z "$file" ] && continue
-            case "$file" in
-              src/*|app/*|pages/*|components/*|api/*|lib/*|public/*|supabase/*|migrations/*|prisma/*|db/*|database/*|package.json|package-lock.json|pnpm-lock.yaml|yarn.lock|pyproject.toml|requirements.txt|poetry.lock|Cargo.toml|Cargo.lock|go.mod|go.sum|composer.json|pom.xml|build.gradle|Dockerfile|*.csproj|*.sln|.github/workflows/*)
-                meaningful=true; break;;
-            esac
+            for pattern in "${meaningful_patterns[@]}"; do
+              pattern="${pattern#${pattern%%[![:space:]]*}}"
+              pattern="${pattern%${pattern##*[![:space:]]}}"
+              [ -z "$pattern" ] && continue
+              case "$file" in
+                $pattern) meaningful=true; break 2;;
+              esac
+            done
           done <<< "$changed_files"
 
           [ -f "$CHANGELOG" ] || printf '%s\n' '# Project Change Log' '' 'Automatically maintained by Development OS.' '' > "$CHANGELOG"
