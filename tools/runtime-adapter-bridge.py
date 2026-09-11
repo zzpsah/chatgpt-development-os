@@ -30,28 +30,53 @@ def _github_execute(request: dict[str, Any], client: Any) -> dict[str, Any]:
     operation = request["operation"]
     repository = request["target"]
     scope = request["scope"]
+    authorization = request.get("authorization", "NOT_REQUIRED")
 
     if github_adapter.capability_status(operation) != "AVAILABLE":
         return {"status": "UNAVAILABLE", "reason": "GitHub capability is not available"}
     if not isinstance(repository, str) or not repository or repository.count("/") != 1:
         return {"status": "BLOCKED", "reason": "GitHub target must be owner/name"}
-    if request.get("authorization", "NOT_REQUIRED") != "NOT_REQUIRED":
-        return {"status": "BLOCKED", "reason": "read-only GitHub inspection requires NOT_REQUIRED authorization"}
 
-    if operation == "github.inspect.repository":
-        if scope != "repository-read":
-            return {"status": "BLOCKED", "reason": "repository inspection requires scope repository-read"}
-        result = github_adapter.inspect_repository(client, repository)
-    elif operation == "github.inspect.commit":
-        if not isinstance(scope, str) or not scope or "/" in scope:
-            return {"status": "BLOCKED", "reason": "commit scope must be a commit identifier"}
-        result = github_adapter.inspect_commit(client, repository, scope)
-    elif operation == "github.inspect.workflow_run":
-        try:
-            run_id = int(scope)
-        except (TypeError, ValueError):
-            return {"status": "BLOCKED", "reason": "workflow-run scope must be a positive numeric run id"}
-        result = github_adapter.inspect_workflow_run(client, repository, run_id)
+    if operation in github_adapter.READ_CAPABILITIES:
+        if authorization != "NOT_REQUIRED":
+            return {"status": "BLOCKED", "reason": "read-only GitHub inspection requires NOT_REQUIRED authorization"}
+        if operation == "github.inspect.repository":
+            if scope != "repository-read":
+                return {"status": "BLOCKED", "reason": "repository inspection requires scope repository-read"}
+            result = github_adapter.inspect_repository(client, repository)
+        elif operation == "github.inspect.commit":
+            if not isinstance(scope, str) or not scope or "/" in scope:
+                return {"status": "BLOCKED", "reason": "commit scope must be a commit identifier"}
+            result = github_adapter.inspect_commit(client, repository, scope)
+        elif operation == "github.inspect.workflow_run":
+            try:
+                run_id = int(scope)
+            except (TypeError, ValueError):
+                return {"status": "BLOCKED", "reason": "workflow-run scope must be a positive numeric run id"}
+            result = github_adapter.inspect_workflow_run(client, repository, run_id)
+        else:
+            return {"status": "UNAVAILABLE", "reason": "operation not supported by external bridge"}
+    elif operation in github_adapter.MUTATION_CAPABILITIES:
+        if authorization != "ALREADY_GRANTED":
+            return {"status": "BLOCKED", "reason": "explicit authorization required for remote mutation"}
+        if request.get("security_gate") != "PASS":
+            return {"status": "BLOCKED", "reason": "Security Gate PASS is required for remote mutation"}
+        if not isinstance(request.get("content"), str):
+            return {"status": "BLOCKED", "reason": "file content is required"}
+        if not isinstance(request.get("message"), str) or not request["message"]:
+            return {"status": "BLOCKED", "reason": "commit message is required"}
+        expected_sha = request.get("expected_sha")
+        if not isinstance(expected_sha, str) or not expected_sha:
+            return {"status": "BLOCKED", "reason": "expected current file SHA is required"}
+        result = github_adapter.mutate_file(
+            client,
+            repository,
+            scope,
+            request["content"],
+            request["message"],
+            expected_sha,
+            authorization,
+        )
     else:
         return {"status": "UNAVAILABLE", "reason": "operation not supported by external bridge"}
 
