@@ -23,8 +23,7 @@ REQUIRED_FILES = [
 
 
 def read(rel):
-    path = ROOT / rel
-    return path.read_text(encoding="utf-8")
+    return (ROOT / rel).read_text(encoding="utf-8")
 
 
 def check(condition, message):
@@ -77,8 +76,10 @@ def main():
     ]
 
     integration_checks = [
-        (contains(router, "No guessing") and contains(router, "project"), "project routing rejects guessing and establishes project context"),
-        (contains(agents, "verification") and contains(agents, "evidence"), "AGENTS completion standard requires evidence-backed verification"),
+        (contains(router, "instead of guessing") and contains(router, "project-local `.ai/` context"),
+         "project routing rejects guessing and keeps project-local context authoritative"),
+        (contains(agents, "verification performed") and contains(agents, "tested facts"),
+         "AGENTS completion standard requires evidence-backed verification"),
         (re.search(r"\[x\]\s+Integrate with resume workflow", roadmap, re.I) is not None,
          "roadmap marks resume integration complete"),
         (re.search(r"\[ \]\s+End-to-end verification", roadmap, re.I) is not None,
