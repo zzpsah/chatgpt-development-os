@@ -69,6 +69,16 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Orchestration workflow
 - [x] Verification harness and CI integration
 
+### P4 — Autonomous Development Loop
+- [x] Define autonomous-loop lifecycle and bounded iteration
+- [x] Define stop/continue/escalation conditions
+- [x] Connect orchestration outputs to executable workflow steps
+- [x] Define capability checks and honest delegation when a host lacks tools
+- [x] Define checkpointing and resumability between iterations
+- [x] Define approval gates for high-risk actions
+- [x] Define end-to-end evidence aggregation
+- [x] Build contract verification harness and CI integration
+
 ## Cross-cutting
 
 - [x] `.ai` remains durable project-local memory
@@ -80,6 +90,7 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Multi-AI portability architecture and documentation synchronized
 - [x] Auto-Onboarding architecture, tooling, and validation synchronized
 - [x] Agent Orchestration architecture, workflow, and validation synchronized
+- [x] Autonomous Development Loop architecture, workflow, and validation synchronized
 - [x] This roadmap and Git/project state do not contradict each other
 
 ## Execution rule
@@ -88,19 +99,4 @@ Complete the current milestone before advancing to the next milestone. Do not ma
 
 ## Next planned capability
 
-### P4 — Autonomous Development Loop
-
-The next phase will turn the existing contracts into a controlled end-to-end execution loop. It will define how DevOS repeatedly moves from objective → state resolution → planning/orchestration → authorized implementation → verification → review → persistence, while stopping safely when authority, evidence, or required capabilities are missing.
-
-Planned scope:
-
-- [ ] Define autonomous-loop lifecycle and bounded iteration
-- [ ] Define stop/continue/escalation conditions
-- [ ] Connect orchestration outputs to executable workflow steps
-- [ ] Define capability checks and honest delegation when a host lacks tools
-- [ ] Define checkpointing and resumability between iterations
-- [ ] Define approval gates for high-risk actions
-- [ ] Define end-to-end evidence aggregation
-- [ ] Build contract verification harness and CI integration
-
-P4 does **not** mean unrestricted autonomous deployment or removal of user authorization. The existing Security Gate, Verification / Test Engine, project-local `.ai` context, and Git/source authority remain in force.
+No next milestone is defined yet. P4 establishes the bounded autonomous execution contract; future capabilities should build on it without weakening authorization, security, verification, portability, or durable-state guarantees.
