@@ -11,12 +11,62 @@ import importlib.util
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location("reference_host", ROOT / "adapters" / "reference-host.py")
-adapter = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(adapter)
 
 
-def execute(request: dict[str, Any], project_root: Path) -> dict[str, Any]:
+def _load_module(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load {name}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+adapter = _load_module("reference_host", ROOT / "adapters" / "reference-host.py")
+github_adapter = _load_module("github_reference", ROOT / "adapters" / "github-reference.py")
+
+
+def _github_execute(request: dict[str, Any], client: Any) -> dict[str, Any]:
+    operation = request["operation"]
+    repository = request["target"]
+    scope = request["scope"]
+
+    if github_adapter.capability_status(operation) != "AVAILABLE":
+        return {"status": "UNAVAILABLE", "reason": "GitHub capability is not available"}
+    if not isinstance(repository, str) or not repository or repository.count("/") != 1:
+        return {"status": "BLOCKED", "reason": "GitHub target must be owner/name"}
+    if request.get("authorization", "NOT_REQUIRED") != "NOT_REQUIRED":
+        return {"status": "BLOCKED", "reason": "read-only GitHub inspection requires NOT_REQUIRED authorization"}
+
+    if operation == "github.inspect.repository":
+        if scope != "repository-read":
+            return {"status": "BLOCKED", "reason": "repository inspection requires scope repository-read"}
+        result = github_adapter.inspect_repository(client, repository)
+    elif operation == "github.inspect.commit":
+        if not isinstance(scope, str) or not scope or "/" in scope:
+            return {"status": "BLOCKED", "reason": "commit scope must be a commit identifier"}
+        result = github_adapter.inspect_commit(client, repository, scope)
+    elif operation == "github.inspect.workflow_run":
+        try:
+            run_id = int(scope)
+        except (TypeError, ValueError):
+            return {"status": "BLOCKED", "reason": "workflow-run scope must be a positive numeric run id"}
+        result = github_adapter.inspect_workflow_run(client, repository, run_id)
+    else:
+        return {"status": "UNAVAILABLE", "reason": "operation not supported by external bridge"}
+
+    return {
+        "status": result.get("status", "FAILED"),
+        "provider": "github",
+        "operation": operation,
+        "target": repository,
+        "scope": scope,
+        "evidence": [result] if result.get("status") == "SUCCESS" else [],
+        "provider_result": result,
+    }
+
+
+def execute(request: dict[str, Any], project_root: Path, github_client: Any = None) -> dict[str, Any]:
     operation = request.get("operation")
     target = request.get("target")
     scope = request.get("scope")
@@ -24,6 +74,11 @@ def execute(request: dict[str, Any], project_root: Path) -> dict[str, Any]:
 
     if not operation or target is None or not scope:
         return {"status": "BLOCKED", "reason": "operation, target, and scope are required"}
+
+    if operation.startswith("github."):
+        if github_client is None:
+            return {"status": "UNAVAILABLE", "reason": "GitHub provider client is not supplied by the host"}
+        return _github_execute(request, github_client)
 
     if operation == "filesystem.read":
         return adapter.read_text(project_root, target)
