@@ -14,7 +14,10 @@ with tempfile.TemporaryDirectory() as tmp:
     assert module.capability_status("filesystem.read") == "AVAILABLE"
     assert module.capability_status("unknown.capability") == "MISSING"
 
-    result = module.write_text(root, "nested/example.txt", "hello")
+    blocked = module.write_text(root, "nested/example.txt", "hello", "NOT_GRANTED")
+    assert blocked["status"] == "BLOCKED"
+
+    result = module.write_text(root, "nested/example.txt", "hello", "ALREADY_GRANTED")
     assert result["status"] == "SUCCESS"
     assert module.read_text(root, "nested/example.txt")["content"] == "hello"
 
