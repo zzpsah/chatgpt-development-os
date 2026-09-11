@@ -13,9 +13,9 @@ This profile maps supported GitHub operations to the External Integration Adapte
 
 These operations collect actual GitHub responses as evidence.
 
-## Controlled mutation capabilities
+## Mutating capabilities
 
-P8 currently enables only:
+P8 currently enables only the controlled mutation:
 
 - `github.mutate.file`
 
