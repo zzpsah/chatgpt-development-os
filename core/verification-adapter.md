@@ -63,7 +63,7 @@ evidence:
   limitations: []
 ```
 
-The evidence describes what actually ran. A planned command or expected result is not evidence. The adapter must not invent command output or claim a check ran when it did not.
+The evidence describes what actually ran. A planned command or expected result is not evidence. The adapter must not invent command output or claim a check ran when it did not. It must also **do not invent** verification results when execution is unavailable or blocked.
 
 ## Runtime integration
 
