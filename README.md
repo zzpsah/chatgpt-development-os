@@ -4,7 +4,7 @@ A portable, human-language development operating system for working across proje
 
 ## Core idea
 
-The Development OS defines **how AI develops software**. Each project owns its own durable `.ai/` memory. The project must not depend on ChatGPT Memory, a particular AI account, or a particular GitHub account.
+The Development OS defines **how AI develops software**. Each project owns its own durable `.ai` memory. The project must not depend on ChatGPT Memory, a particular AI account, or a particular GitHub account.
 
 **Understand → Inspect → Plan → Implement → Verify → Review → Security → Document → Persist**
 
@@ -126,6 +126,34 @@ P4 is **bounded autonomy**, not unrestricted autonomous deployment or permission
 
 See [`core/autonomous-development-loop.md`](core/autonomous-development-loop.md) and [`workflows/autonomous-loop.md`](workflows/autonomous-loop.md).
 
+## Executable Development Runtime
+
+P5 adds the controlled execution boundary beneath the autonomous loop. The runtime receives an already-authorized work unit, checks capabilities and approval requirements, creates pre/post checkpoints, performs only the bounded action through a supported host/tool adapter, captures actual execution evidence, invokes applicable verification, and returns a factual outcome.
+
+```text
+Authorized work unit
+      ↓
+Capability check
+      ↓
+Authorization / Security Gate
+      ↓
+Pre-action checkpoint
+      ↓
+Execute bounded action
+      ↓
+Capture actual evidence
+      ↓
+Post-action checkpoint
+      ↓
+Verification
+      ↓
+Persist + return outcome
+```
+
+The runtime separates **AI decision from execution evidence**. A plan is not proof that an action happened. Missing capabilities are reported or explicitly delegated; they are never simulated. Resume compares current repository state with the checkpoint and never blindly replays an uncertain action.
+
+See [`core/execution-runtime.md`](core/execution-runtime.md) and [`workflows/execution-runtime.md`](workflows/execution-runtime.md).
+
 ## Verification / Test Engine
 
 The Verification / Test Engine makes verification an evidence-based stage rather than an assumption. It:
@@ -165,12 +193,12 @@ Full onboarding guidance: [`docs/NEW-AI-ONBOARDING.md`](docs/NEW-AI-ONBOARDING.m
 
 ## Flow and architecture
 
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the Development OS flow, layered architecture, portable-context model, new-AI onboarding sequence, agent orchestration, autonomous development loop, and automation boundaries.
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the Development OS flow, layered architecture, portable-context model, new-AI onboarding sequence, agent orchestration, autonomous development loop, executable runtime, and automation boundaries.
 
 ## Architecture
 
 - **Development OS** — reusable methodology, workflows, roles, rules, and adapters.
-- **Project `.ai/`** — authoritative portable project context.
+- **Project `.ai`** — authoritative portable project context.
 - **Source code** — actual implementation.
 - **Git history** — durable change history when version control is used.
 - **AI account memory** — optional personal/contextual assistance, never the sole project memory.
@@ -187,6 +215,7 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the Development OS flow, 
 - Keep project-specific knowledge separate from global rules.
 - Do not watch entire drives by default; configure dedicated project roots.
 - Autonomous looping must remain bounded and must stop or escalate when authority, capability, evidence, or security conditions require it.
+- The executable runtime must not claim execution or external results without actual host evidence.
 
 ## Repository structure
 
@@ -210,4 +239,4 @@ chatgpt-development-os/
 
 ## Version
 
-0.9 — bounded autonomous development loop, agent orchestration, auto-onboarding, multi-AI portability, and evidence-based development contracts.
+0.10 — executable development runtime, bounded autonomous loop, agent orchestration, auto-onboarding, multi-AI portability, and evidence-based development contracts.
