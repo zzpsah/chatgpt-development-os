@@ -23,11 +23,12 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Contract verification harness
 
 ### P1 — Verification / Test Engine
-- [ ] Define verification levels and evidence model
-- [ ] Detect applicable tests/checks
-- [ ] Execute or delegate supported checks
-- [ ] Honest VERIFIED / PARTIAL / UNVERIFIED / FAILED reporting
-- [ ] Prevent unsupported correctness claims
+- [x] Define verification levels and evidence model
+- [x] Detect applicable tests/checks
+- [x] Execute or delegate supported checks
+- [x] Honest VERIFIED / PARTIAL / UNVERIFIED / FAILED reporting
+- [x] Prevent unsupported correctness claims
+- [x] Integrate verification workflow and CI contract harness
 
 ### P1 — Security Gate
 - [ ] Define security review stages
