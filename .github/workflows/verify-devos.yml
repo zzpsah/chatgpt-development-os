@@ -309,3 +309,16 @@ jobs:
           python-version: '3.x'
       - name: Verify stance-code entry point
         run: python tools/verify-stance-codes.py
+
+  fresh-ai-recovery:
+    name: Verify Repository-Only Fresh-AI Recovery v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Simulate fresh-AI repository-only recovery
+        run: python tools/test-fresh-ai-recovery.py
