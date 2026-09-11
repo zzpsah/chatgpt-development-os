@@ -55,11 +55,11 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Repository-only recovery by another AI
 
 ### P2 — Auto-Onboarding
-- [ ] Existing-repository onboarding flow
-- [ ] Onboarding script/workflow
-- [ ] Context validation
-- [ ] Preserve existing context; no destructive overwrite
-- [ ] GitHub-side versus local automation boundaries
+- [x] Existing-repository onboarding flow
+- [x] Onboarding script/workflow
+- [x] Context validation
+- [x] Preserve existing context; no destructive overwrite
+- [x] GitHub-side versus local automation boundaries
 
 ## Cross-cutting
 
@@ -70,6 +70,7 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] README and architecture docs synchronized for the Human Language Execution Engine
 - [x] Teaching Engine architecture and routing synchronized
 - [x] Multi-AI portability architecture and documentation synchronized
+- [x] Auto-Onboarding architecture, tooling, and validation synchronized
 - [x] This roadmap and Git/project state do not contradict each other
 
 ## Execution rule
