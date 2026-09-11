@@ -73,3 +73,18 @@ jobs:
 
       - name: Verify Security Gate contract
         run: python tools/verify-security-gate.py
+
+  teaching-engine:
+    name: Verify Teaching Engine v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Verify Teaching Engine contract
+        run: python tools/verify-teaching-engine.py
