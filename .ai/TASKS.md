@@ -1,18 +1,15 @@
 # DevOS Tasks
 
 ## Active
-- P11: persist AI-session handoff summaries with provenance.
-- P11: prove repository-only recovery from a fresh AI/account context.
-- P11: fresh-verify the registry-driven stance/style contract after the latest verifier and alias fixes.
-- P11: fresh-verify self-healing, recovery precedence, and the final integrated CI workflow on the latest HEAD.
+- P12: define Operational Intelligence architecture and first dependency-aware task graph slice.
 
 ## Planned
-- P11: integrate self-healing and recovery precedence into the broader DevOS task lifecycle.
-- P11: complete final fresh-AI/account repository-only recovery proof.
+- P12: dependency-aware prioritization and checkpoint intelligence.
+- P12: failure classification and evidence collection improvements.
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
 
 ## Blocked
-- None recorded for P10.
+- None.
 
 ## Completed recently
 - P9 Development Task Controller v1 implemented and verified.
@@ -30,10 +27,13 @@
 - P11 context freshness/integrity checker and contract verifier implemented and verified by fresh CI.
 - P11 safe derived-context reconciliation guard and executable cases implemented and verified by fresh CI.
 - P11 cross-AI bootstrap/recovery handshake specification and vendor-neutral handoff generator implemented and verified by fresh CI.
-- P11 composable stance/style registry, parser, DESI profile, and CI contract added.
-- P11 bounded deterministic derived-context self-healer and contract verifier added.
-- P11 isolated-Git self-healing execution test added and wired into primary CI.
-- P11 repository-first recovery precedence resolver, verifier, and scenario tests added and wired into primary CI.
+- P11 composable stance/style registry, parser, DESI profile, and CI contract added and freshly verified.
+- P11 bounded deterministic derived-context self-healer and contract verifier added and freshly verified.
+- P11 isolated-Git self-healing execution test added and freshly verified.
+- P11 repository-first recovery precedence resolver, verifier, and scenarios added and freshly verified.
+- P11 recovery/revalidation and bounded self-healing integrated into the Development Task Controller lifecycle.
+- P11 DESI/GOD stance contracts aligned with executable verification semantics.
+- P11 fresh-AI repository-only recovery proof passed from repository evidence without account memory.
 
 ## Verification note
-P10 is complete based on fresh primary CI evidence plus successful external-project reusable-workflow execution and durable context generation. P11 identity, integrity, reconciliation, and cross-AI handoff foundations are verified by fresh primary CI. The newest stance/style, self-healing, and recovery-precedence commits are implemented but still require a fresh fully green run on the latest HEAD before P11 is closed.
+P11 completion criteria are satisfied by fresh primary CI run 290 on commit `e701f5fa0a6dce1f0f4ab3ad1cb260de2f55853f` (all jobs successful), plus fresh repository-only recovery, self-healing, recovery-precedence, handoff, and stance verification. P11 is closed. P12 is now the active milestone.
