@@ -232,3 +232,16 @@ jobs:
           python-version: '3.x'
       - name: Verify project manifest compatibility contract
         run: python tools/verify-project-manifest.py
+
+  project-identity:
+    name: Verify DevOS Project Identity Discovery v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify project identity discovery contract
+        run: python tools/verify-project-identity.py
