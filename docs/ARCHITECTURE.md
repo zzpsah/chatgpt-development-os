@@ -54,7 +54,8 @@ flowchart LR
     V --> GH[Git / CI / GitHub / test providers]
     GH --> PM
     OS[Development OS] --> R
-    OS -. optional .-> AI[AI coding agent: ChatGPT / Codex / Claude / Gemini / Cursor]
+    OS -.-> AD[AI Adapter Contract]
+    AD -.-> AI[ChatGPT / Codex / Claude / Gemini / Cursor / other AI]
     OS -. optional .-> DB[Supabase / APIs / other infrastructure]
 ```
 
@@ -68,6 +69,7 @@ flowchart LR
 | AI State Resolver | Interpret repository evidence and unfinished work | Current-state reasoning |
 | Teaching Engine | Present concepts, explanations, examples, and practice safely | Learning/presentation behavior |
 | Development OS | How work should be performed | Workflow, safety, routing |
+| AI Adapter Contract | Connect a host AI to portable DevOS capabilities | Host integration boundary |
 | Verification / Test Engine | Select checks, execute/delegate them, classify evidence | Verification status and evidence |
 | Security Gate | Evaluate security-sensitive scope and boundaries | Security review decision/evidence |
 | `.ai/` | What this project is and its durable state | Project context |
@@ -103,6 +105,7 @@ An AI entering a project for the first time should not need previous chat histor
 sequenceDiagram
     participant U as User
     participant A as New AI
+    participant AD as Adapter
     participant R as Project Router
     participant E as Language Engine
     participant G as Project repository
@@ -112,7 +115,8 @@ sequenceDiagram
     participant V as Verification Engine
 
     U->>A: "Continue / work on this project"
-    A->>R: Resolve project
+    A->>AD: Use host capabilities
+    AD->>R: Resolve project
     R->>G: Discover AGENTS.md
     A->>E: Normalize natural-language intent
     E->>C: Load durable context
@@ -128,7 +132,15 @@ sequenceDiagram
     A->>C: Persist meaningful state changes
 ```
 
-## 5. Automation boundary
+## 5. Multi-AI portability boundary
+
+The adapter is an integration layer, not a second memory system. Host-specific capabilities such as terminal access, browser automation, or build execution may vary. The adapter must expose those capabilities honestly and delegate when unavailable.
+
+The portable contract requires every compatible AI to be able to bootstrap from the repository, inspect implementation, resolve state, follow workflows, respect authorization/security gates, verify claims, and persist meaningful context.
+
+See [`adapters/adapter-contract.md`](../adapters/adapter-contract.md) and [`docs/MULTI-AI-PORTABILITY.md`](MULTI-AI-PORTABILITY.md).
+
+## 6. Automation boundary
 
 The GitHub repository can provide the portable `.ai/` contract and automation scripts. A local computer cannot be silently controlled by a cloud AI session. Therefore local filesystem watching is an optional resident worker concern, not a project-memory dependency.
 
@@ -136,7 +148,7 @@ The important invariant is:
 
 > **The project remains usable by a new AI even if the original AI account, chat history, or local worker is unavailable.**
 
-## 6. Safety boundaries
+## 7. Safety boundaries
 
 - `.ai/` must never contain secrets merely to preserve context.
 - Existing project context must not be overwritten blindly.
