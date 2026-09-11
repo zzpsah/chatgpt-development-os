@@ -44,7 +44,7 @@ def main() -> None:
         require(alias in text.lower(), f"human alias missing: {alias}")
 
     for invariant in (
-        "does not replace project recovery",
+        "not a substitute for project context",
         "never grants permission",
         "safety",
         "authorization",
