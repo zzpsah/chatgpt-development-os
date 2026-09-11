@@ -36,6 +36,9 @@ node:
   evidence: []
   checkpoint: null
   next_action: specific-action
+  effort: non-negative-integer
+  age_days: non-negative-integer
+  deadline_days: integer-or-null
 ```
 
 Dependencies are directed edges from prerequisites to dependent work. A task is `READY` only when its required dependencies are satisfied and its authorization/capability conditions permit execution.
@@ -53,29 +56,32 @@ The engine must:
 
 ## Priority intelligence
 
-Priority is a decision-support signal, not authority. A deterministic baseline may consider:
+Priority is a decision-support signal, not authority. The deterministic baseline scores unfinished work from explicit priority plus bounded operational signals:
 
-- explicit user/project priority;
-- dependency criticality;
-- blocked dependents;
-- verification/security deadlines;
+- explicit user/project priority (dominant baseline);
+- dependency criticality, measured by unfinished direct dependents;
+- blocked/failed status penalty;
 - age/staleness;
-- estimated bounded effort.
+- deadline urgency when supplied;
+- estimated bounded effort penalty when supplied.
 
-The engine must expose the reasons behind a ranking and must not silently change user-defined priority.
+The engine exposes each scoring reason. It never silently changes the stored user-defined priority, and a ranking never authorizes execution.
 
 ## Checkpoint intelligence
 
-A checkpoint signal identifies when the controller should persist or revalidate state. At minimum it should recognize:
+A checkpoint signal identifies when the controller should persist or revalidate state. Recognized events are:
 
-- meaningful repository changes;
-- completion/failure of a work unit;
-- transition into or out of a blocked state;
-- authorization boundary changes;
-- verification/security results;
-- session/handoff boundaries.
+- `REPOSITORY_CHANGE`
+- `WORK_UNIT_COMPLETE`
+- `WORK_UNIT_FAILED`
+- `BLOCKED_TRANSITION`
+- `AUTHORIZATION_CHANGE`
+- `VERIFICATION_RESULT`
+- `SECURITY_RESULT`
+- `SESSION_BOUNDARY`
+- `HANDOFF_BOUNDARY`
 
-Checkpoint recommendations do not authorize an action; they preserve recoverability.
+Unknown events are surfaced as non-checkpoint signals rather than guessed. Checkpoint recommendations do not authorize an action; they preserve recoverability.
 
 ## Failure classification
 
@@ -107,6 +113,10 @@ Operational Intelligence may recommend, rank, classify, and request checkpointin
 - silently mutate semantic project state;
 - convert a recommendation into execution without the existing controller/runtime authorities.
 
-## P12 first slice
+## P12 implementation slices
 
-The first implementation slice is intentionally narrow: deterministic task graph construction and readiness analysis from the existing Development Task Controller task model. It should be independently testable before adding adaptive ranking or broader automation.
+1. **Graph/readiness v1:** deterministic task graph construction, missing-reference validation, cycle detection, and readiness analysis.
+2. **Prioritization/checkpoints v2:** deterministic dependency-aware ranking with explicit reasons and checkpoint event signals.
+3. **Next:** failure classification/evidence improvements, followed by controller integration that consumes recommendations as advisory signals only.
+
+The implementation remains independently testable before broader automation is added.
