@@ -10,9 +10,10 @@ Use when the user asks to continue, resume, pick up previous work, or asks what 
 6. Inspect actual source, tests, configuration, deployment files, and Git state to validate important semantic assumptions. The resolver does not replace source inspection.
 7. Reconstruct the current objective, verification status, and highest-priority unfinished work.
 8. Continue the recommended unfinished work when the user's request authorizes continuation. Destructive, production-impacting, security-sensitive, irreversible, or data-affecting actions still require explicit authorization.
-9. Implement the smallest appropriate change and perform the applicable verification.
-10. Persist meaningful semantic progress in the project's `.ai` context, including tasks, decisions, current state, and session evidence where appropriate.
-11. Allow deterministic project automation to update generated state such as `STATE-INDEX.md` and `CHANGELOG.md` from repository evidence.
+9. Implement the smallest appropriate change.
+10. Run the Verification / Test Engine (`core/verification-engine.md`) to detect and perform or delegate applicable verification.
+11. Persist meaningful semantic progress in the project's `.ai` context, including tasks, decisions, current state, and session evidence where appropriate.
+12. Allow deterministic project automation to update generated state such as `STATE-INDEX.md` and `CHANGELOG.md` from repository evidence.
 
 ## Resolver flow
 
@@ -40,6 +41,24 @@ Recommended action
 Inspect source → Implement → Verify → Persist
 ```
 
+## Verification handoff
+
+```text
+Implementation complete
+    ↓
+Verification Engine
+    ↓
+Applicable checks
+    ↓
+Execute / delegate
+    ↓
+Evidence
+    ↓
+VERIFIED / PARTIAL / UNVERIFIED / FAILED
+```
+
+Never treat the absence of an error, an unrun test, or an unchanged status file as proof of correctness.
+
 ## Safety and evidence
 
 - Do not guess the project when multiple plausible projects exist.
@@ -49,4 +68,4 @@ Inspect source → Implement → Verify → Persist
 - Keep facts, likely interpretations, and unknowns separate.
 - Do not expose secrets, tokens, passwords, private keys, session cookies, or unnecessary personal/student data.
 - Do not convert emotional language into destructive authority.
-- Preserve the distinction between recommendation and execution.
+- Preserve the distinction between recommendation, execution, and verification.
