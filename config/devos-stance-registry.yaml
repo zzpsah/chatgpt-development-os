@@ -10,7 +10,7 @@ executions:
     purpose: recover state and continue the highest-priority authorized unfinished work
     write_allowed_by_stance: true
   GOD:
-    purpose: maximize routine engineering autonomy within existing authorization, security, scope, verification, and safety boundaries
+    purpose: maximum routine engineering autonomy within existing authorization, security, scope, verification, and safety boundaries
     write_allowed_by_stance: true
     escalation_required_for:
       - destructive
