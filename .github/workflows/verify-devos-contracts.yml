@@ -30,6 +30,9 @@ jobs:
       - name: Verify Documentation Integrity
         run: python tools/verify-documentation-integrity.py
 
+      - name: Verify DevOS Portable Memory Bootstrap
+        run: python tools/test-devos-bootstrap.py
+
       - name: Verify Human Language Execution Engine
         run: python tools/verify-human-language-engine.py
 
