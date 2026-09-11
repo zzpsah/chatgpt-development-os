@@ -20,12 +20,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-
       - name: Verify human-language execution contract
         run: python tools/verify-human-language-engine.py
 
@@ -35,12 +33,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-
       - name: Verify resolver contract and integration
         run: python tools/verify-state-resolver.py
 
@@ -50,12 +46,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-
       - name: Verify verification engine contract
         run: python tools/verify-verification-engine.py
 
@@ -65,12 +59,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-
       - name: Verify Security Gate contract
         run: python tools/verify-security-gate.py
 
@@ -80,11 +72,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-
       - name: Verify Teaching Engine contract
         run: python tools/verify-teaching-engine.py
+
+  multi-ai-portability:
+    name: Verify Multi-AI Portability v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify Multi-AI portability contract
+        run: python tools/verify-multi-ai-portability.py
