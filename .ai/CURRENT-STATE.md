@@ -31,6 +31,8 @@ The repository contains the DevOS architecture through P10 plus the P11 federati
 16. Context Continuity & Recovery (P10)
 17. DevOS Federation & Self-Healing Context (P11, in progress)
 18. Composable stance + communication-style layer (`DEVOS::<STANCE>::<STYLE>`)
+19. Deterministic derived-context self-healing layer
+20. Repository-first recovery precedence resolver
 
 ## P8 status
 
@@ -81,9 +83,14 @@ Implemented in P11 so far:
 - identity discovery is non-destructive by default and never modifies application source
 - context freshness/integrity detection and CI verification
 - safe derived-context reconciliation guard and executable CI cases
+- deterministic derived-context self-healer at `tools/self-heal-derived-context.py`
+- self-healing contract verifier and isolated-Git executable test
 - cross-AI bootstrap/recovery handshake and vendor-neutral handoff packet generator
+- provenance-aware handoff contract fields
 - composable stance codes and ChatGPT-facing DESI communication profile
+- centralized stance/style registry and executable parser
 - stance/style contract verifier in Development OS contract CI
+- repository-first recovery precedence resolver and deterministic scenario tests
 
 ## Stance/style contract
 
@@ -95,13 +102,24 @@ DEVOS::GOD::DESI
 
 `GOD` controls execution posture. `DESI` controls conversational presentation. DESI may use natural Hinglish, engineering banter, and user-invited slang/profanity while preserving technical precision. Neither layer changes authorization, security, or verification requirements.
 
+## Recovery precedence
+
+1. Source tree + Git for exact implementation state.
+2. Explicit requirements/decisions for intentional project state.
+3. Durable `.ai` state for project context and handoff.
+4. Generated indexes for navigation/evidence only.
+5. AI account memory/chat history as supplementary context and never as authoritative repository evidence.
+
+## Self-healing boundary
+
+Only deterministic derived artifacts are eligible for automated recreation: `STATE-INDEX.md`, `CHANGELOG.md`, and `PROJECT-IDENTITY.json`. Semantic project files such as `PROJECT.md`, `DECISIONS.md`, `TASKS.md`, `CURRENT-STATE.md`, and `ARCHITECTURE.md` are outside the self-healing write boundary.
+
 ## Immediate remaining focus
 
-- Fresh CI evidence for the latest P11 stance/style changes
-- provenance-aware session handoff
-- safe self-healing of deterministic derived context
-- recovery precedence when memory, `.ai`, Git, and generated indexes disagree
+- Fresh CI evidence for the latest P11 stance/style, self-healing, and recovery-precedence changes
+- provenance-aware session handoff persistence
 - fresh-AI/account repository-only recovery proof
+- integration of self-healing/recovery precedence into the broader DevOS task lifecycle
 
 ## Durable future-work rule
 
