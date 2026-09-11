@@ -1,26 +1,26 @@
 # DevOS Tasks
 
 ## Active
-- P10 Context Continuity & Recovery v1: establish a supported project-side execution path for the reusable context-sync workflow outside the DevOS repository self-call test.
-- P10: verify generated `STATE-INDEX.md` and `CHANGELOG.md` synchronization end-to-end.
+- P11 DevOS Federation & Self-Healing Context v1: define and implement versioned project identity/compatibility, freshness/integrity reconciliation, cross-AI handoff, and safe self-healing context recovery.
+- P11: prove repository-only recovery from a fresh AI/account context.
 
 ## Planned
-- P10: document and validate future-session persistence expectations.
-- Continue expanding controlled remote mutations only with operation-specific authorization, security, verification, and recovery contracts.
+- Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
 
 ## Blocked
-- Same-repository reusable-workflow self-call experiment produced GitHub Actions workflow-run failures with zero jobs before execution. The experimental caller was removed rather than left as a permanent broken workflow.
-- A real external/project-side caller repository is required for final end-to-end validation of the reusable context-sync workflow.
+- None for P10.
 
 ## Completed recently
-- P9 Development Task Controller v1 implemented and wired into contract verification CI.
-- Durable `.ai` project context initialized with project identity, current state, decisions, architecture, and recovery rules.
-- Chat context recovery snapshot persisted under `.ai/SESSIONS/2026-09-11-chat-context-recovery.md`.
-- P10 Context Continuity & Recovery v1 established from the documented recovery/context-sync evidence gap.
+- P9 Development Task Controller v1 implemented and verified.
+- P10 Context Continuity & Recovery v1 completed.
+- Durable `.ai` project context established as the cross-chat project memory layer.
+- Engineering-relevant chat recovery snapshot persisted.
 - Durable context-sync contract verifier added and wired into primary CI.
-- Reusable context-sync meaningful-path classification changed to consume its configured input instead of a separate hardcoded classifier.
-- Primary DevOps contract verification remained green through the latest validated run.
-- Failed self-test caller experiment was removed to keep the repository's active workflow set healthy.
+- Reusable context-sync meaningful-path configuration made effective.
+- Context-sync workflow refactored to use the portable `tools/context-sync.py` implementation.
+- External project-side caller validated successfully in `zzpsah/automation-suite` on branch `devos-p10-context-sync-test`.
+- Verified generated `.ai/STATE-INDEX.md`, `.ai/CURRENT-STATE.md`, and `.ai/CHANGELOG.md` were persisted by the Development OS bot commit `0291fa0fd226e15e87da9e2bb35624cd0f5b887d`.
+- Temporary reusable-workflow smoke/debug files removed from DevOS after diagnosis.
 
 ## Verification note
-Static context-sync contract verification passes in the primary DevOps CI. It does not prove an external project's reusable workflow call executes successfully. P10 remains open until an actual project-side caller outside the DevOps repository is available and its generated context changes are verified.
+P10 is complete based on fresh primary CI evidence plus a successful external-project reusable-workflow execution and durable context generation. P11 is now the current milestone.
