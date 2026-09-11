@@ -1,15 +1,10 @@
 #!/usr/bin/env python3
-"""Portable reference host adapter for safe DevOS operations.
-
-This module is intentionally small: it demonstrates the adapter boundary without
-providing unrestricted command execution or production control.
-"""
+"""Portable reference host adapter for bounded DevOS operations."""
 from __future__ import annotations
 
 import subprocess
 from pathlib import Path
 from typing import Any
-
 
 SAFE_CAPABILITIES = {
     "filesystem.read",
@@ -38,7 +33,9 @@ def read_text(root: Path, relative_path: str) -> dict[str, Any]:
     return {"status": "SUCCESS", "path": relative_path, "content": target.read_text(encoding="utf-8")}
 
 
-def write_text(root: Path, relative_path: str, content: str) -> dict[str, Any]:
+def write_text(root: Path, relative_path: str, content: str, authorization: str) -> dict[str, Any]:
+    if authorization != "ALREADY_GRANTED":
+        return {"status": "BLOCKED", "reason": "explicit authorization required"}
     target = (root / relative_path).resolve()
     if not _inside(root, target):
         return {"status": "BLOCKED", "reason": "target outside project root"}
@@ -69,7 +66,6 @@ def git_inspect(root: Path, operation: str = "status") -> dict[str, Any]:
 
 if __name__ == "__main__":
     import argparse
-
     parser = argparse.ArgumentParser(description="DevOS reference host adapter")
     parser.add_argument("root", type=Path)
     args = parser.parse_args()
