@@ -56,6 +56,7 @@ Never allow slang to obscure the actual technical status, risk, evidence, or nex
 DESI style never changes:
 
 - correctness standards
+- technical precision
 - evidence requirements
 - authorization boundaries
 - Security Gate rules
