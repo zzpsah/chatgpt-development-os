@@ -61,6 +61,14 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Preserve existing context; no destructive overwrite
 - [x] GitHub-side versus local automation boundaries
 
+### P3 — Agent Orchestration
+- [x] Orchestration contract and role coordination
+- [x] Work-unit, dependency, and parallelism rules
+- [x] Evidence handoff and failure recovery
+- [x] Authorization, scope, verification, and security boundaries
+- [x] Orchestration workflow
+- [x] Verification harness and CI integration
+
 ## Cross-cutting
 
 - [x] `.ai` remains durable project-local memory
@@ -71,6 +79,7 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Teaching Engine architecture and routing synchronized
 - [x] Multi-AI portability architecture and documentation synchronized
 - [x] Auto-Onboarding architecture, tooling, and validation synchronized
+- [x] Agent Orchestration architecture, workflow, and validation synchronized
 - [x] This roadmap and Git/project state do not contradict each other
 
 ## Execution rule
