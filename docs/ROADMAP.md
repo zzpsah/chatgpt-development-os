@@ -31,11 +31,13 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Integrate verification workflow and CI contract harness
 
 ### P1 — Security Gate
-- [ ] Define security review stages
-- [ ] Auth/authz and data-access checks
-- [ ] Secret/credential protection
-- [ ] Dependency and configuration checks
-- [ ] Production/destructive-action gates
+- [x] Define security review stages
+- [x] Auth/authz and data-access checks
+- [x] Secret/credential protection
+- [x] Dependency and configuration checks
+- [x] Production/destructive-action gates
+- [x] Integrate Security Gate with language, review, and CI workflows
+- [x] Contract verification harness and successful CI run
 
 ### P2 — Teaching Engine
 - [ ] Do-it / Teach-me / Explain modes
