@@ -3,9 +3,10 @@
 ## Active
 - P11: persist AI-session handoff summaries with provenance.
 - P11: prove repository-only recovery from a fresh AI/account context.
+- P11: fresh-verify the registry-driven stance/style contract after the latest verifier and alias fixes.
 
 ## Planned
-- P11: add safe self-healing for missing derived context files.
+- P11: validate deterministic self-healing end-to-end on a controlled missing-derived-file scenario.
 - P11: complete recovery precedence validation across ChatGPT memory, `.ai`, Git, and generated indexes.
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
 
@@ -28,6 +29,8 @@
 - P11 context freshness/integrity checker and contract verifier implemented and verified by fresh CI.
 - P11 safe derived-context reconciliation guard and executable cases implemented and verified by fresh CI.
 - P11 cross-AI bootstrap/recovery handshake specification and vendor-neutral handoff generator implemented and verified by fresh CI.
+- P11 composable stance/style registry, parser, DESI profile, and CI contract added.
+- P11 bounded deterministic derived-context self-healer and contract verifier added; fresh end-to-end verification remains pending.
 
 ## Verification note
-P10 is complete based on fresh primary CI evidence plus successful external-project reusable-workflow execution and durable context generation. P11 identity, integrity, reconciliation, and cross-AI handoff foundations are implemented and verified by fresh primary CI. Remaining P11 work is provenance-aware handoff persistence, deterministic self-healing, recovery-precedence validation, and fresh-AI/account repository-only recovery proof.
+P10 is complete based on fresh primary CI evidence plus successful external-project reusable-workflow execution and durable context generation. P11 identity, integrity, reconciliation, and cross-AI handoff foundations are implemented and verified by fresh primary CI. Latest P11 stance/style and self-healing changes are committed but require fresh CI evidence before being marked fully verified.
