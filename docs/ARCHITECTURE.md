@@ -51,8 +51,11 @@ flowchart LR
     SR --> W[Routing + Workflows + Roles + Rules]
     W --> TE[Teaching Engine]
     W --> AO[Agent Orchestration]
+    W --> AL[Autonomous Development Loop]
     W --> PM[Project-local .ai/ context]
     AO --> ROLES[Planner / Architect / Developer / Tester / Reviewer]
+    AL --> AO
+    AL --> CAP[Capability + Authorization checks]
     PM --> SRC[Project source code]
     SRC --> V[Verification / Test Engine]
     V --> SG[Security Gate]
@@ -75,6 +78,7 @@ flowchart LR
 | AI State Resolver | Interpret repository evidence and unfinished work | Current-state reasoning |
 | Teaching Engine | Present concepts, explanations, examples, and practice safely | Learning/presentation behavior |
 | Agent Orchestration | Coordinate internal work units, roles, dependencies, handoffs, and recovery | Orchestration contract |
+| Autonomous Development Loop | Run bounded iterations, checkpoints, capability/approval gates, and continue/stop/escalate decisions | Autonomous-loop control contract |
 | Development OS | How work should be performed | Workflow, safety, routing |
 | AI Adapter Contract | Connect a host AI to portable DevOS capabilities | Host integration boundary |
 | Auto-Onboarding | Safely establish missing DevOS project infrastructure | Onboarding state/change scope |
@@ -121,6 +125,7 @@ sequenceDiagram
     participant S as State Resolver
     participant TE as Teaching Engine
     participant AO as Orchestrator
+    participant AL as Autonomous Loop
     participant V as Verification Engine
 
     U->>A: "Continue / work on this project"
@@ -135,7 +140,8 @@ sequenceDiagram
     S->>A: Recommended action + evidence + authorization
     A->>TE: Present learning content when requested
     A->>AO: Coordinate multi-unit work when useful
-    AO->>A: Evidence-backed work-unit results
+    AO->>AL: Supply bounded work plan
+    AL->>A: Capability / approval decision
     A->>G: Implement change when authorized
     A->>V: Select and run/delegate checks
     V->>A: Verification status + evidence + limitations
@@ -177,7 +183,17 @@ The important invariant is:
 
 > **The project remains usable by a new AI even if the original AI account, chat history, or local worker is unavailable.**
 
-## 9. Safety boundaries
+## 9. Autonomous Development Loop
+
+The Autonomous Development Loop turns the existing state, language, orchestration, verification, security, and persistence contracts into a bounded repeated execution cycle. Each iteration has a concrete objective, scope, capability check, authorization state, checkpoint, evidence, verification result, and next decision.
+
+The control decision is always one of `CONTINUE`, `STOP`, or `ESCALATE`. The loop must stop when its execution bound is exhausted, useful authorized work is unavailable, required capability/evidence is missing, or safe recovery is not possible. It escalates for new high-risk approval, unresolved security-sensitive judgment, material evidence conflict, or blockers requiring external authority.
+
+Checkpointing makes the loop resumable, but a resumed loop re-checks repository state, source, Git, capabilities, authority, and applicable verification rather than blindly replaying actions. Missing capabilities may be explicitly delegated; they must never be simulated.
+
+See [`core/autonomous-development-loop.md`](../core/autonomous-development-loop.md) and [`workflows/autonomous-loop.md`](../workflows/autonomous-loop.md).
+
+## 10. Safety boundaries
 
 - `.ai/` must never contain secrets merely to preserve context.
 - Existing project context must not be overwritten blindly.
@@ -190,3 +206,4 @@ The important invariant is:
 - Verification never grants implementation or deployment authority.
 - Teaching never grants implementation or deployment authority.
 - Orchestration coordinates work but never creates authority.
+- Autonomous looping never creates authority, and bounded continuation cannot override a missing capability, approval, verification condition, or security gate.
