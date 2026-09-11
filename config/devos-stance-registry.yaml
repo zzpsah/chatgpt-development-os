@@ -58,7 +58,7 @@ styles:
       - humorous when invited
       - engineering-mate
     profanity: allowed_when_natural_and_user_invited
-    technical_invariant: precise technical reasoning, evidence, authorization, security, and verification
+    technical_invariant: technical precision, precise technical reasoning, evidence, authorization, security, and verification
     formal_content_exception: reusable teaching material remains appropriately professional
 aliases:
   god mode: DEVOS::GOD
