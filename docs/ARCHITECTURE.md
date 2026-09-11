@@ -52,10 +52,12 @@ flowchart LR
     W --> TE[Teaching Engine]
     W --> AO[Agent Orchestration]
     W --> AL[Autonomous Development Loop]
+    W --> ER[Executable Development Runtime]
     W --> PM[Project-local .ai/ context]
     AO --> ROLES[Planner / Architect / Developer / Tester / Reviewer]
     AL --> AO
-    AL --> CAP[Capability + Authorization checks]
+    AL --> ER
+    ER --> CAP[Capability + Authorization checks]
     PM --> SRC[Project source code]
     SRC --> V[Verification / Test Engine]
     V --> SG[Security Gate]
@@ -79,6 +81,7 @@ flowchart LR
 | Teaching Engine | Present concepts, explanations, examples, and practice safely | Learning/presentation behavior |
 | Agent Orchestration | Coordinate internal work units, roles, dependencies, handoffs, and recovery | Orchestration contract |
 | Autonomous Development Loop | Run bounded iterations, checkpoints, capability/approval gates, and continue/stop/escalate decisions | Autonomous-loop control contract |
+| Executable Development Runtime | Execute one authorized bounded work unit, capture evidence, checkpoint, and return an outcome | Execution boundary |
 | Development OS | How work should be performed | Workflow, safety, routing |
 | AI Adapter Contract | Connect a host AI to portable DevOS capabilities | Host integration boundary |
 | Auto-Onboarding | Safely establish missing DevOS project infrastructure | Onboarding state/change scope |
@@ -126,6 +129,7 @@ sequenceDiagram
     participant TE as Teaching Engine
     participant AO as Orchestrator
     participant AL as Autonomous Loop
+    participant ER as Runtime
     participant V as Verification Engine
 
     U->>A: "Continue / work on this project"
@@ -141,8 +145,8 @@ sequenceDiagram
     A->>TE: Present learning content when requested
     A->>AO: Coordinate multi-unit work when useful
     AO->>AL: Supply bounded work plan
-    AL->>A: Capability / approval decision
-    A->>G: Implement change when authorized
+    AL->>ER: Request authorized work unit execution
+    ER->>A: Outcome + evidence + checkpoint
     A->>V: Select and run/delegate checks
     V->>A: Verification status + evidence + limitations
     A->>C: Persist meaningful state changes
@@ -193,7 +197,15 @@ Checkpointing makes the loop resumable, but a resumed loop re-checks repository 
 
 See [`core/autonomous-development-loop.md`](../core/autonomous-development-loop.md) and [`workflows/autonomous-loop.md`](../workflows/autonomous-loop.md).
 
-## 10. Safety boundaries
+## 10. Executable Development Runtime
+
+The Executable Development Runtime is the controlled execution boundary beneath the Autonomous Development Loop. It receives an already authorized work unit, resolves capabilities, creates pre/post checkpoints, performs only the bounded action through a supported host/tool adapter, captures actual evidence, invokes applicable verification, and returns a factual outcome.
+
+The runtime separates AI decisions from execution evidence. A planned action is not evidence that the action happened. A missing capability cannot be simulated, and a failed tool action cannot silently become project success. Resume requires repository/source comparison and fresh capability/authorization checks before any retry or continuation.
+
+See [`core/execution-runtime.md`](../core/execution-runtime.md) and [`workflows/execution-runtime.md`](../workflows/execution-runtime.md).
+
+## 11. Safety boundaries
 
 - `.ai/` must never contain secrets merely to preserve context.
 - Existing project context must not be overwritten blindly.
@@ -207,3 +219,4 @@ See [`core/autonomous-development-loop.md`](../core/autonomous-development-loop.
 - Teaching never grants implementation or deployment authority.
 - Orchestration coordinates work but never creates authority.
 - Autonomous looping never creates authority, and bounded continuation cannot override a missing capability, approval, verification condition, or security gate.
+- The Executable Runtime cannot claim execution, external results, or completion without actual host evidence.
