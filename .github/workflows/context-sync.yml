@@ -14,12 +14,8 @@ on:
         type: string
         default: 'src/**,app/**,pages/**,components/**,api/**,lib/**,public/**,supabase/**,migrations/**,prisma/**,db/**,database/**,package.json,package-lock.json,pnpm-lock.yaml,yarn.lock,pyproject.toml,requirements.txt,poetry.lock,Cargo.toml,Cargo.lock,go.mod,go.sum,composer.json,pom.xml,build.gradle,Dockerfile,*.csproj,*.sln,.github/workflows/**'
 
-permissions:
-  contents: write
-
 jobs:
   sync-context:
-    if: ${{ !contains(github.event.head_commit.message, '[devos-context-sync]') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -29,7 +25,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Skip recursive synchronization commits
+        if: contains(github.event.head_commit.message, '[devos-context-sync]')
+        run: echo 'Context-sync commit detected; no synchronization needed.'
+
       - name: Synchronize durable project context
+        if: ${{ !contains(github.event.head_commit.message, '[devos-context-sync]') }}
         shell: bash
         env:
           CONTEXT_DIR: ${{ inputs.context_directory }}
