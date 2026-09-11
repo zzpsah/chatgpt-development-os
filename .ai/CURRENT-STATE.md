@@ -5,13 +5,12 @@
 - Repository: `zzpsah/chatgpt-development-os`
 - Branch: `main`
 - Current state is established from Git/source evidence; this file is a durable recovery summary, not a replacement for source inspection.
-- Latest verified primary DevOS verification baseline: `812c0f9be996d78233d7fddb87c7a5fb3c19d6a1`.
-- Current `main` HEAD after roadmap reconciliation: `7ecb784608d2bd5b6d090e60f23b55b0de681ed9`.
-- Current HEAD is pending a fresh primary verification run; do not call the current HEAD fully green until that run completes.
+- Current `main` HEAD includes the P10 context-continuity work and requires fresh CI verification before being called fully green.
+- P9 Development Task Controller v1 remains complete.
 
 ## Implemented architecture
 
-The repository contains the DevOS architecture through the P9 Development Task Controller integration:
+The repository contains the DevOS architecture through P9 plus the P10 continuity hardening layer:
 
 1. AI State Resolver
 2. Human Language Execution Engine
@@ -28,6 +27,7 @@ The repository contains the DevOS architecture through the P9 Development Task C
 13. Runtime–Adapter Execution Bridge
 14. Remote Mutation Controls
 15. Development Task Controller (P9)
+16. Context Continuity & Recovery (P10, in progress)
 
 ## P8 status
 
@@ -37,41 +37,30 @@ Higher-impact remote mutations remain separately gated and are not implied by th
 
 ## P9 status
 
-**P9 Development Task Controller v1 is implemented in the repository.**
+**P9 Development Task Controller v1 is implemented and remains complete.**
 
-Evidence in Git history:
-- `604443d10282a00e389fc3bb0d67040f2d071329` — add P9 development task controller
-- `daf42fbe52340d4c283e8a04126f7e475857ff34` — add P9 development task workflow
-- `5b3274210f030112fb320716afd3184eb4796cae` — add P9 task controller contract verifier
-- `cd6671a04e52aa7d5e727bffbe93ce84a289e888` — add P9 verifier to CI
+P9 introduced the evidence-driven lifecycle from request and project resolution through objective/acceptance criteria, orchestration, authorization, bounded execution, checkpoints, verification, security, review, persistence, and evidence-backed outcome.
 
-P9 contract flow:
-`User request → project/intent → durable state → objective/acceptance criteria → orchestration/work units → capability/authorization → bounded execution → checkpoint → verification → security → review → persistence → evidence-backed outcome`.
+## P10 status
 
-The P9 verifier is wired into `.github/workflows/verify-devos.yml`.
+**P10 Context Continuity & Recovery v1 is in progress.**
 
-The primary verification workflow and contract verification workflow both completed successfully for commit `812c0f9be996d78233d7fddb87c7a5fb3c19d6a1`.
+Implemented in this stage:
+- repository-first continuity/recovery scope documented in `docs/P10-CONTEXT-CONTINUITY.md`
+- durable context-sync contract verifier added at `tools/verify-context-sync.py`
+- verifier wired into `.github/workflows/verify-devos.yml`
+- reusable context-sync meaningful-path classification changed to consume its configured input rather than silently relying on a separate hardcoded classifier
+- chat recovery snapshot remains preserved under `.ai/SESSIONS/2026-09-11-chat-context-recovery.md`
 
-## Durable context
+P10 still requires:
+- fresh primary CI evidence for the latest HEAD
+- an actual project-side caller execution of the reusable context-sync workflow
+- end-to-end confirmation that generated `STATE-INDEX.md` and `CHANGELOG.md` synchronize correctly
+- final documentation/validation of future-session persistence expectations
 
-The DevOS repository now has the durable `.ai` foundation required for cross-chat recovery: `manifest.yaml`, `PROJECT.md`, `CURRENT-STATE.md`, `ARCHITECTURE.md`, `DECISIONS.md`, and `TASKS.md`. `STATE-INDEX.md` and automated change-log synchronization are expected to be maintained by the repository's context-sync workflow.
+## Durable future-work rule
 
-## Context-sync observation
-
-The reusable `.github/workflows/context-sync.yml` has produced immediate failed workflow runs with zero reported jobs on recent direct pushes. This is a separate automation issue from the successful DevOS verification workflows and must be investigated before treating durable context synchronization as healthy/verified.
-
-## Roadmap reconciliation
-
-`docs/ROADMAP.md` now records P9 Development Task Controller v1 as completed and explicitly states that no P10 milestone is established yet. P8 higher-impact remote mutations remain incomplete.
-
-Do not infer a P10 milestone from numbering alone.
-
-## Current next-state requirement
-
-1. Obtain fresh primary CI verification for the latest HEAD.
-2. Investigate and repair the context-sync workflow failure/trigger behavior.
-3. Ensure generated `.ai/STATE-INDEX.md` and automated `CHANGELOG.md` synchronization are actually working.
-4. Establish the next milestone explicitly from repository evidence; do not invent P10.
+Future meaningful engineering work, decisions, blockers, verification evidence, and recovery notes must be persisted in the repository-local `.ai` context. Use `.ai/SESSIONS/` for session-level semantic records and update `TASKS.md`, `DECISIONS.md`, and `CURRENT-STATE.md` when the durable project state changes. Chat history is not the authoritative recovery layer.
 
 ## Authority
 
