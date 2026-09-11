@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Provider-backed GitHub reference adapter using an injected API client.
+"""Provider-backed GitHub reference adapter with bounded read and mutation paths.
 
 The adapter owns no credentials. The client is the provider boundary, while
-this module validates inputs, applies bounded read retries, and normalizes
-actual provider responses into DevOS evidence.
+this module validates inputs, applies bounded read retries, enforces explicit
+mutation authorization/concurrency checks, and normalizes actual provider
+responses into DevOS evidence.
 """
 from __future__ import annotations
 
@@ -15,6 +16,7 @@ class GitHubClient(Protocol):
     def get_repo(self, repository: str) -> Any: ...
     def get_commit(self, repository: str, commit_sha: str) -> Any: ...
     def get_workflow_run(self, repository: str, run_id: int) -> Any: ...
+    def update_file(self, repository: str, path: str, content: str, message: str, expected_sha: str) -> Any: ...
 
 
 READ_CAPABILITIES = {
@@ -23,9 +25,15 @@ READ_CAPABILITIES = {
     "github.inspect.workflow_run",
 }
 
+MUTATION_CAPABILITIES = {
+    "github.mutate.file",
+}
+
 
 def capability_status(name: str) -> str:
-    return "AVAILABLE" if name in READ_CAPABILITIES else "MISSING"
+    if name in READ_CAPABILITIES or name in MUTATION_CAPABILITIES:
+        return "AVAILABLE"
+    return "MISSING"
 
 
 def _read_operation(call: Any, operation: str, **metadata: Any) -> dict[str, Any]:
@@ -72,30 +80,78 @@ def _read_with_retry(
 def inspect_repository(client: GitHubClient, repository: str) -> dict[str, Any]:
     if not repository or "/" not in repository or repository.count("/") != 1:
         return {"status": "BLOCKED", "reason": "repository must be owner/name"}
-    return _read_with_retry(
-        lambda: client.get_repo(repository),
-        "inspect_repository",
-        repository=repository,
-    )
+    return _read_with_retry(lambda: client.get_repo(repository), "inspect_repository", repository=repository)
 
 
 def inspect_commit(client: GitHubClient, repository: str, commit_sha: str) -> dict[str, Any]:
     if not repository or "/" not in repository or not commit_sha:
         return {"status": "BLOCKED", "reason": "repository and commit are required"}
-    return _read_with_retry(
-        lambda: client.get_commit(repository, commit_sha),
-        "inspect_commit",
-        repository=repository,
-        commit=commit_sha,
-    )
+    return _read_with_retry(lambda: client.get_commit(repository, commit_sha), "inspect_commit", repository=repository, commit=commit_sha)
 
 
 def inspect_workflow_run(client: GitHubClient, repository: str, run_id: int) -> dict[str, Any]:
     if not repository or "/" not in repository or not isinstance(run_id, int) or run_id <= 0:
         return {"status": "BLOCKED", "reason": "repository and positive workflow run id are required"}
-    return _read_with_retry(
-        lambda: client.get_workflow_run(repository, run_id),
-        "inspect_workflow_run",
-        repository=repository,
-        run_id=run_id,
-    )
+    return _read_with_retry(lambda: client.get_workflow_run(repository, run_id), "inspect_workflow_run", repository=repository, run_id=run_id)
+
+
+def mutate_file(
+    client: GitHubClient,
+    repository: str,
+    path: str,
+    content: str,
+    message: str,
+    expected_sha: str,
+    authorization: str,
+) -> dict[str, Any]:
+    """Perform one explicitly authorized, optimistic-concurrency file update.
+
+    Mutations are intentionally not retried. An uncertain provider response is
+    therefore surfaced as UNVERIFIED so the caller can inspect remote state.
+    """
+    if authorization != "ALREADY_GRANTED":
+        return {"status": "BLOCKED", "reason": "explicit authorization required"}
+    if not repository or repository.count("/") != 1:
+        return {"status": "BLOCKED", "reason": "repository must be owner/name"}
+    if not isinstance(path, str) or not path or path.startswith("/") or ".." in path.split("/"):
+        return {"status": "BLOCKED", "reason": "mutation path must remain within repository"}
+    if not isinstance(content, str) or not isinstance(message, str) or not message:
+        return {"status": "BLOCKED", "reason": "content and commit message are required"}
+    if not isinstance(expected_sha, str) or not expected_sha:
+        return {"status": "BLOCKED", "reason": "expected current file SHA is required"}
+
+    try:
+        response = client.update_file(repository, path, content, message, expected_sha)
+        return {
+            "status": "SUCCESS",
+            "provider": "github",
+            "operation": "mutate_file",
+            "repository": repository,
+            "path": path,
+            "expected_sha": expected_sha,
+            "response": response,
+            "attempt": 1,
+        }
+    except Exception as exc:
+        text = str(exc).lower()
+        if "sha" in text or "conflict" in text:
+            return {
+                "status": "BLOCKED",
+                "provider": "github",
+                "operation": "mutate_file",
+                "repository": repository,
+                "path": path,
+                "expected_sha": expected_sha,
+                "reason": "remote file state changed; inspect current state before retrying",
+                "error": str(exc),
+            }
+        return {
+            "status": "UNVERIFIED",
+            "provider": "github",
+            "operation": "mutate_file",
+            "repository": repository,
+            "path": path,
+            "expected_sha": expected_sha,
+            "reason": "provider outcome is uncertain; inspect remote state before retrying",
+            "error": str(exc),
+        }
