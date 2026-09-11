@@ -88,6 +88,7 @@ The adapter must not expand a requested target into unrelated files merely becau
 - Secrets, tokens, credentials, private keys, and session cookies must not be returned as evidence or persisted into `.ai` checkpoints.
 - Shell or command execution, when supported by a host, must be separately capability-declared and bounded; it is not implied by filesystem or Git access.
 - Failed, timed-out, or unavailable operations must remain distinguishable from successful execution.
+- Unavailable capabilities must not be simulated.
 
 ## Evidence contract
 
