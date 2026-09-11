@@ -60,3 +60,6 @@ jobs:
 
       - name: Verify P12 Operational Intelligence
         run: python tools/verify-operational-intelligence.py
+
+      - name: Verify P12 fresh-repository determinism
+        run: python tools/test-operational-intelligence-recovery.py
