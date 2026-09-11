@@ -68,6 +68,34 @@ You should not need to know which agent, workflow, or command is required.
 - “Continue where we stopped.” → recover project state and resume.
 - “Go ahead and do it.” → execute the agreed plan.
 
+## Agent Orchestration
+
+For larger work, DevOS can coordinate internal engineering responsibilities rather than treating the whole job as one undifferentiated task.
+
+```text
+User objective
+    ↓
+State + scope resolution
+    ↓
+Work decomposition
+    ↓
+Role selection
+    ↓
+Ordered / safe parallel work units
+    ↓
+Evidence handoff
+    ↓
+Integration + review
+    ↓
+Verification + Security Gate
+    ↓
+Durable project state
+```
+
+Orchestration selects only the roles needed for the work, respects dependencies, prevents conflicting shared-state operations from running concurrently, preserves failed/blocked units, and never creates authorization. It does not claim unrestricted autonomy or automatic production deployment.
+
+See [`core/agent-orchestration.md`](core/agent-orchestration.md) and [`workflows/orchestration.md`](workflows/orchestration.md).
+
 ## Verification / Test Engine
 
 The Verification / Test Engine makes verification an evidence-based stage rather than an assumption. It:
@@ -107,7 +135,7 @@ Full onboarding guidance: [`docs/NEW-AI-ONBOARDING.md`](docs/NEW-AI-ONBOARDING.m
 
 ## Flow and architecture
 
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the Development OS flow, layered architecture, portable-context model, new-AI onboarding sequence, and automation boundaries.
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the Development OS flow, layered architecture, portable-context model, new-AI onboarding sequence, agent orchestration, and automation boundaries.
 
 ## Architecture
 
@@ -151,4 +179,4 @@ chatgpt-development-os/
 
 ## Version
 
-0.7 — auto-onboarding, multi-AI portability, and evidence-based development contracts.
+0.8 — agent orchestration, auto-onboarding, multi-AI portability, and evidence-based development contracts.
