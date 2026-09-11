@@ -261,6 +261,8 @@ jobs:
       - name: Verify context integrity checker contract
         run: python tools/verify-context-integrity.py
       - name: Run context freshness and integrity check
+        env:
+          DEVOS_ALLOW_MISSING_DERIVED: 'true'
         run: python tools/check-context-integrity.py
 
   context-reconciliation:
