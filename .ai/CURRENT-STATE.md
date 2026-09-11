@@ -5,7 +5,8 @@
 - Repository: `zzpsah/chatgpt-development-os`
 - Branch: `main`
 - Current state is established from Git/source evidence; this file is a durable recovery summary, not a replacement for source inspection.
-- Current `main` HEAD includes the P10 context-continuity work and requires fresh CI verification before being called fully green.
+- Latest known main HEAD: `8afb0e9eb6b8bd17df99bebb2fe8a34b0fef3435`.
+- Primary DevOS verification for the latest completed verification run is green at the immediately preceding HEAD; the latest HEAD must be reverified after subsequent changes.
 - P9 Development Task Controller v1 remains complete.
 
 ## Implemented architecture
@@ -50,13 +51,23 @@ Implemented in this stage:
 - durable context-sync contract verifier added at `tools/verify-context-sync.py`
 - verifier wired into `.github/workflows/verify-devos.yml`
 - reusable context-sync meaningful-path classification changed to consume its configured input rather than silently relying on a separate hardcoded classifier
-- chat recovery snapshot remains preserved under `.ai/SESSIONS/2026-09-11-chat-context-recovery.md`
+- chat recovery snapshot preserved under `.ai/SESSIONS/2026-09-11-chat-context-recovery.md`
+- future-work persistence rule recorded in `DECISIONS.md`, `TASKS.md`, and current-state documentation
+- repository-side context-sync caller added for end-to-end testing
 
-P10 still requires:
-- fresh primary CI evidence for the latest HEAD
-- an actual project-side caller execution of the reusable context-sync workflow
-- end-to-end confirmation that generated `STATE-INDEX.md` and `CHANGELOG.md` synchronize correctly
-- final documentation/validation of future-session persistence expectations
+## P10 verification evidence
+
+- The primary `Verify Development OS` workflow run for commit `8afb0e9eb6b8bd17df99bebb2fe8a34b0fef3435` completed successfully across the existing DevOS verification jobs.
+- The dedicated project-side context-sync caller is being used to test the reusable workflow path, but its runs currently fail at workflow startup with zero jobs. This remains an unresolved integration issue and must not be marked green.
+- The reusable context-sync workflow previously contained a permissions declaration in the wrong scope; that was corrected, but the caller startup failure persisted, so the exact remaining root cause is still under investigation.
+
+## P10 still requires
+
+1. Diagnose and repair the project-side reusable context-sync caller startup failure.
+2. Obtain a successful actual context-sync execution.
+3. Verify generated `STATE-INDEX.md` and `CHANGELOG.md` are updated from repository evidence.
+4. Validate future-session persistence/recovery expectations from a new AI/session perspective.
+5. Close P10 only after fresh evidence supports all of the above.
 
 ## Durable future-work rule
 
