@@ -281,3 +281,18 @@ jobs:
         run: python tools/verify-context-reconciliation.py
       - name: Run executable reconciliation cases
         run: python tools/test-context-reconciliation.py
+
+  ai-handoff:
+    name: Verify Cross-AI Bootstrap Handoff v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify cross-AI handoff contract
+        run: python tools/verify-ai-handoff.py
+      - name: Generate vendor-neutral handoff packet
+        run: python tools/generate-ai-handoff.py
