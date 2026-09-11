@@ -16,6 +16,8 @@ def require(text, needles, source):
 contract = read("core/host-adapter-contract.md")
 adapter = read("adapters/host-adapter.md")
 reference = read("adapters/reference-host.py")
+verification_contract = read("core/verification-adapter.md")
+verification_adapter = read("adapters/reference-verification.py")
 bridge = read("tools/runtime-adapter-bridge.py")
 roadmap = read("docs/ROADMAP.md")
 architecture = read("docs/ARCHITECTURE.md")
@@ -24,10 +26,12 @@ require(contract, ["Capability lookup", "Authorization / Security Gate", "Actual
 require(adapter, ["Capability discovery", "filesystem.read", "filesystem.write_scoped", "git.inspect", "verification.run", "github.inspect", "github.mutate", "Validate target + scope", "Check authorization", "Capture actual result", "never simulated", "never convert that condition into `VERIFIED`"], "adapters/host-adapter.md")
 require(reference, ["SAFE_CAPABILITIES", "filesystem.read", "filesystem.write_scoped", "git.inspect", "capability_status", "target outside project root", "subprocess.run"], "adapters/reference-host.py")
 require(bridge, ["filesystem.read", "filesystem.write_scoped", "git.inspect", "explicit authorization required for mutation", "UNAVAILABLE"], "tools/runtime-adapter-bridge.py")
+require(verification_contract, ["configured project verification commands", "bounded execution", "VERIFIED", "FAILED", "UNAVAILABLE", "BLOCKED", "do not invent"], "core/verification-adapter.md")
+require(verification_adapter, ["run_verification", "subprocess.run", "timeout", "expected_exit_codes", "VERIFIED", "FAILED", "UNAVAILABLE", "BLOCKED"], "adapters/reference-verification.py")
 require(roadmap, ["P6 — Host Execution Adapters", "[x] Define host adapter contract", "[x] Define capability discovery and honest availability states", "[x] Define scoped filesystem, Git, verification, and GitHub/CI boundaries", "[x] Define normalized execution evidence and failure semantics"], "docs/ROADMAP.md")
 require(architecture, ["Host Execution Adapters", "Executable Development Runtime"], "docs/ARCHITECTURE.md")
 
-for test in ("test-reference-host-adapter.py", "test-runtime-adapter-bridge.py"):
+for test in ("test-reference-host-adapter.py", "test-runtime-adapter-bridge.py", "test-verification-adapter.py"):
     result = subprocess.run([sys.executable, str(ROOT / "tools" / test)], text=True, capture_output=True, check=False)
     assert result.returncode == 0, result.stdout + result.stderr
 
