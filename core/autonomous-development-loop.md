@@ -134,7 +134,7 @@ After every meaningful iteration, persist a checkpoint containing:
 
 Checkpoint data belongs in the project-local durable context where appropriate. Secrets, credentials, session cookies, private keys, and unnecessary sensitive data must never be stored merely for resumability.
 
-A resumed loop must reconstruct state from repository evidence and checkpoints, then re-check source, Git, capability, authorization, and verification status as applicable. It must not blindly replay the previous action.
+A resumed loop must reconstruct state from repository evidence and checkpoints, then re-check source, Git, capability, authorization, and verification status as applicable. It must never blindly replay the previous action.
 
 ## Evidence aggregation
 
