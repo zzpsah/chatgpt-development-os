@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Contract and executable checks for P12 Operational Intelligence v1."""
+"""Contract and executable checks for P12 Operational Intelligence."""
 from __future__ import annotations
 
 import importlib.util
-import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +30,8 @@ def main() -> None:
         "UNKNOWN",
         "does not authorize",
         "deterministic task graph construction",
+        "dependency-aware prioritization",
+        "checkpoint signals",
     ):
         assert needle in contract, f"missing contract marker: {needle}"
 
@@ -39,11 +40,19 @@ def main() -> None:
         {"id": "build", "status": "COMPLETE", "priority": 1},
         {"id": "test", "status": "PLANNED", "dependencies": ["build"], "priority": 10},
         {"id": "docs", "status": "PLANNED", "dependencies": ["test"], "priority": 5},
+        {"id": "approval", "status": "NEEDS_APPROVAL", "priority": 99},
     ]
-    result = oi.analyze(tasks)
+    result = oi.analyze(tasks, [{"type": "REPOSITORY_CHANGE"}, {"type": "SESSION_BOUNDARY"}])
     states = {item["id"]: item["readiness"] for item in result["readiness"]}
-    assert states == {"build": "COMPLETE", "test": "READY", "docs": "WAITING"}
+    assert states == {"build": "COMPLETE", "test": "READY", "docs": "WAITING", "approval": "UNAUTHORIZED"}
     assert result["cycle_detected"] is False
+    assert [x["event"] for x in result["checkpoints"]] == ["REPOSITORY_CHANGE", "SESSION_BOUNDARY"]
+
+    ranked = [x["id"] for x in result["priority"]]
+    assert ranked.index("test") < ranked.index("docs"), "higher explicit priority should rank first"
+    reasons = next(x["reasons"] for x in result["priority"] if x["id"] == "test")
+    assert "explicit_priority=10" in reasons
+    assert "dependent_count=1" in reasons
 
     cycle = [
         {"id": "a", "status": "PLANNED", "dependencies": ["b"]},
@@ -58,7 +67,8 @@ def main() -> None:
     else:
         raise AssertionError("missing dependencies must fail explicitly")
 
-    print("Operational Intelligence v1 contract and executable checks: PASS")
+    assert oi.checkpoint_signals([{"type": "UNKNOWN_EVENT"}])[0]["checkpoint"] is False
+    print("Operational Intelligence v2 contract and executable checks: PASS")
 
 
 if __name__ == "__main__":
