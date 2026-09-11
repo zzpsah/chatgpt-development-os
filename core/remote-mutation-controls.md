@@ -46,7 +46,7 @@ This prevents a DevOS operation from silently destroying a concurrent remote cha
 
 ## Retry and idempotency
 
-Mutations are not retried automatically after an uncertain provider response unless the operation has a verified idempotency mechanism.
+Mutations must not be retried automatically after an uncertain provider response unless the operation has a verified idempotency mechanism.
 
 For a failed request with a known non-committed outcome, bounded retry may be considered only when the provider contract makes the retry safe. Unknown outcome means `UNVERIFIED` until remote state is inspected.
 
