@@ -25,3 +25,6 @@ jobs:
 
       - name: Verify Verification / Test Engine
         run: python tools/verify-verification-engine.py
+
+      - name: Verify Auto-Onboarding
+        run: python tools/verify-auto-onboarding.py
