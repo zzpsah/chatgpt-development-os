@@ -40,7 +40,7 @@ for needle in [
     "UNVERIFIED",
     "FAILED",
     "never blindly replay",
-    "never automatically repeated",
+    "Do not automatically repeat destructive or irreversible operations",
     "does not provide unrestricted autonomous software development",
 ]:
     require(core, needle, "core/autonomous-development-loop.md")
@@ -73,12 +73,15 @@ for needle in [
 ]:
     require(roadmap, needle, "docs/ROADMAP.md")
 
-require(architecture, "Autonomous Development Loop", "docs/ARCHITECTURE.md")
-require(architecture, "bounded", "docs/ARCHITECTURE.md")
-require(architecture, "CONTINUE", "docs/ARCHITECTURE.md")
-require(architecture, "STOP", "docs/ARCHITECTURE.md")
-require(architecture, "ESCALATE", "docs/ARCHITECTURE.md")
-require(architecture, "capability", "docs/ARCHITECTURE.md")
-require(architecture, "checkpoint", "docs/ARCHITECTURE.md")
+for needle in [
+    "Autonomous Development Loop",
+    "bounded",
+    "CONTINUE",
+    "STOP",
+    "ESCALATE",
+    "capability",
+    "checkpoint",
+]:
+    require(architecture, needle, "docs/ARCHITECTURE.md")
 
 print("Autonomous Development Loop v1 contract checks passed.")
