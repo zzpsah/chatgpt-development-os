@@ -5,7 +5,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 TOOL = ROOT / "tools" / "reconcile-derived-context.py"
 SYNC = ROOT / "tools" / "context-sync.py"
-FORBIDDEN = ("PROJECT.md", "DECISIONS.md", "TASKS.md", "CURRENT-STATE.md", "ARCHITECTURE.md")
+FORBIDDEN = (
+    "PROJECT.md", "DECISIONS.md", "TASKS.md", "CURRENT-STATE.md", "ARCHITECTURE.md"
+)
 DERIVED = ("STATE-INDEX.md", "CHANGELOG.md", "PROJECT-IDENTITY.json")
 
 
@@ -20,11 +22,14 @@ def main() -> None:
     text = TOOL.read_text(encoding="utf-8")
     for name in DERIVED:
         require(name in text, f"derived file not represented: {name}")
+    require("DERIVED" in text, "tool must define an explicit derived-file allowlist")
     for name in FORBIDDEN:
-        require(name in text, f"forbidden semantic file not represented in safety boundary: {name}")
+        require(name not in text, f"semantic file must not be represented as an auto-writable target: {name}")
     require("unsafe" in text and "BLOCKED:" in text, "semantic reconciliation must be blocked")
     require("does not modify semantic project state" in text, "tool must declare semantic no-write boundary")
     require("context-sync.py" in text, "repair must delegate to canonical sync implementation")
+    require("requested = [p.strip()" in text, "tool must take an explicit requested derived-file set")
+    require("set(requested) - DERIVED" in text, "requested files must be constrained by the derived allowlist")
     print("PASS: safe reconciliation boundaries are structurally valid")
 
 
