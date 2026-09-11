@@ -1,11 +1,12 @@
 # DevOS Tasks
 
 ## Active
-- P12: define Operational Intelligence architecture and first dependency-aware task graph slice.
+- P12: extend Operational Intelligence from deterministic task graph/readiness into dependency-aware prioritization and checkpoint intelligence.
 
 ## Planned
-- P12: dependency-aware prioritization and checkpoint intelligence.
 - P12: failure classification and evidence collection improvements.
+- P12: integrate Operational Intelligence recommendations into the Development Task Controller without granting authority.
+- P12: prove deterministic operational analysis across fresh repository recovery.
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
 
 ## Blocked
@@ -34,6 +35,9 @@
 - P11 recovery/revalidation and bounded self-healing integrated into the Development Task Controller lifecycle.
 - P11 DESI/GOD stance contracts aligned with executable verification semantics.
 - P11 fresh-AI repository-only recovery proof passed from repository evidence without account memory.
+- P12 Operational Intelligence v1 contract added.
+- P12 deterministic task graph construction and dependency readiness analysis implemented with explicit missing-dependency and cycle detection.
+- P12 Operational Intelligence executable contract checks wired into DevOS contract CI.
 
 ## Verification note
-P11 completion criteria are satisfied by fresh primary CI run 290 on commit `e701f5fa0a6dce1f0f4ab3ad1cb260de2f55853f` (all jobs successful), plus fresh repository-only recovery, self-healing, recovery-precedence, handoff, and stance verification. P11 is closed. P12 is now the active milestone.
+P11 is closed. P12 first implementation slice is now repository-backed and under CI verification. The next P12 slice is dependency-aware prioritization and checkpoint intelligence.
