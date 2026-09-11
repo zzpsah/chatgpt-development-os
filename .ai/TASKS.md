@@ -3,10 +3,11 @@
 ## Active
 - P11: verify automatic project identity/registration discovery on fresh CI.
 - P11: verify context freshness and integrity checks on fresh CI.
+- P11: verify safe derived-context reconciliation on fresh CI.
 - P11: prove repository-only recovery from a fresh AI/account context.
 
 ## Planned
-- P11: detect/reconcile stale `.ai` state against Git/source evidence.
+- P11: detect and reconcile stale `.ai` state against Git/source evidence using deterministic derived-file repair only.
 - P11: add cross-AI bootstrap/recovery handshake and provenance-aware session handoff.
 - P11: add safe self-healing for missing derived context files.
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
@@ -28,6 +29,7 @@
 - P11 versioned project manifest compatibility verifier implemented and wired into primary verification CI.
 - P11 project identity discovery tool and contract verifier implemented.
 - P11 context freshness/integrity checker and contract verifier implemented and wired into primary verification CI.
+- P11 safe derived-context reconciliation guard and contract verifier implemented and wired into primary verification CI.
 
 ## Verification note
-P10 is complete based on fresh primary CI evidence plus a successful external-project reusable-workflow execution and durable context generation. P11 identity discovery and context integrity are implemented but require fresh CI evidence on the latest HEAD before their checklist items are marked verified.
+P10 is complete based on fresh primary CI evidence plus a successful external-project reusable-workflow execution and durable context generation. P11 identity discovery, context integrity, and safe reconciliation are implemented; fresh CI evidence on the latest HEAD is still required before marking their checklist items verified.
