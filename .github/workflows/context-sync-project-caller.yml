@@ -12,6 +12,6 @@ permissions:
 
 jobs:
   sync:
-    uses: ./.github/workflows/context-sync.yml
+    uses: zzpsah/chatgpt-development-os/.github/workflows/context-sync.yml@main
     permissions:
       contents: write
