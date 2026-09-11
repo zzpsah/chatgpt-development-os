@@ -40,3 +40,6 @@ jobs:
 
       - name: Verify Agent Orchestration
         run: python tools/verify-agent-orchestration.py
+
+      - name: Verify Autonomous Development Loop
+        run: python tools/verify-autonomous-loop.py
