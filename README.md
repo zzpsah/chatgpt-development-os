@@ -96,6 +96,36 @@ Orchestration selects only the roles needed for the work, respects dependencies,
 
 See [`core/agent-orchestration.md`](core/agent-orchestration.md) and [`workflows/orchestration.md`](workflows/orchestration.md).
 
+## Autonomous Development Loop
+
+P4 adds a controlled execution loop on top of the existing DevOS contracts:
+
+```text
+Objective
+  ↓
+State resolution
+  ↓
+Plan / orchestrate
+  ↓
+Capability + authorization check
+  ↓
+Bounded iteration
+  ↓
+Checkpoint + verification
+  ↓
+Review / Security Gate
+  ↓
+Persist evidence + state
+  ↓
+CONTINUE / STOP / ESCALATE
+```
+
+Each iteration has an execution bound, concrete scope, capability state, authorization state, evidence, verification result, and checkpoint. A resumed loop re-checks current repository state rather than blindly replaying actions. Missing capabilities may be explicitly delegated, but tool execution and external results are never simulated. High-risk, destructive, irreversible, production-impacting, security-sensitive, and data-affecting actions still require the applicable approval.
+
+P4 is **bounded autonomy**, not unrestricted autonomous deployment or permission bypass.
+
+See [`core/autonomous-development-loop.md`](core/autonomous-development-loop.md) and [`workflows/autonomous-loop.md`](workflows/autonomous-loop.md).
+
 ## Verification / Test Engine
 
 The Verification / Test Engine makes verification an evidence-based stage rather than an assumption. It:
@@ -135,7 +165,7 @@ Full onboarding guidance: [`docs/NEW-AI-ONBOARDING.md`](docs/NEW-AI-ONBOARDING.m
 
 ## Flow and architecture
 
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the Development OS flow, layered architecture, portable-context model, new-AI onboarding sequence, agent orchestration, and automation boundaries.
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the Development OS flow, layered architecture, portable-context model, new-AI onboarding sequence, agent orchestration, autonomous development loop, and automation boundaries.
 
 ## Architecture
 
@@ -156,6 +186,7 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the Development OS flow, 
 - Test and report verification evidence before declaring work complete.
 - Keep project-specific knowledge separate from global rules.
 - Do not watch entire drives by default; configure dedicated project roots.
+- Autonomous looping must remain bounded and must stop or escalate when authority, capability, evidence, or security conditions require it.
 
 ## Repository structure
 
@@ -179,4 +210,4 @@ chatgpt-development-os/
 
 ## Version
 
-0.8 — agent orchestration, auto-onboarding, multi-AI portability, and evidence-based development contracts.
+0.9 — bounded autonomous development loop, agent orchestration, auto-onboarding, multi-AI portability, and evidence-based development contracts.
