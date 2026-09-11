@@ -5,13 +5,13 @@
 - Repository: `zzpsah/chatgpt-development-os`
 - Branch: `main`
 - Current state is established from Git/source evidence; this file is a durable recovery summary, not a replacement for source inspection.
-- Latest known main HEAD: `8afb0e9eb6b8bd17df99bebb2fe8a34b0fef3435`.
-- Primary DevOS verification for the latest completed verification run is green at the immediately preceding HEAD; the latest HEAD must be reverified after subsequent changes.
-- P9 Development Task Controller v1 remains complete.
+- P9 Development Task Controller v1 is complete.
+- P10 Context Continuity & Recovery v1 is complete.
+- P11 DevOS Federation & Self-Healing Context v1 is the current milestone.
 
 ## Implemented architecture
 
-The repository contains the DevOS architecture through P9 plus the P10 continuity hardening layer:
+The repository contains the DevOS architecture through P10 plus the P11 federation/self-healing design layer:
 
 1. AI State Resolver
 2. Human Language Execution Engine
@@ -28,7 +28,8 @@ The repository contains the DevOS architecture through P9 plus the P10 continuit
 13. Runtime–Adapter Execution Bridge
 14. Remote Mutation Controls
 15. Development Task Controller (P9)
-16. Context Continuity & Recovery (P10, in progress)
+16. Context Continuity & Recovery (P10)
+17. DevOS Federation & Self-Healing Context (P11, in progress)
 
 ## P8 status
 
@@ -44,34 +45,42 @@ P9 introduced the evidence-driven lifecycle from request and project resolution 
 
 ## P10 status
 
-**P10 Context Continuity & Recovery v1 is in progress.**
+**P10 Context Continuity & Recovery v1 is complete.**
 
-Implemented in this stage:
-- repository-first continuity/recovery scope documented in `docs/P10-CONTEXT-CONTINUITY.md`
-- durable context-sync contract verifier added at `tools/verify-context-sync.py`
-- verifier wired into `.github/workflows/verify-devos.yml`
-- reusable context-sync meaningful-path classification changed to consume its configured input rather than silently relying on a separate hardcoded classifier
-- chat recovery snapshot preserved under `.ai/SESSIONS/2026-09-11-chat-context-recovery.md`
-- future-work persistence rule recorded in `DECISIONS.md`, `TASKS.md`, and current-state documentation
-- repository-side context-sync caller added for end-to-end testing
+Completion evidence:
+- repository-first continuity/recovery rules documented
+- engineering-relevant chat recovery snapshot persisted
+- durable context-sync contract verifier added and wired into primary CI
+- configurable meaningful-path patterns made effective
+- context-sync implementation refactored into `tools/context-sync.py`
+- successful external project-side reusable workflow execution in `zzpsah/automation-suite` on branch `devos-p10-context-sync-test`
+- successful persistence of `.ai/STATE-INDEX.md`, `.ai/CURRENT-STATE.md`, and `.ai/CHANGELOG.md` by the Development OS bot commit `0291fa0fd226e15e87da9e2bb35624cd0f5b887d`
+- temporary diagnostic smoke workflows removed after isolation
 
 ## P10 verification evidence
 
-- The primary `Verify Development OS` workflow run for commit `8afb0e9eb6b8bd17df99bebb2fe8a34b0fef3435` completed successfully across the existing DevOS verification jobs.
-- The dedicated project-side context-sync caller is being used to test the reusable workflow path, but its runs currently fail at workflow startup with zero jobs. This remains an unresolved integration issue and must not be marked green.
-- The reusable context-sync workflow previously contained a permissions declaration in the wrong scope; that was corrected, but the caller startup failure persisted, so the exact remaining root cause is still under investigation.
+The external project-side run `34603320644` completed successfully. Its called DevOS workflow executed the project checkout, Development OS tool checkout, and durable context synchronization successfully. The resulting external repository state contains generated `STATE-INDEX.md`, `CHANGELOG.md`, and updated `CURRENT-STATE.md` in the test branch.
 
-## P10 still requires
+This proves the reusable context-sync path works across repository boundaries under the tested GitHub Actions configuration.
 
-1. Diagnose and repair the project-side reusable context-sync caller startup failure.
-2. Obtain a successful actual context-sync execution.
-3. Verify generated `STATE-INDEX.md` and `CHANGELOG.md` are updated from repository evidence.
-4. Validate future-session persistence/recovery expectations from a new AI/session perspective.
-5. Close P10 only after fresh evidence supports all of the above.
+## P11 status
+
+**P11 DevOS Federation & Self-Healing Context v1 is in progress.**
+
+Initial scope is documented in `docs/P11-FEDERATION-SELF-HEALING.md`.
+
+Immediate focus:
+- versioned project identity and compatibility
+- context freshness/integrity detection
+- safe reconciliation of stale/derived `.ai` state
+- cross-AI bootstrap/recovery handshake
+- provenance-aware session handoff
+- safe self-healing of deterministic derived context
+- recovery precedence when memory, `.ai`, Git, and generated indexes disagree
 
 ## Durable future-work rule
 
-Future meaningful engineering work, decisions, blockers, verification evidence, and recovery notes must be persisted in the repository-local `.ai` context. Use `.ai/SESSIONS/` for session-level semantic records and update `TASKS.md`, `DECISIONS.md`, and `CURRENT-STATE.md` when the durable project state changes. Chat history is not the authoritative recovery layer.
+Future meaningful engineering work, decisions, blockers, verification evidence, and recovery notes must be persisted in the repository-local `.ai` context. Use `.ai/SESSIONS/` for session-level semantic records and update `TASKS.md`, `DECISIONS.md`, and `CURRENT-STATE.md` when durable project state changes. Chat history is not the authoritative recovery layer.
 
 ## Authority
 
