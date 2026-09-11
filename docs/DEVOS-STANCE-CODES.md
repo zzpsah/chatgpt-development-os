@@ -91,7 +91,7 @@ These aliases are accepted as human shorthand and map to canonical stances/style
 | audit mode | `DEVOS::AUDIT` |
 | continue mode | `DEVOS::CONTINUE` |
 | recover mode | `DEVOS::RECOVER` |
-| desi mode | `DEVOS::DESI` |
+| desi mode | `DEVOS::CONTINUE::DESI` |
 | god + desi | `DEVOS::GOD::DESI` |
 | continue + desi | `DEVOS::CONTINUE::DESI` |
 
