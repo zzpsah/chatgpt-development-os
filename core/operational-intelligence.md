@@ -21,7 +21,7 @@ Repository + durable .ai state
           ↓
  Failure + evidence analysis
           ↓
- Evidence-backed next action
+ Evidence-backed advisory next action
 ```
 
 ## Task graph model
@@ -81,7 +81,9 @@ Evidence is normalized with provenance and freshness metadata. Recognized execut
 
 ## Advisory next action
 
-P12 may derive a next-action signal from readiness, priority, failure class, checkpoint state, and available evidence. The signal must identify its supporting evidence and remain advisory. If evidence is insufficient, the safe result is an explicit blocker/unknown rather than a guessed action.
+P12 may derive a next-action signal from readiness and priority, with blockers taking precedence over speculative work. The result contains the task identifier, supporting reasons, and an explicit `ADVISORY_ONLY` authority marker. `NEEDS_APPROVAL` remains a controller approval concern even when its priority is high. The recommendation never executes, authorizes, mutates, or claims completion.
+
+When no task is safely actionable, the engine returns an explicit `no_action` result rather than guessing.
 
 ## Safety and authority
 
@@ -92,6 +94,7 @@ Operational Intelligence may recommend, rank, classify, normalize evidence, and 
 1. **Graph/readiness v1:** deterministic task graph construction, missing-reference validation, cycle detection, and readiness analysis.
 2. **Prioritization/checkpoints v2:** deterministic dependency-aware ranking with explicit reasons and checkpoint event signals.
 3. **Failure/evidence v3:** deterministic failure classification, raw-evidence preservation, provenance/freshness normalization, and safe handling of unsupported classifications.
-4. **Next:** fresh-repository recovery proof and stronger controller integration/advisory next-action generation without granting authority.
+4. **Next-action v4:** deterministic advisory next-action generation with explicit non-authority semantics.
+5. **Next:** fresh-repository recovery proof and stronger controller integration without granting authority.
 
 The implementation remains independently testable before broader automation is added.
