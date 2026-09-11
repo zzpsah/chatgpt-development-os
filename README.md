@@ -33,16 +33,30 @@ This makes project context portable between ChatGPT, Codex, Claude, Gemini, Curs
 
 ## Automatic context synchronization
 
-The Development OS now supports automatic GitHub-side `.ai/` synchronization:
+The Development OS supports automatic GitHub-side `.ai/` synchronization:
 
 - `.github/workflows/context-sync.yml` — reusable workflow that records repository changes in `.ai/CHANGELOG.md` and updates `.ai/CURRENT-STATE.md` for meaningful application changes.
 - `templates/project/.github/workflows/devos-context-sync.yml` — ready-to-copy caller workflow for managed projects.
 - `templates/project/.ai/CHANGELOG.md` — portable change-record template.
 - `tools/init-project.ps1` — idempotent initializer for an existing local project.
+- `tools/onboard-project.ps1` — safe existing-repository onboarding wrapper with dry-run support.
+- `tools/check-project.ps1` — context health check.
 - `tools/watch-projects.ps1` — Windows recursive watcher that detects project activity and initializes missing `.ai/` context.
 - `tools/install-windows.ps1` — installs the watcher at Windows logon for configured project roots.
 
 The automatic GitHub sync records verified repository facts. It does **not** invent architecture or decisions from a commit. AI agents remain responsible for updating semantic context such as architecture, decisions, requirements, and task state after meaningful work.
+
+## Auto-Onboarding
+
+Existing repositories can be brought under Development OS management without manually creating every context file.
+
+```powershell
+.\tools\onboard-project.ps1 -Path 'D:\Projects\MyApp'
+```
+
+Use `-DryRun` to preview the operation. Onboarding preserves existing `.ai` files and existing project files, creates only missing context/integration infrastructure, and does not modify application source. After onboarding, commit and push the generated files so GitHub-side synchronization can begin.
+
+Full design and automation boundaries: [`docs/AUTO-ONBOARDING.md`](docs/AUTO-ONBOARDING.md).
 
 ## Human-language first
 
@@ -137,4 +151,4 @@ chatgpt-development-os/
 
 ## Version
 
-0.6 — multi-AI portability contract and repository-only recovery.
+0.7 — auto-onboarding, multi-AI portability, and evidence-based development contracts.
