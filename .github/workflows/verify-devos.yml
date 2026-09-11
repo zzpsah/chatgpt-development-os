@@ -130,3 +130,16 @@ jobs:
           python-version: '3.x'
       - name: Verify Autonomous Development Loop contract
         run: python tools/verify-autonomous-loop.py
+
+  executable-development-runtime:
+    name: Verify Executable Development Runtime v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify Executable Development Runtime contract
+        run: python tools/verify-execution-runtime.py
