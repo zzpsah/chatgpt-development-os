@@ -18,44 +18,20 @@ architecture = read("docs/ARCHITECTURE.md")
 
 for needle in [
     "bounded, evidence-driven, checkpointed, and stoppable",
-    "Objective",
-    "State resolution",
-    "Plan / orchestrate",
-    "Capability check",
-    "Authorization check",
-    "Checkpoint",
-    "CONTINUE | STOP | ESCALATE",
-    "AVAILABLE",
-    "DELEGATABLE",
-    "MISSING",
-    "maximum iteration count",
+    "Objective", "State resolution", "Plan / orchestrate", "Capability check",
+    "Authorization check", "Checkpoint", "CONTINUE | STOP | ESCALATE",
+    "AVAILABLE", "DELEGATABLE", "MISSING", "maximum iteration count",
     "Production-impacting, destructive, irreversible, security-sensitive, or data-affecting",
-    "ESCALATE",
-    "checkpoint",
-    "Observed",
-    "Likely",
-    "Unknown",
-    "VERIFIED",
-    "PARTIAL",
-    "UNVERIFIED",
-    "FAILED",
-    "never blindly replay",
+    "ESCALATE", "checkpoint", "Observed", "Likely", "Unknown", "VERIFIED",
+    "PARTIAL", "UNVERIFIED", "FAILED", "never blindly replay",
     "Do not automatically repeat destructive or irreversible operations",
     "does not provide unrestricted autonomous software development",
 ]:
     require(core, needle, "core/autonomous-development-loop.md")
 
 for needle in [
-    "AI State Resolver",
-    "Agent Orchestration",
-    "capabilities",
-    "authorization",
-    "checkpoint",
-    "Verification",
-    "Security Gate",
-    "CONTINUE",
-    "STOP",
-    "ESCALATE",
+    "AI State Resolver", "Agent Orchestration", "capabilities", "authorization",
+    "checkpoint", "verification", "Security Gate", "CONTINUE", "STOP", "ESCALATE",
     "never blindly replay",
 ]:
     require(workflow, needle, "workflows/autonomous-loop.md")
@@ -73,15 +49,7 @@ for needle in [
 ]:
     require(roadmap, needle, "docs/ROADMAP.md")
 
-for needle in [
-    "Autonomous Development Loop",
-    "bounded",
-    "CONTINUE",
-    "STOP",
-    "ESCALATE",
-    "capability",
-    "checkpoint",
-]:
+for needle in ["Autonomous Development Loop", "bounded", "CONTINUE", "STOP", "ESCALATE", "capability", "checkpoint"]:
     require(architecture, needle, "docs/ARCHITECTURE.md")
 
 print("Autonomous Development Loop v1 contract checks passed.")
