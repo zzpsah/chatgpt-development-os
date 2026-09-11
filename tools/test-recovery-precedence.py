@@ -43,6 +43,8 @@ def main() -> None:
         assert "PROCEED_WITH_SOURCE_AND_GIT" in conflicted.stdout
         assert "source+git" in conflicted.stdout
 
+        (project / ".ai" / "CURRENT-STATE.md").unlink()
+        (project / ".ai" / "TASKS.md").unlink()
         (project / ".ai" / "STATE-INDEX.md").write_text("generated only\n", encoding="utf-8")
         generated_only = run(project)
         assert generated_only.returncode == 0
