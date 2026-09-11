@@ -7,7 +7,7 @@ Use when the user asks to check, review, validate, or assess existing work.
 3. Review correctness against requirements.
 4. Review regression and edge-case risk.
 5. Review maintainability and clarity.
-6. Review security and privacy.
+6. Review security and privacy at a baseline level. If the request or change requires a dedicated security review, invoke `workflows/security.md` and `core/security-gate.md`.
 7. Review performance where relevant.
 8. Use the Verification / Test Engine (`core/verification-engine.md`) to identify and perform applicable checks.
 9. Classify actual evidence as Observed, Likely, or Unknown.
