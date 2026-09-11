@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import json
 from dataclasses import dataclass
-from datetime import date
 from typing import Any
 
 
@@ -154,7 +153,6 @@ def analyze(tasks: list[dict[str, Any]], events: list[dict[str, Any]] | None = N
     return {
         "protocol_version": "P12-OI-v2",
         "task_count": len(graph),
-        "analysis_date": date.today().isoformat(),
         "cycle_detected": has_cycle(graph),
         "nodes": [
             {
