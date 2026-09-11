@@ -17,6 +17,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install parser dependency
+        run: python -m pip install pyyaml
+
       - name: Verify Human Language Execution Engine
         run: python tools/verify-human-language-engine.py
 
@@ -46,3 +54,6 @@ jobs:
 
       - name: Verify DevOS Stance Codes and DESI Style
         run: python tools/verify-stance-codes.py
+
+      - name: Test composable DevOS stance parser
+        run: python tools/test-devos-stance-parser.py
