@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Development Task Controller is the P9 integration layer that connects the existing DevOS contracts into one evidence-driven development task lifecycle. It coordinates existing authorities; it does not replace them. P11 adds repository-first recovery, integrity validation, bounded derived-context self-healing, and provenance-aware handoff requirements to that lifecycle.
+The Development Task Controller is the P9 integration layer that connects the existing DevOS contracts into one evidence-driven development task lifecycle. P11 adds repository-first recovery, integrity validation, bounded derived-context self-healing, and provenance-aware handoff requirements to that lifecycle. P12 adds Operational Intelligence as an advisory decision-support layer.
 
 ## Core contract
 
@@ -11,6 +11,7 @@ User request
   -> Project + intent resolution
   -> P11 repository-first recovery / revalidation
   -> Durable state resolution
+  -> P12 operational analysis (advisory)
   -> Objective + acceptance criteria
   -> Orchestration / work units
   -> Capability + authorization checks
@@ -30,16 +31,18 @@ User request
 2. Preserve the canonical intent produced by the Human Language Execution Engine.
 3. Run P11 repository-first recovery and revalidation before material work.
 4. Resolve current project state before material work.
-5. Convert the objective into bounded work units through Agent Orchestration.
-6. Require capability and authorization checks before execution.
-7. Execute only supported, bounded actions through the runtime/adapters.
-8. Collect evidence from actual execution and provider responses.
-9. Invoke applicable verification and Security Gate checks.
-10. Prevent a successful subtask from being mistaken for overall task completion.
-11. When derived context is missing or malformed, invoke only deterministic P11 self-healing; never overwrite semantic decisions.
-12. Persist meaningful semantic state and leave deterministic state generation to automation.
-13. Produce a provenance-aware handoff containing the current Git/source reference and revalidation requirements when a session boundary is reached.
-14. Produce a final result with completion status, evidence, limitations, blockers, and next action.
+5. Run P12 Operational Intelligence against the current task inventory to expose dependency readiness, advisory priority, and checkpoint signals.
+6. Treat P12 recommendations as advisory only; never convert a ranking or checkpoint signal into authority.
+7. Convert the objective into bounded work units through Agent Orchestration.
+8. Require capability and authorization checks before execution.
+9. Execute only supported, bounded actions through the runtime/adapters.
+10. Collect evidence from actual execution and provider responses.
+11. Invoke applicable verification and Security Gate checks.
+12. Prevent a successful subtask from being mistaken for overall task completion.
+13. When derived context is missing or malformed, invoke only deterministic P11 self-healing; never overwrite semantic decisions.
+14. Persist meaningful semantic state and leave deterministic state generation to automation.
+15. Produce a provenance-aware handoff containing the current Git/source reference and revalidation requirements when a session boundary is reached.
+16. Produce a final result with completion status, evidence, limitations, blockers, and next action.
 
 ## Task state
 
@@ -85,9 +88,11 @@ A resumed task must run repository revalidation and P11 recovery precedence befo
 
 The controller never manufactures authority. Planning, testing, prior low-risk approval, or provider credentials do not authorize a new high-risk operation. Remote mutation continues to be governed by Remote Mutation Controls.
 
+P12 priority and checkpoint signals are never authorization. `UNAUTHORIZED` readiness must continue through the existing approval/capability path rather than being bypassed by a high priority score.
+
 ## Evidence boundary
 
-Only actual repository, runtime, test, security, or provider responses are execution evidence. Intentions, proposed commands, generated URLs, and AI assertions are not evidence of execution.
+Only actual repository, runtime, test, security, or provider responses are execution evidence. Intentions, proposed commands, generated URLs, and AI assertions are not evidence of execution. P12 recommendations must retain their supporting operational evidence and must not be presented as execution evidence.
 
 ## Relationship to existing contracts
 
@@ -96,6 +101,7 @@ Only actual repository, runtime, test, security, or provider responses are execu
 - AI State Resolver: current-state reasoning
 - Agent Orchestration: decomposition and role coordination
 - Autonomous Development Loop: bounded continuation
+- Operational Intelligence: dependency/readiness analysis, advisory prioritization, checkpoint signals, and later failure/evidence intelligence
 - Execution Runtime: executable actions
 - Host/External Adapters: capabilities and provider boundaries
 - Verification Engine: verification authority
@@ -105,4 +111,4 @@ Only actual repository, runtime, test, security, or provider responses are execu
 
 ## Non-goals
 
-P9/P11 do not create unrestricted autonomy, bypass approval, replace existing authorities, invent execution results, silently rewrite semantic decisions, or automatically deploy production changes.
+P9/P11/P12 do not create unrestricted autonomy, bypass approval, replace existing authorities, invent execution results, silently rewrite semantic decisions, or automatically deploy production changes.
