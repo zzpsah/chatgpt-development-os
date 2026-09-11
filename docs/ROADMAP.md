@@ -104,6 +104,20 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Implement provider-backed reference operations
 - [x] Add external integration end-to-end tests
 
+### P8 — Remote Mutation Controls v1
+- [x] Define explicit remote-mutation authorization boundary
+- [x] Define target/scope validation and optimistic concurrency requirements
+- [x] Define safe retry and uncertain-outcome semantics
+- [x] Define Security Gate requirement for controlled remote mutation
+- [x] Implement provider-backed GitHub file-update reference operation
+- [x] Connect controlled file mutation to the executable runtime bridge
+- [x] Add mutation safety tests and CI contract verification
+- [ ] Execute a real provider-backed mutation only through an explicitly authorized production/test workflow
+- [ ] Add controlled branch mutation
+- [ ] Add controlled pull-request mutation
+- [ ] Add controlled workflow trigger/mutation
+- [ ] Add operation-specific rollback/recovery contracts for higher-impact mutations
+
 ## Cross-cutting
 
 - [x] `.ai` remains durable project-local memory
@@ -121,14 +135,15 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Verification Adapter architecture and reference implementation synchronized
 - [x] External Integration Adapter architecture and contract synchronized
 - [x] External Integration Adapter connected to the Executable Runtime for read-only GitHub operations
+- [x] Remote Mutation Controls connected to the Executable Runtime for controlled GitHub file updates
 - [x] This roadmap and Git/project state do not contradict each other
 
 ## Execution rule
 
 Complete the current milestone before advancing to the next milestone. Do not mark work complete without repository evidence and appropriate verification.
 
-## Next planned capability
+## Current milestone
 
-### P8 — Remote Mutation Controls
+### P8 — Remote Mutation Controls v1
 
-P8 should add remote mutation only after explicit authorization, Security Gate integration, target/scope validation, idempotency or safe retry semantics, provider-backed implementation, and end-to-end verification are defined. Examples include controlled GitHub file/branch/pull-request/workflow mutations. Read-only external inspection remains available through P7.
+P8 is intentionally incremental. The reference implementation proves the authorization, Security Gate, target/scope, optimistic-concurrency, and uncertain-outcome controls for one GitHub file-update operation. Higher-impact remote mutations remain disabled until their operation-specific controls and evidence paths are implemented and verified.
