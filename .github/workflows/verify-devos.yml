@@ -73,6 +73,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Python
+        uses: actions/checkout@v4
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
@@ -164,8 +166,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Python
         uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -311,6 +311,8 @@ jobs:
           python-version: '3.x'
       - name: Verify stance-code entry point
         run: python tools/verify-stance-codes.py
+      - name: Test composable DevOS stance parser
+        run: python tools/test-devos-stance-parser.py
 
   fresh-ai-recovery:
     name: Verify Repository-Only Fresh-AI Recovery v1
@@ -339,3 +341,5 @@ jobs:
           python-version: '3.x'
       - name: Verify bounded self-healing contract
         run: python tools/verify-self-heal-derived-context.py
+      - name: Exercise deterministic self-healing in isolated Git repository
+        run: python tools/test-self-heal-derived-context.py
