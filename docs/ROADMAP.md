@@ -130,18 +130,33 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Wire P9 verification into CI
 - [x] Verify current repository HEAD through the primary Development OS verification workflows
 
-P9 is implemented and verified. Higher-impact remote mutations from P8 remain separately incomplete.
+P9 is implemented and verified. Higher-impact remote mutations from P8 remain independently incomplete.
 
-### P10 — Context Continuity & Recovery v1 — IN PROGRESS
+### P10 — Context Continuity & Recovery v1 — COMPLETE
 - [x] Define repository-first continuity and recovery rules
 - [x] Preserve an engineering-relevant chat recovery snapshot
 - [x] Add durable context-sync contract verification
 - [x] Make configurable meaningful-path patterns effective in context-sync
 - [x] Wire context-sync verification into primary CI
-- [ ] Verify the repaired reusable context-sync workflow through an actual project-side caller run
-- [ ] Verify generated `STATE-INDEX.md` and `CHANGELOG.md` synchronization end-to-end
-- [ ] Document and validate future-session persistence expectations
-- [ ] Complete P10 with fresh CI and context-sync evidence
+- [x] Verify the repaired reusable context-sync workflow through an actual project-side caller run
+- [x] Verify generated `STATE-INDEX.md` and `CHANGELOG.md` synchronization end-to-end
+- [x] Document and validate future-session persistence expectations
+- [x] Complete P10 with fresh CI and context-sync evidence
+
+## P11 — DevOS Federation & Self-Healing Context v1 — IN PROGRESS
+
+Goal: make DevOS context portable, self-identifying, recoverable, and resistant to stale/partial context across AI tools, accounts, projects, and connectivity interruptions.
+
+- [ ] Define a versioned DevOS project manifest and compatibility contract
+- [ ] Add automatic project identity/registration discovery
+- [ ] Add context freshness and integrity checks
+- [ ] Detect and reconcile stale `.ai` state against Git/source evidence
+- [ ] Add cross-AI bootstrap/recovery handshake
+- [ ] Persist AI-session handoff summaries with provenance
+- [ ] Add safe self-healing for missing derived context files
+- [ ] Define recovery precedence when ChatGPT memory, `.ai`, Git, and generated indexes disagree
+- [ ] Add P11 contract verification and CI coverage
+- [ ] Prove recovery from a fresh AI/account context using repository-only evidence
 
 ## Cross-cutting
 
@@ -162,7 +177,8 @@ P9 is implemented and verified. Higher-impact remote mutations from P8 remain se
 - [x] External Integration Adapter connected to the Executable Runtime for read-only GitHub operations
 - [x] Remote Mutation Controls connected to the Executable Runtime for controlled GitHub file updates
 - [x] Development Task Controller integrated into the runtime/orchestration/verification path
-- [x] Durable context continuity work is explicitly tracked as P10
+- [x] Durable context continuity work completed as P10
+- [x] P11 continuity/federation scope recorded
 
 ## Execution rule
 
@@ -170,6 +186,6 @@ Complete the current milestone before advancing to the next milestone. Do not ma
 
 ## Current milestone
 
-### P10 — Context Continuity & Recovery v1 — IN PROGRESS
+### P11 — DevOS Federation & Self-Healing Context v1 — IN PROGRESS
 
-P10 is the evidence-driven next stage after P9. It is not an assumption based only on numbering: it is established from the post-P9 recovery incident and the documented context-sync verification gap. Higher-impact P8 remote mutations remain independently incomplete.
+P11 begins only after P10 completion is evidenced by both primary CI and an actual external project-side context-sync execution. Higher-impact P8 remote mutations remain independently incomplete.
