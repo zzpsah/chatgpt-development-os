@@ -41,7 +41,7 @@ assert module.inspect_workflow_run(client, "zzpsah/chatgpt-development-os", 123)
 assert module.inspect_repository(client, "invalid")["status"] == "BLOCKED"
 
 flaky = FlakyClient()
-retry_result = module.inspect_repository(flaky, "zzpsah/chatgpt-development-os", backoff_seconds=0)
+retry_result = module.inspect_repository(flaky, "zzpsah/chatgpt-development-os")
 assert retry_result["status"] == "SUCCESS"
 assert retry_result["attempt"] == 2
 assert flaky.repo_calls == 2
