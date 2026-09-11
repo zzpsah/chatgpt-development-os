@@ -34,11 +34,12 @@ Each future mutation requires its own bounded scope, authorization rules, applic
 `github.mutate.file` requires:
 
 1. `authorization: ALREADY_GRANTED`;
-2. `security_gate: PASS` at the runtime bridge;
-3. exact `owner/name` repository target;
-4. repository-relative file path;
-5. expected current file SHA;
-6. actual provider response before reporting `SUCCESS`.
+2. an authorized work unit for the specific mutation;
+3. `security_gate: PASS` at the runtime bridge;
+4. exact `owner/name` repository target;
+5. repository-relative file path;
+6. expected current file SHA;
+7. actual provider response before reporting `SUCCESS`.
 
 Provider credentials do not constitute user authorization.
 
