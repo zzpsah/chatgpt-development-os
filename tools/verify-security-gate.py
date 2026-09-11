@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Verify the repository contract for Security Gate v1."""
 from pathlib import Path
-import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,11 +52,11 @@ def main():
          "Security Gate defines finding severity"),
         (all(x.lower() in gate.lower() for x in ("Observed", "Likely", "Unknown")),
          "Security Gate preserves the evidence model"),
-        ("100% secure".lower() in gate.lower() and "never state" in gate.lower(),
+        ("100% secure".lower() in gate.lower() and "Never state".lower() in gate.lower(),
          "Security Gate prevents absolute-security claims"),
         ("No technical action is justified solely by emotional intensity".lower() in engine.lower(),
          "Human-language execution preserves authorization boundary"),
-        ("workflows/security.md" in engine and "Security Gate" in engine,
+        ("workflows/security.md" in engine and "SECURITY_REVIEW" in engine,
          "security intent routes to dedicated Security Gate workflow"),
         ("workflows/security.md" in review and "core/security-gate.md" in review,
          "Review workflow delegates material security reviews to Security Gate"),
