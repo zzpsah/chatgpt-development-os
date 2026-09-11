@@ -262,3 +262,18 @@ jobs:
         run: python tools/verify-context-integrity.py
       - name: Run context freshness and integrity check
         run: python tools/check-context-integrity.py
+
+  context-reconciliation:
+    name: Verify DevOS Safe Context Reconciliation v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify safe reconciliation boundaries
+        run: python tools/verify-context-reconciliation.py
+      - name: Run reconciliation guard in safe no-op mode
+        run: python tools/reconcile-derived-context.py
