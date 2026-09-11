@@ -7,11 +7,12 @@
 - Current state is established from Git/source evidence; this file is a durable recovery summary, not a replacement for source inspection.
 - P9 Development Task Controller v1 is complete.
 - P10 Context Continuity & Recovery v1 is complete.
-- P11 DevOS Federation & Self-Healing Context v1 is the current milestone.
+- P11 DevOS Federation & Self-Healing Context v1 is complete.
+- P12 Operational Intelligence is now the active milestone.
 
 ## Implemented architecture
 
-The repository contains the DevOS architecture through P10 plus the P11 federation/self-healing design layer:
+The repository contains the DevOS architecture through P11:
 
 1. AI State Resolver
 2. Human Language Execution Engine
@@ -29,10 +30,11 @@ The repository contains the DevOS architecture through P10 plus the P11 federati
 14. Remote Mutation Controls
 15. Development Task Controller (P9)
 16. Context Continuity & Recovery (P10)
-17. DevOS Federation & Self-Healing Context (P11, in progress)
+17. DevOS Federation & Self-Healing Context (P11)
 18. Composable stance + communication-style layer (`DEVOS::<STANCE>::<STYLE>`)
 19. Deterministic derived-context self-healing layer
 20. Repository-first recovery precedence resolver
+21. P11 recovery/revalidation and bounded self-healing integrated into the task lifecycle
 
 ## P8 status
 
@@ -42,7 +44,7 @@ Higher-impact remote mutations remain separately gated and are not implied by th
 
 ## P9 status
 
-**P9 Development Task Controller v1 is implemented and remains complete.**
+**P9 Development Task Controller v1 is implemented and complete.**
 
 P9 introduced the evidence-driven lifecycle from request and project resolution through objective/acceptance criteria, orchestration, authorization, bounded execution, checkpoints, verification, security, review, persistence, and evidence-backed outcome.
 
@@ -50,47 +52,24 @@ P9 introduced the evidence-driven lifecycle from request and project resolution 
 
 **P10 Context Continuity & Recovery v1 is complete.**
 
-Completion evidence:
-- repository-first continuity/recovery rules documented
-- engineering-relevant chat recovery snapshot persisted
-- durable context-sync contract verifier added and wired into primary CI
-- configurable meaningful-path patterns made effective
-- context-sync implementation refactored into `tools/context-sync.py`
-- successful external project-side reusable workflow execution in `zzpsah/automation-suite` on branch `devos-p10-context-sync-test`
-- successful persistence of `.ai/STATE-INDEX.md`, `.ai/CURRENT-STATE.md`, and `.ai/CHANGELOG.md` by the Development OS bot commit `0291fa0fd226e15e87da9e2bb35624cd0f5b887d`
-- temporary diagnostic smoke workflows removed after isolation
-
-## P10 verification evidence
-
-The external project-side run `34603320644` completed successfully. Its called DevOS workflow executed the project checkout, Development OS tool checkout, and durable context synchronization successfully. The resulting external repository state contains generated `STATE-INDEX.md`, `CHANGELOG.md`, and updated `CURRENT-STATE.md` in the test branch.
-
-This proves the reusable context-sync path works across repository boundaries under the tested GitHub Actions configuration.
+Completion evidence includes repository-first continuity rules, durable context synchronization, successful external reusable-workflow execution, and persisted `.ai` recovery artifacts.
 
 ## P11 status
 
-**P11 DevOS Federation & Self-Healing Context v1 is in progress.**
+**P11 DevOS Federation & Self-Healing Context v1 is complete.**
 
-Initial scope is documented in `docs/P11-FEDERATION-SELF-HEALING.md`.
-
-Implemented in P11 so far:
-- versioned `.ai/manifest.yaml` compatibility contract
-- `tools/verify-project-manifest.py` contract verifier
-- automatic project identity discovery tool at `tools/discover-project-identity.py`
-- identity discovery verifier at `tools/verify-project-identity.py`
-- project identity verification wired into primary DevOS CI
-- discovery precedence: existing manifest → GitHub CI repository metadata → Git remote → filesystem fallback
-- ambiguous identity uses explicit `UNKNOWN`/confidence semantics rather than guessing
-- identity discovery is non-destructive by default and never modifies application source
-- context freshness/integrity detection and CI verification
-- safe derived-context reconciliation guard and executable CI cases
-- deterministic derived-context self-healer at `tools/self-heal-derived-context.py`
-- self-healing contract verifier and isolated-Git executable test
-- cross-AI bootstrap/recovery handshake and vendor-neutral handoff packet generator
-- provenance-aware handoff contract fields
-- composable stance codes and ChatGPT-facing DESI communication profile
-- centralized stance/style registry and executable parser
-- stance/style contract verifier in Development OS contract CI
-- repository-first recovery precedence resolver and deterministic scenario tests
+Completion evidence:
+- versioned project manifest compatibility and identity discovery
+- context freshness/integrity detection
+- safe deterministic derived-context reconciliation
+- bounded deterministic self-healing with isolated-Git execution proof
+- cross-AI bootstrap/recovery handshake and provenance-aware handoff generation
+- composable `DEVOS::<STANCE>::<STYLE>` registry/parser and DESI profile
+- repository-first recovery precedence with conflict escalation
+- fresh-AI repository-only recovery proof
+- P11 recovery/revalidation and self-healing integrated into the broader Development Task Controller lifecycle
+- fresh primary CI run `34628093712` / run 290 passed all jobs on commit `e701f5fa0a6dce1f0f4ab3ad1cb260de2f55853f`
+- P11 contract CI also passed on the corresponding verified state
 
 ## Stance/style contract
 
@@ -114,12 +93,9 @@ DEVOS::GOD::DESI
 
 Only deterministic derived artifacts are eligible for automated recreation: `STATE-INDEX.md`, `CHANGELOG.md`, and `PROJECT-IDENTITY.json`. Semantic project files such as `PROJECT.md`, `DECISIONS.md`, `TASKS.md`, `CURRENT-STATE.md`, and `ARCHITECTURE.md` are outside the self-healing write boundary.
 
-## Immediate remaining focus
+## P12 starting point
 
-- Fresh CI evidence for the latest P11 stance/style, self-healing, and recovery-precedence changes
-- provenance-aware session handoff persistence
-- fresh-AI/account repository-only recovery proof
-- integration of self-healing/recovery precedence into the broader DevOS task lifecycle
+P12 Operational Intelligence starts from the completed P11 recovery foundation. The first slice is dependency-aware project/task intelligence: build a durable task graph from repository evidence, identify dependencies/blockers, improve priority selection, and preserve evidence-backed checkpoints without weakening P11 recovery or authorization boundaries.
 
 ## Durable future-work rule
 
