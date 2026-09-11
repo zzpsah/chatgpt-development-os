@@ -16,7 +16,10 @@ flowchart TD
     L -->|Do / Normal execution| I[Inspect current code, tests, configuration and Git state]
     TE --> I
     I --> P[Plan appropriate scope]
-    P --> A{Execution authorized?}
+    P --> O{Orchestration useful?}
+    O -->|Yes| AO[Agent Orchestration]
+    O -->|No| A{Execution authorized?}
+    AO --> A
     A -->|No| PL[Return findings / plan]
     A -->|Yes| X[Implement smallest appropriate change]
     X --> V[Verification / Test Engine]
@@ -36,7 +39,7 @@ flowchart TD
     PL --> Z
 ```
 
-The Human Language Execution Engine normalizes the user's wording into a canonical engineering intent. The AI State Resolver combines that intent with durable repository evidence. The Teaching Engine controls how work is explained or taught without replacing engineering controls. The Verification / Test Engine determines which checks apply, records actual evidence, and prevents unsupported verification claims.
+The Human Language Execution Engine normalizes the user's wording into a canonical engineering intent. The AI State Resolver combines that intent with durable repository evidence. The Teaching Engine controls how work is explained or taught without replacing engineering controls. Agent Orchestration coordinates larger work across internal engineering responsibilities without creating authority. The Verification / Test Engine determines which checks apply, records actual evidence, and prevents unsupported verification claims.
 
 ## 2. Layered architecture
 
@@ -47,7 +50,9 @@ flowchart LR
     E --> SR[AI State Resolver]
     SR --> W[Routing + Workflows + Roles + Rules]
     W --> TE[Teaching Engine]
+    W --> AO[Agent Orchestration]
     W --> PM[Project-local .ai/ context]
+    AO --> ROLES[Planner / Architect / Developer / Tester / Reviewer]
     PM --> SRC[Project source code]
     SRC --> V[Verification / Test Engine]
     V --> SG[Security Gate]
@@ -56,9 +61,8 @@ flowchart LR
     OS[Development OS] --> R
     OS -.-> AD[AI Adapter Contract]
     AD -.-> AI[ChatGPT / Codex / Claude / Gemini / Cursor / other AI]
-    OS -. optional .-> AO[Auto-Onboarding]
-    AO -.-> PM
-    OS -. optional .-> DB[Supabase / APIs / other infrastructure]
+    OS -. optional .-> AON[Auto-Onboarding]
+    AON -.-> PM
 ```
 
 ### Responsibilities
@@ -70,6 +74,7 @@ flowchart LR
 | Human Language Execution Engine | Normalize language and compose safe intents | Semantic execution contract |
 | AI State Resolver | Interpret repository evidence and unfinished work | Current-state reasoning |
 | Teaching Engine | Present concepts, explanations, examples, and practice safely | Learning/presentation behavior |
+| Agent Orchestration | Coordinate internal work units, roles, dependencies, handoffs, and recovery | Orchestration contract |
 | Development OS | How work should be performed | Workflow, safety, routing |
 | AI Adapter Contract | Connect a host AI to portable DevOS capabilities | Host integration boundary |
 | Auto-Onboarding | Safely establish missing DevOS project infrastructure | Onboarding state/change scope |
@@ -115,6 +120,7 @@ sequenceDiagram
     participant C as .ai context
     participant S as State Resolver
     participant TE as Teaching Engine
+    participant AO as Orchestrator
     participant V as Verification Engine
 
     U->>A: "Continue / work on this project"
@@ -127,8 +133,9 @@ sequenceDiagram
     A->>G: Inspect source + Git state
     A->>S: Resolve facts, unfinished work and verification
     S->>A: Recommended action + evidence + authorization
-    A->>U: Explain, teach, plan, or execute according to request
     A->>TE: Present learning content when requested
+    A->>AO: Coordinate multi-unit work when useful
+    AO->>A: Evidence-backed work-unit results
     A->>G: Implement change when authorized
     A->>V: Select and run/delegate checks
     V->>A: Verification status + evidence + limitations
@@ -143,7 +150,15 @@ The portable contract requires every compatible AI to be able to bootstrap from 
 
 See [`adapters/adapter-contract.md`](../adapters/adapter-contract.md) and [`docs/MULTI-AI-PORTABILITY.md`](MULTI-AI-PORTABILITY.md).
 
-## 6. Auto-Onboarding architecture
+## 6. Agent Orchestration
+
+Agent Orchestration is a coordination layer for work that benefits from multiple internal engineering responsibilities. It decomposes objectives into minimal work units, assigns roles, manages dependencies and safe parallelism, carries evidence between units, handles failures, and reconciles the integrated result.
+
+It does **not** imply multiple physical AI models, unrestricted autonomy, automatic production deployment, or permission to bypass user authorization. The Verification / Test Engine and Security Gate remain authoritative for their respective decisions.
+
+See [`core/agent-orchestration.md`](../core/agent-orchestration.md) and [`workflows/orchestration.md`](../workflows/orchestration.md).
+
+## 7. Auto-Onboarding architecture
 
 Auto-Onboarding has two distinct paths:
 
@@ -154,7 +169,7 @@ The onboarding initializer creates only missing infrastructure. Existing `.ai` s
 
 See [`docs/AUTO-ONBOARDING.md`](AUTO-ONBOARDING.md).
 
-## 7. Automation boundary
+## 8. Automation boundary
 
 The GitHub repository can provide the portable `.ai/` contract and automation scripts. A local computer cannot be silently controlled by a cloud AI session. Therefore local filesystem watching is an optional resident worker concern, not a project-memory dependency.
 
@@ -162,7 +177,7 @@ The important invariant is:
 
 > **The project remains usable by a new AI even if the original AI account, chat history, or local worker is unavailable.**
 
-## 8. Safety boundaries
+## 9. Safety boundaries
 
 - `.ai/` must never contain secrets merely to preserve context.
 - Existing project context must not be overwritten blindly.
@@ -174,3 +189,4 @@ The important invariant is:
 - Verification claims must be supported by actual evidence.
 - Verification never grants implementation or deployment authority.
 - Teaching never grants implementation or deployment authority.
+- Orchestration coordinates work but never creates authority.
