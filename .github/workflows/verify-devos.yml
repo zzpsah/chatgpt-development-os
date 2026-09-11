@@ -166,6 +166,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Python
+        uses: actions/checkout@v4
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
@@ -322,3 +324,18 @@ jobs:
           python-version: '3.x'
       - name: Simulate fresh-AI repository-only recovery
         run: python tools/test-fresh-ai-recovery.py
+
+  derived-context-self-healing:
+    name: Verify Derived Context Self-Healing v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify bounded self-healing contract
+        run: python tools/verify-self-heal-derived-context.py
