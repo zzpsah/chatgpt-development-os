@@ -63,6 +63,8 @@ flowchart LR
     HA --> GI[Git]
     HA --> VT[Verification tooling]
     HA --> GH[GitHub / CI integrations]
+    ER --> EX[External Integration Bridge]
+    EX --> GH
     PM --> SRC[Project source code]
     SRC --> V[Verification / Test Engine]
     V --> SG[Security Gate]
@@ -88,6 +90,7 @@ flowchart LR
 | Autonomous Development Loop | Run bounded iterations, checkpoints, capability/approval gates, and continue/stop/escalate decisions | Autonomous-loop control contract |
 | Executable Development Runtime | Execute one authorized bounded work unit, capture evidence, checkpoint, and return an outcome | Execution boundary |
 | Host Execution Adapters | Expose real host capabilities through bounded, honest operations and normalized evidence | Host integration boundary |
+| External Integration Bridge | Route declared external operations from runtime to supported provider adapters | External execution boundary |
 | Development OS | How work should be performed | Workflow, safety, routing |
 | AI Adapter Contract | Connect a host AI to portable DevOS capabilities | Host integration boundary |
 | Auto-Onboarding | Safely establish missing DevOS project infrastructure | Onboarding state/change scope |
@@ -137,6 +140,7 @@ sequenceDiagram
     participant AL as Autonomous Loop
     participant ER as Runtime
     participant HA as Host Adapter
+    participant EX as External Bridge
     participant V as Verification Engine
 
     U->>A: "Continue / work on this project"
@@ -155,6 +159,8 @@ sequenceDiagram
     AL->>ER: Request authorized work unit execution
     ER->>HA: Request bounded host operation
     HA->>ER: Actual result + normalized evidence
+    ER->>EX: Request bounded external operation when required
+    EX->>ER: Actual provider result + normalized evidence
     ER->>A: Outcome + evidence + checkpoint
     A->>V: Select and run/delegate checks
     V->>A: Verification status + evidence + limitations
@@ -208,11 +214,11 @@ See [`core/autonomous-development-loop.md`](../core/autonomous-development-loop.
 
 ## 10. Executable Development Runtime
 
-The Executable Development Runtime is the controlled execution boundary beneath the Autonomous Development Loop. It receives an already authorized work unit, resolves capabilities, creates pre/post checkpoints, performs only the bounded action through a supported host/tool adapter, captures actual evidence, invokes applicable verification, and returns a factual outcome.
+The Executable Development Runtime is the controlled execution boundary beneath the Autonomous Development Loop. It receives an already authorized work unit, resolves capabilities, creates pre/post checkpoints, performs only the bounded action through a supported host or external integration adapter, captures actual evidence, invokes applicable verification, and returns a factual outcome.
 
 The runtime separates AI decisions from execution evidence. A planned action is not evidence that the action happened. A missing capability cannot be simulated, and a failed tool action cannot silently become project success. Resume requires repository/source comparison and fresh capability/authorization checks before any retry or continuation.
 
-See [`core/execution-runtime.md`](../core/execution-runtime.md) and [`workflows/execution-runtime.md`](../workflows/execution-runtime.md).
+See [`core/execution-runtime.md`](../core/execution-runtime.md), [`core/runtime-adapter-bridge.md`](../core/runtime-adapter-bridge.md), and [`workflows/execution-runtime.md`](../workflows/execution-runtime.md).
 
 ## 11. Host Execution Adapters
 
@@ -224,7 +230,17 @@ Adapters report `AVAILABLE`, `DELEGATABLE`, or `MISSING` honestly. `BLOCKED`, `F
 
 See [`core/host-adapter-contract.md`](../core/host-adapter-contract.md) and [`adapters/host-adapter.md`](../adapters/host-adapter.md).
 
-## 12. Safety boundaries
+## 12. External Integration Adapters
+
+External Integration Adapters provide a controlled boundary for remote systems. The runtime validates the operation, target, scope, capability, and authorization before passing a bounded request to a provider adapter. The provider returns an actual response, which is normalized into execution evidence and checkpointed by the runtime.
+
+The current reference path supports read-only GitHub repository, commit, and workflow-run inspection. These operations use injected provider clients so credentials remain in the host/provider credential system. Read-only inspection is not a mutation authority and is deliberately kept separate from future remote mutation controls.
+
+Provider-backed reads use bounded retries. A provider failure remains a failure; an unavailable provider capability remains unavailable. Planned API calls, generated URLs, or AI statements are never treated as external execution evidence.
+
+See [`core/external-integration-adapter.md`](../core/external-integration-adapter.md), [`core/runtime-adapter-bridge.md`](../core/runtime-adapter-bridge.md), and [`adapters/github-reference.py`](../adapters/github-reference.py).
+
+## 13. Safety boundaries
 
 - `.ai/` must never contain secrets merely to preserve context.
 - Existing project context must not be overwritten blindly.
@@ -240,3 +256,5 @@ See [`core/host-adapter-contract.md`](../core/host-adapter-contract.md) and [`ad
 - Autonomous looping never creates authority, and bounded continuation cannot override a missing capability, approval, verification condition, or security gate.
 - The Executable Runtime cannot claim execution, external results, or completion without actual host evidence.
 - Host adapters cannot grant authorization, silently expand scope, simulate unavailable capabilities, or persist secrets as execution evidence.
+- External adapters cannot grant authorization or turn planned remote calls into evidence.
+- Remote mutation remains a separate P8 capability and is not implied by P7 read-only inspection.
