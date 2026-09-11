@@ -7,7 +7,6 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
-
 TERMINAL = {"COMPLETE"}
 BLOCKED = {"BLOCKED", "FAILED", "ESCALATED"}
 UNAUTHORIZED = {"NEEDS_APPROVAL"}
@@ -22,7 +21,6 @@ FAILURE_CLASSES = {
     "REPOSITORY_DRIFT", "INPUT_AMBIGUOUS", "UNKNOWN",
 }
 EXECUTION_EVIDENCE_SOURCES = {"repository", "git", "runtime", "test", "security", "provider"}
-
 
 @dataclass(frozen=True)
 class Node:
@@ -161,11 +159,31 @@ def evidence_records(evidence: list[dict[str, Any]] | None = None) -> list[dict[
     return records
 
 
+def advisory_next_action(graph: dict[str, Node], failures: list[dict[str, Any]] | None = None,
+                         evidence: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+    """Return a non-authoritative recommendation; never grants execution authority."""
+    states = {row["id"]: row for row in readiness(graph)}
+    ranked = priority_analysis(graph)
+    for row in ranked:
+        state = states[row["id"]]["readiness"]
+        if state == "READY":
+            return {"action": f"work_on:{row['id']}", "task_id": row["id"],
+                    "reason": row["reasons"], "authority": "ADVISORY_ONLY"}
+    blocked = [r for r in ranked if states[r["id"]]["readiness"] in {"BLOCKED", "UNAUTHORIZED"}]
+    if blocked:
+        row = blocked[0]
+        return {"action": f"resolve:{row['id']}", "task_id": row["id"],
+                "reason": row["reasons"] + [states[row["id"]]["reason"]],
+                "authority": "ADVISORY_ONLY"}
+    return {"action": "no_action", "task_id": None,
+            "reason": ["NO_READY_OR_ACTIONABLE_TASK"], "authority": "ADVISORY_ONLY"}
+
+
 def analyze(tasks: list[dict[str, Any]], events: list[dict[str, Any]] | None = None,
             failures: list[dict[str, Any]] | None = None,
             evidence: list[dict[str, Any]] | None = None) -> dict[str, Any]:
     graph = build_graph(tasks)
-    return {"protocol_version": "P12-OI-v3", "task_count": len(graph),
+    return {"protocol_version": "P12-OI-v4", "task_count": len(graph),
             "cycle_detected": has_cycle(graph),
             "nodes": [{"id": n.id, "status": n.status, "dependencies": list(n.dependencies),
                        "priority": n.priority, "effort": n.effort, "age_days": n.age_days,
@@ -173,7 +191,8 @@ def analyze(tasks: list[dict[str, Any]], events: list[dict[str, Any]] | None = N
             "readiness": readiness(graph), "priority": priority_analysis(graph),
             "checkpoints": checkpoint_signals(events),
             "failures": [classify_failure(x) for x in failures or []],
-            "evidence": evidence_records(evidence)}
+            "evidence": evidence_records(evidence),
+            "advisory_next_action": advisory_next_action(graph, failures, evidence)}
 
 
 def main() -> None:
@@ -193,7 +212,6 @@ def main() -> None:
             handle.write(payload)
     else:
         print(payload, end="")
-
 
 if __name__ == "__main__":
     main()
