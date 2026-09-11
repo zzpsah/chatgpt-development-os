@@ -85,3 +85,22 @@ This is the authoritative high-level implementation order for the Development OS
 ## Execution rule
 
 Complete the current milestone before advancing to the next milestone. Do not mark work complete without repository evidence and appropriate verification.
+
+## Next planned capability
+
+### P4 — Autonomous Development Loop
+
+The next phase will turn the existing contracts into a controlled end-to-end execution loop. It will define how DevOS repeatedly moves from objective → state resolution → planning/orchestration → authorized implementation → verification → review → persistence, while stopping safely when authority, evidence, or required capabilities are missing.
+
+Planned scope:
+
+- [ ] Define autonomous-loop lifecycle and bounded iteration
+- [ ] Define stop/continue/escalation conditions
+- [ ] Connect orchestration outputs to executable workflow steps
+- [ ] Define capability checks and honest delegation when a host lacks tools
+- [ ] Define checkpointing and resumability between iterations
+- [ ] Define approval gates for high-risk actions
+- [ ] Define end-to-end evidence aggregation
+- [ ] Build contract verification harness and CI integration
+
+P4 does **not** mean unrestricted autonomous deployment or removal of user authorization. The existing Security Gate, Verification / Test Engine, project-local `.ai` context, and Git/source authority remain in force.
