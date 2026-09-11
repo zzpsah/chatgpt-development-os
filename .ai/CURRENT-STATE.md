@@ -69,8 +69,18 @@ This proves the reusable context-sync path works across repository boundaries un
 
 Initial scope is documented in `docs/P11-FEDERATION-SELF-HEALING.md`.
 
-Immediate focus:
-- versioned project identity and compatibility
+Implemented in P11 so far:
+- versioned `.ai/manifest.yaml` compatibility contract
+- `tools/verify-project-manifest.py` contract verifier
+- automatic project identity discovery tool at `tools/discover-project-identity.py`
+- identity discovery verifier at `tools/verify-project-identity.py`
+- project identity verification wired into primary DevOS CI
+- discovery precedence: existing manifest → GitHub CI repository metadata → Git remote → filesystem fallback
+- ambiguous identity uses explicit `UNKNOWN`/confidence semantics rather than guessing
+- identity discovery is non-destructive by default and never modifies application source
+
+Immediate remaining focus:
+- fresh CI evidence for the latest P11 identity-discovery changes
 - context freshness/integrity detection
 - safe reconciliation of stale/derived `.ai` state
 - cross-AI bootstrap/recovery handshake
