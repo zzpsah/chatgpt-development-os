@@ -6,7 +6,7 @@ A portable, human-language development operating system for working across proje
 
 The Development OS defines **how AI develops software**. Each project owns its own durable `.ai/` memory. The project must not depend on ChatGPT Memory, a particular AI account, or a particular GitHub account.
 
-**Understand → Inspect → Plan → Implement → Test → Review → Security → Document → Persist**
+**Understand → Inspect → Plan → Implement → Verify → Review → Security → Document → Persist**
 
 Not every request requires every stage; the workflow scales to the task.
 
@@ -19,6 +19,7 @@ project/
 ├── AGENTS.md
 └── .ai/
     ├── manifest.yaml
+    ├── STATE-INDEX.md
     ├── PROJECT.md
     ├── CURRENT-STATE.md
     ├── ARCHITECTURE.md
@@ -52,6 +53,19 @@ You should not need to know which agent, workflow, or command is required.
 - “Can you check whether this is secure?” → security review.
 - “Continue where we stopped.” → recover project state and resume.
 - “Go ahead and do it.” → execute the agreed plan.
+
+## Verification / Test Engine
+
+The Verification / Test Engine makes verification an evidence-based stage rather than an assumption. It:
+
+- selects applicable checks from the changed scope and project tooling;
+- supports static, unit, integration, E2E, runtime, deployment, and security verification levels;
+- executes supported checks or delegates them to CI/project tooling;
+- records actual evidence and limitations;
+- reports `VERIFIED`, `PARTIAL`, `UNVERIFIED`, or `FAILED` honestly;
+- prevents claims such as “tests passed” when tests were not actually run.
+
+See [`core/verification-engine.md`](core/verification-engine.md) and [`workflows/verification.md`](workflows/verification.md).
 
 ## Moving to a new AI
 
@@ -87,7 +101,7 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the Development OS flow, 
 - Treat production/database/destructive changes as high-risk.
 - Verify assumptions before changing important systems.
 - Prefer small, reviewable changes.
-- Test before declaring work complete.
+- Test and report verification evidence before declaring work complete.
 - Keep project-specific knowledge separate from global rules.
 - Do not watch entire drives by default; configure dedicated project roots.
 
@@ -113,4 +127,4 @@ chatgpt-development-os/
 
 ## Version
 
-0.4 — automatic GitHub durable-context synchronization.
+0.5 — human-language execution and evidence-based verification contracts.
