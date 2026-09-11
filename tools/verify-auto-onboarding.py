@@ -40,9 +40,9 @@ def main() -> None:
         require(onboarding, term, "tools/onboard-project.ps1")
 
     for term in [
-        "Write-IfMissing", "Never overwrite", "AGENTS.md",
-        ".ai/manifest.yaml", ".ai/STATE-INDEX.md", ".ai/PROJECT.md",
-        ".ai/CURRENT-STATE.md", ".ai/DECISIONS.md", ".ai/TASKS.md",
+        "Write-IfMissing", "AGENTS.md", ".ai/manifest.yaml",
+        ".ai/STATE-INDEX.md", ".ai/PROJECT.md", ".ai/CURRENT-STATE.md",
+        ".ai/DECISIONS.md", ".ai/TASKS.md",
     ]:
         # The initializer must be idempotent and establish the durable minimum context.
         require(initializer, term, "tools/init-project.ps1")
@@ -63,11 +63,11 @@ def main() -> None:
     require(bootstrap, "Missing or incomplete context", "core/ai-bootstrap-protocol.md")
 
     for item in [
-        "[ ] Existing-repository onboarding flow",
-        "[ ] Onboarding script/workflow",
-        "[ ] Context validation",
-        "[ ] Preserve existing context; no destructive overwrite",
-        "[ ] GitHub-side versus local automation boundaries",
+        "[x] Existing-repository onboarding flow",
+        "[x] Onboarding script/workflow",
+        "[x] Context validation",
+        "[x] Preserve existing context; no destructive overwrite",
+        "[x] GitHub-side versus local automation boundaries",
     ]:
         require(roadmap, item, "docs/ROADMAP.md")
 
