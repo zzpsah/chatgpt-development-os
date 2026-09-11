@@ -58,3 +58,18 @@ jobs:
 
       - name: Verify verification engine contract
         run: python tools/verify-verification-engine.py
+
+  security-gate:
+    name: Verify Security Gate v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Verify Security Gate contract
+        run: python tools/verify-security-gate.py
