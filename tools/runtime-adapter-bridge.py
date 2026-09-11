@@ -89,7 +89,7 @@ def execute(request: dict[str, Any], project_root: Path, github_client: Any = No
         content = request.get("content")
         if not isinstance(content, str):
             return {"status": "BLOCKED", "reason": "write content is required"}
-        return adapter.write_text(project_root, target, content)
+        return adapter.write_text(project_root, target, content, authorization)
 
     if operation == "git.inspect":
         return adapter.git_inspect(project_root, target or "status")
