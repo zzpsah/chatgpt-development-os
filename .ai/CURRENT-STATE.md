@@ -30,6 +30,7 @@ The repository contains the DevOS architecture through P10 plus the P11 federati
 15. Development Task Controller (P9)
 16. Context Continuity & Recovery (P10)
 17. DevOS Federation & Self-Healing Context (P11, in progress)
+18. Composable stance + communication-style layer (`DEVOS::<STANCE>::<STYLE>`)
 
 ## P8 status
 
@@ -78,15 +79,29 @@ Implemented in P11 so far:
 - discovery precedence: existing manifest → GitHub CI repository metadata → Git remote → filesystem fallback
 - ambiguous identity uses explicit `UNKNOWN`/confidence semantics rather than guessing
 - identity discovery is non-destructive by default and never modifies application source
+- context freshness/integrity detection and CI verification
+- safe derived-context reconciliation guard and executable CI cases
+- cross-AI bootstrap/recovery handshake and vendor-neutral handoff packet generator
+- composable stance codes and ChatGPT-facing DESI communication profile
+- stance/style contract verifier in Development OS contract CI
 
-Immediate remaining focus:
-- fresh CI evidence for the latest P11 identity-discovery changes
-- context freshness/integrity detection
-- safe reconciliation of stale/derived `.ai` state
-- cross-AI bootstrap/recovery handshake
+## Stance/style contract
+
+Preferred high-autonomy user invocation:
+
+```text
+DEVOS::GOD::DESI
+```
+
+`GOD` controls execution posture. `DESI` controls conversational presentation. DESI may use natural Hinglish, engineering banter, and user-invited slang/profanity while preserving technical precision. Neither layer changes authorization, security, or verification requirements.
+
+## Immediate remaining focus
+
+- Fresh CI evidence for the latest P11 stance/style changes
 - provenance-aware session handoff
 - safe self-healing of deterministic derived context
 - recovery precedence when memory, `.ai`, Git, and generated indexes disagree
+- fresh-AI/account repository-only recovery proof
 
 ## Durable future-work rule
 
