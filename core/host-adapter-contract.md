@@ -4,7 +4,7 @@
 
 The Host Adapter Contract defines the safe boundary between the Executable Development Runtime and the capabilities provided by a machine, AI host, CI system, or external integration.
 
-A host adapter exposes capabilities; it does not create authorization.
+A host adapter exposes capabilities; it does not create authorization. **No authorization is created by the adapter.**
 
 ## Core contract
 
@@ -83,6 +83,7 @@ The adapter must not expand a requested target into unrelated files merely becau
 ## Safety boundary
 
 - The adapter never grants permission.
+- No authorization is created by the adapter.
 - Production, destructive, irreversible, security-sensitive, and data-affecting operations remain gated.
 - Secrets, tokens, credentials, private keys, and session cookies must not be returned as evidence or persisted into `.ai` checkpoints.
 - Shell or command execution, when supported by a host, must be separately capability-declared and bounded; it is not implied by filesystem or Git access.
