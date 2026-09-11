@@ -180,3 +180,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEVOS_GITHUB_REPOSITORY: ${{ github.repository }}
         run: python tools/test-github-live.py
+
+  remote-mutation-controls:
+    name: Verify Remote Mutation Controls v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify Remote Mutation Controls contract and reference path
+        run: python tools/verify-remote-mutation.py
