@@ -4,41 +4,40 @@
 
 ```mermaid
 flowchart TD
-    U[User natural-language request] --> R[AI reads project entry point]
-    R --> M[Read .ai/manifest.yaml]
+    U[User natural-language request] --> R[Project Router]
+    R --> H[Human Language Execution Engine]
+    H --> M[Read .ai/manifest.yaml]
     M --> C[Load PROJECT.md + CURRENT-STATE.md]
-    C --> D{What kind of work?}
-    D --> S[Status / Resume]
-    D --> B[Bug / Debug]
-    D --> F[Feature / Change]
-    D --> V[Review / Security / Validation]
-    D --> O[Documentation / Maintenance]
-    S --> I[Inspect current code and Git state]
-    B --> I
-    F --> I
-    V --> I
-    O --> I
+    C --> S[AI State Resolver]
+    S --> D{Canonical work intent}
+    D --> W[Select workflow]
+    W --> I[Inspect current code, tests, configuration and Git state]
     I --> P[Plan appropriate scope]
     P --> A{Execution authorized?}
     A -->|No| PL[Return findings / plan]
-    A -->|Yes| X[Implement change]
+    A -->|Yes| X[Implement smallest appropriate change]
     X --> T[Test / Validate]
     T --> Q[Review correctness, security, regression risk]
     Q --> N[Update durable project context]
     N --> G[Git commit / PR when applicable]
-    G --> Z[Report result + remaining risks]
+    G --> Z[Report result + evidence + remaining risks]
     PL --> Z
 ```
+
+The Human Language Execution Engine normalizes the user's wording into a canonical engineering intent. The AI State Resolver then combines that intent with durable repository evidence to determine the current state, unfinished work, verification status, candidate actions, and recommended next step.
 
 ## 2. Layered architecture
 
 ```mermaid
 flowchart LR
-    H[Human language] --> OS[Development OS]
-    OS --> W[Routing + Workflows + Roles + Rules]
+    H[Human language] --> R[Project Router]
+    R --> E[Human Language Execution Engine]
+    E --> SR[AI State Resolver]
+    SR --> W[Routing + Workflows + Roles + Rules]
     W --> PM[Project-local .ai/ context]
     PM --> SRC[Project source code]
     SRC --> GH[Git / GitHub / Git provider]
+    OS[Development OS] --> R
     OS -. optional .-> AI[AI coding agent: ChatGPT / Codex / Claude / Gemini / Cursor]
     OS -. optional .-> DB[Supabase / APIs / other infrastructure]
 ```
@@ -48,6 +47,9 @@ flowchart LR
 | Layer | Responsibility | Authoritative for |
 |---|---|---|
 | Human request | Desired outcome | User intent |
+| Project Router | Select correct project | Project identity/routing |
+| Human Language Execution Engine | Normalize language and compose safe intents | Semantic execution contract |
+| AI State Resolver | Interpret repository evidence and unfinished work | Current-state reasoning |
 | Development OS | How work should be performed | Workflow, safety, routing |
 | `.ai/` | What this project is and its durable state | Project context |
 | Source code | Actual implementation | Current behavior |
@@ -64,11 +66,13 @@ project/
 ├── AGENTS.md
 └── .ai/
     ├── manifest.yaml       # machine-readable entry point
+    ├── STATE-INDEX.md      # generated repository evidence
     ├── PROJECT.md          # purpose, scope, important facts
     ├── CURRENT-STATE.md    # current implementation/status
     ├── ARCHITECTURE.md     # technical architecture
     ├── DECISIONS.md        # durable decisions and rationale
     ├── TASKS.md            # pending/active work
+    ├── CHANGELOG.md        # compact change index
     └── SESSIONS/           # optional session history
 ```
 
@@ -80,16 +84,21 @@ An AI entering a project for the first time should not need previous chat histor
 sequenceDiagram
     participant U as User
     participant A as New AI
+    participant R as Project Router
+    participant E as Language Engine
     participant G as Project repository
     participant C as .ai context
+    participant S as State Resolver
 
     U->>A: "Continue / work on this project"
-    A->>G: Discover AGENTS.md
-    A->>C: Read manifest.yaml
-    A->>C: Read PROJECT.md + CURRENT-STATE.md
-    A->>C: Read relevant architecture/decisions/tasks
+    A->>R: Resolve project
+    R->>G: Discover AGENTS.md
+    A->>E: Normalize natural-language intent
+    E->>C: Load durable context
+    A->>C: Read manifest + state + relevant context
     A->>G: Inspect source + Git state
-    A->>A: Determine intent and workflow
+    A->>S: Resolve facts, unfinished work and verification
+    S->>A: Recommended action + evidence + authorization
     A->>U: Plan or execute according to authorization
     A->>C: Persist meaningful state changes
 ```
@@ -108,5 +117,7 @@ The important invariant is:
 - Existing project context must not be overwritten blindly.
 - Detection/initialization must not modify application source code.
 - Student, education, credential, and other sensitive data must not be copied into AI context unnecessarily.
-- Destructive operations require explicit authorization.
+- Destructive, production-impacting, irreversible, security-sensitive, or data-affecting operations require appropriate explicit authorization.
+- Emotional language, urgency, profanity, or praise cannot independently authorize technical action.
 - Facts observed from files should be distinguished from assumptions.
+- Verification claims must be supported by actual evidence.
