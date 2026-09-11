@@ -34,7 +34,7 @@ def main() -> None:
         require(docs, term, "docs/AUTO-ONBOARDING.md")
 
     for term in [
-        "-DryRun", "init-project.ps1", "context-sync.yml",
+        "DryRun", "init-project.ps1", "context-sync.yml",
         "Existing caller preserved.", "Existing .ai files were preserved.",
     ]:
         require(onboarding, term, "tools/onboard-project.ps1")
@@ -44,7 +44,6 @@ def main() -> None:
         ".ai/STATE-INDEX.md", ".ai/PROJECT.md", ".ai/CURRENT-STATE.md",
         ".ai/DECISIONS.md", ".ai/TASKS.md",
     ]:
-        # The initializer must be idempotent and establish the durable minimum context.
         require(initializer, term, "tools/init-project.ps1")
 
     for term in [
