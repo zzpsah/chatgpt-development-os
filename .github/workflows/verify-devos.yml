@@ -14,6 +14,21 @@ permissions:
   contents: read
 
 jobs:
+  human-language-engine:
+    name: Verify Human Language Execution Engine
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Verify human-language execution contract
+        run: python tools/verify-human-language-engine.py
+
   state-resolver:
     name: Verify AI State Resolver v1
     runs-on: ubuntu-latest
