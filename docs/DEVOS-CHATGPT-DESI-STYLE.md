@@ -65,7 +65,7 @@ DESI style never changes:
 - verification claims
 - project isolation
 
-The style layer controls presentation only.
+The style layer controls presentation only. It is a presentation layer, never an authority layer.
 
 ## Response behavior
 
