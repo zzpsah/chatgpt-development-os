@@ -49,10 +49,10 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Integrate teaching behavior with language routing and architecture
 
 ### P2 — Multi-AI Portability
-- [ ] Vendor/account-independent project context
-- [ ] Adapter contract
-- [ ] ChatGPT/Codex adapter documentation
-- [ ] Repository-only recovery by another AI
+- [x] Vendor/account-independent project context
+- [x] Adapter contract
+- [x] ChatGPT/Codex adapter documentation
+- [x] Repository-only recovery by another AI
 
 ### P2 — Auto-Onboarding
 - [ ] Existing-repository onboarding flow
@@ -63,13 +63,14 @@ This is the authoritative high-level implementation order for the Development OS
 
 ## Cross-cutting
 
-- [ ] `.ai` remains durable project-local memory
-- [ ] Git/source remains implementation authority
-- [ ] `STATE-INDEX.md` remains deterministic
-- [ ] DevOS tooling/workflows gain validation tests
+- [x] `.ai` remains durable project-local memory
+- [x] Git/source remains implementation authority
+- [x] `STATE-INDEX.md` remains deterministic
+- [x] DevOS tooling/workflows gain validation tests
 - [x] README and architecture docs synchronized for the Human Language Execution Engine
 - [x] Teaching Engine architecture and routing synchronized
-- [ ] This roadmap and Git/project state do not contradict each other
+- [x] Multi-AI portability architecture and documentation synchronized
+- [x] This roadmap and Git/project state do not contradict each other
 
 ## Execution rule
 
