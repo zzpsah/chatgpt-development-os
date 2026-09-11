@@ -70,4 +70,4 @@ aliases:
   teach mode: DEVOS::TEACH
   audit mode: DEVOS::AUDIT
   recover mode: DEVOS::RECOVER
-  desi mode: DEVOS::DESI
+  desi mode: DEVOS::CONTINUE::DESI
