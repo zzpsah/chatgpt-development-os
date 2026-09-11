@@ -156,3 +156,5 @@ jobs:
           python-version: '3.x'
       - name: Verify Host Adapter contract
         run: python tools/verify-host-adapter.py
+      - name: Run reference host adapter integration checks
+        run: python tools/test-reference-host-adapter.py
