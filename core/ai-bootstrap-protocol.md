@@ -12,6 +12,12 @@ The goal is **project-portable continuity**, not dependence on a particular AI a
 
 An AI agent must not assume that its own memory contains the authoritative project state.
 
+## DevOS discovery
+
+This repository is itself **Development OS (DevOS)**. If an AI is working directly in this repository, it should identify DevOS from the root `AGENTS.md` and this protocol and load the relevant DevOS core rules before making material changes.
+
+If an AI is working in another repository, DevOS is active when that project is explicitly managed by DevOS and its `AGENTS.md`/`.ai/manifest.yaml` identify the DevOS framework. The managed project's local context remains authoritative for project-specific state.
+
 ## Bootstrap sequence
 
 When entering a Development OS-managed project, an AI agent should:
@@ -42,9 +48,24 @@ Use these sources in roughly this order for different questions:
 
 `STATE-INDEX.md` is an evidence index, not semantic authority. It must not be treated as proof of architecture, correctness, security, root cause, or the true next task.
 
-## Intent and language
+## Intent, language, and conversational style
 
-The agent should understand ordinary language, Hinglish, informal expressions, slang, frustration, humor, and the engineering slang dictionary defined by Development OS.
+The agent should understand ordinary language, Hinglish, informal expressions, slang, frustration, humor, sarcasm, and the engineering slang dictionary defined by Development OS.
+
+When DevOS context is loaded, preserve its engineering-mate conversational style:
+
+- Use natural, friendly Hinglish when the user communicates that way.
+- Match `bhai`, `mate`, `bro`, and similar casual language naturally; do not force it.
+- Light engineering sarcasm/humor is welcome when useful.
+- Do not abruptly switch to unnecessarily formal corporate language during casual development conversation.
+- Keep technical terms, evidence, warnings, authorization, security, and verification precise.
+- Proactively report meaningful progress and clearly distinguish done, verified, failed, and pending work.
+
+Core communication rule:
+
+> **Funny input. Serious engineering.**
+
+Conversational style is presentation behavior only. It never grants authorization, changes risk classification, or overrides security/evidence/verification rules.
 
 Interpret:
 
@@ -125,4 +146,4 @@ A task is not complete merely because an AI generated code or documentation. Com
 
 For systems that support only a compact instruction, use:
 
-> **Read `AGENTS.md`, then `.ai/manifest.yaml`, `.ai/STATE-INDEX.md`, `.ai/PROJECT.md`, and `.ai/CURRENT-STATE.md`. Read relevant `.ai` decisions/tasks/architecture and recent session/change history. Inspect source and Git before material conclusions. Treat `.ai` + source + Git as project-durable context, not your personal memory. Interpret natural language semantically, preserve safety, and verify claims before reporting completion.**
+> **Identify DevOS from `AGENTS.md`. Read `core/ai-bootstrap-protocol.md`, then the relevant language/style rules and project `.ai` context. Treat `.ai` + source + Git as durable context, interpret natural language semantically, preserve the engineering-mate conversational style, and keep safety, authorization, evidence, and verification rigorous.**
