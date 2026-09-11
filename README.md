@@ -10,6 +10,37 @@ The Development OS defines **how AI develops software**. Each project owns its o
 
 Not every request requires every stage; the workflow scales to the task.
 
+## P12 Operational Intelligence
+
+P12 adds a deterministic, evidence-backed **decision-support layer** to the Development Task Controller. It reads the current task inventory and exposes dependency readiness, advisory prioritization, and checkpoint signals.
+
+```text
+Repository + durable .ai state
+          ↓
+      Task inventory
+          ↓
+   Dependency graph
+          ↓
+ Readiness / blockers
+          ↓
+ Priority + checkpoint signals
+          ↓
+ Evidence-backed next action
+```
+
+The first P12 implementation slices provide:
+
+- explicit dependency graph validation, including missing references and cycles;
+- `READY`, `WAITING`, `BLOCKED`, `UNAUTHORIZED`, and `COMPLETE` readiness states;
+- deterministic priority scoring using explicit priority plus bounded dependency, status, age, deadline, and effort signals;
+- transparent scoring reasons rather than silent reprioritization;
+- checkpoint signals for repository changes, work-unit outcomes, blocked transitions, authorization changes, verification/security results, and session/handoff boundaries;
+- safe handling of unknown checkpoint events without guessing.
+
+Operational Intelligence is **advisory**. It cannot grant authorization, bypass Security Gate, fabricate execution evidence, or turn a recommendation into an action. The existing Controller, Runtime, Verification Engine, Security Gate, and P11 recovery contracts remain authoritative.
+
+See [`core/operational-intelligence.md`](core/operational-intelligence.md) and [`tools/operational-intelligence.py`](tools/operational-intelligence.py).
+
 ## Portable project memory
 
 Every managed software project should contain:
@@ -275,4 +306,4 @@ chatgpt-development-os/
 
 ## Version
 
-0.11 — P11 federation, repository-first recovery, deterministic context self-healing, provenance-aware handoff, composable stance/style contracts, and task-lifecycle integration.
+0.12 — P12 Operational Intelligence: deterministic dependency graph/readiness, advisory prioritization, checkpoint intelligence, and Development Task Controller integration.
