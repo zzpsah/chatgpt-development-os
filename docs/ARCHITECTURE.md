@@ -16,15 +16,24 @@ flowchart TD
     P --> A{Execution authorized?}
     A -->|No| PL[Return findings / plan]
     A -->|Yes| X[Implement smallest appropriate change]
-    X --> T[Test / Validate]
-    T --> Q[Review correctness, security, regression risk]
+    X --> V[Verification / Test Engine]
+    V --> T[Applicable checks: static / unit / integration / E2E / runtime / deployment / security]
+    T --> E{Evidence sufficient?}
+    E -->|Yes| QV[VERIFIED]
+    E -->|Partial| QP[PARTIAL]
+    E -->|No meaningful evidence| QU[UNVERIFIED]
+    E -->|Check failed| QF[FAILED]
+    QV --> Q[Review correctness, security, regression risk]
+    QP --> Q
+    QU --> Q
+    QF --> Q
     Q --> N[Update durable project context]
     N --> G[Git commit / PR when applicable]
     G --> Z[Report result + evidence + remaining risks]
     PL --> Z
 ```
 
-The Human Language Execution Engine normalizes the user's wording into a canonical engineering intent. The AI State Resolver then combines that intent with durable repository evidence to determine the current state, unfinished work, verification status, candidate actions, and recommended next step.
+The Human Language Execution Engine normalizes the user's wording into a canonical engineering intent. The AI State Resolver then combines that intent with durable repository evidence to determine the current state, unfinished work, verification status, candidate actions, and recommended next step. The Verification / Test Engine determines which checks apply, records actual evidence, and prevents unsupported verification claims.
 
 ## 2. Layered architecture
 
@@ -36,7 +45,9 @@ flowchart LR
     SR --> W[Routing + Workflows + Roles + Rules]
     W --> PM[Project-local .ai/ context]
     PM --> SRC[Project source code]
-    SRC --> GH[Git / GitHub / Git provider]
+    SRC --> V[Verification / Test Engine]
+    V --> GH[Git / CI / GitHub / test providers]
+    GH --> PM
     OS[Development OS] --> R
     OS -. optional .-> AI[AI coding agent: ChatGPT / Codex / Claude / Gemini / Cursor]
     OS -. optional .-> DB[Supabase / APIs / other infrastructure]
@@ -51,6 +62,7 @@ flowchart LR
 | Human Language Execution Engine | Normalize language and compose safe intents | Semantic execution contract |
 | AI State Resolver | Interpret repository evidence and unfinished work | Current-state reasoning |
 | Development OS | How work should be performed | Workflow, safety, routing |
+| Verification / Test Engine | Select checks, execute/delegate them, classify evidence | Verification status and evidence |
 | `.ai/` | What this project is and its durable state | Project context |
 | Source code | Actual implementation | Current behavior |
 | Git history | What changed and when | Change history |
@@ -89,6 +101,7 @@ sequenceDiagram
     participant G as Project repository
     participant C as .ai context
     participant S as State Resolver
+    participant V as Verification Engine
 
     U->>A: "Continue / work on this project"
     A->>R: Resolve project
@@ -100,6 +113,9 @@ sequenceDiagram
     A->>S: Resolve facts, unfinished work and verification
     S->>A: Recommended action + evidence + authorization
     A->>U: Plan or execute according to authorization
+    A->>G: Implement change
+    A->>V: Select and run/delegate checks
+    V->>A: Verification status + evidence + limitations
     A->>C: Persist meaningful state changes
 ```
 
@@ -121,3 +137,4 @@ The important invariant is:
 - Emotional language, urgency, profanity, or praise cannot independently authorize technical action.
 - Facts observed from files should be distinguished from assumptions.
 - Verification claims must be supported by actual evidence.
+- Verification never grants implementation or deployment authority.
