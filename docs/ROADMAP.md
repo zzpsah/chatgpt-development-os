@@ -40,10 +40,12 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Contract verification harness and successful CI run
 
 ### P2 — Teaching Engine
-- [ ] Do-it / Teach-me / Explain modes
-- [ ] Simple mental model before terminology
-- [ ] Practical infrastructure/operations connections
-- [ ] Progressive developer growth with full engineering rigor
+- [x] Do-it / Teach-me / Explain modes
+- [x] Simple mental model before terminology
+- [x] Practical infrastructure/operations connections
+- [x] Progressive developer growth with full engineering rigor
+- [x] Evidence-aware teaching and safe learning boundaries
+- [x] Contract verification harness and CI integration
 
 ### P2 — Multi-AI Portability
 - [ ] Vendor/account-independent project context
