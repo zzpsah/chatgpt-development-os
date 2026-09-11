@@ -34,7 +34,7 @@ capability:
   evidence: []
 ```
 
-The adapter must report `MISSING` when it cannot perform an operation. It must not simulate a result.
+The adapter must report `MISSING` when it cannot perform an operation. It must not simulate a result. **Unavailable capabilities must not be simulated.**
 
 ## v1 capability families
 
@@ -89,6 +89,7 @@ The adapter must not expand a requested target into unrelated files merely becau
 - Shell or command execution, when supported by a host, must be separately capability-declared and bounded; it is not implied by filesystem or Git access.
 - Failed, timed-out, or unavailable operations must remain distinguishable from successful execution.
 - Unavailable capabilities must not be simulated.
+- A host adapter must not be simulated when a real provider capability is required; it must report `MISSING` or `UNAVAILABLE` instead.
 
 ## Evidence contract
 
