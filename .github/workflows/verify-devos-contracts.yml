@@ -26,5 +26,17 @@ jobs:
       - name: Verify Verification / Test Engine
         run: python tools/verify-verification-engine.py
 
+      - name: Verify Security Gate
+        run: python tools/verify-security-gate.py
+
+      - name: Verify Teaching Engine
+        run: python tools/verify-teaching-engine.py
+
+      - name: Verify Multi-AI Portability
+        run: python tools/verify-multi-ai-portability.py
+
       - name: Verify Auto-Onboarding
         run: python tools/verify-auto-onboarding.py
+
+      - name: Verify Agent Orchestration
+        run: python tools/verify-agent-orchestration.py
