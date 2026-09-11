@@ -46,6 +46,7 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Progressive developer growth with full engineering rigor
 - [x] Evidence-aware teaching and safe learning boundaries
 - [x] Contract verification harness and CI integration
+- [x] Integrate teaching behavior with language routing and architecture
 
 ### P2 — Multi-AI Portability
 - [ ] Vendor/account-independent project context
@@ -67,6 +68,7 @@ This is the authoritative high-level implementation order for the Development OS
 - [ ] `STATE-INDEX.md` remains deterministic
 - [ ] DevOS tooling/workflows gain validation tests
 - [x] README and architecture docs synchronized for the Human Language Execution Engine
+- [x] Teaching Engine architecture and routing synchronized
 - [ ] This roadmap and Git/project state do not contradict each other
 
 ## Execution rule
