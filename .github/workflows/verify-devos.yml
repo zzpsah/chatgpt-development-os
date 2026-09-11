@@ -341,3 +341,18 @@ jobs:
         run: python tools/verify-self-heal-derived-context.py
       - name: Exercise deterministic self-healing in isolated Git repository
         run: python tools/test-self-heal-derived-context.py
+
+  recovery-precedence:
+    name: Verify Repository-First Recovery Precedence v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify recovery precedence contract
+        run: python tools/verify-recovery-precedence.py
+      - name: Exercise recovery precedence scenarios
+        run: python tools/test-recovery-precedence.py
