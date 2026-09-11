@@ -73,6 +73,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Python
+        uses: actions/checkout@v4
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
@@ -173,6 +175,8 @@ jobs:
         run: python tools/verify-external-adapter.py
       - name: Run GitHub reference adapter integration checks
         run: python tools/test-github-reference.py
+      - name: Run external runtime bridge integration checks
+        run: python tools/test-external-runtime-bridge.py
       - name: Run live GitHub provider integration check
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
