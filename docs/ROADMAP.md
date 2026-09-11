@@ -130,7 +130,7 @@ This is the authoritative high-level implementation order for the Development OS
 - [x] Wire P9 verification into CI
 - [x] Verify current repository HEAD through the primary Development OS verification workflows
 
-P9 is implemented and verified. Higher-impact remote mutations from P8 remain independently incomplete.
+P9 is implemented and verified. Higher-impact remote mutations from P8 remain separately incomplete.
 
 ### P10 — Context Continuity & Recovery v1 — COMPLETE
 - [x] Define repository-first continuity and recovery rules
@@ -147,7 +147,7 @@ P9 is implemented and verified. Higher-impact remote mutations from P8 remain in
 
 Goal: make DevOS context portable, self-identifying, recoverable, and resistant to stale/partial context across AI tools, accounts, projects, and connectivity interruptions.
 
-- [ ] Define a versioned DevOS project manifest and compatibility contract
+- [x] Define a versioned DevOS project manifest and compatibility contract
 - [ ] Add automatic project identity/registration discovery
 - [ ] Add context freshness and integrity checks
 - [ ] Detect and reconcile stale `.ai` state against Git/source evidence
@@ -155,7 +155,7 @@ Goal: make DevOS context portable, self-identifying, recoverable, and resistant 
 - [ ] Persist AI-session handoff summaries with provenance
 - [ ] Add safe self-healing for missing derived context files
 - [ ] Define recovery precedence when ChatGPT memory, `.ai`, Git, and generated indexes disagree
-- [ ] Add P11 contract verification and CI coverage
+- [x] Add P11 contract verification and CI coverage
 - [ ] Prove recovery from a fresh AI/account context using repository-only evidence
 
 ## Cross-cutting
@@ -188,4 +188,4 @@ Complete the current milestone before advancing to the next milestone. Do not ma
 
 ### P11 — DevOS Federation & Self-Healing Context v1 — IN PROGRESS
 
-P11 begins only after P10 completion is evidenced by both primary CI and an actual external project-side context-sync execution. Higher-impact P8 remote mutations remain independently incomplete.
+P11 begins after P10 completion was evidenced by both primary CI and an actual external project-side context-sync execution. Higher-impact P8 remote mutations remain independently incomplete.
