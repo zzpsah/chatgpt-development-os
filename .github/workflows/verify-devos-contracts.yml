@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -24,6 +26,9 @@ jobs:
 
       - name: Install parser dependency
         run: python -m pip install pyyaml
+
+      - name: Verify Documentation Integrity
+        run: python tools/verify-documentation-integrity.py
 
       - name: Verify Human Language Execution Engine
         run: python tools/verify-human-language-engine.py
