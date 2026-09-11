@@ -31,6 +31,42 @@ project/
 
 This makes project context portable between ChatGPT, Codex, Claude, Gemini, Cursor, other AI tools, GitHub accounts, Git providers, and local machines.
 
+## P11 Federation & Self-Healing Context
+
+P11 makes project continuity resilient to AI-account changes, lost chats, stale generated files, and cross-AI handoffs.
+
+```text
+AI / Account / Chat
+        ↓
+Bootstrap + Project Identity
+        ↓
+Repository-First Recovery
+        ↓
+Freshness / Integrity Check
+        ↓
+Safe Reconciliation / Bounded Self-Healing
+        ↓
+Current State
+        ↓
+Provenance-Aware AI Handoff
+```
+
+Recovery precedence is explicit:
+
+1. **Source tree + Git** — exact implementation state.
+2. **Requirements + decisions** — intentional project state.
+3. **Durable `.ai` state** — project context and handoff.
+4. **Generated indexes** — navigation/evidence only.
+5. **AI memory/chat history** — supplementary, never authoritative.
+
+P11 self-healing can recreate only deterministic derived context. It must never silently overwrite semantic requirements, decisions, task state, or architecture. Ambiguous or semantic conflicts escalate for review.
+
+P11 also defines composable operating codes such as `DEVOS::GOD::DESI`: execution stance and communication style are separate layers, and neither layer changes authorization, security, or verification requirements.
+
+The P11 recovery/revalidation and self-healing rules are integrated into the Development Task Controller lifecycle, so task resumption revalidates repository state rather than blindly trusting an old handoff or replaying actions.
+
+See [`docs/P11-FEDERATION-SELF-HEALING.md`](docs/P11-FEDERATION-SELF-HEALING.md), [`docs/DEVOS-STANCE-CODES.md`](docs/DEVOS-STANCE-CODES.md), and [`core/development-task-controller.md`](core/development-task-controller.md).
+
 ## Automatic context synchronization
 
 The Development OS supports automatic GitHub-side `.ai/` synchronization:
@@ -239,4 +275,4 @@ chatgpt-development-os/
 
 ## Version
 
-0.10 — executable development runtime, bounded autonomous loop, agent orchestration, auto-onboarding, multi-AI portability, and evidence-based development contracts.
+0.11 — P11 federation, repository-first recovery, deterministic context self-healing, provenance-aware handoff, composable stance/style contracts, and task-lifecycle integration.
