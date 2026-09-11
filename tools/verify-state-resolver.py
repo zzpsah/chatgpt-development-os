@@ -82,8 +82,8 @@ def main():
          "AGENTS completion standard requires evidence-backed verification"),
         (re.search(r"\[x\]\s+Integrate with resume workflow", roadmap, re.I) is not None,
          "roadmap marks resume integration complete"),
-        (re.search(r"\[ \]\s+End-to-end verification", roadmap, re.I) is not None,
-         "roadmap keeps end-to-end verification open until this verifier is actually executed"),
+        (re.search(r"\[x\]\s+End-to-end verification", roadmap, re.I) is not None,
+         "roadmap records end-to-end verification as completed"),
     ]
 
     for ok, message in resolver_checks + resume_checks + integration_checks:
