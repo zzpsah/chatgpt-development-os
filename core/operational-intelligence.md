@@ -19,6 +19,8 @@ Repository + durable .ai state
           ↓
  Priority + checkpoint signals
           ↓
+ Failure + evidence analysis
+          ↓
  Evidence-backed next action
 ```
 
@@ -41,51 +43,25 @@ node:
   deadline_days: integer-or-null
 ```
 
-Dependencies are directed edges from prerequisites to dependent work. A task is `READY` only when its required dependencies are satisfied and its authorization/capability conditions permit execution.
+Dependencies are directed edges from prerequisites to dependent work. A task is `READY` only when required dependencies are satisfied and authorization/capability conditions permit execution.
 
 ## Dependency intelligence
 
-The engine must:
-
-1. preserve explicit dependencies from durable task state;
-2. distinguish `READY`, `WAITING`, `BLOCKED`, and `UNAUTHORIZED` work;
-3. detect missing dependency references rather than guessing them;
-4. detect dependency cycles and surface them as blockers;
-5. never infer completion merely from priority or proximity in the graph;
-6. retain evidence for every readiness decision.
+The engine must preserve explicit dependencies, distinguish `READY`, `WAITING`, `BLOCKED`, and `UNAUTHORIZED`, detect missing references/cycles, never infer completion, and retain evidence for readiness decisions.
 
 ## Priority intelligence
 
-Priority is a decision-support signal, not authority. The deterministic baseline scores unfinished work from explicit priority plus bounded operational signals:
-
-- explicit user/project priority (dominant baseline);
-- dependency criticality, measured by unfinished direct dependents;
-- blocked/failed status penalty;
-- age/staleness;
-- deadline urgency when supplied;
-- estimated bounded effort penalty when supplied.
-
-The engine exposes each scoring reason. It never silently changes the stored user-defined priority, and a ranking never authorizes execution.
+Priority is a decision-support signal, not authority. The deterministic baseline scores unfinished work from explicit user/project priority plus bounded dependency criticality, blocked/failed status, age/staleness, deadline urgency, and estimated effort. Every scoring reason is exposed. Stored user-defined priority is never silently changed, and ranking never authorizes execution.
 
 ## Checkpoint intelligence
 
-A checkpoint signal identifies when the controller should persist or revalidate state. Recognized events are:
+A checkpoint signal identifies when the controller should persist or revalidate state. Recognized events are `REPOSITORY_CHANGE`, `WORK_UNIT_COMPLETE`, `WORK_UNIT_FAILED`, `BLOCKED_TRANSITION`, `AUTHORIZATION_CHANGE`, `VERIFICATION_RESULT`, `SECURITY_RESULT`, `SESSION_BOUNDARY`, and `HANDOFF_BOUNDARY`.
 
-- `REPOSITORY_CHANGE`
-- `WORK_UNIT_COMPLETE`
-- `WORK_UNIT_FAILED`
-- `BLOCKED_TRANSITION`
-- `AUTHORIZATION_CHANGE`
-- `VERIFICATION_RESULT`
-- `SECURITY_RESULT`
-- `SESSION_BOUNDARY`
-- `HANDOFF_BOUNDARY`
-
-Unknown events are surfaced as non-checkpoint signals rather than guessed. Checkpoint recommendations do not authorize an action; they preserve recoverability.
+Unknown events are surfaced as non-checkpoint signals rather than guessed. Checkpoint recommendations preserve recoverability and do not authorize actions.
 
 ## Failure classification
 
-Operational Intelligence classifies failures without rewriting their raw evidence. Initial classes:
+Operational Intelligence classifies failures without rewriting their raw evidence. Initial classes are:
 
 - `CAPABILITY_MISSING`
 - `AUTHORIZATION_REQUIRED`
@@ -97,26 +73,25 @@ Operational Intelligence classifies failures without rewriting their raw evidenc
 - `INPUT_AMBIGUOUS`
 - `UNKNOWN`
 
-A classifier must preserve the original failure evidence and confidence. `UNKNOWN` is preferred over an unsupported guess.
+Classification uses explicit machine-readable hints or a constrained status mapping. Unsupported values become `UNKNOWN`; the original failure payload is preserved and a confidence level is exposed. The classifier is not a root-cause authority and must not invent a cause from free-form assertions.
 
 ## Evidence intelligence
 
-Every operational recommendation must identify the evidence used and its freshness. Evidence can come from repository/source, Git, durable `.ai` state, runtime/tests, security checks, or provider responses. AI assertions alone are not execution evidence.
+Evidence is normalized with provenance and freshness metadata. Recognized execution-evidence sources are repository, Git, runtime, test, security, and provider responses. AI assertions or plans are not execution evidence. Evidence normalization does not alter the original evidence payload and does not upgrade uncertain evidence into verified results.
+
+## Advisory next action
+
+P12 may derive a next-action signal from readiness, priority, failure class, checkpoint state, and available evidence. The signal must identify its supporting evidence and remain advisory. If evidence is insufficient, the safe result is an explicit blocker/unknown rather than a guessed action.
 
 ## Safety and authority
 
-Operational Intelligence may recommend, rank, classify, and request checkpointing. It may not:
-
-- grant authorization;
-- bypass Security Gate;
-- fabricate provider/runtime results;
-- silently mutate semantic project state;
-- convert a recommendation into execution without the existing controller/runtime authorities.
+Operational Intelligence may recommend, rank, classify, normalize evidence, and request checkpointing. It may not grant authorization, bypass Security Gate, fabricate provider/runtime results, silently mutate semantic project state, or convert a recommendation into execution without the existing controller/runtime authorities.
 
 ## P12 implementation slices
 
 1. **Graph/readiness v1:** deterministic task graph construction, missing-reference validation, cycle detection, and readiness analysis.
 2. **Prioritization/checkpoints v2:** deterministic dependency-aware ranking with explicit reasons and checkpoint event signals.
-3. **Next:** failure classification/evidence improvements, followed by controller integration that consumes recommendations as advisory signals only.
+3. **Failure/evidence v3:** deterministic failure classification, raw-evidence preservation, provenance/freshness normalization, and safe handling of unsupported classifications.
+4. **Next:** fresh-repository recovery proof and stronger controller integration/advisory next-action generation without granting authority.
 
 The implementation remains independently testable before broader automation is added.
