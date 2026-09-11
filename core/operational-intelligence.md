@@ -24,6 +24,8 @@ Repository + durable .ai state
  Evidence-backed advisory next action
 ```
 
+Operational Intelligence **does not authorize** execution, mutation, deployment, publication, or security bypass. It is advisory only and cannot grant authority that belongs to the existing controller/runtime and Security Gate.
+
 ## Task graph model
 
 Each task/work unit is represented as a node:

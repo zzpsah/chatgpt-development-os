@@ -39,7 +39,9 @@ The repository contains the DevOS architecture through P12 foundations:
 
 ## P12 status
 
-P12 graph/readiness, prioritization/checkpoint, and failure/evidence slices are repository-backed. The operational-intelligence contract uses `ADVISORY_ONLY` for advisory next actions and does not grant execution authority.
+P12 graph/readiness, prioritization/checkpoint, failure/evidence, and advisory next-action slices are repository-backed. The operational-intelligence contract uses `ADVISORY_ONLY`; Operational Intelligence does not authorize execution, mutation, deployment, publication, or security bypass.
+
+The current contract CI blocker is an exact-marker mismatch in `tools/verify-operational-intelligence.py`; this change aligns the durable P12 contract wording with the verifier while preserving the existing advisory-only authority boundary. Live CI verification remains required before claiming P12 contract green.
 
 ## Portable project memory
 
