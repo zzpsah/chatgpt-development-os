@@ -94,7 +94,7 @@ A resumed runtime must:
 - determine whether the previous action actually completed;
 - continue only with a safe, authorized next action.
 
-If completion cannot be established from evidence, the runtime must not claim completion. It may re-check or safely retry only when the action is idempotent or otherwise explicitly safe.
+If completion cannot be established from evidence, the runtime must not claim completion. It may re-check or safely retry only when the action is idempotent or otherwise explicitly safe. **The runtime must never blindly replay an uncertain action.**
 
 ## Evidence contract
 
