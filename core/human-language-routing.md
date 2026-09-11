@@ -9,6 +9,7 @@ Routing answers **what kind of work the user is asking for**. The detailed norma
 | User intent | Internal response |
 |---|---|
 | Understand/explain | Explain or research |
+| Learn/teach | Teaching Engine: DO / TEACH / EXPLAIN mode |
 | Explore an idea | Feasibility + options |
 | Start/change a feature | Inspect → plan → implement when authorized |
 | Fix a problem | Diagnose → reproduce if possible → fix → test |
@@ -32,6 +33,9 @@ Routing answers **what kind of work the user is asking for**. The detailed norma
 | `security dekh` | Perform a security review |
 | `kya kiya tune?` | Explain the implementation |
 | `isey professional bana` | Improve quality/UX/presentation |
+| `simple mein samjha` | Teach at intuitive Level 1 depth |
+| `andar se kaise hota hai?` | Teach mechanics/X-ray view |
+| `teach me` | Use structured TEACH mode |
 
 The exact words are not the command language. The semantic engineering intent is what matters.
 
@@ -54,5 +58,7 @@ This routing document identifies the broad semantic intent and should delegate d
 The Human Language Execution Engine determines:
 
 `Human phrase → Canonical intent → Workflow → Scope → Authorization → Evidence → Action → Verification → Persistence`
+
+When the intent is learning or teaching, presentation depth and learning behavior are governed by `core/teaching-engine.md`.
 
 Project selection remains the responsibility of `core/project-router.md`; routing must not guess between multiple plausible projects.
