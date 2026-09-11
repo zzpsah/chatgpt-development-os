@@ -20,7 +20,7 @@ roadmap = read("docs/ROADMAP.md")
 require(core, [
     "User intent", "Work decomposition", "Role selection", "Evidence handoff",
     "PLANNED | READY | IN_PROGRESS | BLOCKED | COMPLETE | FAILED",
-    "Observed / Likely / Unknown", "production-impacting, destructive, irreversible",
+    "Observed / Likely / Unknown", "Production-impacting, destructive, irreversible",
     "Emotional urgency, profanity, or praise never grants authorization",
     "Verification / Test Engine remains authoritative",
     "Security Gate remains authoritative",
