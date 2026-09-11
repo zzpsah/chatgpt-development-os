@@ -56,6 +56,8 @@ flowchart LR
     OS[Development OS] --> R
     OS -.-> AD[AI Adapter Contract]
     AD -.-> AI[ChatGPT / Codex / Claude / Gemini / Cursor / other AI]
+    OS -. optional .-> AO[Auto-Onboarding]
+    AO -.-> PM
     OS -. optional .-> DB[Supabase / APIs / other infrastructure]
 ```
 
@@ -70,6 +72,7 @@ flowchart LR
 | Teaching Engine | Present concepts, explanations, examples, and practice safely | Learning/presentation behavior |
 | Development OS | How work should be performed | Workflow, safety, routing |
 | AI Adapter Contract | Connect a host AI to portable DevOS capabilities | Host integration boundary |
+| Auto-Onboarding | Safely establish missing DevOS project infrastructure | Onboarding state/change scope |
 | Verification / Test Engine | Select checks, execute/delegate them, classify evidence | Verification status and evidence |
 | Security Gate | Evaluate security-sensitive scope and boundaries | Security review decision/evidence |
 | `.ai/` | What this project is and its durable state | Project context |
@@ -140,7 +143,18 @@ The portable contract requires every compatible AI to be able to bootstrap from 
 
 See [`adapters/adapter-contract.md`](../adapters/adapter-contract.md) and [`docs/MULTI-AI-PORTABILITY.md`](MULTI-AI-PORTABILITY.md).
 
-## 6. Automation boundary
+## 6. Auto-Onboarding architecture
+
+Auto-Onboarding has two distinct paths:
+
+1. **Local path:** a configured resident worker detects a candidate project under an approved root and invokes the idempotent onboarding initializer.
+2. **Repository path:** the managed project uses GitHub-side synchronization and CI validation after onboarding files are committed.
+
+The onboarding initializer creates only missing infrastructure. Existing `.ai` semantic context and application source are preserved. Semantic project understanding remains an AI/user responsibility based on repository evidence.
+
+See [`docs/AUTO-ONBOARDING.md`](AUTO-ONBOARDING.md).
+
+## 7. Automation boundary
 
 The GitHub repository can provide the portable `.ai/` contract and automation scripts. A local computer cannot be silently controlled by a cloud AI session. Therefore local filesystem watching is an optional resident worker concern, not a project-memory dependency.
 
@@ -148,7 +162,7 @@ The important invariant is:
 
 > **The project remains usable by a new AI even if the original AI account, chat history, or local worker is unavailable.**
 
-## 7. Safety boundaries
+## 8. Safety boundaries
 
 - `.ai/` must never contain secrets merely to preserve context.
 - Existing project context must not be overwritten blindly.
