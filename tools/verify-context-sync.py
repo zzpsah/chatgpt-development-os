@@ -44,7 +44,7 @@ def main() -> None:
     require("CURRENT-STATE.md" in tool, "sync tool must update meaningful current state")
     require("development-os[bot]" in tool, "sync tool must use a dedicated bot identity")
     require("chore: sync project AI context [devos-context-sync]" in tool, "sync tool must use a recursion-identifying commit message")
-    require("git push" in tool, "sync tool must persist generated context")
+    require('"git", "push"' in tool, "sync tool must persist generated context")
 
     require("zzpsah/chatgpt-development-os/.github/workflows/context-sync.yml@main" in caller, "project caller must use the reusable DevOS workflow")
     require("contents: write" in caller, "project caller must grant the reusable workflow write permission")
