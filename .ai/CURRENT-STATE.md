@@ -5,7 +5,9 @@
 - Repository: `zzpsah/chatgpt-development-os`
 - Branch: `main`
 - Current state is established from Git/source evidence; this file is a durable recovery summary, not a replacement for source inspection.
-- Last verified baseline before this context update: `6a989ae6a0a73f72eb1f650df32d79d4fbca0ff6`.
+- Latest verified primary DevOS verification baseline: `812c0f9be996d78233d7fddb87c7a5fb3c19d6a1`.
+- Current `main` HEAD after roadmap reconciliation: `7ecb784608d2bd5b6d090e60f23b55b0de681ed9`.
+- Current HEAD is pending a fresh primary verification run; do not call the current HEAD fully green until that run completes.
 
 ## Implemented architecture
 
@@ -48,24 +50,29 @@ P9 contract flow:
 
 The P9 verifier is wired into `.github/workflows/verify-devos.yml`.
 
-## Recent bootstrap updates
+The primary verification workflow and contract verification workflow both completed successfully for commit `812c0f9be996d78233d7fddb87c7a5fb3c19d6a1`.
 
-The latest pre-context-update commits also made DevOS self-identifying during bootstrap and restored the engineering-mate conversational style. Current bootstrap guidance requires an AI to identify DevOS from `AGENTS.md`, read the bootstrap protocol and relevant language/style rules, then recover project context before material work.
+## Durable context
+
+The DevOS repository now has the durable `.ai` foundation required for cross-chat recovery: `manifest.yaml`, `PROJECT.md`, `CURRENT-STATE.md`, `ARCHITECTURE.md`, `DECISIONS.md`, and `TASKS.md`. `STATE-INDEX.md` and automated change-log synchronization are expected to be maintained by the repository's context-sync workflow.
+
+## Context-sync observation
+
+The reusable `.github/workflows/context-sync.yml` has produced immediate failed workflow runs with zero reported jobs on recent direct pushes. This is a separate automation issue from the successful DevOS verification workflows and must be investigated before treating durable context synchronization as healthy/verified.
 
 ## Roadmap reconciliation
 
-`docs/ROADMAP.md` was authored before the P9 implementation and currently still describes P8 as the current milestone. Therefore the roadmap is stale relative to Git implementation history.
+`docs/ROADMAP.md` now records P9 Development Task Controller v1 as completed and explicitly states that no P10 milestone is established yet. P8 higher-impact remote mutations remain incomplete.
 
-Do not infer a P10 milestone until the roadmap/current-state/task records are reconciled against actual repository evidence.
+Do not infer a P10 milestone from numbering alone.
 
 ## Current next-state requirement
 
-Before starting new milestone implementation:
-1. reconcile roadmap with P9 implementation;
-2. record P9 as implemented/completed with its evidence and any remaining validation limitations;
-3. establish the next milestone explicitly;
-4. verify CI status for the current HEAD before claiming the baseline is fully green.
+1. Obtain fresh primary CI verification for the latest HEAD.
+2. Investigate and repair the context-sync workflow failure/trigger behavior.
+3. Ensure generated `.ai/STATE-INDEX.md` and automated `CHANGELOG.md` synchronization are actually working.
+4. Establish the next milestone explicitly from repository evidence; do not invent P10.
 
 ## Authority
 
-For implementation state use source tree + Git. For intentional decisions use `DECISIONS.md`. For remaining work use `TASKS.md` plus current evidence. `STATE-INDEX.md` is deterministic evidence indexing only.
+For implementation state use source tree + Git. For intentional decisions use `DECISIONS.md`. For remaining work use `TASKS.md` plus current evidence. `STATE-INDEX.md` is deterministic evidence indexing only. ChatGPT memory and old conversations are supplementary.
