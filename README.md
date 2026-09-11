@@ -12,7 +12,7 @@ Not every request requires every stage; the workflow scales to the task.
 
 ## P12 Operational Intelligence
 
-P12 adds a deterministic, evidence-backed **decision-support layer** to the Development Task Controller. It reads the current task inventory and exposes dependency readiness, advisory prioritization, and checkpoint signals.
+P12 adds a deterministic, evidence-backed **decision-support layer** to the Development Task Controller. It reads the current task inventory and exposes dependency readiness, advisory prioritization, checkpoint signals, failure/evidence analysis, and a bounded advisory next-action signal.
 
 ```text
 Repository + durable .ai state
@@ -25,21 +25,26 @@ Repository + durable .ai state
           ↓
  Priority + checkpoint signals
           ↓
- Evidence-backed next action
+ Failure + evidence analysis
+          ↓
+ Evidence-backed advisory next action
 ```
 
-The first P12 implementation slices provide:
+The P12 implementation provides:
 
 - explicit dependency graph validation, including missing references and cycles;
 - `READY`, `WAITING`, `BLOCKED`, `UNAUTHORIZED`, and `COMPLETE` readiness states;
 - deterministic priority scoring using explicit priority plus bounded dependency, status, age, deadline, and effort signals;
 - transparent scoring reasons rather than silent reprioritization;
 - checkpoint signals for repository changes, work-unit outcomes, blocked transitions, authorization changes, verification/security results, and session/handoff boundaries;
-- safe handling of unknown checkpoint events without guessing.
+- deterministic failure classification with confidence and raw-evidence preservation;
+- evidence provenance/freshness normalization with a strict execution-evidence boundary;
+- deterministic advisory next-action generation with explicit `ADVISORY_ONLY` semantics and safe `no_action` behavior;
+- controller integration that treats OI output as a candidate, never as authorization or execution authority.
 
-Operational Intelligence is **advisory**. It cannot grant authorization, bypass Security Gate, fabricate execution evidence, or turn a recommendation into an action. The existing Controller, Runtime, Verification Engine, Security Gate, and P11 recovery contracts remain authoritative.
+Operational Intelligence is **advisory**. It cannot grant authorization, bypass Security Gate, fabricate execution evidence, mutate semantic state, or turn a recommendation into an action. The existing Controller, Runtime, Verification Engine, Security Gate, and P11 recovery contracts remain authoritative.
 
-See [`core/operational-intelligence.md`](core/operational-intelligence.md) and [`tools/operational-intelligence.py`](tools/operational-intelligence.py).
+See [`core/operational-intelligence.md`](core/operational-intelligence.md), [`tools/operational-intelligence.py`](tools/operational-intelligence.py), and [`core/development-task-controller.md`](core/development-task-controller.md).
 
 ## Portable project memory
 
@@ -306,4 +311,4 @@ chatgpt-development-os/
 
 ## Version
 
-0.12 — P12 Operational Intelligence: deterministic dependency graph/readiness, advisory prioritization, checkpoint intelligence, and Development Task Controller integration.
+0.12 — P12 Operational Intelligence: deterministic dependency graph/readiness, advisory prioritization, checkpoint intelligence, failure/evidence analysis, advisory next-action generation, and Development Task Controller integration.
