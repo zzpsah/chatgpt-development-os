@@ -81,3 +81,6 @@ jobs:
 
       - name: Verify P14 adaptive verification and bounded healing policy
         run: python tools/test-adaptive-verification.py
+
+      - name: Verify P14 deterministic heal execution and re-verification
+        run: python tools/test-adaptive-self-heal.py
