@@ -30,6 +30,8 @@ Authorization remains operation-specific. Security-relevant work requires an exp
 
 The loop is intentionally one iteration at a time. A future scheduler/worker may invoke it repeatedly, but each iteration must re-enter the same gates and persist its outcome before continuing.
 
+The loop remains **bounded, evidence-driven, checkpointed, and stoppable**. Each iteration has an explicit execution boundary, captures raw evidence, records checkpoint/outcome state, and stops on missing capability, authorization, security, objective, or verification conditions rather than bypassing a gate.
+
 ## Documentation boundary
 
 **What is not written was never done.** Every material runtime capability and its durable project-state/documentation record must land in the same change set. Completion is **IMPLEMENTED + VERIFIED + DOCUMENTED**.

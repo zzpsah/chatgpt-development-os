@@ -22,8 +22,8 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 ## Verification state
 
-Scheduler/Worker v1 fail-closed recovery hardening, executable proof, contract documentation, durable state updates, and CI trigger hardening are included in the same atomic change. Live CI remains the acceptance gate; until it passes for the current HEAD, this slice is `IMPLEMENTED` but not `VERIFIED` by CI.
+The current HEAD CI run failed in `Verify Autonomous Development Loop` because the verifier required the exact contract phrase `bounded, evidence-driven, checkpointed, and stoppable`, which was absent from `core/autonomous-development-loop.md`. All preceding contract checks passed. This is a deterministic documentation-contract mismatch, not a runtime execution failure.
 
 ## Next implementation target
 
-Verify the hardened Scheduler/Worker v1 through live CI. After that, continue P12 hardening only through bounded, operation-specific capabilities. Higher-impact P8 remote mutations remain separately incomplete.
+Repair the autonomous-loop contract wording atomically with its durable state record, then require live CI on the new HEAD. If CI passes, continue P12 hardening only through bounded, operation-specific capabilities. Higher-impact P8 remote mutations remain separately incomplete.
