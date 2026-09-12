@@ -2,6 +2,7 @@
 """Verify the repository contract for Human Language Execution Engine v1."""
 from pathlib import Path
 import re
+import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -11,6 +12,9 @@ REQUIRED_FILES = [
     "core/human-language-routing.md",
     "core/human-language-execution-engine.md",
     "core/project-router.md",
+    "core/human-command-interpreter.md",
+    "tools/devos-command-interpreter.py",
+    "tools/test-devos-command-interpreter.py",
     "workflows/resume.md",
     "workflows/bug-fix.md",
     "workflows/feature.md",
@@ -40,6 +44,8 @@ def main():
     routing = text("core/human-language-routing.md")
     router = text("core/project-router.md")
     security = text("rules/security.md")
+    interpreter = text("tools/devos-command-interpreter.py")
+    contract = text("core/human-command-interpreter.md")
 
     checks = [
         (all(x.lower() in engine.lower() for x in ("Human phrase", "Canonical intent", "Workflow", "Authorization", "Evidence", "Action", "Verification")),
@@ -64,18 +70,30 @@ def main():
          "security baseline remains part of execution safety"),
         (re.search(r"No technical action is justified solely by emotional intensity", engine, re.I) is not None,
          "emotional language cannot independently authorize technical action"),
+        ("P12-COMMAND-INTERPRETER-v1" in interpreter,
+         "executable command interpreter declares a stable version"),
+        (all(x in contract for x in ("continue", "continiue", "wahi se continue", "ok", "do it", "ruk ja")),
+         "command interpreter contract documents casual command examples"),
+        ("Interpretation never grants authorization" in contract,
+         "command interpreter contract preserves authority separation"),
     ]
 
     for ok, message in checks:
         if not check(ok, message):
             failures += 1
 
+    test = subprocess.run([sys.executable, str(ROOT / "tools/test-devos-command-interpreter.py")], cwd=ROOT, capture_output=True, text=True)
+    if not check(test.returncode == 0, "executable Human Command Interpretation checks pass"):
+        print(test.stdout)
+        print(test.stderr)
+        failures += 1
+
     print("\nResult:")
     if failures:
         print(f"FAIL — {failures} verification check(s) failed.")
         return 1
-    print("PASS — Human Language Execution Engine v1 contract checks passed.")
-    print("NOTE — This verifies repository contracts, not semantic AI behavior or application correctness.")
+    print("PASS — Human Language Execution Engine v1 and Command Interpretation Layer v1 checks passed.")
+    print("NOTE — This verifies repository contracts and deterministic examples, not general semantic AI behavior or application correctness.")
     return 0
 
 
