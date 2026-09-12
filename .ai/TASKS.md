@@ -1,7 +1,7 @@
 # DevOS Tasks
 
 ## Active
-- P13: validate the full orchestration flow in a real managed project.
+- P13: obtain fresh green GitHub Actions evidence for the real managed-project orchestration proof against `zzpsah/automation-suite`, then close the milestone.
 
 ## Planned
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
@@ -46,9 +46,11 @@
 - P12 controller/OI/runtime-handoff integration verifier added locally and passed alongside the full local contract suite.
 - P12 controller/OI/runtime-handoff integration published in commit `1f544f2f000a8357bf801cb0682c1a0e797997b1`; fresh GitHub Actions workflows 415 and 360 passed.
 - Portable host-profile contract published in commit `0abaf5340b412d6f7701f0481a1e32f1e50a3504` with fresh GitHub Actions evidence.
-- P13 first slice added locally: the goal-to-next-safe-unit orchestrator returns only `CONTINUE`, `STOP`, or `ESCALATE` and never executes a work unit.
-- P13 runtime-outcome feedback added locally: only a verified, evidenced completion unlocks a dependent task for fresh selection.
-- P13 durable checkpoint added locally: resume compares Git HEAD and always requires fresh revalidation instead of replaying a saved candidate.
+- P13 first slice added: the goal-to-next-safe-unit orchestrator returns only `CONTINUE`, `STOP`, or `ESCALATE` and never executes a work unit.
+- P13 runtime-outcome feedback added: only a verified, evidenced completion unlocks a dependent task for fresh selection.
+- P13 durable checkpoint added: resume compares Git HEAD and always requires fresh revalidation instead of replaying a saved candidate.
+- P13 real managed-project verifier added: it validates actual `zzpsah/automation-suite` repository context, evidence-gated progression, checkpoint/resume behavior, head-drift escalation, bounded termination, and unchanged authority.
+- Dedicated read-only GitHub Actions workflow added to check out DevOS and `zzpsah/automation-suite` separately and run the P13 proof.
 
 ## Verification note
-P11 and P12 are closed with fresh GitHub Actions evidence. P13 orchestration, runtime-outcome feedback, and durable checkpoint/resume are locally verified; a managed-project proof remains.
+P11 and P12 are closed with fresh GitHub Actions evidence. P13 implementation now includes the external managed-project completion proof; the milestone remains open until that proof has fresh green GitHub Actions evidence on the final P13 state.
