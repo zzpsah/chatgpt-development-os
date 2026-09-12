@@ -19,6 +19,13 @@ with tempfile.TemporaryDirectory() as tmp:
     assert batch["status"]=="COMPLETE" and batch["iterations"]==2 and batch["max_iterations"]==2
     limited=module.run_batch(batch_payloads[:1], root, state, max_iterations=1)
     assert limited["status"]=="COMPLETE" and limited["iterations"]==1
+    duplicate=[batch_payloads[0], batch_payloads[0]]
+    try:
+        module.run_batch(duplicate, root, state, max_iterations=2)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("duplicate work-unit payloads must fail closed")
     try:
         module.run_batch(batch_payloads, root, state, max_iterations=0)
     except ValueError:

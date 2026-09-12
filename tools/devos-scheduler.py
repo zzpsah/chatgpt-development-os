@@ -22,15 +22,7 @@ def run_iteration(payload: dict[str, Any], project_root: Path, state_path: Path,
     try:
         recovery = recovery_mod.recover(state_path)
     except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
-        return {
-            "scheduler_version":"P12-SCHEDULER-v1",
-            "status":"HOLD",
-            "reason":"RECOVERY_STATE_INVALID",
-            "recovery":{"recovery_version":"P12-RECOVERY-v1","status":"RECOVERY_ERROR","action":"RECOVERY_HOLD_REQUIRES_REVIEW","error_type":type(exc).__name__,"execution":"NONE","authorization":"UNCHANGED","replay":"NEVER_AUTOMATIC"},
-            "iteration":0,
-            "execution":"NONE",
-            "authorization":"UNCHANGED",
-        }
+        return {"scheduler_version":"P12-SCHEDULER-v1","status":"HOLD","reason":"RECOVERY_STATE_INVALID","recovery":{"recovery_version":"P12-RECOVERY-v1","status":"RECOVERY_ERROR","action":"RECOVERY_HOLD_REQUIRES_REVIEW","error_type":type(exc).__name__,"execution":"NONE","authorization":"UNCHANGED","replay":"NEVER_AUTOMATIC"},"iteration":0,"execution":"NONE","authorization":"UNCHANGED"}
     if recovery.get("status") == "RECOVERED" and recovery.get("action") == "RECOVERY_HOLD_REQUIRES_REVIEW":
         return {"scheduler_version":"P12-SCHEDULER-v1","status":"HOLD","reason":"RECOVERY_HOLD_REQUIRES_REVIEW","recovery":recovery,"iteration":0,"execution":"NONE","authorization":"UNCHANGED"}
     if recovery.get("status") == "RECOVERED" and recovery.get("outcome") in {"FAILED", "BLOCKED", "CANCELLED"}:
@@ -44,6 +36,12 @@ def run_batch(payloads: list[dict[str, Any]], project_root: Path, state_path: Pa
         raise ValueError("max_iterations must be >= 1")
     if len(payloads) > max_iterations:
         raise ValueError("payload count exceeds max_iterations")
+    seen: set[str] = set()
+    for payload in payloads:
+        identity = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+        if identity in seen:
+            raise ValueError("duplicate work-unit payload")
+        seen.add(identity)
     results: list[dict[str, Any]] = []
     for payload in payloads:
         if len(results) >= max_iterations:
@@ -52,16 +50,7 @@ def run_batch(payloads: list[dict[str, Any]], project_root: Path, state_path: Pa
         results.append(result)
         if result.get("status") != "COMPLETE":
             break
-    return {
-        "scheduler_version":"P12-SCHEDULER-v1",
-        "status":"COMPLETE" if results and all(r.get("status") == "COMPLETE" for r in results) else (results[-1].get("status", "HOLD") if results else "NO_ACTION"),
-        "iterations":len(results),
-        "max_iterations":max_iterations,
-        "results":results,
-        "execution":"DELEGATE_TO_EXISTING_RUNTIME" if results else "NONE",
-        "authorization":"UNCHANGED",
-        "replay":"NEVER_AUTOMATIC",
-    }
+    return {"scheduler_version":"P12-SCHEDULER-v1","status":"COMPLETE" if results and all(r.get("status") == "COMPLETE" for r in results) else (results[-1].get("status", "HOLD") if results else "NO_ACTION"),"iterations":len(results),"max_iterations":max_iterations,"results":results,"execution":"DELEGATE_TO_EXISTING_RUNTIME" if results else "NONE","authorization":"UNCHANGED","replay":"NEVER_AUTOMATIC"}
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run one or a bounded batch of DevOS scheduler/worker iterations")

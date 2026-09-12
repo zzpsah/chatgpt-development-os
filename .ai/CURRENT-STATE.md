@@ -12,7 +12,7 @@ The autonomous loop executes one already-approved `P12-HANDOFF-v1` through the e
 
 Scheduler/Worker v1 is the orchestration boundary above that loop. Each scheduler invocation processes exactly one bounded work unit. It first performs deterministic recovery; a latest `FAILED`, `BLOCKED`, or `CANCELLED` outcome causes `HOLD`/review and never triggers an automatic retry. An unknown persisted outcome also causes a fail-closed `HOLD`/review. Malformed or unreadable durable state likewise causes `HOLD` with `RECOVERY_STATE_INVALID`; the scheduler does not execute when recovery cannot establish a trustworthy classification. Otherwise it delegates exactly one iteration to the existing autonomous loop with a durable state path, which re-enters controller, handoff, runtime, verification, Security Gate, and persistence boundaries.
 
-The bounded batch scheduling extension `run_batch(...)` accepts distinct work-unit payloads, requires an explicit positive `max_iterations`, re-enters the existing one-unit scheduler path for each payload, and stops on the first non-`COMPLETE` result. It cannot silently retry, reuse a payload, or exceed the caller-supplied iteration bound.
+The bounded batch scheduling extension `run_batch(...)` accepts distinct work-unit payloads, requires an explicit positive `max_iterations`, re-enters the existing one-unit scheduler path for each payload, and stops on the first non-`COMPLETE` result. It rejects duplicate payloads using a canonical JSON identity check, cannot silently retry or reuse a payload, and cannot exceed the caller-supplied iteration bound.
 
 ## Portable project memory
 
@@ -24,10 +24,10 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 ## Verification state
 
-The corrective durable record at HEAD `18f3bf3438ef48a936c3f1dda0239eed91d474b0` was verified by CI run `34688138297` (run #349) for workflow `Verify Development OS Contracts`: `completed` / `success`. The prior guard failure on `649f34bb...` remains recorded as a historical documentation-integrity exception because that commit changed `tools/test-devos-scheduler.py` without a durable documentation file in the same commit. The exception is not being misrepresented as an atomic historical change.
+The corrective durable record at HEAD `1f12d7916c16dd708cf3600b71a5bd42c4a426b9` was verified by CI run `34688213470` (run #350) for workflow `Verify Development OS Contracts`: `completed` / `success`. The prior guard failure on `649f34bb...` remains recorded as a historical documentation-integrity exception because that commit changed `tools/test-devos-scheduler.py` without a durable documentation file in the same commit. The exception is not being misrepresented as an atomic historical change.
 
-The current verified CI acceptance applies to the corrective HEAD only. Any subsequent implementation must again satisfy the repository's documentation-at-change boundary and obtain a new green CI result before being treated as verified.
+The next change adds executable duplicate-payload rejection to `run_batch(...)` and records that contract in this same change set. This change must obtain a new green CI result before it is treated as verified.
 
 ## Next implementation target
 
-Continue P12 hardening with the next safe bounded worker/recovery improvement, using an atomic documented change set where the available repository write path permits it. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.
+After green CI, continue P12 hardening with the next safe bounded worker/recovery improvement. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.
