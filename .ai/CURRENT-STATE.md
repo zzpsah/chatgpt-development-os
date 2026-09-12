@@ -2,13 +2,13 @@
 
 ## Current milestone
 
-P12 — Operational Intelligence is active; executable controller integration v1 is now repository-backed. P11 remains complete.
+P12 — Operational Intelligence is active; executable controller integration and bounded controller-to-runtime handoff v1 are now repository-backed. P11 remains complete.
 
 ## P12 status
 
-P12 graph/readiness, prioritization/checkpoint, failure/evidence, advisory next-action, and controller-gating slices are repository-backed. Operational Intelligence uses `ADVISORY_ONLY`; it does not authorize execution, mutation, deployment, publication, or security bypass. The executable controller consumes the advisory result but independently checks readiness, objective/scope, capability, authorization, and repository state before returning a candidate/hold/routing decision.
+P12 graph/readiness, prioritization/checkpoint, failure/evidence, advisory next-action, controller-gating, and bounded handoff slices are repository-backed. Operational Intelligence uses `ADVISORY_ONLY`; it does not authorize execution, mutation, deployment, publication, or security bypass. The controller consumes the advisory result but independently gates readiness, objective/scope, capability, authorization, and repository state. The handoff then requires explicit capability availability, authorization approval when required, and `PASS` from the Security Gate for security-relevant work before constructing an envelope for the existing bounded runtime.
 
-The latest P12 verifier fix is live-CI verified on commit `b8975e598199f5ca7fb791c36ecbafef04ca1fef`: the contract workflow passed both the Operational Intelligence check and the fresh-repository determinism check.
+The handoff begins with an empty evidence list. Only the existing runtime/provider may supply raw execution evidence. A runtime result without raw evidence is not accepted as successful completion.
 
 ## Portable project memory
 
@@ -20,4 +20,4 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 ## Next implementation target
 
-Move the executable controller bridge from decision-envelope proof toward the bounded execution runtime: consume an approved candidate, pass explicit capability/authorization/security gates, execute a supported work unit, collect raw execution evidence, verify it, and persist the result without turning advisory intelligence into authority.
+Connect the approved handoff envelope to the existing bounded Execution Runtime, collect actual runtime evidence, run verification/security checks, and persist the resulting checkpoint/task outcome. No second executor and no authority grant may be introduced.

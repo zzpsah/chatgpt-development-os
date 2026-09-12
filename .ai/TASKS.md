@@ -1,14 +1,13 @@
 # DevOS Tasks
 
 ## Active
-- P12: move executable controller integration from advisory decision envelope to bounded execution-runtime handoff while preserving independent capability, authorization, verification, and security gates.
+- P12: execute supported work units through the bounded controller-to-runtime handoff while preserving independent capability, authorization, verification, and security gates.
 - Portable continuity: validate fresh-checkout bootstrap and repository-only recovery across AI/tool boundaries.
 
 ## Planned
-- P12: implement bounded work-unit execution handoff from controller candidate to the existing execution runtime.
-- P12: collect raw execution evidence and feed verification/security results back into durable task state.
+- P12: feed verified runtime outcomes back into durable task state and checkpoint records.
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
-- Extend portable-memory recovery proof to an isolated fresh checkout path and handoff boundary.
+- Extend portable-memory recovery proof to an isolated fresh checkout and handoff boundary.
 
 ## Blocked
 - None.
@@ -36,6 +35,7 @@
 - Portable project-memory bootstrap inspector, deterministic proof, documentation, and contract-CI integration implemented in one atomic change set.
 - P12 executable verifier repaired for Python 3.14 dynamic-import/dataclass compatibility and live CI verified.
 - P12 executable controller bridge v1 implemented with independent gates over OI advisory next-action output; bridge is non-executing and preserves authority boundaries.
+- P12 bounded controller-to-runtime handoff v1 implemented with explicit capability, authorization, Security Gate, objective, and raw-evidence boundaries.
 
 ## Verification note
-P11 is closed. P12 graph/readiness, prioritization/checkpoint, failure/evidence, advisory next-action, and controller-gating slices are repository-backed and live-CI verified. The next target is the bounded handoff from controller candidate to execution runtime; no execution authority is granted by OI.
+P11 is closed. P12 graph/readiness, prioritization/checkpoint, failure/evidence, advisory next-action, controller-gating, and bounded handoff slices are repository-backed. The handoff is still not an executor: actual execution remains the responsibility of the existing bounded runtime, and runtime evidence must be verified before durable completion.

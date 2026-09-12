@@ -74,3 +74,6 @@ jobs:
 
       - name: Verify P12 controller advisory integration
         run: python tools/test-devos-task-controller.py
+
+      - name: Verify P12 bounded controller-to-runtime handoff
+        run: python tools/test-devos-runtime-handoff.py
