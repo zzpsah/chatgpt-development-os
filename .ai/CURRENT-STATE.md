@@ -22,8 +22,8 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 ## Verification state
 
-The current HEAD CI run failed in `Verify Autonomous Development Loop` because the verifier required the exact contract phrase `bounded, evidence-driven, checkpointed, and stoppable`, which was absent from `core/autonomous-development-loop.md`. All preceding contract checks passed. This is a deterministic documentation-contract mismatch, not a runtime execution failure.
+The live CI run for the previous HEAD `306a1a08...` failed on a stale autonomous-loop contract needle. A follow-up documentation-only correction at `f95ff6a1...` restored that phrase, but its CI run exposed the next missing contract needle (`Objective`). The autonomous-loop verifier is therefore the current acceptance blocker; no runtime execution failure has been observed.
 
 ## Next implementation target
 
-Repair the autonomous-loop contract wording atomically with its durable state record, then require live CI on the new HEAD. If CI passes, continue P12 hardening only through bounded, operation-specific capabilities. Higher-impact P8 remote mutations remain separately incomplete.
+Complete the autonomous-loop contract vocabulary atomically with this durable state record, then require live CI on the new HEAD. Only after CI passes may P12 hardening continue. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.
