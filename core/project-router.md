@@ -13,10 +13,13 @@ The router is a resolution layer, not the source of project truth. The selected 
 4. Active project from the current workflow/session, when supported by durable evidence.
 5. If multiple projects remain plausible, ask one concise clarification instead of guessing.
 
+The canonical `DEVOS` / `Development OS` alias resolves to `zzpsah/chatgpt-development-os`. Exact owner/repository identity wins over a name-only repository search; a similarly named public repository must not replace the registry/manifest identity.
+
 ## Examples
 
 | User request | Route |
 |---|---|
+| `DEVOS` / `Development OS` | `zzpsah/chatgpt-development-os` |
 | `Continue Tetahali` | `zzpsah/umv-tetahali` |
 | `Continue Sahaspur` | `zzpsah/umvsahaspur` |
 | `Work on photo signature` | `zzpsah/photo-signature-studio` |
@@ -35,9 +38,12 @@ Once a project is resolved:
 6. Inspect the actual source, tests, configuration, and Git state before making important claims.
 7. Determine the user's requested intent from the recovered state and current request.
 
+If `.ai/manifest.yaml` declares `canonical_repository`, compare it with observed Git/CI repository evidence. A mismatch is an identity conflict and must be surfaced before material work; do not silently switch either identity.
+
 ## Safety
 
 - Never select a project merely because its name is similar when another project is plausible.
+- Never let a name-only GitHub search override an exact repository identity declared by trusted project context.
 - Never treat the registry as a substitute for project-local context.
 - Never copy one project's context into another project.
 - Do not expose secrets or unnecessary personal/student data while routing or reporting state.

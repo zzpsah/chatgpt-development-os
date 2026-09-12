@@ -38,7 +38,7 @@ def main() -> None:
             runs.append(completed.stdout)
     assert runs[0] == runs[1], "operational analysis must be deterministic across fresh runs"
     result = json.loads(runs[0])
-    assert result["protocol_version"] == "P12-OI-v3"
+    assert result["protocol_version"] == "P12-OI-v4"
     assert result["failures"][0]["class"] == "VERIFICATION_FAILED"
     assert result["evidence"][0]["execution_evidence"] is True
     assert result["readiness"][0]["id"] == "verify"

@@ -3,6 +3,9 @@ specification: portable-project-context
 project_id: chatgpt-development-os
 name: "ChatGPT Development OS"
 managed_by: development-os
+canonical_repository: zzpsah/chatgpt-development-os
+canonical_url: https://github.com/zzpsah/chatgpt-development-os
+canonical_alias: DEVOS
 context_directory: .ai
 read_first:
   - STATE-INDEX.md
