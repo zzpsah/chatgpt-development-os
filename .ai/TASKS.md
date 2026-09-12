@@ -45,6 +45,7 @@
 - Documentation-integrity boundary implemented and contract-verified.
 - Portable project-memory bootstrap inspector, deterministic proof, documentation, and contract-CI integration implemented in one atomic change set.
 - P12 contract vocabulary aligned with executable verification by explicitly documenting dependency-aware prioritization; live CI verification remains the acceptance gate.
+- P12 executable verifier repaired for Python 3.14 dynamic-import/dataclass compatibility by registering the loaded module in `sys.modules`; live CI verification remains the acceptance gate.
 
 ## Verification note
 P11 is closed. P12 graph/readiness, prioritization/checkpoint, failure/evidence, and advisory next-action slices are repository-backed. Portable project memory has a repository-local bootstrap inspector and deterministic proof wired into contract CI. Controller advisory next-action integration remains the next P12 implementation target.

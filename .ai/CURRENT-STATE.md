@@ -39,9 +39,9 @@ The repository contains the DevOS architecture through P12 foundations:
 
 ## P12 status
 
-P12 graph/readiness, prioritization/checkpoint, failure/evidence, and advisory next-action slices are repository-backed. The operational-intelligence contract uses `ADVISORY_ONLY`; Operational Intelligence does not authorize execution, mutation, deployment, publication, or security bypass. The contract now explicitly documents dependency-aware prioritization to satisfy the executable P12 contract vocabulary.
+P12 graph/readiness, prioritization/checkpoint, failure/evidence, and advisory next-action slices are repository-backed. The operational-intelligence contract uses `ADVISORY_ONLY`; Operational Intelligence does not authorize execution, mutation, deployment, publication, or security bypass. The contract explicitly documents dependency-aware prioritization.
 
-Live CI verification is required before claiming P12 contract green.
+A fresh CI run on the latest P12 contract fix exposed a Python 3.14 compatibility failure in the executable verifier's dynamic module loading: `dataclass` inspection could not resolve `cls.__module__` because the dynamically imported module was not registered in `sys.modules`. The verifier fix registers the module before `exec_module`; this is an executable-verifier compatibility repair, not an authority change. Live CI verification remains required before claiming P12 contract green.
 
 ## Portable project memory
 
