@@ -34,3 +34,7 @@ The optional `latest_runtime_outcome` is processed only in memory for the next s
 `tools/orchestration-checkpoint.py` writes a minimal `P13-ORCHESTRATION-CHECKPOINT-v1` record, normally at `.ai/ORCHESTRATION-CHECKPOINT.json`. It stores only the goal, iteration, control decision, repository head, candidate task identifier, and reasons; it never stores credentials, raw runtime evidence, or semantic task state.
 
 Resume compares the recorded repository head with the current head. A mismatch returns `ESCALATE`. A match still returns `REVALIDATE_REQUIRED`, never execution or a replay instruction: the orchestrator must receive fresh inventory, capability, authorization, security, and evidence inputs before another candidate is selected.
+
+## Managed-project proof
+
+`tools/test-p13-managed-project.py` creates an isolated Git repository from the DevOS managed-project template and proves the complete control path: recovered `.ai` context, real Git head, goal-to-candidate selection, checkpoint persistence, verified runtime-outcome feedback unlocking a dependent task, and changed-head resume escalation. It does not contact an external provider or mutate a production project.

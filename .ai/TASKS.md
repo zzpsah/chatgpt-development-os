@@ -1,7 +1,7 @@
 # DevOS Tasks
 
 ## Active
-- P13: validate the full orchestration flow in a real managed project.
+- Define P14 adaptive verification and self-healing scope from the completed P13 execution-feedback boundary.
 
 ## Planned
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
@@ -49,6 +49,7 @@
 - P13 first slice added locally: the goal-to-next-safe-unit orchestrator returns only `CONTINUE`, `STOP`, or `ESCALATE` and never executes a work unit.
 - P13 runtime-outcome feedback added locally: only a verified, evidenced completion unlocks a dependent task for fresh selection.
 - P13 durable checkpoint added locally: resume compares Git HEAD and always requires fresh revalidation instead of replaying a saved candidate.
+- P13 isolated managed-project proof added locally: template context, real Git, candidate selection, verified runtime outcome, dependency unlock, checkpoint, and stale-head escalation execute end to end.
 
 ## Verification note
-P11 and P12 are closed with fresh GitHub Actions evidence. P13 orchestration, runtime-outcome feedback, and durable checkpoint/resume are locally verified; a managed-project proof remains.
+P11 and P12 are closed with fresh GitHub Actions evidence. P13 is locally complete pending fresh GitHub Actions evidence for the isolated managed-project proof.

@@ -11,6 +11,7 @@ Implement the first executable P13 control boundary: transform one human goal an
 - Added regression coverage for `CONTINUE`, `STOP`, execution-budget exhaustion, and authorization escalation.
 - Added in-memory runtime-outcome feedback: only verified, non-empty evidence can mark a task complete for the next selection and unlock a dependent task.
 - Added a durable minimal orchestration checkpoint and safe-resume proof: changed Git head escalates, and a matching head still requires fresh revalidation.
+- Added an isolated managed-project end-to-end proof using the DevOS template and real Git state.
 - Wired the P13 test into contract CI.
 - Reconciled the roadmap from completed P11/P12 evidence and set P13 as the active milestone.
 
@@ -25,7 +26,7 @@ The orchestrator does not execute commands, mutate repositories, retry operation
 
 ## Remaining work
 
-1. Validate the full P13 flow in a real managed project.
+1. Publish the managed-project proof and confirm fresh CI before closing P13.
 
 ## Next action
 

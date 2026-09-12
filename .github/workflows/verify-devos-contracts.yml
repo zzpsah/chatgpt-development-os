@@ -75,3 +75,6 @@ jobs:
 
       - name: Verify P13 orchestration checkpoint resume
         run: python tools/test-orchestration-checkpoint.py
+
+      - name: Verify P13 managed-project end-to-end proof
+        run: python tools/test-p13-managed-project.py
