@@ -23,9 +23,20 @@ def _load(path: Path) -> dict[str, Any]:
     data = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict) or data.get("state_version") != STATE_VERSION:
         raise ValueError("unsupported runtime state")
+    latest = data.get("latest")
+    if latest is not None and not isinstance(latest, dict):
+        raise ValueError("runtime latest record must be an object or null")
     history = data.get("history", [])
     if not isinstance(history, list):
         raise ValueError("runtime history must be a list")
+    if len(history) > MAX_HISTORY:
+        raise ValueError("runtime history exceeds bounded size")
+    if any(not isinstance(record, dict) for record in history):
+        raise ValueError("runtime history records must be objects")
+    if latest is not None and history and history[-1] != latest:
+        raise ValueError("runtime latest record must match final history record")
+    if latest is not None and not history:
+        raise ValueError("runtime latest record requires history")
     return data
 
 
