@@ -68,6 +68,11 @@ with tempfile.TemporaryDirectory() as tmp:
     unknown=module.run_iteration(payload, root, state)
     assert unknown["status"]=="HOLD" and unknown["iteration"]==0 and unknown["execution"]=="NONE"
     assert unknown["reason"]=="RECOVERY_HOLD_REQUIRES_REVIEW"
+    for invalid_latest in ("invalid", ["invalid"], 7, True):
+        state.write_text(json.dumps({"state_version":"P12-PERSISTENCE-v1","latest":invalid_latest,"history":[]}), encoding="utf-8")
+        invalid=module.run_iteration(payload, root, state)
+        assert invalid["status"]=="HOLD" and invalid["iteration"]==0 and invalid["execution"]=="NONE"
+        assert invalid["reason"]=="RECOVERY_STATE_INVALID"
     state.write_text("{malformed", encoding="utf-8")
     malformed=module.run_iteration(payload, root, state)
     assert malformed["status"]=="HOLD" and malformed["iteration"]==0 and malformed["execution"]=="NONE"

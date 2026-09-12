@@ -28,6 +28,8 @@ def recover(path: Path) -> dict[str, object]:
     latest = persistence.load_latest(path)
     if latest is None:
         return {"recovery_version":"P12-RECOVERY-v1","status":"NO_STATE","action":"SELECT_FROM_FRESH_STATE","execution":"NONE","authorization":"UNCHANGED"}
+    if not isinstance(latest, dict):
+        raise ValueError("invalid latest runtime record")
     status = latest.get("status")
     if status == "COMPLETE":
         action = "RECHECK_GATES_THEN_CONTINUE"

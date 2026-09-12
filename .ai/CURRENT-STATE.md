@@ -14,6 +14,8 @@ Scheduler/Worker v1 is the orchestration boundary above that loop. Each schedule
 
 The bounded batch scheduling extension `run_batch(...)` accepts distinct work-unit payloads, requires a positive integer `max_iterations`, re-enters the existing one-unit scheduler path for each payload, and stops on the first non-`COMPLETE` result. It rejects duplicate payloads using a canonical JSON identity check and rejects non-object work-unit payloads before execution. Invalid `max_iterations` types/values fail closed before batch execution. Direct `run_iteration(...)` calls now apply the same non-object payload guard before recovery or execution. The batch API now also rejects non-list payload collections before length checks or execution. It cannot silently retry or reuse a payload, and cannot exceed the caller-supplied iteration bound.
 
+Recovery now also validates the type of the persisted `latest` runtime record before reading fields. A scalar or list in `latest` is treated as invalid durable state and the scheduler returns `HOLD` with `RECOVERY_STATE_INVALID` without executing work.
+
 ## Portable project memory
 
 The repository is the durable project-memory boundary. A fresh AI must recover from repository source, Git, and `.ai` context before continuing. ChatGPT Memory, account memory, and prior chat history are supplementary only.
@@ -25,6 +27,8 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 ## Verification state
 
 The duplicate-payload hardening at `7a26b5a7eefc11f3057910e3d9a6319c3cf930fa` was verified by CI run `34688273962` (run #351): `completed` / `success`. The subsequent durable acceptance record at `61875c2f2a4ae00393a5e2f5cf8b4c53b9d02623` was verified by CI run `34688308681` (run #352): `completed` / `success`. The malformed-batch-payload hardening at `c83c1efbd475452f31dadd3f2bada3b2417a6c33` was verified by CI run `34688396678` (run #353): `completed` / `success`. The durable acceptance record at `690f30b3b098e74f238b5fe5897e1d6a46549315` was verified by CI run `34688527297` (run #354): `completed` / `success`. The iteration-bound hardening at `40d6dd0c901d940f00f26974d947216d9ee7968a` was verified by CI run `34688741615` (run #355): `completed` / `success`, including the P12 scheduler/worker verification.
+
+The latest recovery-record-type hardening is implemented and awaits CI verification.
 
 ## Next implementation target
 
