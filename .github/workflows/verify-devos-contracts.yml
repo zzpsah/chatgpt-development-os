@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -24,6 +26,12 @@ jobs:
 
       - name: Install parser dependency
         run: python -m pip install pyyaml
+
+      - name: Verify Documentation Integrity
+        run: python tools/verify-documentation-integrity.py
+
+      - name: Verify DevOS Portable Memory Bootstrap
+        run: python tools/test-devos-bootstrap.py
 
       - name: Verify Human Language Execution Engine
         run: python tools/verify-human-language-engine.py
@@ -63,3 +71,6 @@ jobs:
 
       - name: Verify P12 fresh-repository determinism
         run: python tools/test-operational-intelligence-recovery.py
+
+      - name: Verify P12 controller advisory integration
+        run: python tools/test-devos-task-controller.py

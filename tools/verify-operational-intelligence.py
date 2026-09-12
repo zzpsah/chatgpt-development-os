@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -10,10 +11,13 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def load_engine():
     path = ROOT / "tools/operational-intelligence.py"
-    spec = importlib.util.spec_from_file_location("operational_intelligence", path)
+    module_name = "operational_intelligence"
+    spec = importlib.util.spec_from_file_location(module_name, path)
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
-    assert spec.loader
+    # Register the dynamically loaded module before exec_module so Python 3.14's
+    # dataclass/type inspection can resolve cls.__module__ reliably.
+    sys.modules[module_name] = module
     spec.loader.exec_module(module)
     return module
 
