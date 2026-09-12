@@ -4,7 +4,7 @@
 
 Operational Intelligence is the P12 decision-support layer for turning the current Development Task Controller state into an evidence-backed operational view.
 
-It coordinates existing DevOS authorities; it does not replace authorization, execution, verification, Security Gate, or repository recovery rules.
+It coordinates existing DevOS authorities; it does not replace authorization, execution, verification, Security Gate, or repository recovery rules. Operational Intelligence does not authorize execution, mutation, or any action that requires an existing controller/runtime authority.
 
 ## Core contract
 
@@ -51,7 +51,7 @@ The engine must preserve explicit dependencies, distinguish `READY`, `WAITING`, 
 
 ## Priority intelligence
 
-Priority is a decision-support signal, not authority. The deterministic baseline scores unfinished work from explicit user/project priority plus bounded dependency criticality, blocked/failed status, age/staleness, deadline urgency, and estimated effort. Every scoring reason is exposed. Stored user-defined priority is never silently changed, and ranking never authorizes execution.
+Priority is a decision-support signal, not authority. The deterministic baseline provides dependency-aware prioritization by scoring unfinished work from explicit user/project priority plus bounded dependency criticality, blocked/failed status, age/staleness, deadline urgency, and estimated effort. Every scoring reason is exposed. Stored user-defined priority is never silently changed, and ranking never authorizes execution.
 
 ## Checkpoint intelligence
 
@@ -92,8 +92,8 @@ Operational Intelligence may recommend, rank, classify, normalize evidence, and 
 ## P12 implementation slices
 
 1. **Graph/readiness v1:** deterministic task graph construction, missing-reference validation, cycle detection, and readiness analysis.
-2. **Prioritization/checkpoints v2:** deterministic dependency-aware ranking with explicit reasons and checkpoint event signals.
-3. **Failure/evidence v3:** deterministic failure classification, raw-evidence preservation, provenance/freshness normalization, and safe handling of unsupported classifications.
+2. **Prioritization/checkpoints v2:** deterministic dependency-aware prioritization with explicit reasons and checkpoint signals.
+3. **Failure/evidence v3:** deterministic failure classification, raw evidence preservation, provenance/freshness normalization, and safe handling of unsupported classifications.
 4. **Next-action v4:** deterministic advisory next-action generation with explicit non-authority semantics.
 5. **Next:** fresh-repository recovery proof and stronger controller integration without granting authority.
 

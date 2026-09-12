@@ -10,6 +10,15 @@
 - P11 DevOS Federation & Self-Healing Context v1 is complete.
 - P12 Operational Intelligence is now the active milestone.
 
+## Canonical DevOS repository identity
+
+- Canonical alias: `DEVOS` / `Development OS`.
+- Canonical repository: `zzpsah/chatgpt-development-os`.
+- Canonical URL: `https://github.com/zzpsah/chatgpt-development-os`.
+- `.ai/manifest.yaml` and `projects/registry.md` carry this durable identity so a fresh AI session does not depend on prior chat/account memory.
+- Name-only GitHub search results are not authoritative project identity evidence. A similarly named repository must not replace the exact canonical owner/repository.
+- `tools/discover-project-identity.py` compares observed Git/CI repository evidence with the canonical manifest identity and surfaces mismatches as `CONFLICT` instead of silently switching repositories.
+
 ## Implemented architecture
 
 The repository contains the DevOS architecture through P11:

@@ -50,7 +50,11 @@ Core communication rule: **Funny input. Serious engineering.**
 
 ## DevOS identity and first-contact bootstrap
 
-This repository **is Development OS (DevOS)**. When an AI enters this repository, it should treat DevOS as the governing development framework for the work and bootstrap itself from repository context before making material technical conclusions.
+This repository **is Development OS (DevOS)**. Its canonical repository identity is exactly `zzpsah/chatgpt-development-os`, with canonical URL `https://github.com/zzpsah/chatgpt-development-os` and canonical alias `DEVOS`.
+
+When a user says `DEVOS` or `Development OS`, resolve that name through repository-local durable identity (`.ai/manifest.yaml`) and `projects/registry.md`. Do **not** substitute a different repository merely because its GitHub name is `devos` or looks similar. A name-only GitHub search result is not project identity evidence. If observed Git/CI repository evidence conflicts with the declared canonical repository, surface the conflict and stop before material changes rather than guessing.
+
+When an AI enters this repository, it should treat DevOS as the governing development framework for the work and bootstrap itself from repository context before making material technical conclusions.
 
 The first-contact sequence is:
 

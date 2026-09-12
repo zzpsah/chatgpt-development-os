@@ -4,6 +4,7 @@ This registry maps natural-language project names to their durable repositories 
 
 | Project | Repository | Context | Notes |
 |---|---|---|---|
+| DevOS / Development OS | `zzpsah/chatgpt-development-os` | `.ai/PROJECT.md` | Canonical DevOS framework repository; canonical alias `DEVOS`; exact owner/repository wins over name-only search |
 | UMV Tetahali | `zzpsah/umv-tetahali` | `projects/umv-tetahali/context.md` | Production/project repository |
 | UMV Tetahali Staging | `zzpsah/umv-tetahali-staging` | `projects/umv-tetahali-staging/context.md` | Staging repository |
 | UMV Sahaspur | `zzpsah/umvsahaspur` | `projects/umv-sahaspur/context.md` | School project |

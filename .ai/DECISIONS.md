@@ -7,6 +7,14 @@
 - AI account memory is supplementary and must not be treated as project authority.
 - `STATE-INDEX.md` is an evidence index, not semantic authority.
 
+## Canonical DevOS repository identity
+
+- The canonical `DEVOS` / `Development OS` repository is exactly `zzpsah/chatgpt-development-os`.
+- The canonical URL is `https://github.com/zzpsah/chatgpt-development-os`.
+- Name-only repository similarity is not identity evidence and must never override the exact canonical owner/repository declared by trusted project context.
+- `.ai/manifest.yaml` is the repository-local canonical identity declaration; `projects/registry.md` is the natural-language routing map.
+- Observed Git/CI repository evidence is compared with the canonical declaration. A mismatch is surfaced as an identity conflict and blocks silent substitution; it does not authorize changes to either repository.
+
 ## P9 milestone status
 
 - P9 Development Task Controller v1 is implemented and integrated into the repository CI contract verification workflow.
