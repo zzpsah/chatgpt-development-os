@@ -53,7 +53,7 @@ The engine must preserve explicit dependencies, distinguish `READY`, `WAITING`, 
 
 ## Priority intelligence
 
-Priority is a decision-support signal, not authority. The deterministic baseline scores unfinished work from explicit user/project priority plus bounded dependency criticality, blocked/failed status, age/staleness, deadline urgency, and estimated effort. Every scoring reason is exposed. Stored user-defined priority is never silently changed, and ranking never authorizes execution.
+Priority is a decision-support signal, not authority. The deterministic baseline performs **dependency-aware prioritization** of unfinished work using explicit user/project priority plus bounded dependency criticality, blocked/failed status, age/staleness, deadline urgency, and estimated effort. Every scoring reason is exposed. Stored user-defined priority is never silently changed, and ranking never authorizes execution.
 
 ## Checkpoint intelligence
 
