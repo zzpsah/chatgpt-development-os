@@ -18,7 +18,7 @@ The Human Language Execution Engine and Desi Language Pack form the human-input 
 
 The controller independently gates readiness, objective/scope, capability, authorization, and repository state. Handoff requires capability availability, required authorization approval, and Security Gate `PASS` for security-relevant work. Runtime v1 is verification-only: explicit Python argv, in-root script, no shell/inline/module execution. Persistence atomically records runtime outcomes; recovery validates durable state, reconstructs the latest outcome, and never grants replay permission or executes work. Scheduler/Worker processes at most one bounded unit per invocation; invalid/unknown or FAILED/BLOCKED/CANCELLED recovery fails closed to HOLD/review. Batch mode enforces a positive explicit bound, distinct canonical work units, and stops on the first non-`COMPLETE` result.
 
-Worker lifecycle v1 is explicitly represented as `READY → RECOVERING → PREFLIGHT → DISPATCHED → RUNNING → VERIFYING → PERSISTING → COMPLETE`, with deterministic failure/hold exits. The lifecycle contract and regression guard require ordered transitions, one-unit bounds, explicit terminal states, non-secret observability, fresh recovery gates, and no automatic replay/authority creation. The lifecycle artifacts are restored on the active branch after detecting that an earlier documentation commit had not carried them forward.
+Worker lifecycle v1 is explicitly represented as `READY → RECOVERING → PREFLIGHT → DISPATCHED → RUNNING → VERIFYING → PERSISTING → COMPLETE`, with deterministic failure/hold exits. The lifecycle contract and `tools/test-devos-worker-lifecycle.py` regression guard require ordered transitions, one-unit bounds, explicit terminal states, non-secret observability, fresh recovery gates, and no automatic replay/authority creation. A documentation-integrity failure on the prior worker-test commit identified that the regression guard lacked a durable record in the same commit; this change repairs that boundary by synchronizing the guard and `.ai/CURRENT-STATE.md` in one atomic change set.
 
 ## Documentation / recovery authority
 
@@ -26,7 +26,7 @@ Worker lifecycle v1 is explicitly represented as `READY → RECOVERING → PREFL
 
 ## Verification state
 
-PR #2 (`devos/documentation-integrity-v2`) remains open, draft, and unmerged. Fresh CI verification is required for the recent failure-resolution, preflight, Worker lifecycle restoration, and human-language architecture additions. Local live-network verification is not claimed because the execution environment previously failed DNS resolution; that failure was treated as a real diagnostic event rather than hidden.
+The latest CI run for the worker lifecycle regression guard failed at Documentation Integrity because `tools/test-devos-worker-lifecycle.py` was added without a durable documentation record in that same commit. The failure was deterministic and is now explicitly recorded as a resolved documentation-boundary defect; a fresh CI run is required to verify the repair. PR #2 (`devos/documentation-integrity-v2`) remains open, draft, and unmerged. Local live-network verification is not claimed because the execution environment previously failed DNS resolution; that failure was treated as a real diagnostic event rather than hidden.
 
 ## Next implementation target
 
