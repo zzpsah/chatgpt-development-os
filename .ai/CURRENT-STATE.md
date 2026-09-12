@@ -28,7 +28,7 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 The duplicate-payload hardening at `7a26b5a7eefc11f3057910e3d9a6319c3cf930fa` was verified by CI run `34688273962` (run #351): `completed` / `success`. The subsequent durable acceptance record at `61875c2f2a4ae00393a5e2f5cf8b4c53b9d02623` was verified by CI run `34688308681` (run #352): `completed` / `success`. The malformed-batch-payload hardening at `c83c1efbd475452f31dadd3f2bada3b2417a6c33` was verified by CI run `34688396678` (run #353): `completed` / `success`. The durable acceptance record at `690f30b3b098e74f238b5fe5897e1d6a46549315` was verified by CI run `34688527297` (run #354): `completed` / `success`. The iteration-bound hardening at `40d6dd0c901d940f00f26974d947216d9ee7968a` was verified by CI run `34688741615` (run #355): `completed` / `success`, including the P12 scheduler/worker verification.
 
-The latest recovery-record-type hardening is implemented and awaits CI verification.
+The malformed recovery-record-type hardening at `8972a785921259b40ac3fd8f971911770fc03d4e` was verified by CI run `34691608454` (run #360): `completed` / `success`, including P12 scheduler/worker verification. The durable acceptance record is now persisted in this state file.
 
 ## Next implementation target
 
