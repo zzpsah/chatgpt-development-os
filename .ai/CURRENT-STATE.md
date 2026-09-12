@@ -9,6 +9,7 @@
 - P10 Context Continuity & Recovery v1 is complete.
 - P11 DevOS Federation & Self-Healing Context v1 is complete.
 - P12 Operational Intelligence is complete.
+- P13 Autonomous Development Orchestration is the active milestone.
 
 ## Canonical DevOS repository identity
 

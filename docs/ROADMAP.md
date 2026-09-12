@@ -143,7 +143,7 @@ P9 is implemented and verified. Higher-impact remote mutations from P8 remain se
 - [x] Document and validate future-session persistence expectations
 - [x] Complete P10 with fresh CI and context-sync evidence
 
-## P11 — DevOS Federation & Self-Healing Context v1 — IN PROGRESS
+## P11 — DevOS Federation & Self-Healing Context v1 — COMPLETE
 
 Goal: make DevOS context portable, self-identifying, recoverable, and resistant to stale/partial context across AI tools, accounts, projects, and connectivity interruptions.
 
@@ -151,14 +151,35 @@ Goal: make DevOS context portable, self-identifying, recoverable, and resistant 
 - [x] Add automatic project identity/registration discovery
 - [x] Add context freshness and integrity checks
 - [x] Detect and reconcile stale `.ai` state against Git/source evidence
-- [ ] Add cross-AI bootstrap/recovery handshake
-- [ ] Persist AI-session handoff summaries with provenance
-- [ ] Add safe self-healing for missing derived context files
+- [x] Add cross-AI bootstrap/recovery handshake
+- [x] Persist AI-session handoff summaries with provenance
+- [x] Add safe self-healing for missing derived context files
 - [x] Define recovery precedence when ChatGPT memory, `.ai`, Git, and generated indexes disagree
 - [x] Add P11 contract verification and CI coverage
-- [ ] Prove recovery from a fresh AI/account context using repository-only evidence
+- [x] Prove recovery from a fresh AI/account context using repository-only evidence
 
-P11 identity, freshness/integrity, and safe derived-state reconciliation are implemented and covered by fresh primary CI evidence. Cross-AI handoff and fresh-account recovery remain open.
+P11 is complete with repository-first recovery, vendor-neutral handoff, deterministic derived-context self-healing, and fresh-AI repository-only recovery evidence.
+
+## P12 — Operational Intelligence — COMPLETE
+
+- [x] Build deterministic dependency graph, readiness, and blocker analysis
+- [x] Add transparent dependency-aware prioritization and checkpoint signals
+- [x] Normalize failure classification and evidence provenance/freshness
+- [x] Generate an `ADVISORY_ONLY` next-action signal with safe `no_action`
+- [x] Add an independently gated executable controller decision envelope
+- [x] Verify P12 through fresh GitHub Actions evidence
+
+## P13 — Autonomous Development Orchestration — IN PROGRESS
+
+Goal: turn one human goal and recovered task state into one bounded, independently gated next work unit, then choose `CONTINUE`, `STOP`, or `ESCALATE` without claiming execution.
+
+- [x] Define P13 goal-to-next-safe-unit orchestration contract
+- [x] Implement the non-executing orchestrator over P12 controller and runtime handoff
+- [x] Add regression cases for continue, stop, budget exhaustion, and authorization escalation
+- [x] Wire the P13 verifier into contract CI
+- [ ] Connect actual completed runtime outcomes back into fresh task-state selection
+- [ ] Add durable orchestration checkpoints and resume proof
+- [ ] Verify P13 against a real managed-project end-to-end scenario
 
 ## Cross-cutting
 
@@ -189,6 +210,6 @@ Complete the current milestone before advancing to the next milestone. Do not ma
 
 ## Current milestone
 
-### P11 — DevOS Federation & Self-Healing Context v1 — IN PROGRESS
+### P13 — Autonomous Development Orchestration — IN PROGRESS
 
-P11 begins after P10 completion was evidenced by both primary CI and an actual external project-side context-sync execution. Higher-impact P8 remote mutations remain independently incomplete.
+P13 starts from verified P11 federation and P12 operational-intelligence foundations. Higher-impact P8 remote mutations remain independently incomplete.

@@ -69,3 +69,6 @@ jobs:
 
       - name: Verify portable AI host profiles
         run: python tools/test-host-profile.py
+
+      - name: Verify P13 autonomous orchestration
+        run: python tools/test-autonomous-orchestrator.py

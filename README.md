@@ -46,6 +46,17 @@ Operational Intelligence is **advisory**. It cannot grant authorization, bypass 
 
 See [`core/operational-intelligence.md`](core/operational-intelligence.md), [`tools/operational-intelligence.py`](tools/operational-intelligence.py), and [`core/development-task-controller.md`](core/development-task-controller.md).
 
+## P13 Autonomous Development Orchestration
+
+P13 composes one human goal, the recovered task inventory, P12 advisory analysis, independent controller gates, and the runtime-handoff boundary into one safe control decision:
+
+```text
+Goal -> task graph -> independent gates -> one next work-unit candidate
+                                      -> CONTINUE | STOP | ESCALATE
+```
+
+`tools/autonomous-orchestrator.py` never executes a candidate. `CONTINUE` only means a bounded work unit is ready for the existing runtime; `STOP` preserves no-action or budget exhaustion; `ESCALATE` preserves the blocking controller evidence. See [`core/autonomous-development-orchestration.md`](core/autonomous-development-orchestration.md).
+
 ## Portable project memory
 
 Every managed software project should contain:
