@@ -71,3 +71,6 @@ jobs:
 
       - name: Verify P12 fresh-repository determinism
         run: python tools/test-operational-intelligence-recovery.py
+
+      - name: Verify P12 controller advisory integration
+        run: python tools/test-devos-task-controller.py

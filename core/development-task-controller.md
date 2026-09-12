@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Development Task Controller is the P9 integration layer that connects the existing DevOS contracts into one evidence-driven development task lifecycle. P11 adds repository-first recovery, integrity validation, bounded derived-context self-healing, and provenance-aware handoff requirements to that lifecycle. P12 adds Operational Intelligence as an advisory decision-support layer.
+The Development Task Controller is the P9 integration layer that connects the existing DevOS contracts into one evidence-driven development task lifecycle. P11 adds repository-first recovery, integrity validation, bounded derived-context self-healing, and provenance-aware handoff requirements to that lifecycle. P12 adds Operational Intelligence as an advisory decision-support layer and an executable controller bridge.
 
 ## Core contract
 
@@ -13,6 +13,8 @@ User request
   -> Durable state resolution
   -> P12 operational analysis (advisory)
   -> Advisory next-action signal
+  -> Controller independent gates (scope/dependency/capability/authorization/state)
+  -> Candidate / Hold / Blocker routing / No-action
   -> Objective + acceptance criteria
   -> Orchestration / work units
   -> Capability + authorization checks
@@ -34,19 +36,31 @@ User request
 4. Resolve current project state before material work.
 5. Run P12 Operational Intelligence against the current task inventory to expose dependency readiness, advisory priority, checkpoint signals, failure/evidence analysis, and an advisory next action.
 6. Treat P12 recommendations as advisory only; never convert a ranking, checkpoint signal, or next-action recommendation into authority.
-7. Treat an OI `work_on:<task>` result only as a candidate work item; the controller must independently validate scope, dependencies, capability, authorization, and current repository state before execution.
-8. If OI recommends `resolve:<task>`, route the blocker through the existing dependency, capability, authorization, verification, security, or recovery authority instead of bypassing it.
-9. If OI returns `no_action`, preserve the explicit no-action/unknown state rather than inventing work.
-10. Convert the objective into bounded work units through Agent Orchestration.
-11. Require capability and authorization checks before execution.
-12. Execute only supported, bounded actions through the runtime/adapters.
-13. Collect evidence from actual execution and provider responses.
-14. Invoke applicable verification and Security Gate checks.
-15. Prevent a successful subtask from being mistaken for overall task completion.
-16. When derived context is missing or malformed, invoke only deterministic P11 self-healing; never overwrite semantic decisions.
-17. Persist meaningful semantic state and leave deterministic state generation to automation.
-18. Produce a provenance-aware handoff containing the current Git/source reference and revalidation requirements when a session boundary is reached.
-19. Produce a final result with completion status, evidence, limitations, blockers, and next action.
+7. Pass an OI `work_on:<task>` recommendation through independent controller gates for scope/objective, dependency/readiness, capability, authorization, and current repository state before it can become an execution candidate.
+8. If any independent gate fails, return `HOLD` and preserve the explicit reason rather than executing.
+9. If OI recommends `resolve:<task>`, return `ROUTE_BLOCKER` and route the blocker through the existing dependency, capability, authorization, verification, security, or recovery authority instead of bypassing it.
+10. If OI returns `no_action`, preserve the explicit no-action/unknown state rather than inventing work.
+11. Convert an approved candidate objective into bounded work units through Agent Orchestration.
+12. Require capability and authorization checks before execution.
+13. Execute only supported, bounded actions through the runtime/adapters.
+14. Collect evidence from actual execution and provider responses.
+15. Invoke applicable verification and Security Gate checks.
+16. Prevent a successful subtask from being mistaken for overall task completion.
+17. When derived context is missing or malformed, invoke only deterministic P11 self-healing; never overwrite semantic decisions.
+18. Persist meaningful semantic state and leave deterministic state generation to automation.
+19. Produce a provenance-aware handoff containing the current Git/source reference and revalidation requirements when a session boundary is reached.
+20. Produce a final result with completion status, evidence, limitations, blockers, and next action.
+
+## Executable controller bridge v1
+
+`tools/devos-task-controller.py` is the first executable P12 integration boundary. It consumes the same task inventory used by Operational Intelligence, obtains the advisory next action, and then independently validates the candidate before returning a deterministic decision envelope:
+
+- `EXECUTION_CANDIDATE`: advisory recommendation passed controller gates; still not execution.
+- `HOLD`: candidate failed a controller gate such as missing capability, required authorization, missing objective, or readiness mismatch.
+- `ROUTE_BLOCKER`: OI recommends resolving a blocked/unauthorized task through an existing authority.
+- `NO_ACTION`: no executable candidate exists; the controller does not invent one.
+
+The bridge always reports `authority=UNCHANGED`, `execution=NONE`, and `authorization=UNCHANGED`. It does not execute commands, mutate repositories, grant authorization, or replace Security Gate/Verification Engine authority.
 
 ## Task state
 
