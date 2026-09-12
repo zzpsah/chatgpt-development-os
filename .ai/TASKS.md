@@ -5,7 +5,7 @@
 - Portable continuity: validate fresh-checkout bootstrap and repository-only recovery across AI/tool boundaries.
 
 ## Planned
-- P12: persist verified runtime outcomes into durable task/checkpoint state through a bounded persistence adapter.
+- P12: add deterministic recovery/resume from durable runtime state without blind replay.
 - P12: add scheduler/worker orchestration only after persistence and recovery semantics are verified.
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
 
@@ -23,6 +23,7 @@
 - P12 bounded controller-to-runtime handoff v1 implemented with capability, authorization, and Security Gate boundaries.
 - P12 bounded Execution Runtime v1 implemented with real reference-host verification, raw evidence capture, and checkpoint support.
 - P12 end-to-end autonomous development loop v1 implemented: OI -> Controller -> Handoff -> Runtime -> raw evidence -> verification -> checkpoint.
+- P12 durable runtime persistence v1 implemented: raw-evidence-required atomic state persistence with bounded history and recovery read path.
 
 ## Verification note
-P12 remains active. The autonomous loop is bounded to verification work units and does not create authority. Live CI remains the acceptance gate for the current change set.
+P12 remains active. Runtime persistence is implemented and its executable integration test is included in the same atomic change. Live CI remains the acceptance gate for marking this slice verified.
