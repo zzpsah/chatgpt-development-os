@@ -21,4 +21,13 @@ with tempfile.TemporaryDirectory() as tmp:
     hold=module.run_iteration(payload, root, state)
     assert hold["status"]=="HOLD" and hold["iteration"]==0 and hold["execution"]=="NONE"
     assert hold["recovery"]["action"]=="REVIEW_OUTCOME_BEFORE_CONTINUE"
+    state.write_text(json.dumps({"state_version":"P12-PERSISTENCE-v1","latest":{"task_id":"verify","status":"UNKNOWN"},"history":[]}), encoding="utf-8")
+    unknown=module.run_iteration(payload, root, state)
+    assert unknown["status"]=="HOLD" and unknown["iteration"]==0 and unknown["execution"]=="NONE"
+    assert unknown["reason"]=="RECOVERY_HOLD_REQUIRES_REVIEW"
+    state.write_text("{malformed", encoding="utf-8")
+    malformed=module.run_iteration(payload, root, state)
+    assert malformed["status"]=="HOLD" and malformed["iteration"]==0 and malformed["execution"]=="NONE"
+    assert malformed["reason"]=="RECOVERY_STATE_INVALID"
+    assert not (root/"marker").read_text(encoding="utf-8") == "ran"
 print("DevOS scheduler/worker v1 contract: PASS")

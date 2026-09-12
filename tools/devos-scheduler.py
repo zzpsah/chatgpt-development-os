@@ -19,7 +19,20 @@ def _load(name: str, relative: str):
 def run_iteration(payload: dict[str, Any], project_root: Path, state_path: Path, checkpoint: Path | None = None) -> dict[str, Any]:
     recovery_mod = _load("devos_runtime_recovery", "tools/devos-runtime-recovery.py")
     loop = _load("devos_autonomous_loop", "tools/devos-autonomous-loop.py")
-    recovery = recovery_mod.recover(state_path)
+    try:
+        recovery = recovery_mod.recover(state_path)
+    except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        return {
+            "scheduler_version":"P12-SCHEDULER-v1",
+            "status":"HOLD",
+            "reason":"RECOVERY_STATE_INVALID",
+            "recovery":{"recovery_version":"P12-RECOVERY-v1","status":"RECOVERY_ERROR","action":"RECOVERY_HOLD_REQUIRES_REVIEW","error_type":type(exc).__name__,"execution":"NONE","authorization":"UNCHANGED","replay":"NEVER_AUTOMATIC"},
+            "iteration":0,
+            "execution":"NONE",
+            "authorization":"UNCHANGED",
+        }
+    if recovery.get("status") == "RECOVERED" and recovery.get("action") == "RECOVERY_HOLD_REQUIRES_REVIEW":
+        return {"scheduler_version":"P12-SCHEDULER-v1","status":"HOLD","reason":"RECOVERY_HOLD_REQUIRES_REVIEW","recovery":recovery,"iteration":0,"execution":"NONE","authorization":"UNCHANGED"}
     if recovery.get("status") == "RECOVERED" and recovery.get("outcome") in {"FAILED", "BLOCKED", "CANCELLED"}:
         return {"scheduler_version":"P12-SCHEDULER-v1","status":"HOLD","reason":"REVIEW_OUTCOME_BEFORE_CONTINUE","recovery":recovery,"iteration":0,"execution":"NONE","authorization":"UNCHANGED"}
     result = loop.run_once(payload, project_root, checkpoint, state_path)

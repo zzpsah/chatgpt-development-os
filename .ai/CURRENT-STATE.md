@@ -10,7 +10,7 @@ Operational Intelligence remains `ADVISORY_ONLY`; it does not authorize executio
 
 The autonomous loop executes one already-approved `P12-HANDOFF-v1` through the existing bounded runtime. Runtime v1 remains verification-only: explicit Python argv, in-root script, no shell/inline/module execution. Actual process output, exit status, and duration are captured as raw evidence. The persistence adapter records runtime outcomes atomically in `.ai/RUNTIME-STATE.json` and retains a bounded history. The recovery reader reconstructs the latest outcome but never grants replay permission or executes work.
 
-Scheduler/Worker v1 is the orchestration boundary above that loop. Each scheduler invocation processes exactly one bounded work unit. It first performs deterministic recovery; a latest `FAILED`, `BLOCKED`, or `CANCELLED` outcome causes `HOLD`/review and never triggers an automatic retry. Otherwise it delegates exactly one iteration to the existing autonomous loop with a durable state path, which re-enters controller, handoff, runtime, verification, Security Gate, and persistence boundaries.
+Scheduler/Worker v1 is the orchestration boundary above that loop. Each scheduler invocation processes exactly one bounded work unit. It first performs deterministic recovery; a latest `FAILED`, `BLOCKED`, or `CANCELLED` outcome causes `HOLD`/review and never triggers an automatic retry. An unknown persisted outcome also causes a fail-closed `HOLD`/review. Malformed or unreadable durable state likewise causes `HOLD` with `RECOVERY_STATE_INVALID`; the scheduler does not execute when recovery cannot establish a trustworthy classification. Otherwise it delegates exactly one iteration to the existing autonomous loop with a durable state path, which re-enters controller, handoff, runtime, verification, Security Gate, and persistence boundaries.
 
 ## Portable project memory
 
@@ -22,8 +22,8 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 ## Verification state
 
-Scheduler/Worker v1 code, executable proof, contract documentation, CI wiring, and durable state updates are included in the same atomic change. Live CI remains the acceptance gate; until it passes, this slice is `IMPLEMENTED` but not `VERIFIED` by CI.
+Scheduler/Worker v1 fail-closed recovery hardening, executable proof, contract documentation, and durable state updates are included in the same atomic change. Live CI remains the acceptance gate; until it passes, this slice is `IMPLEMENTED` but not `VERIFIED` by CI.
 
 ## Next implementation target
 
-Verify Scheduler/Worker v1 through live CI. After that, continue P12 hardening only through bounded, operation-specific capabilities. Higher-impact P8 remote mutations remain separately incomplete.
+Verify the hardened Scheduler/Worker v1 through live CI. After that, continue P12 hardening only through bounded, operation-specific capabilities. Higher-impact P8 remote mutations remain separately incomplete.

@@ -25,6 +25,7 @@
 - P12 durable runtime persistence v1 implemented: raw-evidence-required atomic state persistence with bounded history and recovery read path.
 - P12 deterministic runtime recovery v1 implemented: latest-outcome classification, no-blind-replay boundary, deterministic proof, and explicit re-gating requirement.
 - P12 Scheduler/Worker v1 implemented: deterministic recovery gate, one bounded iteration, existing-runtime delegation, and durable persistence requirement.
+- P12 Scheduler/Worker recovery hardening implemented: unknown or malformed durable state now fails closed to `HOLD` without invoking the autonomous loop, with executable proof.
 
 ## Verification note
-P12 remains active. Scheduler/Worker v1 executable proof and documentation are included in the same atomic change. Live CI remains the acceptance gate for marking this slice verified.
+P12 remains active. Scheduler/Worker v1 recovery hardening, executable proof, and documentation are included in the same atomic change. Live CI remains the acceptance gate for marking this slice verified.
