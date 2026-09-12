@@ -78,3 +78,6 @@ jobs:
 
       - name: Verify P13 managed-project end-to-end proof
         run: python tools/test-p13-managed-project.py
+
+      - name: Verify P14 adaptive verification and bounded healing policy
+        run: python tools/test-adaptive-verification.py
