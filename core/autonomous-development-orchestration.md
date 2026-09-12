@@ -34,3 +34,19 @@ The optional `latest_runtime_outcome` is processed only in memory for the next s
 `tools/orchestration-checkpoint.py` writes a minimal `P13-ORCHESTRATION-CHECKPOINT-v1` record, normally at `.ai/ORCHESTRATION-CHECKPOINT.json`. It stores only the goal, iteration, control decision, repository head, candidate task identifier, and reasons; it never stores credentials, raw runtime evidence, or semantic task state.
 
 Resume compares the recorded repository head with the current head. A mismatch returns `ESCALATE`. A match still returns `REVALIDATE_REQUIRED`, never execution or a replay instruction: the orchestrator must receive fresh inventory, capability, authorization, security, and evidence inputs before another candidate is selected.
+
+## Real managed-project proof contract
+
+`tools/verify-managed-project-orchestration.py` is the executable P13 completion proof. It must run against a separate checked-out repository whose `.ai/manifest.yaml` declares `managed_by: development-os`; the proof is invalid if it runs only against fixtures inside the DevOS repository.
+
+The verifier performs a bounded, read-only orchestration sequence against the managed project:
+
+1. recover the external repository Git HEAD and durable `.ai` context;
+2. let P13 select `verify_managed_context` through the normal P12 controller and runtime-handoff gates;
+3. perform actual manifest/context checks and feed the result back only as `COMPLETE + VERIFIED + non-empty evidence`;
+4. require P13 to select the dependent `checkpoint_resume` unit;
+5. build a P13 checkpoint, prove same-HEAD resume returns `REVALIDATE_REQUIRED`, and prove changed-HEAD resume returns `ESCALATE`;
+6. feed that verified checkpoint evidence back and require the bounded goal to terminate with `STOP` / controller `NO_ACTION`;
+7. assert authority remains `UNCHANGED` and orchestration execution remains `NONE` throughout.
+
+`.github/workflows/verify-p13-managed-project.yml` supplies the independent environment. It checks out DevOS and `zzpsah/automation-suite` separately and runs the proof against the latter's real `main` state. The workflow has read-only repository permissions and does not modify the managed project.
