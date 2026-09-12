@@ -6,6 +6,10 @@ P12 — Operational Intelligence is active. The repository now includes graph/re
 ## Operating contract
 P12 remains `ADVISORY_ONLY`: it never grants execution, mutation, deployment, publication, or security bypass authority. The Base Operating Contract makes failure a bounded diagnostic-and-recovery task. Material failures follow `DETECTED → DIAGNOSED → REPAIRED → DRY-TESTED → VERIFIED → REGRESSION-PROTECTED → DOCUMENTED → RESUMED`, or remain `BLOCKED`/`HOLD` when authorization/evidence is insufficient. Root cause must be `ROOT_CAUSE_UNCONFIRMED` when evidence does not support a stronger claim.
 
+## Repository identity boundary
+DevOS now has a canonical repository identity contract. The durable identity is `zzpsah/chatgpt-development-os`, project ID `chatgpt-development-os`, owner `zzpsah`, default branch `main`. `.ai/repository-identity.json` is the machine-readable identity record and `core/devos-repository-identity.md` is the normative resolution rule. Similar-name repositories, including `SamyPesse/devos`, must be rejected as substitutes. Identity conflict or unavailable canonical access must fail closed as `REPOSITORY_IDENTITY_UNCONFIRMED` before material work.
+
+## Connection diagnostics
 Connection diagnosis is layered through configuration, credential shape (never secret values), endpoint/DNS, network reachability, TLS/transport, authentication, authorization, provider/connector, request validation, and response validation. `tools/devos-connection-preflight.py` provides bounded read-only configuration/DNS/network/TLS preflight diagnostics and records only non-secret evidence. `tools/test-devos-connection-preflight.py` provides deterministic regression coverage.
 
 ## Human interaction boundary
@@ -23,7 +27,7 @@ Worker lifecycle v1 is explicitly represented as `READY → RECOVERING → PREFL
 A Scheduler/Worker CI failure exposed a regression-test contract mismatch: the unknown durable-state hold reason is returned under the structured `recovery.action`, not the top-level `reason`. The regression guard now asserts the actual fail-closed interface. This repair is recorded together with the guard change in the same material change set.
 
 ## Verification state
-A fresh CI run is required after the Scheduler/Worker regression repair. P12 is not considered green until the full contract workflow completes successfully. PR #2 (`devos/documentation-integrity-v2`) remains open, draft, and unmerged. Local live-network verification is not claimed because the execution environment previously failed DNS resolution; that failure was treated as a real diagnostic event rather than hidden.
+CI run #403 (`34712612597`) for commit `98bad894af2329d3255dae3f2c91b63ee7e7f75c` completed successfully. This verifies the full contract workflow for the Scheduler/Worker regression repair. PR #2 (`devos/documentation-integrity-v2`) remains open, draft, and unmerged. Local live-network verification is not claimed because the execution environment previously failed DNS resolution; that failure was treated as a real diagnostic event rather than hidden.
 
 ## Next implementation target
-After fresh CI verification, evaluate P12 Final Operational Readiness. If all readiness gates are green, prepare the P13 Autonomous Development Orchestration boundary. Higher-impact P8 remote mutations remain separately incomplete and authorization-gated.
+Evaluate P12 Final Operational Readiness. The repository-identity boundary is now a concrete readiness guard against fresh-session/alternate-AI repository confusion. If all readiness gates are green, prepare the P13 Autonomous Development Orchestration boundary. Higher-impact P8 remote mutations remain separately incomplete and authorization-gated.
