@@ -11,6 +11,12 @@ def task(task_id: str, script: str) -> dict:
 with tempfile.TemporaryDirectory() as tmp:
     root=Path(tmp); (root/"ok.py").write_text("print('SCHED_OK')\n", encoding="utf-8"); (root/"ok2.py").write_text("print('SCHED_OK_2')\n", encoding="utf-8"); state=root/".ai"/"RUNTIME-STATE.json"
     payload={"tasks":[task("verify","ok.py")],"events":[],"failures":[],"evidence":[]}
+    try:
+        module.run_iteration("invalid", root, state)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("direct non-object work-unit payloads must fail closed")
     result=module.run_iteration(payload, root, state, root/"checkpoint.json")
     assert result["status"]=="COMPLETE" and result["iteration"]==1
     saved=json.loads(state.read_text(encoding="utf-8")); assert saved["latest"]["status"]=="COMPLETE"

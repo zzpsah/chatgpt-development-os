@@ -17,6 +17,8 @@ def _load(name: str, relative: str):
     return module
 
 def run_iteration(payload: dict[str, Any], project_root: Path, state_path: Path, checkpoint: Path | None = None) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        raise ValueError("work-unit payload must be an object")
     recovery_mod = _load("devos_runtime_recovery", "tools/devos-runtime-recovery.py")
     loop = _load("devos_autonomous_loop", "tools/devos-autonomous-loop.py")
     try:
