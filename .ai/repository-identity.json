@@ -1,0 +1,12 @@
+{
+  "schema_version": "DEVOS-REPOSITORY-IDENTITY-v1",
+  "project_id": "chatgpt-development-os",
+  "name": "ChatGPT Development OS",
+  "canonical_repository": "zzpsah/chatgpt-development-os",
+  "owner": "zzpsah",
+  "default_branch": "main",
+  "visibility": "public",
+  "aliases": ["DEVOS", "Development OS", "ChatGPT Development OS"],
+  "external_similar_repositories": ["SamyPesse/devos"],
+  "identity_status": "CANONICAL"
+}

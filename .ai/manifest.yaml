@@ -3,11 +3,16 @@ specification: portable-project-context
 project_id: chatgpt-development-os
 name: "ChatGPT Development OS"
 managed_by: development-os
+canonical_repository: zzpsah/chatgpt-development-os
+repository_owner: zzpsah
+repository_default_branch: main
+repository_identity: .ai/repository-identity.json
 context_directory: .ai
 read_first:
   - STATE-INDEX.md
   - PROJECT.md
   - CURRENT-STATE.md
+  - repository-identity.json
 recommended:
   - ARCHITECTURE.md
   - DECISIONS.md
