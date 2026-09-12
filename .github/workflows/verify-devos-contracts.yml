@@ -62,3 +62,5 @@ jobs:
         run: python tools/test-devos-runtime-handoff.py
       - name: Verify P12 bounded execution runtime
         run: python tools/test-devos-execution-runtime.py
+      - name: Verify P12 runtime recovery
+        run: python tools/test-devos-runtime-recovery.py
