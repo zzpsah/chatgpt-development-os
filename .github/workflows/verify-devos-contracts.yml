@@ -18,65 +18,47 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-
       - name: Install parser dependency
         run: python -m pip install pyyaml
-
       - name: Verify Documentation Integrity
         run: python tools/verify-documentation-integrity.py
-
       - name: Verify DevOS Portable Memory Bootstrap
         run: python tools/test-devos-bootstrap.py
-
       - name: Verify Human Language Execution Engine
         run: python tools/verify-human-language-engine.py
-
       - name: Verify AI State Resolver
         run: python tools/verify-state-resolver.py
-
       - name: Verify Verification / Test Engine
         run: python tools/verify-verification-engine.py
-
       - name: Verify Security Gate
         run: python tools/verify-security-gate.py
-
       - name: Verify Teaching Engine
         run: python tools/verify-teaching-engine.py
-
       - name: Verify Multi-AI Portability
         run: python tools/verify-multi-ai-portability.py
-
       - name: Verify Auto-Onboarding
         run: python tools/verify-auto-onboarding.py
-
       - name: Verify Agent Orchestration
         run: python tools/verify-agent-orchestration.py
-
       - name: Verify Autonomous Development Loop
         run: python tools/verify-autonomous-loop.py
-
+      - name: Test Autonomous Development Loop
+        run: python tools/test-devos-autonomous-loop.py
       - name: Verify DevOS Stance Codes and DESI Style
         run: python tools/verify-stance-codes.py
-
       - name: Test composable DevOS stance parser
         run: python tools/test-devos-stance-parser.py
-
       - name: Verify P12 Operational Intelligence
         run: python tools/verify-operational-intelligence.py
-
       - name: Verify P12 fresh-repository determinism
         run: python tools/test-operational-intelligence-recovery.py
-
       - name: Verify P12 controller advisory integration
         run: python tools/test-devos-task-controller.py
-
       - name: Verify P12 bounded controller-to-runtime handoff
         run: python tools/test-devos-runtime-handoff.py
-
       - name: Verify P12 bounded execution runtime
         run: python tools/test-devos-execution-runtime.py

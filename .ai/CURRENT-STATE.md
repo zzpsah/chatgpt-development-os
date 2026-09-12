@@ -2,15 +2,13 @@
 
 ## Current milestone
 
-P12 — Operational Intelligence is active; executable controller integration, bounded controller-to-runtime handoff v1, and the first real bounded Execution Runtime v1 are now repository-backed. P11 remains complete.
+P12 — Operational Intelligence is active; executable controller integration, bounded controller-to-runtime handoff v1, bounded Execution Runtime v1, and the first end-to-end autonomous development loop v1 are now repository-backed. P11 remains complete.
 
 ## P12 status
 
-P12 graph/readiness, prioritization/checkpoint, failure/evidence, advisory next-action, controller-gating, bounded handoff, and bounded execution slices are repository-backed. Operational Intelligence uses `ADVISORY_ONLY`; it does not authorize execution, mutation, deployment, publication, or security bypass. The controller consumes the advisory result but independently gates readiness, objective/scope, capability, authorization, and repository state. The handoff requires explicit capability availability, authorization approval when required, and `PASS` from the Security Gate for security-relevant work before constructing an envelope for the existing runtime.
+P12 graph/readiness, prioritization/checkpoint, failure/evidence, advisory next-action, controller-gating, bounded handoff, bounded execution, and end-to-end autonomous-loop slices are repository-backed. Operational Intelligence uses `ADVISORY_ONLY`; it does not authorize execution, mutation, deployment, publication, or security bypass. The controller independently gates readiness, objective/scope, capability, authorization, and repository state. The handoff requires explicit capability availability, authorization approval when required, and `PASS` from the Security Gate for security-relevant work before constructing a runtime envelope.
 
-The new runtime executes only an already-approved `P12-HANDOFF-v1` with the `verification.run` capability. Runtime v1 is verification-only and accepts only an explicit Python script inside the project root; shell strings, inline/module execution, and out-of-root paths are rejected. Actual process output, exit status, and duration are captured as raw evidence. A checkpoint can persist the pre-action and post-action states. The runtime never grants authority and never commits.
-
-The handoff begins with an empty evidence list. Only the runtime/provider may supply raw execution evidence. A runtime result without raw evidence is not accepted as successful completion.
+The autonomous loop executes one already-approved `P12-HANDOFF-v1` through the existing bounded runtime. Runtime v1 remains verification-only: explicit Python argv, in-root script, no shell/inline/module execution. Actual process output, exit status, and duration are captured as raw evidence. Checkpoints persist pre/post runtime state. The runtime never grants authority and never commits.
 
 ## Portable project memory
 
@@ -22,8 +20,8 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 ## Verification state
 
-The bounded execution runtime implementation and executable tests are included in the same atomic change as their durable documentation and state updates. Live repository CI is the acceptance gate for this change; until it passes, the runtime is `IMPLEMENTED` but not yet `VERIFIED` by CI.
+The autonomous loop implementation, executable tests, and CI contract check are included in the same atomic change as their durable documentation and state update. Live repository CI is the acceptance gate; until it passes, this slice is `IMPLEMENTED` but not `VERIFIED` by CI.
 
 ## Next implementation target
 
-Wire controller-approved work units to the runtime through a host capability adapter that can supply verified repository-head evidence and durable task/checkpoint feedback, while preserving operation-specific authorization, Security Gate checks, and the single-executor boundary. No unrestricted command runner and no second executor may be introduced.
+Add durable task/checkpoint feedback into `.ai` state through a bounded persistence adapter, then add scheduler/worker orchestration only after persistence and recovery semantics are verified. Preserve the single-executor boundary; no unrestricted command runner.

@@ -1,13 +1,13 @@
 # DevOS Tasks
 
 ## Active
-- P12: execute supported work units through the bounded controller-to-runtime path while preserving independent capability, authorization, verification, and security gates.
+- P12: carry supported work units through the bounded autonomous loop while preserving independent capability, authorization, verification, and security gates.
 - Portable continuity: validate fresh-checkout bootstrap and repository-only recovery across AI/tool boundaries.
 
 ## Planned
-- P12: add verified repository-head evidence from the host adapter and feed verified runtime outcomes into durable task state/checkpoint records.
+- P12: persist verified runtime outcomes into durable task/checkpoint state through a bounded persistence adapter.
+- P12: add scheduler/worker orchestration only after persistence and recovery semantics are verified.
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
-- Extend portable-memory recovery proof to an isolated fresh checkout and handoff boundary.
 
 ## Blocked
 - None.
@@ -15,28 +15,14 @@
 ## Completed recently
 - P9 Development Task Controller v1 implemented and verified.
 - P10 Context Continuity & Recovery v1 completed.
-- Durable `.ai` project context established as the cross-chat project memory layer.
-- Engineering-relevant chat recovery snapshot persisted.
-- Durable context-sync contract verifier added and wired into primary CI.
-- Context-sync workflow refactored to use the portable `tools/context-sync.py` implementation.
-- External project-side caller validated successfully in `zzpsah/automation-suite` on branch `devos-p10-context-sync-test`.
-- P11 versioned project manifest compatibility verifier implemented and verified by fresh CI.
-- P11 project identity discovery tool and contract verifier implemented and verified by fresh CI.
-- P11 context freshness/integrity checker and contract verifier implemented and verified by fresh CI.
-- P11 safe derived-context reconciliation guard and executable cases implemented and verified by fresh CI.
-- P11 cross-AI bootstrap/recovery handshake specification and vendor-neutral handoff generator implemented and verified by fresh CI.
-- P11 composable stance/style registry, parser, DESI profile, and CI contract added and freshly verified.
-- P11 bounded deterministic derived-context self-healer and contract verifier added and freshly verified.
-- P11 repository-first recovery precedence resolver, verifier, and scenarios added and freshly verified.
-- P11 recovery/revalidation and bounded self-healing integrated into the Development Task Controller lifecycle.
-- P11 fresh-AI repository-only recovery proof passed from repository evidence without account memory.
+- P11 DevOS Federation & Self-Healing Context v1 completed.
 - P12 Operational Intelligence v1 through v4 implemented and executable contract-verified.
 - Documentation-integrity boundary implemented and contract-verified.
-- Portable project-memory bootstrap inspector, deterministic proof, documentation, and contract-CI integration implemented in one atomic change set.
-- P12 executable verifier repaired for Python 3.14 dynamic-import/dataclass compatibility and live CI verified.
-- P12 executable controller bridge v1 implemented with independent gates over OI advisory next-action output; bridge is non-executing and preserves authority boundaries.
-- P12 bounded controller-to-runtime handoff v1 implemented with explicit capability, authorization, Security Gate, objective, and raw-evidence boundaries.
-- P12 bounded Execution Runtime v1 implemented with a verification-only Python execution boundary, raw process evidence capture, and optional pre/post checkpoint persistence; executable contract tests added in the same change set.
+- Portable project-memory bootstrap inspector and deterministic recovery proof implemented.
+- P12 executable controller bridge v1 implemented with independent gates.
+- P12 bounded controller-to-runtime handoff v1 implemented with capability, authorization, and Security Gate boundaries.
+- P12 bounded Execution Runtime v1 implemented with real reference-host verification, raw evidence capture, and checkpoint support.
+- P12 end-to-end autonomous development loop v1 implemented: OI -> Controller -> Handoff -> Runtime -> raw evidence -> verification -> checkpoint.
 
 ## Verification note
-P11 is closed. P12 graph/readiness, prioritization/checkpoint, failure/evidence, advisory next-action, controller-gating, bounded handoff, and bounded execution slices are repository-backed. The new runtime is implemented and its executable tests are part of this atomic change; live CI must pass before marking this slice verified. The runtime remains a single bounded executor and does not grant authority.
+P12 remains active. The autonomous loop is bounded to verification work units and does not create authority. Live CI remains the acceptance gate for the current change set.
