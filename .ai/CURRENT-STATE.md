@@ -12,7 +12,7 @@ The latest P12 verifier fix is live-CI verified on commit `b8975e598199f5ca7fb79
 
 ## Portable project memory
 
-The repository is the durable project-memory boundary. A fresh AI must recover from repository source, Git, and `.ai` context before continuing. Account memory and prior chat are supplementary only.
+The repository is the durable project-memory boundary. A fresh AI must recover from repository source, Git, and `.ai` context before continuing. ChatGPT Memory, account memory, and prior chat history are supplementary only.
 
 ## Documentation integrity
 
