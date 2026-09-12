@@ -45,10 +45,11 @@ The Human Language Execution Engine normalizes the user's wording into a canonic
 
 ```mermaid
 flowchart LR
-    H[Human language] --> R[Project Router]
-    R --> E[Human Language Execution Engine]
-    E --> SR[AI State Resolver]
-    SR --> W[Routing + Workflows + Roles + Rules]
+    U[Human / User] --> LP[Desi Language Pack(s)]
+    LP --> E[Human Language Execution Engine]
+    E --> CR[Conversation + Repository Context]
+    CR --> R[Project Router / AI State Resolver]
+    R --> W[Routing + Workflows + Roles + Rules]
     W --> TE[Teaching Engine]
     W --> AO[Agent Orchestration]
     W --> AL[Autonomous Development Loop]
@@ -70,18 +71,47 @@ flowchart LR
     V --> SG[Security Gate]
     V --> GH
     GH --> PM
-    OS[Development OS] --> R
+    OS[Development OS] --> E
     OS -.-> AD[AI Adapter Contract]
     AD -.-> AI[ChatGPT / Codex / Claude / Gemini / Cursor / other AI]
     OS -. optional .-> AON[Auto-Onboarding]
     AON -.-> PM
 ```
 
+### Human interaction boundary
+
+DevOS has a dedicated human-interaction layer above engineering execution. The **Human Language Execution Engine** interprets natural-language requests and composes canonical intents. **Desi Language Pack(s)** provide language-specific normalization resources for Hindi, Hinglish, Indian-language transliteration, colloquial wording, and common spelling variation. These resources improve interpretation only; they never grant authority, expand scope, bypass security, or create execution evidence.
+
+```text
+Human command
+     ↓
+Desi Language Pack(s)
+     ↓
+Human Language Execution Engine
+     ↓
+Context + Intent Resolution
+     ↓
+Canonical DevOS Intent
+     ↓
+Controller / Workflow
+     ↓
+Authorization + Security Gate
+     ↓
+Bounded Execution
+     ↓
+Verification + Persistence
+```
+
+This keeps **communication style and execution authority separate**. A command such as `haan kar do`, `continue kro`, or `bug fix kar aur security check bhi kar` is normalized before the existing controller and authorization boundaries decide what may actually happen.
+
+See [`core/human-language-execution-engine.md`](../core/human-language-execution-engine.md) and [`core/desi-language-pack.md`](../core/desi-language-pack.md).
+
 ### Responsibilities
 
 | Layer | Responsibility | Authoritative for |
 |---|---|---|
 | Human request | Desired outcome | User intent |
+| Desi Language Pack(s) | Language/locale vocabulary, colloquial normalization, transliteration and typo resources | Language normalization only |
 | Project Router | Select correct project | Project identity/routing |
 | Human Language Execution Engine | Normalize language and compose safe intents | Semantic execution contract |
 | AI State Resolver | Interpret repository evidence and unfinished work | Current-state reasoning |
@@ -129,6 +159,7 @@ An AI entering a project for the first time should not need previous chat histor
 sequenceDiagram
     participant U as User
     participant A as New AI
+    participant LP as Desi Language Pack
     participant AD as Adapter
     participant R as Project Router
     participant E as Language Engine
@@ -147,6 +178,8 @@ sequenceDiagram
     A->>AD: Use host capabilities
     AD->>R: Resolve project
     R->>G: Discover AGENTS.md
+    A->>LP: Normalize language resources
+    LP->>E: Provide normalized wording
     A->>E: Normalize natural-language intent
     E->>C: Load durable context
     A->>C: Read manifest + state + relevant context
@@ -257,4 +290,5 @@ See [`core/external-integration-adapter.md`](../core/external-integration-adapte
 - The Executable Runtime cannot claim execution, external results, or completion without actual host evidence.
 - Host adapters cannot grant authorization, silently expand scope, simulate unavailable capabilities, or persist secrets as execution evidence.
 - External adapters cannot grant authorization or turn planned remote calls into evidence.
+- Language packs and language interpretation cannot grant authorization, expand scope, bypass security, or create execution evidence.
 - Remote mutation remains a separate P8 capability and is not implied by P7 read-only inspection.
