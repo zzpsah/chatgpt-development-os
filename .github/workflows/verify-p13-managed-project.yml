@@ -1,0 +1,45 @@
+name: Verify P13 Managed Project
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'tools/verify-managed-project-orchestration.py'
+      - 'tools/autonomous-orchestrator.py'
+      - 'tools/orchestration-checkpoint.py'
+      - 'tools/development-task-controller.py'
+      - 'tools/operational-intelligence.py'
+      - 'tools/devos-runtime-handoff.py'
+      - 'core/autonomous-development-orchestration.md'
+      - '.ai/**'
+      - '.github/workflows/verify-p13-managed-project.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  managed-project-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout DevOS
+        uses: actions/checkout@v4
+        with:
+          path: devos
+
+      - name: Checkout real managed project
+        uses: actions/checkout@v4
+        with:
+          repository: zzpsah/automation-suite
+          ref: main
+          path: managed-project
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run P13 managed-project proof
+        run: >-
+          python devos/tools/verify-managed-project-orchestration.py
+          --project-root "$GITHUB_WORKSPACE/managed-project"
+          --expected-repository "zzpsah/automation-suite"
