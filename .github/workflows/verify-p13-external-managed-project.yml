@@ -1,0 +1,44 @@
+name: Verify P13 External Managed Project
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/verify-managed-project-orchestration.py'
+      - '.github/workflows/verify-p13-external-managed-project.yml'
+      - 'tools/autonomous-orchestrator.py'
+      - 'tools/orchestration-checkpoint.py'
+      - 'tools/development-task-controller.py'
+      - 'tools/operational-intelligence.py'
+      - 'tools/devos-runtime-handoff.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  external-managed-project-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout DevOS
+        uses: actions/checkout@v4
+        with:
+          path: devos
+
+      - name: Checkout real DevOS-managed project
+        uses: actions/checkout@v4
+        with:
+          repository: zzpsah/automation-suite
+          ref: main
+          path: managed-project
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify P13 against automation-suite
+        run: >-
+          python devos/tools/verify-managed-project-orchestration.py
+          --project-root "$GITHUB_WORKSPACE/managed-project"
+          --expected-repository zzpsah/automation-suite
