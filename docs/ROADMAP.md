@@ -177,7 +177,7 @@ Goal: turn one human goal and recovered task state into one bounded, independent
 - [x] Implement the non-executing orchestrator over P12 controller and runtime handoff
 - [x] Add regression cases for continue, stop, budget exhaustion, and authorization escalation
 - [x] Wire the P13 verifier into contract CI
-- [ ] Connect actual completed runtime outcomes back into fresh task-state selection
+- [x] Connect actual completed runtime outcomes back into fresh task-state selection
 - [ ] Add durable orchestration checkpoints and resume proof
 - [ ] Verify P13 against a real managed-project end-to-end scenario
 

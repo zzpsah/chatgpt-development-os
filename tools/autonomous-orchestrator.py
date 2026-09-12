@@ -29,6 +29,33 @@ def load(name: str, filename: str) -> Any:
     return module
 
 
+def apply_runtime_outcome(tasks: list[dict[str, Any]], outcome: dict[str, Any] | None) -> tuple[list[dict[str, Any]], list[dict[str, Any]], str | None]:
+    """Apply only an evidenced runtime outcome to a fresh, in-memory inventory."""
+    if outcome is None:
+        return [dict(task) for task in tasks], [], None
+    task_id = str(outcome.get("task_id", ""))
+    status = str(outcome.get("status", ""))
+    task_ids = {str(task.get("id")) for task in tasks}
+    if task_id not in task_ids:
+        return [], [], "RUNTIME_OUTCOME_UNKNOWN_TASK"
+    if status not in {"COMPLETE", "FAILED", "BLOCKED"}:
+        return [], [], "RUNTIME_OUTCOME_INVALID_STATUS"
+    if status == "COMPLETE":
+        if outcome.get("verification") != "VERIFIED":
+            return [], [], "RUNTIME_OUTCOME_UNVERIFIED_COMPLETION"
+        if not isinstance(outcome.get("evidence"), list) or not outcome["evidence"]:
+            return [], [], "RUNTIME_OUTCOME_MISSING_EVIDENCE"
+
+    updated = []
+    for task in tasks:
+        row = dict(task)
+        if str(row.get("id")) == task_id:
+            row["status"] = status
+        updated.append(row)
+    event = "WORK_UNIT_COMPLETE" if status == "COMPLETE" else "WORK_UNIT_FAILED"
+    return updated, [{"type": event}], None
+
+
 def orchestrate(payload: dict[str, Any]) -> dict[str, Any]:
     """Choose one bounded next unit, stop, or escalate without execution."""
     goal = payload.get("goal")
@@ -53,9 +80,19 @@ def orchestrate(payload: dict[str, Any]) -> dict[str, Any]:
         return base | {"decision": "STOP", "reason": ["EXECUTION_BUDGET_EXHAUSTED"],
                        "controller": None, "runtime_handoff": None}
 
+    tasks, outcome_events, outcome_error = apply_runtime_outcome(
+        payload.get("tasks", []), payload.get("latest_runtime_outcome")
+    )
+    if outcome_error:
+        return base | {"decision": "ESCALATE", "reason": [outcome_error],
+                       "controller": None, "runtime_handoff": None}
+
     controller = load("development_task_controller", "development-task-controller.py")
     handoff = load("devos_runtime_handoff", "devos-runtime-handoff.py")
-    decision = controller.decide(payload)
+    controller_input = dict(payload)
+    controller_input["tasks"] = tasks
+    controller_input["events"] = list(payload.get("events", [])) + outcome_events
+    decision = controller.decide(controller_input)
     if decision["decision"] == "NO_ACTION":
         return base | {"decision": "STOP", "reason": decision["reason"],
                        "controller": decision, "runtime_handoff": None}

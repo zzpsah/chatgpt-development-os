@@ -9,6 +9,7 @@ Implement the first executable P13 control boundary: transform one human goal an
 - Added `tools/autonomous-orchestrator.py`.
 - Added P13 contract documentation in `core/autonomous-development-orchestration.md`.
 - Added regression coverage for `CONTINUE`, `STOP`, execution-budget exhaustion, and authorization escalation.
+- Added in-memory runtime-outcome feedback: only verified, non-empty evidence can mark a task complete for the next selection and unlock a dependent task.
 - Wired the P13 test into contract CI.
 - Reconciled the roadmap from completed P11/P12 evidence and set P13 as the active milestone.
 
@@ -23,9 +24,8 @@ The orchestrator does not execute commands, mutate repositories, retry operation
 
 ## Remaining work
 
-1. Feed completed runtime outcomes into fresh task-state selection.
-2. Persist durable orchestration checkpoints and prove safe resume.
-3. Validate the full P13 flow in a real managed project.
+1. Persist durable orchestration checkpoints and prove safe resume.
+2. Validate the full P13 flow in a real managed project.
 
 ## Next action
 

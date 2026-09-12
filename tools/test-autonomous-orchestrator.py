@@ -27,12 +27,14 @@ def payload() -> dict:
         "repository_head": "abc123",
         "authorization": "NOT_REQUIRED",
         "security_gate": "NOT_APPLICABLE",
-        "capabilities": {"verify": "AVAILABLE"},
+        "capabilities": {"verify": "AVAILABLE", "document": "AVAILABLE"},
         "tasks": [
             {"id": "source", "status": "COMPLETE", "priority": 1,
              "objective": "Inspect source", "scope": "src/"},
             {"id": "verify", "status": "PLANNED", "priority": 10,
              "dependencies": ["source"], "objective": "Run verification", "scope": "tools/"},
+            {"id": "document", "status": "PLANNED", "priority": 5,
+             "dependencies": ["verify"], "objective": "Record result", "scope": ".ai/"},
         ],
     }
 
@@ -44,6 +46,19 @@ def main() -> None:
     assert ready["execution"] == "NONE"
     assert ready["runtime_handoff"]["status"] == "READY_FOR_RUNTIME"
     assert ready["runtime_handoff"]["execution"] == "NOT_STARTED"
+
+    next_unit = orchestrator.orchestrate(payload() | {"latest_runtime_outcome": {
+        "task_id": "verify", "status": "COMPLETE", "verification": "VERIFIED",
+        "evidence": [{"source": "runtime", "exit_status": 0}],
+    }})
+    assert next_unit["decision"] == "CONTINUE"
+    assert next_unit["runtime_handoff"]["work_unit"]["id"] == "document"
+
+    unevidenced = orchestrator.orchestrate(payload() | {"latest_runtime_outcome": {
+        "task_id": "verify", "status": "COMPLETE", "verification": "VERIFIED", "evidence": []
+    }})
+    assert unevidenced["decision"] == "ESCALATE"
+    assert unevidenced["reason"] == ["RUNTIME_OUTCOME_MISSING_EVIDENCE"]
 
     budget = orchestrator.orchestrate(payload() | {"completed_iterations": 2})
     assert budget["decision"] == "STOP"
