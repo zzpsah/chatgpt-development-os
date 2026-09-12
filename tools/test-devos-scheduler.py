@@ -40,6 +40,7 @@ with tempfile.TemporaryDirectory() as tmp:
     state.write_text(json.dumps({"state_version":"P12-PERSISTENCE-v1","latest":{"task_id":"verify","status":"UNKNOWN"},"history":[]}), encoding="utf-8")
     unknown=module.run_iteration(payload, root, state)
     assert unknown["status"]=="HOLD" and unknown["iteration"]==0 and unknown["execution"]=="NONE"
+    # Recovery hold reason is intentionally exposed through the structured recovery action.
     assert unknown["recovery"]["action"]=="RECOVERY_HOLD_REQUIRES_REVIEW"
     state.write_text("{malformed", encoding="utf-8")
     malformed=module.run_iteration(payload, root, state)
