@@ -22,7 +22,7 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 ## Verification state
 
-Scheduler/Worker v1 fail-closed recovery hardening, executable proof, contract documentation, and durable state updates are included in the same atomic change. Live CI remains the acceptance gate; until it passes, this slice is `IMPLEMENTED` but not `VERIFIED` by CI.
+Scheduler/Worker v1 fail-closed recovery hardening, executable proof, contract documentation, durable state updates, and CI trigger hardening are included in the same atomic change. Live CI remains the acceptance gate; until it passes for the current HEAD, this slice is `IMPLEMENTED` but not `VERIFIED` by CI.
 
 ## Next implementation target
 

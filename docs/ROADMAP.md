@@ -143,7 +143,9 @@ P9 is implemented and verified. Higher-impact remote mutations from P8 remain se
 - [x] Document and validate future-session persistence expectations
 - [x] Complete P10 with fresh CI and context-sync evidence
 
-## P11 — DevOS Federation & Self-Healing Context v1 — IN PROGRESS
+P10 is complete.
+
+### P11 — DevOS Federation & Self-Healing Context v1 — COMPLETE
 
 Goal: make DevOS context portable, self-identifying, recoverable, and resistant to stale/partial context across AI tools, accounts, projects, and connectivity interruptions.
 
@@ -151,14 +153,36 @@ Goal: make DevOS context portable, self-identifying, recoverable, and resistant 
 - [x] Add automatic project identity/registration discovery
 - [x] Add context freshness and integrity checks
 - [x] Detect and reconcile stale `.ai` state against Git/source evidence
-- [ ] Add cross-AI bootstrap/recovery handshake
-- [ ] Persist AI-session handoff summaries with provenance
-- [ ] Add safe self-healing for missing derived context files
+- [x] Add cross-AI bootstrap/recovery handshake
+- [x] Persist AI-session handoff summaries with provenance
+- [x] Add safe self-healing for missing derived context files
 - [x] Define recovery precedence when ChatGPT memory, `.ai`, Git, and generated indexes disagree
 - [x] Add P11 contract verification and CI coverage
-- [ ] Prove recovery from a fresh AI/account context using repository-only evidence
+- [x] Prove recovery from a fresh AI/account context using repository-only evidence
 
-P11 identity, freshness/integrity, and safe derived-state reconciliation are implemented and covered by fresh primary CI evidence. Cross-AI handoff and fresh-account recovery remain open.
+P11 identity, freshness/integrity, safe derived-state reconciliation, portable bootstrap/handoff, and fresh-context recovery are implemented. P12 is the active milestone.
+
+### P12 — Operational Intelligence — ACTIVE
+
+Goal: add advisory task intelligence and bounded scheduling above the existing controller and execution boundaries without creating a second executor or granting authority.
+
+- [x] Define operational-intelligence graph/readiness model
+- [x] Add dependency-aware prioritization and checkpoint signals
+- [x] Add failure classification and raw-evidence intelligence
+- [x] Add advisory next-action recommendations with `ADVISORY_ONLY` semantics
+- [x] Integrate advisory intelligence with independent controller gating
+- [x] Add bounded controller-to-runtime handoff v1
+- [x] Add bounded Execution Runtime v1
+- [x] Add autonomous development loop v2
+- [x] Add durable runtime persistence v1
+- [x] Add deterministic runtime recovery v1
+- [x] Add Scheduler/Worker v1 with exactly one bounded iteration per invocation
+- [x] Fail closed on unknown or malformed scheduler recovery state
+- [x] Add executable scheduler/recovery proof and CI coverage
+- [ ] Verify the hardened Scheduler/Worker v1 through live CI for the current HEAD
+- [ ] Continue bounded P12 hardening through operation-specific capabilities
+
+P12 is implemented through Scheduler/Worker v1 fail-closed recovery hardening. Current CI verification remains the acceptance gate. Higher-impact P8 remote mutations remain independently incomplete.
 
 ## Cross-cutting
 
@@ -182,6 +206,8 @@ P11 identity, freshness/integrity, and safe derived-state reconciliation are imp
 - [x] Durable context continuity work completed as P10
 - [x] P11 continuity/federation scope recorded
 - [x] P11 identity, integrity, and safe reconciliation gates verified by fresh CI
+- [x] P12 runtime persistence and recovery boundaries documented
+- [x] P12 Scheduler/Worker recovery hardening documented and tested
 
 ## Execution rule
 
@@ -189,6 +215,6 @@ Complete the current milestone before advancing to the next milestone. Do not ma
 
 ## Current milestone
 
-### P11 — DevOS Federation & Self-Healing Context v1 — IN PROGRESS
+### P12 — Operational Intelligence — ACTIVE
 
-P11 begins after P10 completion was evidenced by both primary CI and an actual external project-side context-sync execution. Higher-impact P8 remote mutations remain independently incomplete.
+P12 is active. Scheduler/Worker v1 fail-closed recovery hardening is implemented and documented, but current-HEAD CI evidence is still required before this slice is marked verified. Higher-impact P8 remote mutations remain independently incomplete.

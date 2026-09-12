@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+      - 'devos/**'
   pull_request:
 
 permissions:
