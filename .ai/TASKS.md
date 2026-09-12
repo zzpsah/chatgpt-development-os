@@ -1,11 +1,11 @@
 # DevOS Tasks
 
 ## Active
-- P12: execute supported work units through the bounded controller-to-runtime handoff while preserving independent capability, authorization, verification, and security gates.
+- P12: execute supported work units through the bounded controller-to-runtime path while preserving independent capability, authorization, verification, and security gates.
 - Portable continuity: validate fresh-checkout bootstrap and repository-only recovery across AI/tool boundaries.
 
 ## Planned
-- P12: feed verified runtime outcomes back into durable task state and checkpoint records.
+- P12: add verified repository-head evidence from the host adapter and feed verified runtime outcomes into durable task state/checkpoint records.
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
 - Extend portable-memory recovery proof to an isolated fresh checkout and handoff boundary.
 
@@ -36,6 +36,7 @@
 - P12 executable verifier repaired for Python 3.14 dynamic-import/dataclass compatibility and live CI verified.
 - P12 executable controller bridge v1 implemented with independent gates over OI advisory next-action output; bridge is non-executing and preserves authority boundaries.
 - P12 bounded controller-to-runtime handoff v1 implemented with explicit capability, authorization, Security Gate, objective, and raw-evidence boundaries.
+- P12 bounded Execution Runtime v1 implemented with a verification-only Python execution boundary, raw process evidence capture, and optional pre/post checkpoint persistence; executable contract tests added in the same change set.
 
 ## Verification note
-P11 is closed. P12 graph/readiness, prioritization/checkpoint, failure/evidence, advisory next-action, controller-gating, and bounded handoff slices are repository-backed. The handoff is still not an executor: actual execution remains the responsibility of the existing bounded runtime, and runtime evidence must be verified before durable completion.
+P11 is closed. P12 graph/readiness, prioritization/checkpoint, failure/evidence, advisory next-action, controller-gating, bounded handoff, and bounded execution slices are repository-backed. The new runtime is implemented and its executable tests are part of this atomic change; live CI must pass before marking this slice verified. The runtime remains a single bounded executor and does not grant authority.

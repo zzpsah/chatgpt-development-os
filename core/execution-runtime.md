@@ -7,19 +7,26 @@ The Executable Development Runtime turns an authorized autonomous-loop iteration
 ## Core contract
 
 ```text
-Work unit
-  -> Capability resolution
-  -> Authorization gate
+Approved handoff
+  -> Capability re-check
   -> Pre-action checkpoint
-  -> Execute bounded action
-  -> Capture evidence
+  -> Bounded execution
+  -> Capture raw evidence
   -> Post-action checkpoint
-  -> Verification
-  -> Persist
+  -> Verification result
+  -> Persist checkpoint
   -> Return outcome
 ```
 
 The runtime must distinguish **decision**, **execution**, and **evidence**. An AI decision is not evidence that an action happened.
+
+## Runtime v1 executable path
+
+`tools/devos-execution-runtime.py` is the reference executable for P12. It accepts only an already-approved `P12-HANDOFF-v1`, requires the `verification.run` capability, and delegates the actual process to `adapters/reference-verification.py`.
+
+Runtime v1 is deliberately verification-only: the command must invoke an existing Python script inside the project root. Shell strings, `-c`, module execution, and paths outside the project root are rejected. The runtime does not create authorization, security approval, Git commits, deployments, or unrestricted command execution.
+
+The reference verification adapter captures actual process exit status, stdout, stderr, and duration as raw execution evidence. A zero/expected exit code produces `VERIFIED`; an unexpected exit produces `FAILED`; unavailable execution is `BLOCKED`. The runtime never fabricates evidence.
 
 ## Execution states
 
@@ -81,7 +88,7 @@ checkpoint:
   next_action: "bounded next action or STOP/ESCALATE"
 ```
 
-Checkpoints must contain enough information to prevent blind replay. They must not store secrets, credentials, session cookies, private keys, or unnecessary sensitive data.
+The executable runtime persists a pre-action and post-action checkpoint together when a checkpoint path is supplied. Checkpoints contain no secrets and are suitable for later resume inspection. The reference implementation currently records `repository_head: UNKNOWN`; a future host adapter may supply a verified repository head without changing the authority boundary.
 
 ## Resume contract
 
