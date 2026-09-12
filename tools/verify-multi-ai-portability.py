@@ -20,6 +20,7 @@ def main() -> None:
     bootstrap = read("core/ai-bootstrap-protocol.md")
     chatgpt = read("adapters/chatgpt.md")
     codex = read("adapters/codex.md")
+    host_profiles = read("docs/HOST-PROFILES.md")
 
     for name in ["AGENTS.md", ".ai/manifest.yaml", ".ai/STATE-INDEX.md", ".ai/PROJECT.md", ".ai/CURRENT-STATE.md"]:
         require(contract, name, "adapters/adapter-contract.md")
@@ -43,6 +44,8 @@ def main() -> None:
     require(chatgpt, "durable project state in the project repository", "adapters/chatgpt.md")
     require(codex, "same project-level `AGENTS.md`, `.ai/` context, decisions, tasks, and workflow artifacts", "adapters/codex.md")
     require(codex, "repository remains the durable source of project context and implementation history", "adapters/codex.md")
+    for term in ["DEVOS-HOST-PROFILE-v1", "AVAILABLE", "DELEGATABLE", "MISSING", "authorization", "execution evidence"]:
+        require(host_profiles, term, "docs/HOST-PROFILES.md")
 
     print("Multi-AI portability contract checks passed.")
 

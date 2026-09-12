@@ -1,7 +1,7 @@
 # DevOS Tasks
 
 ## Active
-- P12: publish the locally verified controller/OI/runtime-handoff integration, then confirm fresh GitHub Actions evidence for the resulting commit.
+- Portable AI host profiles: add a vendor-neutral machine-readable capability declaration and contract verifier so any AI host can state its actual capability boundary without inventing support.
 
 ## Planned
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
@@ -44,6 +44,7 @@
 - P12 fresh-repository deterministic recovery proof added to contract CI.
 - P12 executable controller decision envelope added locally: OI remains `ADVISORY_ONLY`; controller independently checks scope, repository revalidation, readiness, capability, authorization, and Security Gate state before emitting an `EXECUTION_CANDIDATE`.
 - P12 controller/OI/runtime-handoff integration verifier added locally and passed alongside the full local contract suite.
+- P12 controller/OI/runtime-handoff integration published in commit `1f544f2f000a8357bf801cb0682c1a0e797997b1`; fresh GitHub Actions workflows 415 and 360 passed.
 
 ## Verification note
-P11 is closed. P12 graph/readiness, prioritization/checkpoint, failure/evidence, and controller advisory integration are locally verified. Fresh GitHub Actions evidence for the integration commit remains required before P12 can be closed.
+P11 and P12 are closed with fresh GitHub Actions evidence. Portable host-profile conformance is the active cross-AI portability improvement.

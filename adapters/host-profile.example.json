@@ -1,0 +1,15 @@
+{
+  "protocol_version": "DEVOS-HOST-PROFILE-v1",
+  "host_id": "example-ai-host",
+  "adapter_version": "1.0",
+  "capabilities": {
+    "project_discovery": {"status": "AVAILABLE"},
+    "bootstrap": {"status": "AVAILABLE"},
+    "inspection": {"status": "AVAILABLE"},
+    "intent_routing": {"status": "AVAILABLE"},
+    "state_resolution": {"status": "AVAILABLE"},
+    "execution": {"status": "DELEGATABLE"},
+    "verification": {"status": "DELEGATABLE"},
+    "persistence": {"status": "AVAILABLE"}
+  }
+}

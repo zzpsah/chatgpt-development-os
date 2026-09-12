@@ -66,3 +66,6 @@ jobs:
 
       - name: Verify P12 controller/OI/runtime-handoff integration
         run: python tools/verify-development-task-controller-integration.py
+
+      - name: Verify portable AI host profiles
+        run: python tools/test-host-profile.py

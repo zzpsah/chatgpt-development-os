@@ -8,7 +8,7 @@
 - P9 Development Task Controller v1 is complete.
 - P10 Context Continuity & Recovery v1 is complete.
 - P11 DevOS Federation & Self-Healing Context v1 is complete.
-- P12 Operational Intelligence is now the active milestone.
+- P12 Operational Intelligence is complete.
 
 ## Canonical DevOS repository identity
 
@@ -102,15 +102,15 @@ DEVOS::GOD::DESI
 
 Only deterministic derived artifacts are eligible for automated recreation: `STATE-INDEX.md`, `CHANGELOG.md`, and `PROJECT-IDENTITY.json`. Semantic project files such as `PROJECT.md`, `DECISIONS.md`, `TASKS.md`, `CURRENT-STATE.md`, and `ARCHITECTURE.md` are outside the self-healing write boundary.
 
-## P12 starting point
+## P12 completion
 
-P12 Operational Intelligence starts from the completed P11 recovery foundation. The first slice is dependency-aware project/task intelligence: build a durable task graph from repository evidence, identify dependencies/blockers, improve priority selection, and preserve evidence-backed checkpoints without weakening P11 recovery or authorization boundaries.
+P12 Operational Intelligence is complete on commit `1f544f2f000a8357bf801cb0682c1a0e797997b1`. It supplies deterministic dependency/readiness analysis, advisory prioritization, checkpoint signals, failure/evidence intelligence, advisory next actions, and an executable controller decision envelope that does not grant authority or execute work.
 
-## P12 controller integration (local, pending publication)
+## P12 controller integration
 
-A local implementation now turns the OI advisory recommendation into a non-executing controller decision envelope. The controller independently validates task scope, repository revalidation, readiness, declared capability, existing authorization, and Security Gate state. Only a fully gated candidate becomes `EXECUTION_CANDIDATE`; it retains `authority: UNCHANGED`, `authorization: UNCHANGED`, and `execution: NONE`. The existing runtime-handoff tool can then create a `READY_FOR_RUNTIME` envelope without executing an action.
+A local implementation turns the OI advisory recommendation into a non-executing controller decision envelope. The controller independently validates task scope, repository revalidation, readiness, declared capability, existing authorization, and Security Gate state. Only a fully gated candidate becomes `EXECUTION_CANDIDATE`; it retains `authority: UNCHANGED`, `authorization: UNCHANGED`, and `execution: NONE`. The existing runtime-handoff tool can then create a `READY_FOR_RUNTIME` envelope without executing an action.
 
-The targeted P12 integration verifier and the repository's local contract suite passed. This is local verification only; a fresh GitHub Actions run on the published commit is still required before marking P12 complete.
+The targeted P12 integration verifier and the repository's local contract suite passed. Fresh GitHub Actions workflows `415` and `360` also succeeded for commit `1f544f2f000a8357bf801cb0682c1a0e797997b1`.
 
 ## Durable future-work rule
 

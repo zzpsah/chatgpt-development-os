@@ -53,3 +53,9 @@ If context is missing or contradictory, the AI must recover facts from source/Gi
 > **If the previous AI disappears, the project must remain understandable and recoverable from the repository.**
 
 This contract defines portability behavior; host-specific adapter files describe how an individual AI environment satisfies or delegates it.
+
+## Machine-readable host profiles
+
+Any AI host may declare its portable capability boundary using `DEVOS-HOST-PROFILE-v1`. The required capability names are `project_discovery`, `bootstrap`, `inspection`, `intent_routing`, `state_resolution`, `execution`, `verification`, and `persistence`; each is `AVAILABLE`, `DELEGATABLE`, or `MISSING`.
+
+Profiles are validated by `tools/verify-host-profile.py` and documented in `docs/HOST-PROFILES.md`. They communicate honest host limitations only. A profile cannot grant authorization, create execution evidence, or replace repository-local context.

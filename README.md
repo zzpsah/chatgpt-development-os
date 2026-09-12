@@ -247,7 +247,9 @@ The portable adapter contract defines the minimum capabilities for a compatible 
 
 Host-specific capabilities belong in `adapters/`. The adapter is an integration boundary, not a second project-memory system.
 
-See [`adapters/adapter-contract.md`](adapters/adapter-contract.md) and [`docs/MULTI-AI-PORTABILITY.md`](docs/MULTI-AI-PORTABILITY.md).
+Any host can publish a vendor-neutral `DEVOS-HOST-PROFILE-v1` capability declaration and validate it with `tools/verify-host-profile.py`. The profile reports only `AVAILABLE`, `DELEGATABLE`, or `MISSING` capabilities; it never grants authority or claims execution.
+
+See [`adapters/adapter-contract.md`](adapters/adapter-contract.md), [`docs/MULTI-AI-PORTABILITY.md`](docs/MULTI-AI-PORTABILITY.md), and [`docs/HOST-PROFILES.md`](docs/HOST-PROFILES.md).
 
 ## Moving to a new AI
 
