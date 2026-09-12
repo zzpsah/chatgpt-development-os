@@ -17,14 +17,20 @@ with tempfile.TemporaryDirectory() as tmp:
     batch_payloads=[{"tasks":[task("verify-2","ok.py")],"events":[],"failures":[],"evidence":[]},{"tasks":[task("verify-3","ok2.py")],"events":[],"failures":[],"evidence":[]}]
     batch=module.run_batch(batch_payloads, root, state, max_iterations=2)
     assert batch["status"]=="COMPLETE" and batch["iterations"]==2 and batch["max_iterations"]==2
-    limited=module.run_batch(batch_payloads, root, state, max_iterations=1)
-    assert limited["iterations"]==1
+    limited=module.run_batch(batch_payloads[:1], root, state, max_iterations=1)
+    assert limited["status"]=="COMPLETE" and limited["iterations"]==1
     try:
         module.run_batch(batch_payloads, root, state, max_iterations=0)
     except ValueError:
         pass
     else:
         raise AssertionError("max_iterations=0 must fail closed")
+    try:
+        module.run_batch(batch_payloads, root, state, max_iterations=1)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("payloads exceeding max_iterations must fail closed")
     persistence=module._load("devos_runtime_persistence", "tools/devos-runtime-persistence.py")
     failed={"status":"FAILED","verification":"FAILED","security":"PASS","evidence":[{"stdout":"","stderr":"failed","exit_status":3,"duration_seconds":0.01,"command":[sys.executable,"bad.py"]}],"checkpoint":None}
     persistence.persist(state, failed, "verify", "failed prior work")
