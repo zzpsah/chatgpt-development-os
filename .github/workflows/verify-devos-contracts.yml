@@ -64,3 +64,5 @@ jobs:
         run: python tools/test-devos-execution-runtime.py
       - name: Verify P12 runtime recovery
         run: python tools/test-devos-runtime-recovery.py
+      - name: Verify P12 scheduler/worker
+        run: python tools/test-devos-scheduler.py
