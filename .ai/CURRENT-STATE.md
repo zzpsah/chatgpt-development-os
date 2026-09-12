@@ -24,10 +24,10 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 ## Verification state
 
-HEAD `649f34bb...` is the current PR head. Its CI run `34687580871` failed at `Verify Documentation Integrity` before the remaining checks ran. The immediate cause is a repository-history boundary violation: commit `649f34bb...` changed `tools/test-devos-scheduler.py` without a durable `.ai/`, `core/`, `workflows/`, `rules/`, `docs/`, `AGENTS.md`, `CHANGELOG.md`, or `README.md` record in that same commit. This failure is a guard finding, not evidence that the scheduler test itself is semantically incorrect.
+The corrective durable record at HEAD `18f3bf3438ef48a936c3f1dda0239eed91d474b0` was verified by CI run `34688138297` (run #349) for workflow `Verify Development OS Contracts`: `completed` / `success`. The prior guard failure on `649f34bb...` remains recorded as a historical documentation-integrity exception because that commit changed `tools/test-devos-scheduler.py` without a durable documentation file in the same commit. The exception is not being misrepresented as an atomic historical change.
 
-A corrective durable record is being committed now. Because the available GitHub contents interface creates one-file commits, this remediation cannot rewrite/amend the already-created historical commit into a truly atomic multi-file commit. Therefore the repository records the exception explicitly rather than falsely marking the historical change as atomic. The corrective commit will itself be re-verified by CI before any new implementation begins.
+The current verified CI acceptance applies to the corrective HEAD only. Any subsequent implementation must again satisfy the repository's documentation-at-change boundary and obtain a new green CI result before being treated as verified.
 
 ## Next implementation target
 
-First obtain a green CI acceptance on the corrected HEAD. If CI passes, continue P12 hardening with the next safe bounded worker/recovery improvement. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.
+Continue P12 hardening with the next safe bounded worker/recovery improvement, using an atomic documented change set where the available repository write path permits it. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.
