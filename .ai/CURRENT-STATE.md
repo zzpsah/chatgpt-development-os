@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-P12 — Operational Intelligence is active. P12 now includes graph/readiness, prioritization/checkpoint, failure/evidence, advisory next-action, controller gating, bounded controller-to-runtime handoff v1, bounded Execution Runtime v1, autonomous development loop v2, durable runtime persistence v1, deterministic runtime recovery v1, and Scheduler/Worker v1.
+P12 — Operational Intelligence is active. P12 now includes graph/readiness, prioritization/checkpoint, failure/evidence, advisory next-action, controller gating, bounded controller-to-runtime handoff v1, bounded Execution Runtime v1, autonomous development loop v2, durable runtime persistence v1, deterministic runtime recovery v1, Scheduler/Worker v1, and the bounded batch scheduling extension.
 
 ## P12 status
 
@@ -12,7 +12,7 @@ The autonomous loop executes one already-approved `P12-HANDOFF-v1` through the e
 
 Scheduler/Worker v1 is the orchestration boundary above that loop. Each scheduler invocation processes exactly one bounded work unit. It first performs deterministic recovery; a latest `FAILED`, `BLOCKED`, or `CANCELLED` outcome causes `HOLD`/review and never triggers an automatic retry. An unknown persisted outcome also causes a fail-closed `HOLD`/review. Malformed or unreadable durable state likewise causes `HOLD` with `RECOVERY_STATE_INVALID`; the scheduler does not execute when recovery cannot establish a trustworthy classification. Otherwise it delegates exactly one iteration to the existing autonomous loop with a durable state path, which re-enters controller, handoff, runtime, verification, Security Gate, and persistence boundaries.
 
-The Scheduler/Worker v1 contract is now CI-verified on HEAD `498a3c09...`. The next bounded extension is batch scheduling: `run_batch(...)` accepts distinct work-unit payloads, requires an explicit positive `max_iterations`, re-enters the existing one-unit scheduler path for each payload, and stops on the first non-`COMPLETE` result. It cannot silently retry, reuse a payload, or exceed the caller-supplied iteration bound.
+The bounded batch scheduling extension `run_batch(...)` accepts distinct work-unit payloads, requires an explicit positive `max_iterations`, re-enters the existing one-unit scheduler path for each payload, and stops on the first non-`COMPLETE` result. It cannot silently retry, reuse a payload, or exceed the caller-supplied iteration bound.
 
 ## Portable project memory
 
@@ -24,8 +24,10 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 ## Verification state
 
-Live CI run 34687180686 for HEAD `498a3c09...` passed. The autonomous-loop contract vocabulary and the previously failing contract checks are now verified. Scheduler/Worker v1 remains the acceptance baseline; the new batch extension is implemented in the same documented change set but requires its own live CI verification before being marked verified.
+HEAD `649f34bb...` is the current PR head. Its CI run `34687580871` failed at `Verify Documentation Integrity` before the remaining checks ran. The immediate cause is a repository-history boundary violation: commit `649f34bb...` changed `tools/test-devos-scheduler.py` without a durable `.ai/`, `core/`, `workflows/`, `rules/`, `docs/`, `AGENTS.md`, `CHANGELOG.md`, or `README.md` record in that same commit. This failure is a guard finding, not evidence that the scheduler test itself is semantically incorrect.
+
+A corrective durable record is being committed now. Because the available GitHub contents interface creates one-file commits, this remediation cannot rewrite/amend the already-created historical commit into a truly atomic multi-file commit. Therefore the repository records the exception explicitly rather than falsely marking the historical change as atomic. The corrective commit will itself be re-verified by CI before any new implementation begins.
 
 ## Next implementation target
 
-Verify the bounded batch scheduling extension through live CI. If CI passes, continue P12 hardening with the next safe bounded worker/recovery improvement. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.
+First obtain a green CI acceptance on the corrected HEAD. If CI passes, continue P12 hardening with the next safe bounded worker/recovery improvement. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.
