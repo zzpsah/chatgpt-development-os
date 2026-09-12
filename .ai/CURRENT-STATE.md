@@ -12,7 +12,7 @@ The autonomous loop executes one already-approved `P12-HANDOFF-v1` through the e
 
 Scheduler/Worker v1 is the orchestration boundary above that loop. Each scheduler invocation processes exactly one bounded work unit. It first performs deterministic recovery; a latest `FAILED`, `BLOCKED`, or `CANCELLED` outcome causes `HOLD`/review and never triggers an automatic retry. An unknown persisted outcome also causes a fail-closed `HOLD`/review. Malformed or unreadable durable state likewise causes `HOLD` with `RECOVERY_STATE_INVALID`; the scheduler does not execute when recovery cannot establish a trustworthy classification. Otherwise it delegates exactly one iteration to the existing autonomous loop with a durable state path, which re-enters controller, handoff, runtime, verification, Security Gate, and persistence boundaries.
 
-The bounded batch scheduling extension `run_batch(...)` accepts distinct work-unit payloads, requires an explicit positive `max_iterations`, re-enters the existing one-unit scheduler path for each payload, and stops on the first non-`COMPLETE` result. It rejects duplicate payloads using a canonical JSON identity check and rejects non-object work-unit payloads before execution. It cannot silently retry or reuse a payload, and cannot exceed the caller-supplied iteration bound.
+The bounded batch scheduling extension `run_batch(...)` accepts distinct work-unit payloads, requires a positive integer `max_iterations`, re-enters the existing one-unit scheduler path for each payload, and stops on the first non-`COMPLETE` result. It rejects duplicate payloads using a canonical JSON identity check and rejects non-object work-unit payloads before execution. Invalid `max_iterations` types/values fail closed before batch execution. It cannot silently retry or reuse a payload, and cannot exceed the caller-supplied iteration bound.
 
 ## Portable project memory
 
@@ -24,7 +24,7 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 ## Verification state
 
-The duplicate-payload hardening at `7a26b5a7eefc11f3057910e3d9a6319c3cf930fa` was verified by CI run `34688273962` (run #351): `completed` / `success`. The subsequent durable acceptance record at `61875c2f2a4ae00393a5e2f5cf8b4c53b9d02623` was verified by CI run `34688308681` (run #352): `completed` / `success`. The malformed-batch-payload hardening at `c83c1efbd475452f31dadd3f2bada3b2417a6c33` was verified by CI run `34688396678` (run #353): `completed` / `success`.
+The duplicate-payload hardening at `7a26b5a7eefc11f3057910e3d9a6319c3cf930fa` was verified by CI run `34688273962` (run #351): `completed` / `success`. The subsequent durable acceptance record at `61875c2f2a4ae00393a5e2f5cf8b4c53b9d02623` was verified by CI run `34688308681` (run #352): `completed` / `success`. The malformed-batch-payload hardening at `c83c1efbd475452f31dadd3f2bada3b2417a6c33` was verified by CI run `34688396678` (run #353): `completed` / `success`. The durable acceptance record at `690f30b3b098e74f238b5fe5897e1d6a46549315` was verified by CI run `34688527297` (run #354): `completed` / `success`.
 
 ## Next implementation target
 

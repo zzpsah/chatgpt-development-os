@@ -32,12 +32,13 @@ with tempfile.TemporaryDirectory() as tmp:
         pass
     else:
         raise AssertionError("non-object work-unit payloads must fail closed")
-    try:
-        module.run_batch(batch_payloads, root, state, max_iterations=0)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("max_iterations=0 must fail closed")
+    for invalid_limit in (0, -1, True, 2.0):
+        try:
+            module.run_batch(batch_payloads, root, state, max_iterations=invalid_limit)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("non-positive/non-integer max_iterations must fail closed")
     try:
         module.run_batch(batch_payloads, root, state, max_iterations=1)
     except ValueError:
