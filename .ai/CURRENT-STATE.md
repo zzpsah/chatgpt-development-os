@@ -12,6 +12,8 @@ The autonomous loop executes one already-approved `P12-HANDOFF-v1` through the e
 
 Scheduler/Worker v1 is the orchestration boundary above that loop. Each scheduler invocation processes exactly one bounded work unit. It first performs deterministic recovery; a latest `FAILED`, `BLOCKED`, or `CANCELLED` outcome causes `HOLD`/review and never triggers an automatic retry. An unknown persisted outcome also causes a fail-closed `HOLD`/review. Malformed or unreadable durable state likewise causes `HOLD` with `RECOVERY_STATE_INVALID`; the scheduler does not execute when recovery cannot establish a trustworthy classification. Otherwise it delegates exactly one iteration to the existing autonomous loop with a durable state path, which re-enters controller, handoff, runtime, verification, Security Gate, and persistence boundaries.
 
+The Scheduler/Worker v1 contract is now CI-verified on HEAD `498a3c09...`. The next bounded extension is batch scheduling: `run_batch(...)` accepts distinct work-unit payloads, requires an explicit positive `max_iterations`, re-enters the existing one-unit scheduler path for each payload, and stops on the first non-`COMPLETE` result. It cannot silently retry, reuse a payload, or exceed the caller-supplied iteration bound.
+
 ## Portable project memory
 
 The repository is the durable project-memory boundary. A fresh AI must recover from repository source, Git, and `.ai` context before continuing. ChatGPT Memory, account memory, and prior chat history are supplementary only.
@@ -22,8 +24,8 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 ## Verification state
 
-The live CI run for the previous HEAD `306a1a08...` failed on a stale autonomous-loop contract needle. A follow-up documentation-only correction at `f95ff6a1...` restored that phrase, but its CI run exposed the next missing contract needle (`Objective`). The autonomous-loop verifier is therefore the current acceptance blocker; no runtime execution failure has been observed.
+Live CI run 34687180686 for HEAD `498a3c09...` passed. The autonomous-loop contract vocabulary and the previously failing contract checks are now verified. Scheduler/Worker v1 remains the acceptance baseline; the new batch extension is implemented in the same documented change set but requires its own live CI verification before being marked verified.
 
 ## Next implementation target
 
-Complete the autonomous-loop contract vocabulary atomically with this durable state record, then require live CI on the new HEAD. Only after CI passes may P12 hardening continue. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.
+Verify the bounded batch scheduling extension through live CI. If CI passes, continue P12 hardening with the next safe bounded worker/recovery improvement. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.

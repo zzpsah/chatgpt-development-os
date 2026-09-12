@@ -38,11 +38,40 @@ def run_iteration(payload: dict[str, Any], project_root: Path, state_path: Path,
     result = loop.run_once(payload, project_root, checkpoint, state_path)
     return {"scheduler_version":"P12-SCHEDULER-v1","status":result.get("status","FAILED"),"recovery":recovery,"iteration":1,"runtime_loop":result,"execution":"DELEGATE_TO_EXISTING_RUNTIME","authorization":"UNCHANGED"}
 
+def run_batch(payloads: list[dict[str, Any]], project_root: Path, state_path: Path, checkpoint: Path | None = None, max_iterations: int = 1) -> dict[str, Any]:
+    """Run at most max_iterations distinct work-unit payloads; never replay a payload automatically."""
+    if max_iterations < 1:
+        raise ValueError("max_iterations must be >= 1")
+    if len(payloads) > max_iterations:
+        raise ValueError("payload count exceeds max_iterations")
+    results: list[dict[str, Any]] = []
+    for payload in payloads:
+        if len(results) >= max_iterations:
+            break
+        result = run_iteration(payload, project_root, state_path, checkpoint)
+        results.append(result)
+        if result.get("status") != "COMPLETE":
+            break
+    return {
+        "scheduler_version":"P12-SCHEDULER-v1",
+        "status":"COMPLETE" if results and all(r.get("status") == "COMPLETE" for r in results) else (results[-1].get("status", "HOLD") if results else "NO_ACTION"),
+        "iterations":len(results),
+        "max_iterations":max_iterations,
+        "results":results,
+        "execution":"DELEGATE_TO_EXISTING_RUNTIME" if results else "NONE",
+        "authorization":"UNCHANGED",
+        "replay":"NEVER_AUTOMATIC",
+    }
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Run exactly one bounded DevOS scheduler/worker iteration")
-    parser.add_argument("input", type=Path); parser.add_argument("--project-root", type=Path, default=ROOT); parser.add_argument("--state", type=Path, required=True); parser.add_argument("--checkpoint", type=Path)
+    parser = argparse.ArgumentParser(description="Run one or a bounded batch of DevOS scheduler/worker iterations")
+    parser.add_argument("input", type=Path); parser.add_argument("--project-root", type=Path, default=ROOT); parser.add_argument("--state", type=Path, required=True); parser.add_argument("--checkpoint", type=Path); parser.add_argument("--max-iterations", type=int, default=1)
     args = parser.parse_args()
-    result = run_iteration(json.loads(args.input.read_text(encoding="utf-8")), args.project_root, args.state, args.checkpoint)
+    data=json.loads(args.input.read_text(encoding="utf-8"))
+    if isinstance(data, list):
+        result = run_batch(data, args.project_root, args.state, args.checkpoint, args.max_iterations)
+    else:
+        result = run_iteration(data, args.project_root, args.state, args.checkpoint)
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0 if result.get("status") == "COMPLETE" else 1
 if __name__ == "__main__":
