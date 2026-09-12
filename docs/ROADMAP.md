@@ -169,7 +169,7 @@ P11 is complete with repository-first recovery, vendor-neutral handoff, determin
 - [x] Add an independently gated executable controller decision envelope
 - [x] Verify P12 through fresh GitHub Actions evidence
 
-## P13 — Autonomous Development Orchestration — IN PROGRESS
+## P13 — Autonomous Development Orchestration — COMPLETE
 
 Goal: turn one human goal and recovered task state into one bounded, independently gated next work unit, then choose `CONTINUE`, `STOP`, or `ESCALATE` without claiming execution.
 
@@ -210,6 +210,6 @@ Complete the current milestone before advancing to the next milestone. Do not ma
 
 ## Current milestone
 
-### P13 — Autonomous Development Orchestration — IN PROGRESS
+### P14 — Adaptive Verification & Self-Healing — PLANNED
 
-P13 starts from verified P11 federation and P12 operational-intelligence foundations. Higher-impact P8 remote mutations remain independently incomplete.
+P13 is complete with fresh GitHub Actions evidence for the managed-project proof. P14 starts from the verified P13 execution-feedback boundary. Higher-impact P8 remote mutations remain independently incomplete.

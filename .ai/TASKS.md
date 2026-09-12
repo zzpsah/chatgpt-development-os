@@ -50,6 +50,7 @@
 - P13 runtime-outcome feedback added locally: only a verified, evidenced completion unlocks a dependent task for fresh selection.
 - P13 durable checkpoint added locally: resume compares Git HEAD and always requires fresh revalidation instead of replaying a saved candidate.
 - P13 isolated managed-project proof added locally: template context, real Git, candidate selection, verified runtime outcome, dependency unlock, checkpoint, and stale-head escalation execute end to end.
+- P13 managed-project proof published in commit `cee2d894af4c1230240456fa635a31bbd1586248`; fresh GitHub Actions workflows 417 and 362 passed.
 
 ## Verification note
-P11 and P12 are closed with fresh GitHub Actions evidence. P13 is locally complete pending fresh GitHub Actions evidence for the isolated managed-project proof.
+P11, P12, and P13 are closed with fresh GitHub Actions evidence. P14 Adaptive Verification & Self-Healing is the next milestone.

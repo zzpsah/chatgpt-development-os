@@ -9,7 +9,8 @@
 - P10 Context Continuity & Recovery v1 is complete.
 - P11 DevOS Federation & Self-Healing Context v1 is complete.
 - P12 Operational Intelligence is complete.
-- P13 Autonomous Development Orchestration is the active milestone.
+- P13 Autonomous Development Orchestration is complete.
+- P14 Adaptive Verification & Self-Healing is the active milestone.
 
 ## Canonical DevOS repository identity
 
@@ -112,6 +113,12 @@ P12 Operational Intelligence is complete on commit `1f544f2f000a8357bf801cb0682c
 A local implementation turns the OI advisory recommendation into a non-executing controller decision envelope. The controller independently validates task scope, repository revalidation, readiness, declared capability, existing authorization, and Security Gate state. Only a fully gated candidate becomes `EXECUTION_CANDIDATE`; it retains `authority: UNCHANGED`, `authorization: UNCHANGED`, and `execution: NONE`. The existing runtime-handoff tool can then create a `READY_FOR_RUNTIME` envelope without executing an action.
 
 The targeted P12 integration verifier and the repository's local contract suite passed. Fresh GitHub Actions workflows `415` and `360` also succeeded for commit `1f544f2f000a8357bf801cb0682c1a0e797997b1`.
+
+## P13 completion
+
+P13 Autonomous Development Orchestration is complete on commit `cee2d894af4c1230240456fa635a31bbd1586248`. It turns a human goal and recovered task inventory into one independently gated runtime candidate or an explicit `CONTINUE`, `STOP`, or `ESCALATE` decision. Verified runtime outcomes can unlock dependent work only with `VERIFIED` status and actual evidence. Durable checkpoints compare Git head on resume and require revalidation rather than replaying saved work. An isolated managed-project proof passed through the full flow from template context and Git state to safe stale-head escalation.
+
+Fresh GitHub Actions workflows `417` and `362` succeeded for the P13 managed-project proof commit.
 
 ## Durable future-work rule
 
