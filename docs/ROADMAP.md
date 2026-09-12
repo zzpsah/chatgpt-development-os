@@ -178,7 +178,7 @@ Goal: turn one human goal and recovered task state into one bounded, independent
 - [x] Add regression cases for continue, stop, budget exhaustion, and authorization escalation
 - [x] Wire the P13 verifier into contract CI
 - [x] Connect actual completed runtime outcomes back into fresh task-state selection
-- [ ] Add durable orchestration checkpoints and resume proof
+- [x] Add durable orchestration checkpoints and resume proof
 - [ ] Verify P13 against a real managed-project end-to-end scenario
 
 ## Cross-cutting

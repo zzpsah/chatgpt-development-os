@@ -28,3 +28,9 @@ The orchestrator does not mutate a repository, run commands, retry work, mark wo
 ## Runtime-outcome feedback
 
 The optional `latest_runtime_outcome` is processed only in memory for the next selection. A `COMPLETE` outcome must name an existing task, carry `verification: VERIFIED`, and include non-empty actual evidence; only then can it mark that task complete in the next controller input and unlock dependents. `FAILED` and `BLOCKED` outcomes remain failure/blocker signals. Invalid, unknown, or unevidenced outcomes return `ESCALATE` and do not alter task state.
+
+## Durable checkpoint and resume
+
+`tools/orchestration-checkpoint.py` writes a minimal `P13-ORCHESTRATION-CHECKPOINT-v1` record, normally at `.ai/ORCHESTRATION-CHECKPOINT.json`. It stores only the goal, iteration, control decision, repository head, candidate task identifier, and reasons; it never stores credentials, raw runtime evidence, or semantic task state.
+
+Resume compares the recorded repository head with the current head. A mismatch returns `ESCALATE`. A match still returns `REVALIDATE_REQUIRED`, never execution or a replay instruction: the orchestrator must receive fresh inventory, capability, authorization, security, and evidence inputs before another candidate is selected.

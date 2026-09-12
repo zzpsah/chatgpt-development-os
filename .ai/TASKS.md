@@ -1,7 +1,7 @@
 # DevOS Tasks
 
 ## Active
-- P13: add durable orchestration checkpoints and a managed-project end-to-end proof.
+- P13: validate the full orchestration flow in a real managed project.
 
 ## Planned
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
@@ -48,6 +48,7 @@
 - Portable host-profile contract published in commit `0abaf5340b412d6f7701f0481a1e32f1e50a3504` with fresh GitHub Actions evidence.
 - P13 first slice added locally: the goal-to-next-safe-unit orchestrator returns only `CONTINUE`, `STOP`, or `ESCALATE` and never executes a work unit.
 - P13 runtime-outcome feedback added locally: only a verified, evidenced completion unlocks a dependent task for fresh selection.
+- P13 durable checkpoint added locally: resume compares Git HEAD and always requires fresh revalidation instead of replaying a saved candidate.
 
 ## Verification note
-P11 and P12 are closed with fresh GitHub Actions evidence. P13 first-slice orchestration is locally verified; runtime-outcome feedback, durable checkpoints, and a managed-project proof remain.
+P11 and P12 are closed with fresh GitHub Actions evidence. P13 orchestration, runtime-outcome feedback, and durable checkpoint/resume are locally verified; a managed-project proof remains.
