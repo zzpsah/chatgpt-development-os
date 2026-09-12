@@ -113,6 +113,12 @@ A local implementation turns the OI advisory recommendation into a non-executing
 
 The targeted P12 integration verifier and the repository's local contract suite passed. Fresh GitHub Actions workflows `415` and `360` also succeeded for commit `1f544f2f000a8357bf801cb0682c1a0e797997b1`.
 
+## P13 managed-project completion gate
+
+P13 now has an executable external managed-project proof in `tools/verify-managed-project-orchestration.py` plus `.github/workflows/verify-p13-managed-project.yml`. The workflow checks out DevOS and `zzpsah/automation-suite` separately, validates the external repository's real `.ai` management contract and Git HEAD, advances orchestration only on verified evidence, proves checkpoint same-HEAD revalidation and changed-HEAD escalation, and requires bounded termination with authority unchanged and execution still `NONE`.
+
+This implementation is intentionally read-only against the managed project. P13 remains active until the dedicated workflow produces fresh green GitHub Actions evidence on the final P13 branch/commit; only then may the milestone be marked complete.
+
 ## Durable future-work rule
 
 Future meaningful engineering work, decisions, blockers, verification evidence, and recovery notes must be persisted in the repository-local `.ai` context. Use `.ai/SESSIONS/` for session-level semantic records and update `TASKS.md`, `DECISIONS.md`, and `CURRENT-STATE.md` when durable project state changes. Chat history is not the authoritative recovery layer.
