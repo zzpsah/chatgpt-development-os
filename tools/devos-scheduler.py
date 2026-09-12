@@ -38,6 +38,8 @@ def run_batch(payloads: list[dict[str, Any]], project_root: Path, state_path: Pa
         raise ValueError("payload count exceeds max_iterations")
     seen: set[str] = set()
     for payload in payloads:
+        if not isinstance(payload, dict):
+            raise ValueError("work-unit payload must be an object")
         identity = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
         if identity in seen:
             raise ValueError("duplicate work-unit payload")

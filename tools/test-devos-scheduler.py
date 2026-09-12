@@ -27,6 +27,12 @@ with tempfile.TemporaryDirectory() as tmp:
     else:
         raise AssertionError("duplicate work-unit payloads must fail closed")
     try:
+        module.run_batch([batch_payloads[0], "invalid"], root, state, max_iterations=2)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("non-object work-unit payloads must fail closed")
+    try:
         module.run_batch(batch_payloads, root, state, max_iterations=0)
     except ValueError:
         pass

@@ -24,10 +24,8 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 ## Verification state
 
-The duplicate-payload hardening at HEAD `7a26b5a7eefc11f3057910e3d9a6319c3cf930fa` was verified by CI run `34688273962` (run #351) for workflow `Verify Development OS Contracts`: `completed` / `success`. The change atomically updated the scheduler implementation, executable proof, and durable current-state record. The prior guard failure on `649f34bb...` remains recorded as a historical documentation-integrity exception because that commit changed `tools/test-devos-scheduler.py` without a durable documentation file in the same commit. The exception is not being misrepresented as an atomic historical change.
-
-This green CI acceptance verifies the duplicate-payload guard on the current head. Any subsequent implementation must again satisfy the repository's documentation-at-change boundary and obtain a new green CI result before being treated as verified.
+The duplicate-payload hardening at `7a26b5a7eefc11f3057910e3d9a6319c3cf930fa` was verified by CI run `34688273962` (run #351): `completed` / `success`. The subsequent durable acceptance record at `61875c2f2a4ae00393a5e2f5cf8b4c53b9d02623` was verified by CI run `34688308681` (run #352): `completed` / `success`.
 
 ## Next implementation target
 
-Continue P12 hardening with the next safe bounded worker/recovery improvement. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.
+Harden batch scheduling with explicit payload-shape validation before execution, preserving fail-closed behavior and the existing iteration bound. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.
