@@ -14,7 +14,7 @@ Scheduler/Worker v1 is the orchestration boundary above that loop. Single-iterat
 
 ## Human Command Interpretation Layer v1
 
-The new executable layer `tools/devos-command-interpreter.py` maps common casual English/Hinglish/typo-tolerant messages into stable canonical intents without executing work or granting authority. Covered examples include `continue`, `continiue`, `wahi se continue`, `ok`, `haan`, `do it`, `isko production grade bana`, `kya pending hai?`, and `ruk ja`. It also supports ordered compatible multi-intent routing such as `fix this bug and check security`.
+The executable layer `tools/devos-command-interpreter.py` maps common casual English/Hinglish/typo-tolerant messages into stable canonical intents without executing work or granting authority. Covered examples include `continue`, `continiue`, `wahi se continue`, `ok`, `haan`, `do it`, `isko production grade bana`, `kya pending hai?`, and `ruk ja`. It also supports ordered compatible multi-intent routing such as `fix this bug and check security`.
 
 `ok`/`haan`/similar confirmation is context-sensitive: with a known current objective it maps to `CONFIRM_CURRENT_PLAN` and delegates only after existing gates; without a current objective it remains `AMBIGUOUS` and performs no execution. Requests that attempt to bypass/disable authorization or security are `BLOCKED` as `AUTHORIZATION_ESCALATION`. Unknown language also remains `AMBIGUOUS` rather than being guessed into an action.
 
@@ -28,12 +28,16 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 **What is not written was never done.** Material implementation and its durable record must land in the same change set. Completion means **IMPLEMENTED + VERIFIED + DOCUMENTED**.
 
+## Recovery / checkpoint integrity v2
+
+Durable runtime persistence now validates record identity, evidence, outcome status, and checkpoint structure before accepting or recovering state. A checkpoint must carry a stable runtime identity, objective/work-unit identity, positive iteration, status, evidence, verification, blockers, next action, and either a 40-character repository SHA or `UNKNOWN`. Malformed records or checkpoints fail closed instead of becoming resumable state.
+
+Recovery exposes checkpoint presence as `CHECKPOINT_REQUIRES_FRESH_GATES` but never treats a checkpoint as permission to replay. `COMPLETE` still requires fresh gates before continuation; `FAILED`/`BLOCKED`/`CANCELLED` requires review. No recovery path creates authority or executes work.
+
 ## Verification state
 
-Current PR #2 HEAD is `f77234cf97f06c564315df625334f441955df42f`. GitHub check run `103568824215`, workflow run `34699572924`, completed on 2026-09-12T14:32:26Z with conclusion `success`. The branch is `devos/documentation-integrity-v2`; PR #2 remains open, draft, and unmerged.
-
-The current bounded command-interpreter implementation was locally executed before commit with all deterministic cases passing. Its executable test is now part of the existing Human Language Execution Engine verification entry point, so CI will verify the new layer together with the existing contract. This change is documented in this state record in the same atomic implementation commit.
+Current PR #2 HEAD is `856d59d8d603599b736d875dc0a879af1d58a676`. The previous command-interpreter change had live CI verification before this follow-on checkpoint hardening. This checkpoint/recovery v2 change is pending its own live CI verification; it is documented here in the same atomic implementation change set.
 
 ## Next implementation target
 
-After the command-interpreter change receives live CI verification, continue P12 with the next safe bounded worker/recovery integrity improvement: strengthen durable checkpoint/resume semantics without automatic replay or authority creation. Then progress toward P12 Final Operational Readiness and the P13 Autonomous Development Orchestration boundary. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.
+After checkpoint/recovery v2 receives live CI verification, continue P12 with worker lifecycle/state-machine hardening and stronger unattended-loop observability. Then progress toward P12 Final Operational Readiness and the P13 Autonomous Development Orchestration boundary. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.

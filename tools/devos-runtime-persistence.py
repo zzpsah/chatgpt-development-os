@@ -15,6 +15,55 @@ from typing import Any
 
 STATE_VERSION = "P12-PERSISTENCE-v1"
 MAX_HISTORY = 100
+_CHECKPOINT_FIELDS = {
+    "id": str,
+    "runtime_version": str,
+    "objective": str,
+    "iteration": int,
+    "work_unit": str,
+    "repository_head": str,
+    "status": str,
+    "changes": list,
+    "evidence": list,
+    "verification": str,
+    "blockers": list,
+    "next_action": str,
+}
+
+
+def _validate_checkpoint(checkpoint: Any) -> None:
+    if checkpoint is None:
+        return
+    if not isinstance(checkpoint, dict):
+        raise ValueError("checkpoint must be an object or null")
+    for field, expected in _CHECKPOINT_FIELDS.items():
+        if field not in checkpoint or not isinstance(checkpoint[field], expected):
+            raise ValueError(f"invalid checkpoint field: {field}")
+    if isinstance(checkpoint["iteration"], bool) or checkpoint["iteration"] < 1:
+        raise ValueError("checkpoint iteration must be a positive integer")
+    if checkpoint["status"] not in {"IN_PROGRESS", "COMPLETE", "FAILED", "BLOCKED", "CANCELLED"}:
+        raise ValueError("invalid checkpoint status")
+    if not checkpoint["id"] or not checkpoint["runtime_version"] or not checkpoint["objective"] or not checkpoint["work_unit"]:
+        raise ValueError("checkpoint identity fields must be non-empty")
+    if checkpoint["repository_head"] != "UNKNOWN" and len(checkpoint["repository_head"]) != 40:
+        raise ValueError("checkpoint repository_head must be a 40-character SHA or UNKNOWN")
+
+
+def _validate_record(record: Any) -> None:
+    if not isinstance(record, dict):
+        raise ValueError("runtime record must be an object")
+    for field in ("task_id", "objective", "status", "evidence"):
+        if field not in record:
+            raise ValueError(f"runtime record missing field: {field}")
+    if not isinstance(record["task_id"], str) or not record["task_id"]:
+        raise ValueError("runtime record task_id must be non-empty text")
+    if not isinstance(record["objective"], str) or not record["objective"]:
+        raise ValueError("runtime record objective must be non-empty text")
+    if record["status"] not in {"COMPLETE", "FAILED", "BLOCKED", "CANCELLED"}:
+        raise ValueError("invalid runtime outcome")
+    if not isinstance(record["evidence"], list) or not record["evidence"]:
+        raise ValueError("RAW_EXECUTION_EVIDENCE_REQUIRED")
+    _validate_checkpoint(record.get("checkpoint"))
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -26,17 +75,26 @@ def _load(path: Path) -> dict[str, Any]:
     history = data.get("history", [])
     if not isinstance(history, list):
         raise ValueError("runtime history must be a list")
+    latest = data.get("latest")
+    if latest is not None:
+        _validate_record(latest)
+    for record in history:
+        _validate_record(record)
     return data
 
 
 def persist(path: Path, runtime_result: dict[str, Any], task_id: str, objective: str) -> dict[str, Any]:
     """Persist one verified-or-failed runtime outcome atomically."""
+    if not isinstance(runtime_result, dict):
+        raise ValueError("runtime result must be an object")
     evidence = runtime_result.get("evidence")
     if not isinstance(evidence, list) or not evidence:
         raise ValueError("RAW_EXECUTION_EVIDENCE_REQUIRED")
     status = runtime_result.get("status")
     if status not in {"COMPLETE", "FAILED", "BLOCKED", "CANCELLED"}:
         raise ValueError("invalid runtime outcome")
+    if not isinstance(task_id, str) or not task_id or not isinstance(objective, str) or not objective:
+        raise ValueError("task identity must be non-empty text")
 
     path = path.resolve()
     state = _load(path)
@@ -50,6 +108,7 @@ def persist(path: Path, runtime_result: dict[str, Any], task_id: str, objective:
         "evidence": evidence,
         "checkpoint": runtime_result.get("checkpoint"),
     }
+    _validate_record(record)
     history = list(state.get("history", []))
     history.append(record)
     state = {"state_version": STATE_VERSION, "latest": record, "history": history[-MAX_HISTORY:]}
@@ -70,4 +129,7 @@ def persist(path: Path, runtime_result: dict[str, Any], task_id: str, objective:
 
 
 def load_latest(path: Path) -> dict[str, Any] | None:
-    return _load(path).get("latest")
+    latest = _load(path).get("latest")
+    if latest is not None:
+        _validate_record(latest)
+    return latest

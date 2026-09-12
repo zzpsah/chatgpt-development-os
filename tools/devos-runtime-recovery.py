@@ -25,10 +25,22 @@ def _load_persistence():
 
 def recover(path: Path) -> dict[str, object]:
     persistence = _load_persistence()
-    latest = persistence.load_latest(path)
+    try:
+        latest = persistence.load_latest(path)
+    except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"invalid durable recovery state: {type(exc).__name__}") from exc
     if latest is None:
         return {"recovery_version":"P12-RECOVERY-v1","status":"NO_STATE","action":"SELECT_FROM_FRESH_STATE","execution":"NONE","authorization":"UNCHANGED"}
+    if not isinstance(latest, dict):
+        raise ValueError("invalid latest runtime record")
     status = latest.get("status")
+    checkpoint = latest.get("checkpoint")
+    if checkpoint is None:
+        checkpoint_action = "FRESH_STATE_REQUIRED"
+    else:
+        if not isinstance(checkpoint, dict):
+            raise ValueError("invalid persisted checkpoint")
+        checkpoint_action = "CHECKPOINT_REQUIRES_FRESH_GATES"
     if status == "COMPLETE":
         action = "RECHECK_GATES_THEN_CONTINUE"
     elif status in {"FAILED", "BLOCKED", "CANCELLED"}:
@@ -39,8 +51,11 @@ def recover(path: Path) -> dict[str, object]:
         "recovery_version":"P12-RECOVERY-v1",
         "status":"RECOVERED",
         "task_id":latest.get("task_id"),
+        "objective":latest.get("objective"),
         "outcome":status,
         "verification":latest.get("verification","UNVERIFIED"),
+        "checkpoint":checkpoint,
+        "checkpoint_action":checkpoint_action,
         "action":action,
         "execution":"NONE",
         "authorization":"UNCHANGED",
