@@ -34,6 +34,8 @@ def run_iteration(payload: dict[str, Any], project_root: Path, state_path: Path,
 
 def run_batch(payloads: list[dict[str, Any]], project_root: Path, state_path: Path, checkpoint: Path | None = None, max_iterations: int = 1) -> dict[str, Any]:
     """Run at most max_iterations distinct work-unit payloads; never replay a payload automatically."""
+    if not isinstance(payloads, list):
+        raise ValueError("payloads must be a list")
     if not isinstance(max_iterations, int) or isinstance(max_iterations, bool) or max_iterations < 1:
         raise ValueError("max_iterations must be a positive integer")
     if len(payloads) > max_iterations:
