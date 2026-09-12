@@ -1,10 +1,9 @@
 # DevOS Tasks
 
 ## Active
-- P12: verify failure/evidence intelligence on the fresh repository path, then strengthen controller integration and advisory next-action generation without granting authority.
+- P12: publish the locally verified controller/OI/runtime-handoff integration, then confirm fresh GitHub Actions evidence for the resulting commit.
 
 ## Planned
-- P12: strengthen controller integration and advisory next-action generation without granting authority.
 - Harden higher-impact remote mutation capabilities only with operation-specific authorization, verification, security, and recovery contracts.
 
 ## Blocked
@@ -43,6 +42,8 @@
 - P12 evidence intelligence implemented with provenance/freshness normalization and an explicit execution-evidence boundary.
 - P12 Operational Intelligence v3 contract checks added for failure and evidence behavior.
 - P12 fresh-repository deterministic recovery proof added to contract CI.
+- P12 executable controller decision envelope added locally: OI remains `ADVISORY_ONLY`; controller independently checks scope, repository revalidation, readiness, capability, authorization, and Security Gate state before emitting an `EXECUTION_CANDIDATE`.
+- P12 controller/OI/runtime-handoff integration verifier added locally and passed alongside the full local contract suite.
 
 ## Verification note
-P11 is closed. P12 graph/readiness, prioritization/checkpoint, and failure/evidence slices are repository-backed. Fresh-repository CI verification is now wired; controller advisory next-action integration is the remaining P12 implementation target.
+P11 is closed. P12 graph/readiness, prioritization/checkpoint, failure/evidence, and controller advisory integration are locally verified. Fresh GitHub Actions evidence for the integration commit remains required before P12 can be closed.

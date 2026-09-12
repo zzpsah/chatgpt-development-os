@@ -32,6 +32,9 @@ require("core/development-task-controller.md", [
     "ESCALATED",
     "actual execution",
     "Remote Mutation Controls",
+    "Executable P12 decision envelope",
+    "authority: UNCHANGED",
+    "execution: NONE",
 ])
 
 require("workflows/development-task.md", [

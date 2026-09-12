@@ -48,6 +48,12 @@ User request
 18. Produce a provenance-aware handoff containing the current Git/source reference and revalidation requirements when a session boundary is reached.
 19. Produce a final result with completion status, evidence, limitations, blockers, and next action.
 
+## Executable P12 decision envelope
+
+`tools/development-task-controller.py` is the reference implementation of the controller decision boundary. It consumes the task inventory plus **independent** controller inputs: current repository head, per-task capability state, existing authorization state, and Security Gate state. It first obtains the OI recommendation, then independently validates scope, readiness, repository revalidation, capability, authorization, and security.
+
+Its only outcomes are `EXECUTION_CANDIDATE`, `BLOCKED`, and `NO_ACTION`. An `EXECUTION_CANDIDATE` has `authority: UNCHANGED`, `authorization: UNCHANGED`, and `execution: NONE`; it can be passed to `tools/devos-runtime-handoff.py`, which creates a `READY_FOR_RUNTIME` work-unit envelope without running it. OI remains `ADVISORY_ONLY` throughout.
+
 ## Task state
 
 ```yaml

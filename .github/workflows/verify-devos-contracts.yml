@@ -63,3 +63,6 @@ jobs:
 
       - name: Verify P12 fresh-repository determinism
         run: python tools/test-operational-intelligence-recovery.py
+
+      - name: Verify P12 controller/OI/runtime-handoff integration
+        run: python tools/verify-development-task-controller-integration.py
