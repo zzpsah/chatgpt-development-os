@@ -24,10 +24,10 @@ The repository is the durable project-memory boundary. A fresh AI must recover f
 
 ## Verification state
 
-The corrective durable record at HEAD `1f12d7916c16dd708cf3600b71a5bd42c4a426b9` was verified by CI run `34688213470` (run #350) for workflow `Verify Development OS Contracts`: `completed` / `success`. The prior guard failure on `649f34bb...` remains recorded as a historical documentation-integrity exception because that commit changed `tools/test-devos-scheduler.py` without a durable documentation file in the same commit. The exception is not being misrepresented as an atomic historical change.
+The duplicate-payload hardening at HEAD `7a26b5a7eefc11f3057910e3d9a6319c3cf930fa` was verified by CI run `34688273962` (run #351) for workflow `Verify Development OS Contracts`: `completed` / `success`. The change atomically updated the scheduler implementation, executable proof, and durable current-state record. The prior guard failure on `649f34bb...` remains recorded as a historical documentation-integrity exception because that commit changed `tools/test-devos-scheduler.py` without a durable documentation file in the same commit. The exception is not being misrepresented as an atomic historical change.
 
-The next change adds executable duplicate-payload rejection to `run_batch(...)` and records that contract in this same change set. This change must obtain a new green CI result before it is treated as verified.
+This green CI acceptance verifies the duplicate-payload guard on the current head. Any subsequent implementation must again satisfy the repository's documentation-at-change boundary and obtain a new green CI result before being treated as verified.
 
 ## Next implementation target
 
-After green CI, continue P12 hardening with the next safe bounded worker/recovery improvement. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.
+Continue P12 hardening with the next safe bounded worker/recovery improvement. Higher-impact P8 remote mutations remain separately incomplete and require explicit authorization.
