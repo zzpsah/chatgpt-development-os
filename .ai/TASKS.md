@@ -80,3 +80,9 @@ The repository, not any AI account/chat/model/vendor memory, carries authoritati
 - `REPOSITORY DELETE != REPOSITORY CREATE`
 - `BRANCH DELETE != BRANCH CREATE`
 - `NORMAL BRANCH UPDATE != FORCE UPDATE`
+
+## Plain Project Context and Recovery Guide v1
+
+- Add a vendor-neutral first-contact guide that treats DevOS as repository project context and supports unavailable-access fallback.
+- Test local safety wording and boundaries; do not claim every external AI host will accept or use the guide.
+- Keep this as an unnumbered portability hardening objective.

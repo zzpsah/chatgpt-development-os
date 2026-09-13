@@ -299,3 +299,7 @@ Vendor-neutral engineering OS
 + durable future roadmap
 = continuously developable AI engineering platform
 ```
+
+## Plain first-contact portability
+
+For a fresh AI chat, [DEVOS-PROJECT-CONTEXT.md](../DEVOS-PROJECT-CONTEXT.md) provides a repository-first context and recovery path. It uses normal project-documentation language, asks the host to report accessible evidence and unknowns before material work, and explicitly preserves host policies and authorization boundaries. It is locally tested documentation, not evidence that every external AI host will access or follow it.

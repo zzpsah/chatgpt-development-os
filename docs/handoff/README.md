@@ -3,6 +3,7 @@
 **Stable entry point for any AI reviewing DevOS history or resuming after context loss.**
 
 1. Start with the repository [AGENTS.md](../../AGENTS.md) and [manifest](../../.ai/manifest.yaml).
+   For a fresh external AI chat, use the plain [Project Context Guide](../../DEVOS-PROJECT-CONTEXT.md) before this deeper handoff.
 2. Recover [current state](../../.ai/CURRENT-STATE.md), [tasks](../../.ai/TASKS.md), and [decisions](../../.ai/DECISIONS.md), then inspect current source and Git.
 3. Read the [master handoff](DevOS-Master-Handoff.md) for scratch-to-current history, P0–P17 naming caveats, architecture, PR/CI evidence, proof boundaries, limitations, independent review checklist and roadmap choices.
 4. Read the [Master Engineering Map](../DEVOS-MASTER-ENGINEERING-MAP.md) for the product objective, completed architecture, future flow diagrams, semantic model, any-AI/any-platform target, human-language interpreter evolution model, and living-documentation contract.

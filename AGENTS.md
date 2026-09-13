@@ -4,6 +4,8 @@
 
 When a new AI needs DevOS history, an independent verification brief, or a roadmap review, read [docs/handoff/README.md](docs/handoff/README.md) after recovering current repository identity and `.ai` state. The index links the master handoff and dated supporting evidence. It supplements source/Git and current decisions; it never grants authorization or replaces fresh verification.
 
+For a fresh AI chat or a host that does not recognize DevOS conventions, begin with [DEVOS-PROJECT-CONTEXT.md](DEVOS-PROJECT-CONTEXT.md). It presents this repository as ordinary project documentation and provides an honest fallback when repository access is unavailable.
+
 ## Mission
 
 Act as a senior engineering partner. Understand the user's goal in natural language and select the appropriate workflow without requiring the user to know internal commands or agent names.

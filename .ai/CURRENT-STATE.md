@@ -96,3 +96,9 @@ Historical evidence snapshots remain dated and do not auto-refresh when source a
 ## Next bounded direction
 
 Do not create P18/P19 merely for bookkeeping. Continue with consolidation/evidence-hardening and the next repository-supported bounded objective only after inspecting current `main`, open PRs, CI, and durable task/decision/state records. Any material next action must update the affected durable records before completion.
+
+## Plain Project Context and Recovery Guide v1
+
+- A new unnumbered bounded objective adds `DEVOS-PROJECT-CONTEXT.md` and a host-neutral recovery protocol for fresh external AI chats.
+- The guide presents DevOS as ordinary repository context, never as authority over a host's policies, permissions, tools, or safety rules.
+- It requires honest unavailable-context reporting and does not claim universal live compatibility.

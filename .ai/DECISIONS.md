@@ -50,3 +50,9 @@
 - P16 planning remains non-executing/non-authorizing.
 - P17 `READY` means eligibility only; authority/authorization/execution remain unchanged.
 - Higher-impact execution remains separately authorized and Security-Gate controlled.
+
+## Plain Project Context and Recovery Guide v1
+
+- DevOS first-contact material must not claim authority over a host's governing instructions, policies, permissions, tools, or safety rules.
+- A model refusal to access a link or to perform unavailable/consequential work is compatible behavior; the guide must request honest context recovery instead of compliance.
+- Local wording tests are not proof of cross-vendor live compliance.
