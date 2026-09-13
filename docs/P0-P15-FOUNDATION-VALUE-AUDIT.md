@@ -1,137 +1,97 @@
-# P0–P15 Foundation Value Audit
+# P0–P16 Foundation & Maturity Audit
 
 ## Purpose
 
-This audit evaluates P0–P15 by **current architectural value**, not by milestone age or the number of files created. A milestone is retained when its capability is consumed by the current DevOS path or protects a required boundary. A milestone is refactored when its capability is valid but duplicated, weakly integrated, or poorly evidenced. A milestone is deprecated only when repository evidence shows that its capability is obsolete and no current contract depends on it.
+This audit evaluates P0–P16 by **current architectural value and verified evidence**, not by milestone age or file count. A capability is retained when the current system consumes it or a required boundary depends on it. A capability is consolidated when its historical milestone boundary is now represented by a stronger current contract. A capability is deprecated only when repository evidence proves it is unused and obsolete.
 
-## Audit rule
+## Current verdict
 
-For each phase, evaluate:
+**P0–P16 are accepted as the verified foundation/current mainline through P16.** No P0–P16 phase is currently justified for deletion merely because it is historical. P0–P7 provide substrate; P8–P12 provide the operational control plane; P13–P15 provide orchestration, recovery adaptation, and the human semantic interface; P16 provides deterministic goal-to-plan compilation.
 
-1. **Capability** — what the phase contributes.
-2. **Current consumer** — which current layer uses or depends on it.
-3. **Evidence** — source/CI/state evidence currently available.
-4. **Disposition** — RETAIN, INTEGRATE, HARDEN, CONSOLIDATE, or DEPRECATE.
-5. **Exit condition** — what proves the phase has delivered durable value.
+P17 is intentionally excluded from this closure verdict because it remains a separate active development track.
 
-No component is removed merely because it originated in an early phase. Removal requires dependency and behavior evidence.
+## Phase ledger
 
-## P0–P7 — Foundational layer
-
-| Phase | Current value | Consumer / boundary | Evidence posture | Disposition |
-|---|---|---|---|---|
-| P0 | Initial DevOS operating/bootstrap foundation | `AGENTS.md`, bootstrap/state entry, repository-local rules | Current repository still depends on the bootstrap contract | **RETAIN + CONSOLIDATE** |
-| P1 | Portable project context / durable memory model | `.ai/` state, project context spec, fresh-AI recovery | Current recovery precedence explicitly makes source/Git and `.ai` authoritative | **RETAIN** |
-| P2 | Verification / evidence discipline | Verification Engine, CI contract workflows, completion rules | Current contracts require evidence-backed completion | **RETAIN + HARDEN** |
-| P3 | Security / authorization boundary foundations | Security Gate, authorization rules, adapters | Current P8–P17 layers preserve unchanged authority boundaries | **RETAIN** |
-| P4 | Bounded autonomous development loop | Controller → runtime → checkpoint → verification | P12/P13/P17 explicitly consume bounded-loop concepts | **RETAIN + CONSOLIDATE** |
-| P5 | Executable runtime boundary | Runtime, host adapters, evidence capture | Current runtime is the execution boundary beneath orchestration | **RETAIN** |
-| P6 | Multi-AI / adapter portability | adapters, host profiles, repository-first recovery | Current architecture explicitly depends on vendor-neutral portability | **RETAIN** |
-| P7 | Automation / onboarding / project integration foundation | onboarding, context sync, watchers, CI | Current managed-project workflows and P13 proof consume these capabilities | **RETAIN + HARDEN** |
-
-### P0–P7 conclusion
-
-P0–P7 are **not useless**. They form the safety, portability, evidence, runtime, and recovery substrate consumed by later phases. The audit does identify a documentation problem: their historical milestone boundaries are less explicit than the current P9–P17 contracts. The correct remediation is to create a durable capability ledger and integration tests, not to delete the foundation blindly.
-
-## P8–P12 — Operational control layer
-
-| Phase | Current value | Current consumer | Evidence posture | Disposition |
-|---|---|---|---|---|
-| P8 | Remote mutation boundary | runtime–adapter bridge and GitHub reference path | Provider-backed authorized update path exists; higher-impact mutations remain gated | **RETAIN + HARDEN** |
-| P9 | Development Task Controller | central task lifecycle | Explicit controller contract and later orchestration/readiness consumers | **RETAIN — CORE** |
-| P10 | Context continuity and recovery | state resolver, onboarding, handoff | Closed with primary CI plus external reusable-workflow proof | **RETAIN — CORE** |
-| P11 | Federation and self-healing context | repository-first recovery, deterministic derived healing, AI handoff | Closed with recovery/self-healing/federation evidence | **RETAIN — CORE** |
-| P12 | Operational Intelligence | controller, orchestration, failure/recovery, scheduler/worker | Fresh CI evidence and downstream P13/P14/P17 consumption | **RETAIN — CORE** |
-
-### P8–P12 conclusion
-
-These phases provide the operational control plane. They are not obsolete merely because P16/P17 are more visible. P16/P17 depend on the controller, verification, security, persistence, and runtime boundaries established here.
-
-## P13–P15 — Integration and human interface layer
-
-| Phase | Current value | Current consumer | Evidence posture | Disposition |
-|---|---|---|---|---|
-| P13 | Autonomous Development Orchestration | controller/runtime candidate selection | Fresh managed-project read-only proof plus CI | **RETAIN + E2E HARDEN** |
-| P14 | Adaptive Verification & bounded self-healing | verification and failure-repair path | Fresh CI; repairs remain deliberately bounded | **RETAIN + E2E HARDEN** |
-| P15 | Human Language Interpretation v2 | normative top-level semantic entry | Merged to main after feature-branch verification | **RETAIN — TOP-LEVEL** |
-
-### P13–P15 conclusion
-
-These phases are the bridge between user intent and the lower-level control plane. Their biggest remaining weakness is not missing contracts; it is insufficient proof of the **whole pipeline** on realistic managed software work.
+| Phase | Current architectural value | Disposition | Closure evidence / remaining focus |
+|---|---|---|---|
+| P0 | Bootstrap, operating rules, project entry | RETAIN + CONSOLIDATE | Current `AGENTS.md` and repository-local bootstrap remain active |
+| P1 | Durable portable project context | RETAIN | `.ai/` + repository-first recovery remain core |
+| P2 | Verification/evidence discipline | RETAIN + HARDEN | Current CI and completion contracts consume it |
+| P3 | Security/authorization foundations | RETAIN | Security Gate and unchanged-authority invariants remain active |
+| P4 | Bounded autonomous development model | RETAIN + CONSOLIDATE | Later controller/runtime/orchestration layers depend on bounded work |
+| P5 | Execution/runtime boundary | RETAIN | Runtime remains below controller and authorization boundaries |
+| P6 | Multi-AI portability/adapters | RETAIN | Vendor-neutral recovery and adapters remain architectural requirements |
+| P7 | Onboarding/automation/project integration | RETAIN + HARDEN | Managed-project workflows and context synchronization consume it |
+| P8 | Remote mutation boundary | RETAIN + HARDEN | Higher-impact operations remain explicitly gated |
+| P9 | Development Task Controller | RETAIN — CORE | Central lifecycle/control-plane dependency |
+| P10 | Context continuity/recovery | RETAIN — CORE | Fresh-AI repository recovery remains a defining invariant |
+| P11 | Federation/self-healing context | RETAIN — CORE | Recovery and cross-AI continuity remain active |
+| P12 | Operational Intelligence | RETAIN — CORE | Scheduling, runtime, failure handling and orchestration consume it |
+| P13 | Autonomous Development Orchestration | RETAIN + E2E HARDEN | Component/managed-project proof exists; whole-pipeline proof remains next maturity gate |
+| P14 | Adaptive Verification & bounded self-healing | RETAIN + E2E HARDEN | Bounded recovery exists; end-to-end failure proof remains next gate |
+| P15 | Human Language Interpretation v2 | RETAIN — TOP-LEVEL | Normative semantic entry for natural language/Hinglish/context |
+| P16 | Semantic Goal-to-Plan Compiler | RETAIN — CORE | Merged to main through PR #9; final source head and applicable CI were verified before closure |
 
 ## Cross-phase findings
 
-### Finding F1 — Foundation is valuable but historically fragmented
+### F1 — No P0–P16 deletion is justified
 
-The current repository documents individual capabilities well, but P0–P7 do not have the same explicit capability-to-consumer closure model now used by later phases.
+Historical numbering is not a dependency graph. A capability may have originated in P0–P7 and still be required by P16/P17.
 
-**Action:** this audit becomes the durable capability ledger. Future work must update it when a foundation capability is changed, consolidated, or deprecated.
+### F2 — Early milestones should be represented by capability contracts
 
-### Finding F2 — Documentation taxonomy is stale in places
+P0–P7 have less uniform milestone-level closure language than later phases. The remedy is consolidation into current contracts and regression coverage, not rewriting history or deleting working foundations.
 
-The README still presents P12/P13-era sections as if they were the primary current roadmap, while `.ai/CURRENT-STATE.md` records P15 as the current mainline milestone and separate P16/P17 branches exist.
+### F3 — Component verification is ahead of whole-system proof
 
-**Action:** normalize top-level documentation so historical milestones remain discoverable without implying that old milestones are the current development target.
+P0–P16 contain substantial deterministic regression and CI evidence. The highest-value remaining gap is system-level proof across human intent, planning, readiness, execution, verification, persistence and recovery.
 
-### Finding F3 — Component-level verification is stronger than system-level proof
+### F4 — Documentation must remain current-state truthful
 
-Many components have deterministic regression checks and fresh CI evidence. The remaining high-value gap is a cross-layer E2E harness proving human request → plan → readiness → controller → bounded runtime → verification → persistence → recovery.
+Current mainline records P16 as closed. P17 is a separate active branch/PR and must not be represented as complete until its post-P16 revalidation and final verification succeed.
 
-**Action:** make Production E2E Harness the first post-P17 maturity track.
+### F5 — Progress after P16/P17 is evidence-driven
 
-### Finding F4 — Do not delete by milestone number
+Do not create milestone numbers for their own sake. The next major engineering target is a Production E2E Harness followed by bounded failure/recovery, long-running fresh-AI continuation, controlled remote mutation maturity, and production release readiness.
 
-A capability may have originated in P0–P7 and still be required by P17. Historical numbering is not a dependency graph.
+## P16 closure evidence
 
-**Action:** deprecate only with repository evidence showing no consumer and no contract dependency.
+P16 was merged to `main` through PR #9 on merge commit `460a212ebb7600619f396a455ac3e47e5a5c80fa`. The verified final source head was `877833ef0f11d5a869284f9b86407c155125d96f`.
 
-### Finding F5 — Production maturity needs evidence, not another milestone pile
+Applicable final-head verification recorded in durable project state:
+- `Verify Development OS Contracts` — run 476 / `34750716230`: success.
+- `Verify Development OS` — run 402 / `34750716222`: success.
+- `Verify P13 External Managed Project` — run 11 / `34750716234`: success.
 
-After P17, progress should be measured by E2E behavior, managed-project proof, failure recovery, long-running continuation, and controlled real mutations—not by inventing additional milestone numbers without closure evidence.
+These are the evidence basis for treating P16 as closed on main.
 
-## Remediation completed by this audit
+## Acceptance of P0–P16
 
-1. Establish this P0–P15 capability-value ledger.
-2. Define explicit dispositions for every phase.
-3. Record the cross-phase gaps that must drive future engineering.
-4. Add a regression guard for the audit's required sections and disposition vocabulary.
-5. Update durable project state so a fresh AI knows that P0–P15 are the foundation to validate and consolidate, not a backlog to blindly rebuild.
+P0–P16 are **GOOD / VERIFIED FOUNDATION** subject to the explicit remaining maturity work identified above. “Good” does not mean every historical component is perfect; it means there is no evidence-backed reason to rebuild the foundation wholesale. Future changes must be gap-driven and must preserve existing security, authorization, evidence, verification, persistence and repository-first recovery boundaries.
 
-## Next engineering gate
-
-The next major development gate is:
+## Next gate
 
 ```text
-P16 final verification
-        ↓
-P16 merge (explicitly authorized)
-        ↓
-P17 revalidation against resulting main
-        ↓
-P17 final verification
-        ↓
-P17 merge (explicitly authorized)
-        ↓
+P0–P16 VERIFIED FOUNDATION
+          ↓
+P17 revalidation + final verification
+          ↓
 Production E2E Harness
-        ↓
-Real managed-project proof
-        ↓
+          ↓
 Failure injection + recovery proof
-        ↓
-Long-running fresh-AI continuation proof
-        ↓
-Controlled remote mutation hardening
-        ↓
-Production readiness release
+          ↓
+Long-running fresh-AI continuation
+          ↓
+Controlled remote mutation maturity
+          ↓
+Production readiness
 ```
-
-The audit is complete when the ledger is durable and regression-guarded. Foundation refactoring continues only when a concrete consumer, duplication, missing integration, or verification gap is demonstrated.
 
 ## Status vocabulary
 
-- **RETAIN** — capability is still required.
-- **RETAIN — CORE** — capability is a direct dependency of the current control plane.
-- **RETAIN + CONSOLIDATE** — capability remains valuable but its historical boundaries should be represented through current contracts.
-- **RETAIN + HARDEN** — capability is required but needs stronger integration or evidence.
-- **RETAIN + E2E HARDEN** — component contract exists; whole-system proof is the remaining gap.
-- **DEPRECATE** — allowed only after dependency and contract evidence proves the capability is unused/obsolete.
+- **RETAIN** — still required.
+- **RETAIN — CORE** — direct dependency of current control plane.
+- **RETAIN + CONSOLIDATE** — valuable foundation represented more cleanly by current contracts.
+- **RETAIN + HARDEN** — required but needs stronger evidence/integration.
+- **RETAIN + E2E HARDEN** — component contract is present; system-level proof remains.
+- **DEPRECATE** — permitted only with explicit dependency and behavior evidence proving obsolescence.
