@@ -16,7 +16,7 @@
 
 - Objective: support independently authorized GitHub accounts/installations through a GitHub App-oriented authentication boundary while keeping credentials separate from DevOS authorization.
 - Branch: `feat/github-identity-token-control-plane`.
-- Current branch head: `ff28f9c164a2eb00629e6fef6ba01569d6368378`.
+- Current branch head: `d5c12a87b7b15787c8e7dfb6857563798c3e7b59`.
 - Added normative contract: `core/devos-github-identity-token-control-plane.md`.
 - Added side-effect-free primitives: `tools/devos-github-auth.py`.
 - Added deterministic authentication regression suite: `tools/test-devos-github-auth.py`.
@@ -30,7 +30,17 @@
 - Added durable session provenance for the authentication/control-plane work.
 - The first fresh runtime-contract CI attempt exposed a repository-input validation bug for `owner/../repo`; the validator was hardened and the next exact-head control-plane run passed.
 - Fresh exact-head control-plane verification for `ff28f9c164a2eb00629e6fef6ba01569d6368378`: Verify DevOS GitHub Identity and Token Control Plane run `34783664764` / #20 — `success`; all three control-plane test steps passed, including the GitHub-hosted runtime auth contract.
-- Fresh companion verification currently observed: Development OS `34783664782` / #606 success; Current-Source Evidence `34783664841` / #63 success; Living Engineering Map `34783664783` / #33 success; MCP Repository Create `34783664828` / #60 success; Trust-First Audit `34783664787` / #147 success. Development OS Contracts `34783664781` / #684 was still in progress at the last observation.
+- Fresh companion verification observed at that point: Development OS `34783664782` / #606 success; Current-Source Evidence `34783664841` / #63 success; Living Engineering Map `34783664783` / #33 success; MCP Repository Create `34783664828` / #60 success; Trust-First Audit `34783664787` / #147 success. Development OS Contracts `34783664781` / #684 was still in progress at the last observation.
+
+## External GitHub App activation — user-reported configuration
+
+- User reports that GitHub App **DevOS GitHub** was created under `@zzpsah`.
+- Reported App ID: `4934164`.
+- Reported Client ID: `Iv23lisO9Up8GMiMXqX9`.
+- User reports the App was installed on `zzpsah/chatgpt-development-os` with repository-scoped installation.
+- User reports the GitHub Actions secrets `DEVOS_GITHUB_APP_ID` and `DEVOS_GITHUB_APP_PRIVATE_KEY` were added to the repository.
+- The actual secret values are not persisted here and must never enter Git, `.ai`, logs, evidence, or model output.
+- These external setup facts are classified as **User-Reported** until a fresh live workflow proves them against GitHub.
 
 ## GitHub-hosted runtime model
 
@@ -48,7 +58,8 @@ The manual workflow is deliberately read-only: it authenticates, discovers the i
 ## Live activation boundary
 
 - The GitHub repository-side runtime implementation is present and its contract is freshly CI-verified.
-- Live proof still requires a real GitHub App registered and installed on the target repository/account, Actions secrets configured, and the manual runtime workflow completing successfully against that installation.
+- User-reported GitHub App registration, installation, and Actions-secret configuration are now recorded as external setup facts.
+- Live proof still requires the manual runtime workflow completing successfully against the installed App and target repository.
 - Browser OAuth callback configuration is **not required for the GitHub-hosted Actions runtime**. A callback remains relevant only if a separate interactive web/OAuth client is introduced.
 - `production_ready=false` and `live_provider_proven=false` remain unchanged until fresh live evidence exists.
 
@@ -104,4 +115,4 @@ Historical evidence snapshots remain dated and do not auto-refresh when source a
 
 ## Next bounded direction
 
-Complete remaining fresh companion CI, then configure the external GitHub App + Actions secrets and execute the manual read-only runtime workflow against the intended repository. Do not claim live GitHub authentication or production readiness until that live evidence exists. Do not create P18/P19 merely for bookkeeping.
+Execute the existing manual GitHub-hosted runtime workflow against `zzpsah/chatgpt-development-os` to obtain fresh live installation-token/read-only provider evidence. Do not claim live GitHub authentication or production readiness until that live evidence exists. Do not create P18/P19 merely for bookkeeping.
