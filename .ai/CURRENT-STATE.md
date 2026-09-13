@@ -7,10 +7,11 @@
 - P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P12 Operational Intelligence remains the advisory/runtime-observability and durable recovery substrate used by later governed execution paths.
 - P9 through P17 are complete on `main` at their stated evidence levels.
-- Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, and Current-Source Evidence Refresh are closed at their stated evidence levels.
-- **Active unnumbered bounded objective: MCP/App Permission Control Plane + Multi-Project Agent Isolation.**
-- No new numbered phase is created or implied.
-- DevOS is intended to operate as a long-lived agent across multiple repositories without letting provider write access, API tokens, AI accounts, chats, or model memory become authority.
+- Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, Current-Source Evidence Refresh, and MCP/App Permission Control Plane + Multi-Project Agent Isolation are closed at their stated evidence levels.
+- PR #27 merge commit: `2bb8d978113b64ab88d6ba5f8e357fa595162c9c`.
+- PR #27 exact-head source: `99a48fea51bd2d9d33860115c0212f7b25ca4ad8`.
+- PR #27 exact-head verification passed: Full DevOS 543, Contracts 621, Trust-First 84, MCP Permission Control Plane 3, Remote Resource Permission Governance 4, MCP Repository Create 13, Current-Source Evidence 16.
+- No new numbered phase is active or implied by this closure state.
 
 ## Canonical governed path
 
@@ -18,37 +19,26 @@
 
 Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, continuation packets, and simulated provider evidence never manufacture permission.
 
-## Active objective — MCP/App Permission Control Plane
+## MCP/App Permission Control Plane — CLOSED AT CURRENT EVIDENCE LEVEL
 
-Purpose: connect the host-neutral MCP/App boundary to a provider-independent remote-resource permission control plane so remote operations are authorized per exact project, repository, resource, capability, workflow, impact, and freshness scope.
+Purpose: connect the host-neutral MCP/App boundary to provider-independent remote-resource permission governance and multi-project agent isolation.
 
-Governed remote capabilities:
-- `repository.create` — HIGH
-- `repository.delete` — DESTRUCTIVE
-- `branch.create` — LOW by default; higher for protected/default/release/production targets
-- `branch.update` — HIGH for canonical/protected/release/production refs
-- `branch.force_update` — DESTRUCTIVE
-- `branch.delete` — DESTRUCTIVE
+Governed capabilities remain distinct: `repository.create`, `repository.delete`, `branch.create`, `branch.update`, `branch.force_update`, and `branch.delete`.
 
 Core control flow:
 
 `AI host → MCP/App adapter → P15 → P16 → P17 → Actionable Hold / Scoped Approval → Remote Permission Control Plane → provider adapter → fresh readback → durable evidence`
 
-The MCP/App adapter is an interface, not an authority. Existing `devos.create_repository` remains host-neutral and provider-nonexecuting. The new control-plane gateway adds the missing authorization boundary before provider execution.
+The MCP/App adapter is an interface, not an authority. Provider/API write permission is technical capability only and is never DevOS authorization.
 
-Implemented on working branch:
-- `tools/devos-mcp-governed-gateway.py`
-- `tools/devos-governed-continuation.py`
-- `tools/test-devos-mcp-governed-gateway.py`
-- `tools/test-devos-governed-continuation.py`
-- `docs/DEVOS-MCP-PERMISSION-CONTROL-PLANE.md`
-- `.github/workflows/verify-mcp-permission-control-plane.yml`
-- `core/remote-resource-permission-governance.md`
-- `tools/devos-remote-permission-check.py`
-- `tools/test-devos-remote-permission-check.py`
-- multi-project isolation and permission-control documentation/checkpoint files
-
-The provider-neutral remote permission policy defines exact capability separation and consequence disclosure. Provider/API write permission is technical capability only and is never DevOS authorization.
+Preserved safety boundaries:
+- `FULL APPROVAL != BLANKET PERMISSION`
+- `PROVIDER CREDENTIAL != DEVOS AUTHORIZATION`
+- `REPOSITORY DELETE != REPOSITORY CREATE`
+- `BRANCH DELETE != BRANCH CREATE`
+- `NORMAL BRANCH UPDATE != FORCE UPDATE`
+- `PROVIDER RESPONSE != COMPLETION PROOF`
+- `UNCERTAIN MUTATION != AUTOMATIC RETRY`
 
 ## Multi-project agent isolation
 
@@ -60,27 +50,20 @@ A long-lived DevOS agent may manage multiple projects concurrently, but:
 
 `Project A credentials/provider binding != Project B credentials/provider binding`
 
-Approval cannot move between repositories, branches, capabilities, or workflows. `continue` can reuse an approval only while the exact approved scope and freshness/security conditions remain valid. A new/high-impact/out-of-scope action becomes an actionable HOLD requiring fresh approval.
+Approval cannot move between repositories, branches, capabilities, or workflows. `continue` may reuse an approval only while the exact approved scope and freshness/security conditions remain valid. A new/high-impact/out-of-scope action becomes an actionable HOLD requiring fresh approval.
 
 ## Provider credentials / token boundary
 
-Provider/API tokens are technical capabilities only.
+Provider/API tokens are technical capabilities only. They are never DevOS authorization and must never be copied into `.ai/`, MCP arguments, logs, generated evidence, or model output.
 
-They are never DevOS authorization and must never be copied into `.ai/`, MCP arguments, logs, generated evidence, or model output.
+Provider-specific permission names remain adapter concerns and must be verified against the current provider API before live activation.
 
-The provider permission set should be minimum necessary for the enabled adapter capabilities. Provider-specific permission names remain adapter concerns and must be verified against the current provider API before live activation.
-
-## Verification boundary
-
-The control-plane work is **implemented but pending final exact-head independent verification**.
-
-No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation has been performed for this objective.
-
-## Existing production-readiness boundary
+## Production-readiness boundary
 
 - `production_ready = false`.
 - `live_provider_proven = false`.
 - Controlled remote mutation remains provider-simulated / contract-level evidence.
+- No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation was performed for PR #27.
 - Provider response is attempt evidence, not completion proof.
 - Uncertain mutation is not blindly replayed.
 - Historical evidence remains pinned and is never silently rewritten.
@@ -104,3 +87,7 @@ No private AI memory is authoritative project state.
 
 Stable AI discovery path: `docs/handoff/README.md`.
 Historical evidence snapshots remain dated and do not auto-refresh when source advances. Exact implementation remains authoritative in Git history.
+
+## Next bounded direction
+
+Do not create P18/P19 merely for bookkeeping. Continue with consolidation/evidence-hardening and the next repository-supported bounded objective only after inspecting current `main`, open PRs, CI, and durable task state.
