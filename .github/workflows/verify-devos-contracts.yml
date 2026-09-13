@@ -42,6 +42,12 @@ jobs:
           python tools/test-devos-audit.py
           python tools/test-foundation-health.py
 
+      - name: Verify Cross-Host Recovery Friction & Onboarding
+        run: |
+          python tools/test-host-profile.py
+          python tools/test-fresh-ai-recovery.py
+          python tools/test-recovery-friction.py
+
       - name: Verify Human Language Execution Engine
         run: python tools/verify-human-language-engine.py
 
