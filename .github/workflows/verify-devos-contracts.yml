@@ -34,6 +34,9 @@ jobs:
       - name: Test Human Language Execution Engine v2 interpreter
         run: python tools/test-human-language-interpreter.py
 
+      - name: Test Human Language Execution Engine v2 corpus
+        run: python tools/test-human-language-v2-corpus.py
+
       - name: Verify Human Language v2 safety invariants
         run: python tools/test-human-language-v2-safety.py
 
