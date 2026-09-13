@@ -2,6 +2,7 @@
 """Executable P12/P16 controller, OI, and runtime-handoff integration checks."""
 from __future__ import annotations
 
+import copy
 import importlib.util
 from pathlib import Path
 
@@ -77,7 +78,13 @@ def main() -> None:
     assert compiled_decision["decision"] == "EXECUTION_CANDIDATE"
     assert compiled_decision["task_id"] == first["id"]
     assert compiled_decision["compiled_step"]["verification"] == first["verification"]
+    assert compiled_decision["compiled_step"]["stop_or_escalate_if"] == first["stop_or_escalate_if"]
+    assert compiled_decision["compiled_step"]["expected_evidence"] == first["expected_evidence"]
+    assert compiled_decision["compiled_step"]["execution_evidence"] is False
+    assert compiled_decision["compiled_plan"]["constraints"] == plan["constraints"]
+    assert compiled_decision["compiled_plan"]["verification_requirements"] == plan["verification_requirements"]
     assert compiled_decision["compiled_plan"]["execution"] == "NONE"
+    assert compiled_decision["compiled_plan"]["execution_evidence"] is False
     assert compiled_decision["execution"] == "NONE"
     assert handoff.build_handoff(compiled_decision)["status"] == "READY_FOR_RUNTIME"
 
@@ -89,6 +96,7 @@ def main() -> None:
     })
     assert second_decision["decision"] == "EXECUTION_CANDIDATE"
     assert second_decision["task_id"] == second["id"]
+    assert second_decision["compiled_step"]["depends_on"] == [first["id"]]
     assert second_decision["compiled_step"]["impact"] == "LOW_IMPACT_MUTATION"
 
     # A non-PLANNED compiler envelope cannot become work.
@@ -103,6 +111,31 @@ def main() -> None:
     assert clarify_decision["decision"] == "BLOCKED"
     assert "COMPILED_PLAN_NOT_PLANNED" in clarify_decision["reason"]
     assert clarify_decision["execution"] == "NONE"
+
+    # A PLANNED envelope carrying unresolved ambiguity is internally inconsistent.
+    ambiguous = copy.deepcopy(plan)
+    ambiguous["ambiguity"] = ["which docs?"]
+    ambiguous_decision = controller.decide(compiled_payload | {"compiled_plan": ambiguous})
+    assert ambiguous_decision["decision"] == "BLOCKED"
+    assert "COMPILED_PLAN_PLANNED_WITH_AMBIGUITY" in ambiguous_decision["reason"]
+
+    # Completed-step evidence must itself satisfy dependency closure.
+    impossible_completion = controller.decide(compiled_payload | {
+        "completed_steps": [second["id"]],
+        "capabilities": {first["id"]: "AVAILABLE"},
+    })
+    assert impossible_completion["decision"] == "BLOCKED"
+    assert any(reason.startswith("COMPLETED_STEP_DEPENDENCY_INCOMPLETE=") for reason in impossible_completion["reason"])
+
+    # A tampered PLANNED envelope cannot contradict its own negative constraints.
+    constrained = copy.deepcopy(plan)
+    constrained["constraints"] = ["DO_NOT_DEPLOY"]
+    constrained["steps"][1]["objective"] = "deploy production"
+    constrained["steps"][1]["impact"] = "PRODUCTION_OR_DESTRUCTIVE"
+    constrained["steps"][1]["authorization_required"] = True
+    constraint_decision = controller.decide(compiled_payload | {"compiled_plan": constrained})
+    assert constraint_decision["decision"] == "BLOCKED"
+    assert "COMPILED_PLAN_CONSTRAINT_CONFLICT=DO_NOT_DEPLOY:S2" in constraint_decision["reason"]
 
     # High-impact compiler metadata strengthens gates; it never manufactures permission.
     high = compiler.compile_plan("FEATURE_CHANGE", "deploy production", "DEVOS", [], [])
