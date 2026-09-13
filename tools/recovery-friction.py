@@ -34,9 +34,6 @@ REQUIRED_REPOSITORY_INPUTS = (
 CRITICAL_RECOVERY_CAPABILITIES = {
     "project_discovery", "bootstrap", "inspection", "state_resolution",
 }
-CONTINUATION_CAPABILITIES = {
-    "intent_routing", "execution", "verification", "persistence",
-}
 SEVERITY = {"PASS": 0, "WARN": 1, "UNKNOWN": 2, "BLOCKED": 3}
 
 
@@ -70,12 +67,6 @@ def _git_head(root: Path) -> str | None:
     except OSError:
         return None
     return result.stdout.strip() if result.returncode == 0 else None
-
-
-def _status(items: list[str], critical: bool = False) -> str:
-    if not items:
-        return "PASS"
-    return "BLOCKED" if critical else "UNKNOWN"
 
 
 def _worst(*statuses: str) -> str:
@@ -137,19 +128,27 @@ def analyze(root: Path, profile: dict[str, Any], *, expected_head: str | None = 
             else:
                 noncritical_missing.append(name)
 
-    repository_status = "BLOCKED" if blocked else _status(missing_inputs or ambiguous)
-    profile_status = "BLOCKED" if profile_errors or critical_missing else (
-        "WARN" if noncritical_missing or delegatable else "PASS"
-    )
+    if blocked:
+        repository_status = "BLOCKED"
+    elif missing_inputs or ambiguous:
+        repository_status = "UNKNOWN"
+    else:
+        repository_status = "PASS"
+
+    if profile_errors or critical_missing:
+        profile_status = "BLOCKED"
+    elif noncritical_missing or delegatable:
+        profile_status = "WARN"
+    else:
+        profile_status = "PASS"
+
     recovery_status = _worst(repository_status, "BLOCKED" if critical_missing else "PASS")
-    if recovery_status == "PASS" and delegatable & CRITICAL_RECOVERY_CAPABILITIES:
+    if recovery_status == "PASS" and set(delegatable) & CRITICAL_RECOVERY_CAPABILITIES:
         recovery_status = "WARN"
 
     continuation_status = recovery_status
     if continuation_status == "PASS" and (noncritical_missing or delegatable):
         continuation_status = "WARN"
-    elif continuation_status == "WARN":
-        pass
 
     friction = {
         "missing_repository_inputs": len(missing_inputs),
@@ -164,7 +163,7 @@ def analyze(root: Path, profile: dict[str, Any], *, expected_head: str | None = 
     overall = _worst(repository_status, profile_status, recovery_status, continuation_status)
     return {
         "protocol": PROTOCOL,
-        "repository": CANONICAL_REPOSITORY,
+        "canonical_repository": CANONICAL_REPOSITORY,
         "mode": "READ_ONLY",
         "authority": "UNCHANGED",
         "authorization": "UNCHANGED",
@@ -175,7 +174,7 @@ def analyze(root: Path, profile: dict[str, Any], *, expected_head: str | None = 
         "overall": overall,
         "recovery_status": recovery_status,
         "continuation_status": continuation_status,
-        "repository": {
+        "repository_state": {
             "status": repository_status,
             "head": head,
             "expected_head": expected,
