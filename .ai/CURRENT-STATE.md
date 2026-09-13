@@ -82,6 +82,10 @@ Still unproven or unavailable unless separately explicitly authorized/bounded:
 
 ## Active maturity gate — Production-Readiness Evidence Matrix & Limitations
 
+Implementation is present at v1; final PR/head CI closure remains pending.
+See `config/readiness-evidence.json`, `tools/verify-readiness-evidence.py`, and `docs/PRODUCTION-READINESS-EVIDENCE.md`.
+The offline verifier covers 15 capability families and rejects unsupported evidence promotion. VALID never means production ready. Bootstrap checks are now included in primary CI.
+
 Goal: produce an evidence-based readiness view rather than a blanket “production ready” label.
 
 The matrix must distinguish at least:

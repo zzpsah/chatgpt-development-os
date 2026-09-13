@@ -1,6 +1,7 @@
 # DevOS Tasks
 
 ## Active
+- Matrix v1 implementation and negative regressions are present; take fresh Contracts, Full DevOS and External Managed Project verification on the final PR source head before closure.
 - **Production-Readiness Evidence Matrix & Limitations** is the active maturity gate after verified Controlled Remote Mutation Proof closure.
 - Preserve P11 Federation & Self-Healing Context v1 as the repository-first recovery/revalidation baseline.
 - Inventory major DevOS capability families and classify each as deterministic/component proven, integrated proven, real managed-project read-only proven, provider-simulated mutation proven, live-provider mutation proven, or unproven.

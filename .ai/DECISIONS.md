@@ -1,5 +1,13 @@
 # Decisions
 
+## Readiness evidence v1
+- Machine-readable inventory: `config/readiness-evidence.json`; offline verifier: `tools/verify-readiness-evidence.py`.
+- VALID means consistent historical evidence classification, not current runtime verification or production readiness.
+- All live-mutation and production claims remain false in v1; a reviewed future protocol and separately authorized evidence are required to expand them.
+- Archived run/head/test references remain historical. No automatic claim refresh occurs when CI passes on a later head.
+- Foundation bootstrap now participates in Contracts and Full CI; diagnostics remain read-only.
+- Following matrix closure, prioritize Foundation Health & State Consistency with universal AI portability preserved.
+
 ## Durable project state authority
 - DevOS project-local `.ai` is the portable durable context layer.
 - Source tree + Git are authoritative for implementation state and exact changes.

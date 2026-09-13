@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'config/readiness-evidence.json'
+      - 'core/production-readiness-evidence.md'
+      - 'tools/verify-readiness-evidence.py'
+      - 'tools/test-readiness-evidence.py'
       - 'tools/verify-managed-project-orchestration.py'
       - 'tools/production-e2e-harness.py'
       - 'tools/verify-production-e2e-managed-project.py'
