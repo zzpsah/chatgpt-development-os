@@ -8,6 +8,9 @@ on:
         required: true
         default: 'zzpsah/chatgpt-development-os'
         type: string
+  push:
+    branches:
+      - feat/github-identity-token-control-plane
 
 permissions:
   contents: read
@@ -34,4 +37,4 @@ jobs:
           DEVOS_GITHUB_APP_PRIVATE_KEY: ${{ secrets.DEVOS_GITHUB_APP_PRIVATE_KEY }}
         run: >-
           python tools/devos-github-actions-auth.py
-          --repository "${{ inputs.repository }}"
+          --repository "${{ inputs.repository || 'zzpsah/chatgpt-development-os' }}"
