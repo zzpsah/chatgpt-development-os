@@ -30,6 +30,11 @@
 - Host-neutral MCP/App `repository.create` adapter — PR #22.
 - Current-Source Evidence Refresh — PR #24.
 
+## Platform foundations retained in the durable task map
+- **P11 Federation & Self-Healing Context** remains the repository-first recovery/revalidation/cross-AI continuity baseline.
+- **P12 Operational Intelligence** remains the advisory/runtime-observability and durable recovery substrate used by later governed execution paths.
+- P11/P12 are historical completed foundations; the active work above must not be re-labeled as a new numbered phase.
+
 ## Universal portability invariant
 `AI A + Account A → repository → AI B + Account B → correct state recovery → safe continuation`
 

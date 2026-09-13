@@ -5,6 +5,7 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Source tree + Git are authoritative for implementation and exact project state; ChatGPT Memory/chat history are supplementary only.
 - P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline.
+- P12 Operational Intelligence remains the advisory/runtime-observability and durable recovery substrate used by later governed execution paths.
 - P9 through P17 are complete on `main` at their stated evidence levels.
 - Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, and Current-Source Evidence Refresh are closed at their stated evidence levels.
 - **Active unnumbered bounded objective: MCP/App Permission Control Plane + Multi-Project Agent Isolation.**
