@@ -1,0 +1,33 @@
+name: DevOS GitHub App Live Proof (Temporary)
+
+on:
+  push:
+    branches:
+      - feat/github-identity-token-control-plane
+
+permissions:
+  contents: read
+
+jobs:
+  live-proof:
+    name: Live GitHub App read-only proof
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout DevOS
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run deterministic contract checks
+        run: python tools/test-devos-github-actions-auth.py
+
+      - name: Authenticate with GitHub App and verify repository
+        env:
+          DEVOS_GITHUB_APP_ID: ${{ secrets.DEVOS_GITHUB_APP_ID }}
+          DEVOS_GITHUB_APP_PRIVATE_KEY: ${{ secrets.DEVOS_GITHUB_APP_PRIVATE_KEY }}
+        run: >-
+          python tools/devos-github-actions-auth.py
+          --repository zzpsah/chatgpt-development-os
