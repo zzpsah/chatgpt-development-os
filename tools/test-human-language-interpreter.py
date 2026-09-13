@@ -34,4 +34,12 @@ check("check security", ctx, intents=("VALIDATION", "SECURITY_REVIEW"))
 check("continue", {}, decision="CLARIFY")
 high = check("deploy it", ctx)
 assert "HIGH_IMPACT_REQUIRES_AUTHORIZATION_CHECK" in high["ambiguity"]
+
+fresh = check("check repository", {"project": "DEVOS"}, intents=("VALIDATION",))
+assert fresh["objective"] == "check repository", fresh
+assert fresh["context_used"] is False, fresh
+
+continued = check("continue", ctx, intents=("RESUME_WORK", "FEATURE_CHANGE"))
+assert continued["objective"] == ctx["active_objective"], continued
+
 print("human-language-interpreter v2 tests: PASS")
