@@ -1,0 +1,35 @@
+name: Verify Current-Source Evidence
+
+on:
+  push:
+    branches:
+      - feat/current-source-evidence-refresh
+  pull_request:
+    paths:
+      - 'tools/current-source-evidence.py'
+      - 'tools/test-current-source-evidence.py'
+      - '.github/workflows/verify-current-source-evidence.yml'
+      - 'tools/devos-health.py'
+      - 'tools/devos-doctor.py'
+      - 'tools/test-foundation-health.py'
+      - 'core/current-source-evidence.md'
+      - 'docs/CURRENT-SOURCE-EVIDENCE.md'
+      - '.ai/SESSIONS/**'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify readiness evidence ledger
+        run: python tools/verify-readiness-evidence.py
+      - name: Verify current-source evidence packets
+        run: python tools/test-current-source-evidence.py
+      - name: Verify Foundation Health remains conservative
+        run: python tools/test-foundation-health.py
