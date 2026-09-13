@@ -6,6 +6,8 @@ on:
       - 'core/devos-github-identity-token-control-plane.md'
       - 'tools/devos-github-auth.py'
       - 'tools/test-devos-github-auth.py'
+      - 'tools/devos-github-capability-discovery.py'
+      - 'tools/test-devos-github-capability-discovery.py'
       - 'docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md'
       - '.github/workflows/verify-github-auth-control-plane.yml'
       - '.ai/CURRENT-STATE.md'
@@ -27,3 +29,5 @@ jobs:
           python-version: '3.x'
       - name: Verify GitHub auth control plane
         run: python tools/test-devos-github-auth.py
+      - name: Verify GitHub capability discovery bridge
+        run: python tools/test-devos-github-capability-discovery.py
