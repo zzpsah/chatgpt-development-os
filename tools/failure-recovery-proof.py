@@ -5,7 +5,7 @@ This module never grants authority and never executes an action merely because a
 checkpoint exists. It classifies observed E2E failures, records the last safe
 stage, and permits full-path retry only when replay is safe (read-only) and the
 repaired payload is freshly revalidated. Mutation replay is deliberately blocked
-once a mutation runtime attempt has begun or succeeded.
+once a mutation runtime attempt has actually reached the adapter.
 """
 from __future__ import annotations
 
@@ -92,6 +92,10 @@ def classify_failure(result: dict[str, Any]) -> str:
     if stage == "RUNTIME":
         if "UNAVAILABLE" in all_text or "NOT CONFIGURED" in all_text or "FILE NOT FOUND" in all_text:
             return "PROVIDER_OR_RUNTIME_UNAVAILABLE"
+        if "AUTHORIZATION" in all_text:
+            return "AUTHORIZATION_REQUIRED"
+        if "SECURITY" in all_text:
+            return "SECURITY_BLOCKED"
         return "RUNTIME_FAILED"
     if stage == "VERIFICATION":
         return "VERIFICATION_FAILED"
@@ -112,7 +116,6 @@ def _last_safe_stage(result: dict[str, Any]) -> str | None:
     if index == 0:
         return None
     trace = result.get("trace") if isinstance(result.get("trace"), dict) else {}
-    # Walk backwards to the last stage represented by successful evidence.
     mapping = {
         "INTERPRETATION": "interpretation",
         "PLANNING": "plan",
@@ -141,7 +144,11 @@ def build_checkpoint(payload: dict[str, Any], result: dict[str, Any]) -> dict[st
     runtime_status = runtime.get("status")
     failed_stage = str(result.get("stage") or "UNKNOWN")
 
-    mutation_attempted = mutation and failed_stage in {"RUNTIME", "VERIFICATION", "PERSISTENCE", "RECOVERY"}
+    # A mutation request rejected by harness preflight has not reached the adapter.
+    # Only observed runtime evidence proves a mutation attempt actually occurred.
+    mutation_attempted = mutation and bool(runtime) and failed_stage in {
+        "RUNTIME", "VERIFICATION", "PERSISTENCE", "RECOVERY"
+    }
     if mutation_attempted:
         replay_policy = "NO_REPLAY_HOLD"
     elif failure_class == "REPOSITORY_DRIFT":
