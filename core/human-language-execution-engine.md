@@ -1,4 +1,8 @@
-# Human Language Execution Engine v1
+# Human Language Execution Engine v2
+
+## Status
+
+Normative top-level DevOS input layer. Every human-originated DevOS request enters through this contract before project workflow selection, planning, execution, verification, or persistence.
 
 ## Purpose
 
@@ -6,141 +10,118 @@ The Human Language Execution Engine converts natural-language requests into safe
 
 Core transformation:
 
-`Human phrase → Canonical intent → Workflow → Scope → Authorization → Evidence → Action → Verification → Persistence`
+`Human phrase + conversation context + durable project state → Canonical intent(s) + constraints + ambiguity → Project/Workflow → Scope → Authorization → Evidence → Action → Verification → Persistence`
 
-The engine is an interpretation and routing layer. It does not replace project routing, source inspection, workflow rules, security controls, or verification.
+Human-language interpretation is not an optional helper or side feature. It is the top-level semantic interface of DevOS. Stance codes, host adapters, project routers, task controllers, workflows, and runtimes consume the interpreted objective; they do not bypass it for ordinary human requests.
 
-## 1. Canonical intent
+The engine never grants authority. It does not replace source inspection, project identity evidence, workflow rules, security controls, or verification.
 
-Natural-language variants should normalize to a small set of stable engineering intents. Examples:
+## Canonical intents
 
-| Canonical intent | Typical language | Workflow |
-|---|---|---|
-| `RESUME_WORK` | continue, resume, pick up where we stopped | `workflows/resume.md` |
-| `BUG_FIX` | fix this, this is broken, remove this bug | `workflows/bug-fix.md` |
-| `FEATURE_CHANGE` | add, build, change, implement | `workflows/feature.md` |
-| `VALIDATION` | check it, test it, is it correct? | `workflows/review.md` + applicable tests |
-| `SECURITY_REVIEW` | security dekh, check security | `workflows/security.md` |
-| `INVESTIGATE` | why is this happening? what is wrong? | inspect → diagnose → explain |
-| `QUALITY_IMPROVEMENT` | make it better/professional | inspect → prioritize → improve |
-| `DATABASE_IMPLEMENTATION` | db bana de, database change | inspect schema → design → migration → verify |
-| `EXPLAIN_CHANGE` | what did you do? explain this | inspect change → explain evidence |
+Stable intents include `RESUME_WORK`, `BUG_FIX`, `FEATURE_CHANGE`, `VALIDATION`, `SECURITY_REVIEW`, `INVESTIGATE`, `QUALITY_IMPROVEMENT`, `DATABASE_IMPLEMENTATION`, and `EXPLAIN_CHANGE`. Wording, language, slang, emotion, spelling quality, or brevity must not redefine authorization.
 
-The canonical intent is stable even when the user's wording, language, emotion, or slang changes.
+## Contextual interpretation
 
-## 2. Interpretation rules
+v2 treats short and elliptical language as first-class input. Phrases such as `continue`, `kr do`, `wahi continue`, `same wala`, `jo error tha fix`, and `pehle wala` may inherit a referent only from explicit available context such as the previous interpreted intent, active objective, resolved project, or durable project state.
 
-1. Interpret meaning, not exact keywords.
-2. Use the current project context and conversation context to disambiguate.
-3. Treat slang, Hinglish, humor, frustration, and profanity as valid language signals.
-4. Separate emotional signal from technical intent.
-5. Do not treat emotional intensity as authorization.
-6. If multiple canonical intents are clearly present, compose them in a safe order rather than forcing the user to repeat themselves.
-7. If ambiguity could select the wrong project or materially change a technical outcome, clarify before acting.
-8. Preserve explicit user constraints and project constraints.
+The interpreter must:
 
-## 3. Intent normalization
+1. interpret meaning rather than exact keywords;
+2. tolerate common Hinglish/code-switching, shorthand, spelling variation, and incomplete conversational phrasing;
+3. resolve pronouns/deictic phrases (`ye`, `wo`, `wahi`, `this`, `that`, `same`) only when a usable referent exists;
+4. preserve corrections and negative constraints such as `deploy mat karna`;
+5. support safe multiple-intent composition rather than dropping compatible intents;
+6. distinguish interpretation confidence from technical evidence;
+7. clarify when project, intent, or referent ambiguity is material;
+8. never infer high-impact authorization from context, urgency, profanity, or prior low-impact authorization.
 
-Normalization should produce a structured internal representation conceptually equivalent to:
+## Top-level entry contract
+
+For human-originated work the default DevOS path is:
+
+`Human input → Human Language Execution Engine → Project Router / State Resolver → Development Task Controller → bounded workflow/runtime → Verification + Security → durable state`
+
+The selected repository and its project-local `.ai/` context remain authoritative after project resolution. The interpreter may use context to resolve language, but it must not invent a project identity or override repository evidence.
+
+A stance such as `DEVOS::CONTINUE` or `DEVOS::GOD` modifies operating posture after semantic interpretation; it is not a separate language bypass. Likewise, host-specific AI interpretation may enrich semantics, but its output must conform to this contract before technical action.
+
+## Executable interpreter
+
+`tools/human-language-interpreter.py` provides the deterministic v2 reference interpreter for common language forms. It emits a structured envelope containing:
 
 ```yaml
-intent:
-  canonical: FEATURE_CHANGE
-  confidence: HIGH | MEDIUM | LOW
-  user_phrase: "the original request"
-  emotional_signal: NONE | URGENT | FRUSTRATED | PRAISE | OTHER
-  project_reference: "resolved project or unknown"
-  scope: "known scope or unknown"
-  authorization: NOT_REQUIRED | REQUIRED | ALREADY_GRANTED
-  workflow: "selected workflow"
+protocol: DEVOS-HUMAN-LANGUAGE-v2
+intents: []
+project: null
+objective: null
+constraints: []
+context_used: false
+confidence: HIGH | MEDIUM | LOW
+ambiguity: []
+decision: INTERPRETED | CLARIFY
+authorization: UNCHANGED
+authority: UNCHANGED
+execution: NONE
 ```
 
-`confidence` describes interpretation confidence, not implementation correctness.
+The reference interpreter is a deterministic minimum behavior contract, not the ceiling of DevOS language understanding. DevOS may evolve richer model-assisted semantic interpretation for multilingual language, corrections, ellipsis, referents, temporal context, intent composition, and conversational continuity. Richer interpretation must preserve the same structured boundaries and must never manufacture authority.
 
-## 4. Multiple intents
+## Short-command rule
 
-When a request contains multiple compatible intents, combine them without losing safety boundaries.
+Shortness alone is not ambiguity. `continue` can be sufficient when the active project/objective is established. Conversely, a long sentence can remain ambiguous. Clarification is required only when unresolved ambiguity could materially select the wrong project, referent, objective, or high-impact action.
 
-Example:
+## Constraints and negation
 
-`"Continue and fix the registration bug, then check security."`
+Negative constraints are durable for the interpreted objective and must not be lost during intent composition. For example:
 
-becomes:
+`pehle wala hi but deploy mat karna`
 
-`RESUME_WORK → BUG_FIX → SECURITY_REVIEW → VALIDATION`
+may resolve the prior objective while adding `DO_NOT_DEPLOY`. A negative constraint never becomes a positive authorization later merely because work continues.
 
-The engine should not silently broaden a request into unrelated feature work.
+## Multiple intents
 
-## 5. Authorization boundary
+Compatible intents must compose safely. For example, `continue, fix the error, then check security` can normalize to `RESUME_WORK → BUG_FIX → SECURITY_REVIEW → VALIDATION` when context supports that ordering. Composition must preserve constraints, project identity, and authorization boundaries and must not silently broaden into unrelated work.
 
-Interpretation does not grant authority.
+## Authorization boundary
 
-- Reading, analysis, explanation, and ordinary validation may proceed when appropriate.
-- Code changes require the authorization implied by the current request/workflow.
-- Production-impacting, destructive, irreversible, security-sensitive, or data-affecting operations require appropriate explicit authorization.
-- A phrase such as `gand faad de`, `bakchodi fix kar`, or other profanity never bypasses a safety gate.
-- **No technical action is justified solely by emotional intensity.** Emotional language may indicate urgency or frustration, but it is never, by itself, permission to change code, data, infrastructure, security controls, or production systems.
+Interpretation does not grant authority. Reading and ordinary analysis may proceed under their normal rules. Production-impacting, destructive, irreversible, security-sensitive, deployment, merge, database, credential, or other high-impact operations remain independently gated. The v2 interpreter explicitly returns `authorization: UNCHANGED`, `authority: UNCHANGED`, and `execution: NONE`.
 
-## 6. Evidence boundary
+**No technical action is justified solely by emotional intensity.** Urgency, frustration, praise, slang, or profanity may affect conversational interpretation but never independently authorizes code, data, infrastructure, security, deployment, or production changes.
 
-For important conclusions, distinguish:
+## Evidence boundary
 
-- **Observed** — directly verified.
-- **Likely** — evidence-supported but not conclusive.
-- **Unknown** — not established.
+For technical conclusions distinguish `Observed`, `Likely`, and `Unknown`. HIGH interpretation confidence does not establish implementation correctness or root cause.
 
-Intent confidence must never be confused with technical evidence. A HIGH-confidence interpretation can still lead to an UNKNOWN technical root cause.
+## Workflow routing
 
-## 7. Workflow routing
+After interpretation:
 
-After normalization:
+1. resolve the project with `core/project-router.md`;
+2. load durable project `.ai` context and recover current state;
+3. select or compose the appropriate workflow;
+4. route `SECURITY_REVIEW` explicitly through `workflows/security.md` and the Security Gate rather than treating security review as a generic workflow;
+5. inspect actual source/config/tests/Git;
+6. determine scope and authorization;
+7. execute the smallest authorized action;
+8. verify with fresh applicable evidence;
+9. persist meaningful semantic progress.
 
-1. Resolve the project with `core/project-router.md`.
-2. Load the project's durable `.ai` context.
-3. Select the appropriate workflow.
-4. Inspect actual source/configuration/tests/Git as required.
-5. Determine scope and authorization.
-6. Execute the smallest appropriate action when authorized.
-7. Verify the result with applicable evidence.
-8. Persist meaningful semantic progress in project context.
+## Verification contract
 
-## 8. Verification contract
+Execution outcomes remain `VERIFIED`, `PARTIAL`, `UNVERIFIED`, or `FAILED`. Never infer success from absence of an error.
 
-Every execution path should end in one of these states:
+## Evolution contract
 
-- `VERIFIED` — appropriate checks provide sufficient evidence for the claim.
-- `PARTIAL` — some checks passed, but meaningful limitations remain.
-- `UNVERIFIED` — the requested outcome has not been adequately checked.
-- `FAILED` — verification demonstrates the intended outcome is not working.
+Human-language interpretation is a continuously evolvable top-level DevOS capability. Future versions may improve language coverage, contextual reasoning, correction handling, multilingual understanding, referent resolution, intent decomposition, and confidence calibration without forcing downstream workflows to change their safety contracts.
 
-Never infer success from the absence of an error message alone.
+Evolution must be regression-tested against prior language behavior. A language upgrade must not weaken project isolation, explicit constraints, authorization, evidence, security, or verification.
 
-## 9. Learning behavior
+## Test corpus
 
-The engine should hide unnecessary internal terminology from the user. When the user asks to learn, it should expose the mapping gradually:
+`tools/test-human-language-interpreter.py` exercises short commands, contextual continuation, Hinglish shorthand, referential language, multi-intent phrases, explicit negative deployment constraints, unknown-context clarification, and high-impact authorization escalation. It runs in the contract CI suite.
 
-`what you said → what DevOS understood → what workflow that means → what was checked → what changed`
+## Safety invariant
 
-This supports progressive developer growth without lowering engineering rigor.
+> **Understand the smallest human phrase that context can safely complete; never complete missing authority.**
 
-## 10. Safety invariant
-
-> **Simple language for the human; rigorous engineering underneath.**
-
-Natural language makes the interface easier. It does not weaken evidence, authorization, security, or verification requirements.
-
-## Scope of v1
-
-Included:
-- canonical intent normalization;
-- workflow routing;
-- multiple-intent composition;
-- authorization preservation;
-- evidence/verification expectations;
-- integration with existing project routing and workflows.
-
-Not included:
-- autonomous interpretation of every possible human phrase;
-- probabilistic model implementation;
-- bypassing project or security rules;
-- claiming application correctness without executing appropriate checks.
+Simple language for the human; rigorous engineering underneath.
