@@ -8,6 +8,17 @@ from typing import Any
 
 SECURITY_RELEVANT = {"HIGH_IMPACT_MUTATION", "SECURITY_SENSITIVE", "PRODUCTION_OR_DESTRUCTIVE"}
 ALLOWED_IMPACTS = {"READ_ONLY", "LOW_IMPACT_MUTATION", "HIGH_IMPACT_MUTATION", "SECURITY_SENSITIVE", "PRODUCTION_OR_DESTRUCTIVE"}
+CONSTRAINT_TERMS = {
+    "DO_NOT_DEPLOY": "deploy",
+    "DO_NOT_PRODUCTION": "production",
+    "DO_NOT_MERGE": "merge",
+    "DO_NOT_DATABASE": "database",
+    "DO_NOT_MIGRATION": "migration",
+    "DO_NOT_DELETE": "delete",
+    "DO_NOT_SECRET": "secret",
+    "DO_NOT_CREDENTIAL": "credential",
+    "DO_NOT_PERMISSION": "permission",
+}
 
 
 def _base(plan: dict[str, Any], step_id: str | None, compiled_head: str | None, current_head: str | None) -> dict[str, Any]:
@@ -33,7 +44,48 @@ def _base(plan: dict[str, Any], step_id: str | None, compiled_head: str | None, 
     }
 
 
+def _has_cycle(steps: dict[str, dict[str, Any]]) -> bool:
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(sid: str) -> bool:
+        if sid in visiting:
+            return True
+        if sid in visited:
+            return False
+        visiting.add(sid)
+        for dep in steps[sid].get("depends_on", []):
+            if visit(str(dep)):
+                return True
+        visiting.remove(sid)
+        visited.add(sid)
+        return False
+
+    return any(visit(sid) for sid in sorted(steps))
+
+
 def _validated_steps(plan: dict[str, Any]) -> tuple[dict[str, dict[str, Any]] | None, str | None]:
+    if plan.get("protocol") != "DEVOS-GOAL-PLAN-v1" or plan.get("decision") != "PLANNED":
+        return None, "PLAN_NOT_PLANNED_OR_PROTOCOL_INVALID"
+    if plan.get("authority") != "UNCHANGED" or plan.get("authorization") != "UNCHANGED":
+        return None, "PLAN_AUTHORITY_BOUNDARY_CHANGED"
+    if plan.get("execution") != "NONE":
+        return None, "PLAN_EXECUTION_ALREADY_CLAIMED"
+    if not isinstance(plan.get("project"), str) or not plan["project"].strip():
+        return None, "PLAN_PROJECT_INVALID"
+    if not isinstance(plan.get("objective"), str) or not plan["objective"].strip():
+        return None, "PLAN_OBJECTIVE_INVALID"
+
+    ambiguity = plan.get("ambiguity", [])
+    if not isinstance(ambiguity, list):
+        return None, "PLAN_AMBIGUITY_INVALID"
+    if any(str(item).strip() for item in ambiguity):
+        return None, "PLANNED_PLAN_HAS_AMBIGUITY"
+
+    constraints = plan.get("constraints", [])
+    if not isinstance(constraints, list) or any(not isinstance(item, str) for item in constraints):
+        return None, "PLAN_CONSTRAINTS_INVALID"
+
     raw_steps = plan.get("steps")
     if not isinstance(raw_steps, list) or not raw_steps:
         return None, "PLAN_STEPS_MISSING_OR_INVALID"
@@ -57,8 +109,20 @@ def _validated_steps(plan: dict[str, Any]) -> tuple[dict[str, dict[str, Any]] | 
         impact = raw.get("impact")
         if impact not in ALLOWED_IMPACTS:
             return None, "PLAN_STEP_IMPACT_INVALID=" + sid
-        if raw.get("authorization_required") not in (True, False):
+        auth_required = raw.get("authorization_required")
+        if auth_required not in (True, False):
             return None, "PLAN_STEP_AUTHORIZATION_FLAG_INVALID=" + sid
+        if impact in SECURITY_RELEVANT and auth_required is not True:
+            return None, "PLAN_HIGH_IMPACT_AUTHORIZATION_INCONSISTENT=" + sid
+        verification = raw.get("verification")
+        if not isinstance(verification, str) or not verification.strip():
+            return None, "PLAN_STEP_VERIFICATION_MISSING=" + sid
+        expected = raw.get("expected_evidence")
+        if not isinstance(expected, list) or not expected or any(not isinstance(item, str) or not item.strip() for item in expected):
+            return None, "PLAN_STEP_EXPECTED_EVIDENCE_INVALID=" + sid
+        stop = raw.get("stop_or_escalate_if")
+        if not isinstance(stop, str) or not stop.strip():
+            return None, "PLAN_STEP_STOP_CONDITION_MISSING=" + sid
         steps[sid] = raw
 
     known_ids = set(steps)
@@ -68,20 +132,30 @@ def _validated_steps(plan: dict[str, Any]) -> tuple[dict[str, dict[str, Any]] | 
                 return None, f"PLAN_DEPENDENCY_UNKNOWN={sid}:{dep}"
             if dep == sid:
                 return None, "PLAN_SELF_DEPENDENCY=" + sid
+    if _has_cycle(steps):
+        return None, "PLAN_DEPENDENCY_CYCLE"
+
+    for constraint in constraints:
+        term = CONSTRAINT_TERMS.get(constraint)
+        if not term:
+            continue
+        for sid, step in steps.items():
+            if step.get("impact") == "READ_ONLY":
+                continue
+            if term in str(step.get("objective", "")).lower():
+                return None, f"PLAN_CONSTRAINT_CONFLICT={constraint}:{sid}"
+
     return steps, None
 
 
 def evaluate(payload: dict[str, Any]) -> dict[str, Any]:
     plan = payload.get("plan") or {}
+    if not isinstance(plan, dict):
+        plan = {}
     step_id = payload.get("step_id")
     compiled_head = payload.get("compiled_repository_head")
     current_head = payload.get("current_repository_head")
     out = _base(plan, step_id, compiled_head, current_head)
-
-    if plan.get("protocol") != "DEVOS-GOAL-PLAN-v1" or plan.get("decision") != "PLANNED":
-        out["status"] = "BLOCKED"
-        out["reasons"].append("PLAN_NOT_PLANNED_OR_PROTOCOL_INVALID")
-        return out
 
     steps, structural_error = _validated_steps(plan)
     if structural_error:
@@ -91,13 +165,19 @@ def evaluate(payload: dict[str, Any]) -> dict[str, Any]:
     assert steps is not None
     out["gates"]["plan"] = True
 
-    step = steps.get(str(step_id))
+    if not isinstance(step_id, str) or not step_id.strip():
+        out["status"] = "BLOCKED"
+        out["reasons"].append("STEP_ID_INVALID")
+        return out
+    step_id = step_id.strip()
+    out["step_id"] = step_id
+    step = steps.get(step_id)
     if not step:
         out["status"] = "BLOCKED"
         out["reasons"].append("STEP_NOT_FOUND")
         return out
 
-    if not compiled_head or not current_head:
+    if not isinstance(compiled_head, str) or not compiled_head.strip() or not isinstance(current_head, str) or not current_head.strip():
         out["status"] = "NEEDS_EVIDENCE"
         out["reasons"].append("REPOSITORY_HEAD_EVIDENCE_MISSING")
         return out
@@ -107,12 +187,27 @@ def evaluate(payload: dict[str, Any]) -> dict[str, Any]:
         return out
     out["gates"]["freshness"] = True
 
-    completed = {str(x) for x in payload.get("completed_steps", [])}
+    completed_raw = payload.get("completed_steps", [])
+    if not isinstance(completed_raw, list) or any(not isinstance(x, str) or not x.strip() for x in completed_raw):
+        out["status"] = "BLOCKED"
+        out["reasons"].append("COMPLETED_STEPS_INVALID")
+        return out
+    completed = {x.strip() for x in completed_raw}
     unknown_completed = sorted(x for x in completed if x not in steps)
     if unknown_completed:
         out["status"] = "BLOCKED"
         out["reasons"].append("COMPLETED_STEP_UNKNOWN=" + ",".join(unknown_completed))
         return out
+    if step_id in completed:
+        out["status"] = "BLOCKED"
+        out["reasons"].append("STEP_ALREADY_COMPLETE")
+        return out
+    for completed_id in sorted(completed):
+        missing = sorted(str(dep) for dep in steps[completed_id].get("depends_on", []) if str(dep) not in completed)
+        if missing:
+            out["status"] = "BLOCKED"
+            out["reasons"].append(f"COMPLETED_STEP_DEPENDENCY_INCOMPLETE={completed_id}:{','.join(missing)}")
+            return out
 
     missing_deps = [str(dep) for dep in step.get("depends_on", []) if str(dep) not in completed]
     if missing_deps:
@@ -121,7 +216,15 @@ def evaluate(payload: dict[str, Any]) -> dict[str, Any]:
         return out
     out["gates"]["dependencies"] = True
 
-    capability = payload.get("capabilities", {}).get(str(step_id))
+    capabilities = payload.get("capabilities", {})
+    authorization_by_step = payload.get("authorization_by_step", {})
+    security_by_step = payload.get("security_gate_by_step", {})
+    if not isinstance(capabilities, dict) or not isinstance(authorization_by_step, dict) or not isinstance(security_by_step, dict):
+        out["status"] = "BLOCKED"
+        out["reasons"].append("READINESS_EVIDENCE_MAP_INVALID")
+        return out
+
+    capability = capabilities.get(step_id)
     if capability != "AVAILABLE":
         out["status"] = "BLOCKED"
         out["reasons"].append("CAPABILITY_NOT_AVAILABLE")
@@ -129,7 +232,7 @@ def evaluate(payload: dict[str, Any]) -> dict[str, Any]:
     out["gates"]["capability"] = True
 
     if step.get("authorization_required") is True:
-        step_auth = payload.get("authorization_by_step", {}).get(str(step_id))
+        step_auth = authorization_by_step.get(step_id)
         if step_auth != "ALREADY_GRANTED":
             out["status"] = "NEEDS_APPROVAL"
             out["reasons"].append("STEP_BOUND_AUTHORIZATION_REQUIRED")
@@ -138,7 +241,7 @@ def evaluate(payload: dict[str, Any]) -> dict[str, Any]:
 
     impact = step.get("impact")
     if impact in SECURITY_RELEVANT:
-        security = payload.get("security_gate_by_step", {}).get(str(step_id))
+        security = security_by_step.get(step_id)
         if security in (None, "UNKNOWN", "NOT_RUN"):
             out["status"] = "NEEDS_EVIDENCE"
             out["reasons"].append("SECURITY_GATE_EVIDENCE_REQUIRED")
@@ -150,18 +253,19 @@ def evaluate(payload: dict[str, Any]) -> dict[str, Any]:
     out["gates"]["security"] = True
 
     verification = step.get("verification")
-    if not isinstance(verification, str) or not verification.strip():
-        out["status"] = "NEEDS_EVIDENCE"
-        out["reasons"].append("VERIFICATION_PATH_MISSING")
-        return out
     out["gates"]["verification"] = True
 
     out["status"] = "READY"
     out["step"] = {
         "id": step.get("id"),
         "objective": step.get("objective"),
+        "depends_on": list(step.get("depends_on", [])),
+        "expected_evidence": list(step.get("expected_evidence", [])),
         "impact": impact,
+        "authorization_required": step.get("authorization_required"),
         "verification": verification,
+        "stop_or_escalate_if": step.get("stop_or_escalate_if"),
+        "execution_evidence": False,
     }
     out["reasons"].append("ALL_P17_GATES_SATISFIED")
     return out
