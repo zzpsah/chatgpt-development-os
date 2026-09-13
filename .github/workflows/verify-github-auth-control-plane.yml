@@ -8,8 +8,12 @@ on:
       - 'tools/test-devos-github-auth.py'
       - 'tools/devos-github-capability-discovery.py'
       - 'tools/test-devos-github-capability-discovery.py'
+      - 'tools/devos-github-actions-auth.py'
+      - 'tools/test-devos-github-actions-auth.py'
       - 'docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md'
+      - 'docs/DEVOS-GITHUB-HOSTED-RUNTIME.md'
       - '.github/workflows/verify-github-auth-control-plane.yml'
+      - '.github/workflows/devos-github-app-runtime.yml'
       - '.ai/CURRENT-STATE.md'
       - '.ai/TASKS.md'
       - '.ai/DECISIONS.md'
@@ -31,3 +35,5 @@ jobs:
         run: python tools/test-devos-github-auth.py
       - name: Verify GitHub capability discovery bridge
         run: python tools/test-devos-github-capability-discovery.py
+      - name: Verify GitHub-hosted runtime auth contract
+        run: python tools/test-devos-github-actions-auth.py
