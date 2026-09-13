@@ -6,8 +6,11 @@ on:
     paths:
       - 'core/devos-universal-project-onboarding.md'
       - 'core/devos-universal-onboarding-policy.md'
+      - 'core/devos-repository-creation-capability.md'
       - 'tools/devos-onboard.py'
       - 'tools/test-devos-onboard.py'
+      - 'tools/devos-create-repository.py'
+      - 'tools/test-devos-create-repository.py'
       - 'docs/AUTO-ONBOARDING.md'
       - '.github/workflows/verify-universal-onboarding.yml'
   workflow_dispatch:
@@ -26,6 +29,8 @@ jobs:
           python-version: '3.12'
       - name: Run deterministic onboarding regression corpus
         run: python tools/test-devos-onboard.py
+      - name: Run deterministic repository-create regression corpus
+        run: python tools/test-devos-create-repository.py
       - name: Verify onboarding contract and policy markers
         run: |
           python - <<'PY'
@@ -36,7 +41,7 @@ jobs:
           required = [
               'AI A + Account A → repository → AI B + Account B → correct recovery → safe continuation',
               'Onboarding is infrastructure establishment, not permission',
-              'NOT INCLUDED IN AUDIT PACK' not in contract,  # marker must not be abused here
+              'NOT INCLUDED IN AUDIT PACK' not in contract,
           ]
           assert required[0] in contract
           assert 'preserved' in contract.lower() and 'fail closed' in contract.lower()
