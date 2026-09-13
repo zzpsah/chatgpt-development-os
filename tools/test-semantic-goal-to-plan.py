@@ -43,6 +43,18 @@ def main():
     check(v["steps"][1]["impact"] == "LOW_IMPACT_MUTATION", "original mutation must retain mutation classification")
     check(v["steps"][1]["depends_on"] == ["S1"], "mutation must depend on read-before-write inspection")
 
+    high = mod.compile_plan("FEATURE_CHANGE", "deploy production", "DEVOS", [], [])
+    check(len(high["steps"]) == 2, "high-impact mutation should receive read-before-write inspection")
+    check(high["steps"][0]["impact"] == "READ_ONLY", "high-impact precondition inspection must remain read-only")
+    check(high["steps"][1]["impact"] == "PRODUCTION_OR_DESTRUCTIVE", "deploy must remain production/destructive")
+    check(high["steps"][1]["authorization_required"] is True, "deploy must require authorization")
+
+    database_read = mod.compile_plan("VALIDATION", "inspect database", "DEVOS", [], [])
+    check(database_read["steps"][0]["impact"] == "READ_ONLY", "inspect database must not be mislabeled as mutation")
+
+    db_block = mod.compile_plan("FEATURE_CHANGE", "update database", "DEVOS", ["DO_NOT_DATABASE"], [])
+    check(db_block["decision"] == "BLOCKED", "database negative constraint must block database mutation")
+
     print("PASS: P16 Semantic Goal-to-Plan Compiler regression corpus")
 
 
