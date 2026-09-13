@@ -233,6 +233,32 @@ AI/engineering judgment is required for semantic architecture, decisions, requir
 
 The master map is a living navigation/design layer, not a competing source of truth. Source code, contracts, tests, Git history, evidence records, and explicit decisions remain authoritative underneath it.
 
+## GitHub Identity & Token Control Plane
+
+GitHub account connectivity is treated as a provider authentication boundary, not an authority shortcut.
+
+```mermaid
+flowchart LR
+    U[User] --> GA[GitHub App authorization / installation]
+    GA --> AT[Short-lived user / installation token]
+    AT --> VA[External secret-vault boundary]
+    VA --> CAP[Non-secret capability discovery]
+    CAP --> B[Project ↔ GitHub identity binding]
+    B --> RPC[DevOS Remote Permission Control Plane]
+    RPC --> P17[P17 readiness]
+    P17 --> EXEC[Bounded provider execution]
+    EXEC --> READ[Fresh GitHub readback]
+    READ --> E[Durable non-secret evidence]
+```
+
+The preferred production model is a GitHub App with fine-grained permissions. Authentication supplies technical provider capability; it never creates DevOS authorization. Installation access tokens are treated as renewable ephemeral credentials, and user access tokens are treated as renewable credentials where configured for expiration.
+
+Project isolation binds the GitHub identity context to the project. Raw access tokens, refresh tokens, App private keys, OAuth client secrets, JWT signing material, and equivalent secrets remain outside Git and durable repository state.
+
+“Full GitHub access” means the maximum capability explicitly granted by GitHub to the authorized user/app installation within its actual account, organization, and repository scope, further constrained by DevOS capability authorization, P17, Security Gate, impact ceiling, freshness, and exact operation scope. It never means a master bypass credential.
+
+Implementation contract: `core/devos-github-identity-token-control-plane.md`; deterministic reference implementation: `tools/devos-github-auth.py`; guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`.
+
 ## Future goals
 
 - **G1 Universal project recovery:** any AI/account/machine recovers correct state without chat-history dependency.
@@ -278,6 +304,7 @@ More autonomy means better planning, recovery, verification, documentation, and 
 - Normative living-state contract: `core/devos-living-state-and-evolution.md`
 - P15 experiment ledger: `docs/DEVOS-INTERPRETER-EXPERIMENT-LEDGER.md`
 - Fresh-AI discovery: `docs/handoff/README.md`
+- GitHub identity/token guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`
 - Current source/project truth: `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, `.ai/DECISIONS.md`, Git/source/tests/CI
 
 ## Final direction
@@ -293,6 +320,7 @@ Vendor-neutral engineering OS
 + multi-project isolation
 + adaptive recovery
 + experiment-driven P15 evolution
++ provider identity and token control plane
 + automatic factual synchronization
 + mandatory durable documentation
 + continuously updated master architecture
