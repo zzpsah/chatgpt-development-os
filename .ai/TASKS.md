@@ -4,6 +4,11 @@
 
 This file tracks **work state**, not normative law. Durable principles and authorization/security decisions live in `.ai/DECISIONS.md` and the relevant core contracts. Source tree + Git/PR metadata remain authoritative for exact implementation/integration state.
 
+## Normative references — not task records
+
+- **Core documentation law:** **What is not written was never done.** The normative definition lives in `.ai/DECISIONS.md` and core living-state contracts.
+- **Core safety invariants:** maintained in `.ai/DECISIONS.md` and the relevant core contracts; they are referenced here for recovery compatibility rather than interleaved with historical task records.
+
 ## Active bounded work
 
 ### AI State Resolver v2
@@ -17,7 +22,7 @@ This file tracks **work state**, not normative law. Durable principles and autho
 
 ### Next bounded integration/cleanup work
 - Treat GitHub Identity & Token Control Plane v1 as merged through PR #32, not as an open implementation objective.
-- Close obsolete replacement PRs #33 and #34; they were created while #32 appeared unmergeable but are no longer integration vehicles.
+- PRs #33 and #34 are obsolete replacement PRs and have been closed.
 - Continue only after inspecting fresh `main`, open PRs, CI, and durable state.
 
 ## Completed — GitHub Identity & Token Control Plane v1
