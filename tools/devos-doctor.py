@@ -2,8 +2,9 @@
 """Human-readable read-only presentation layer for DevOS foundation health.
 
 Truth remains in the Trust-First audit, readiness evidence ledger, and subordinate
-machine-derived health inputs such as recovery friction. This tool only renders
-health output and never grants authority, recomputes recovery truth, or mutates state.
+machine-derived health inputs such as recovery friction and current-source evidence.
+This tool only renders health output and never grants authority, executes tests,
+recomputes evidence truth, or mutates state.
 """
 from __future__ import annotations
 
@@ -51,6 +52,17 @@ def render(report: dict) -> str:
             f"- real_cross_vendor_account_proven: {str(recovery.get('real_cross_vendor_account_proven', False)).lower()}",
         ])
 
+    current = report.get("current_source_evidence")
+    if isinstance(current, dict):
+        lines.extend([
+            "",
+            "Current-source evidence:",
+            f"- packet_status: {current.get('packet_status', 'UNKNOWN')}",
+            f"- current_source_verified: {current.get('current_source_verified', [])}",
+            f"- unresolved_historical_drift: {current.get('unresolved_historical_drift', [])}",
+            f"- rule: {current.get('rule', 'UNKNOWN')}",
+        ])
+
     lines.extend([
         "",
         f"production_ready: {str(report.get('production_ready', False)).lower()}",
@@ -81,12 +93,14 @@ def main() -> int:
     parser.add_argument("--root", default=".")
     parser.add_argument("--no-run-checks", action="store_true")
     parser.add_argument("--host-profile", default="adapters/host-profile.example.json")
+    parser.add_argument("--current-source-packet")
     args = parser.parse_args()
     health = _load_health()
     report = health.derive_health(
         Path(args.root),
         run_checks=not args.no_run_checks,
         host_profile=args.host_profile,
+        current_source_packet=args.current_source_packet,
     )
     print(render(report))
     return 0 if report.get("overall") == "PASS" else 2
