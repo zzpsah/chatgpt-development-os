@@ -3,8 +3,12 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+CANONICAL_MASTER_MAP = ROOT / "docs/DEVOS-MASTER-ENGINEERING-MAP.md"
+LEGACY_MASTER_MAPS = [
+    ROOT / "docs/DEVOS-MASTER-ENGINEERING-MAP-v2.md",
+]
 REQUIRED = {
-    "master_map": ROOT / "docs/DEVOS-MASTER-ENGINEERING-MAP.md",
+    "master_map": CANONICAL_MASTER_MAP,
     "evolution_contract": ROOT / "core/devos-living-state-and-evolution.md",
     "experiment_ledger": ROOT / "docs/DEVOS-INTERPRETER-EXPERIMENT-LEDGER.md",
     "handoff": ROOT / "docs/handoff/README.md",
@@ -23,6 +27,8 @@ MARKERS = {
     ],
     "evolution_contract": [
         "# DevOS Living State & Evolution Contract",
+        "core/documentation-integrity.md",
+        "does not redefine, replace, weaken, or independently compete",
         "What is not written was never done.",
         "Source-of-truth precedence",
         "Automatic vs semantic documentation",
@@ -41,8 +47,17 @@ MARKERS = {
     "decisions": ["# DevOS Decisions", "What is not written was never done.", "P15 Human Language Interpretation"],
 }
 
+
 def main() -> int:
     failures = []
+
+    for legacy in LEGACY_MASTER_MAPS:
+        if legacy.exists():
+            failures.append(
+                "duplicate canonical master-map surface: "
+                f"{legacy.relative_to(ROOT)} exists alongside {CANONICAL_MASTER_MAP.relative_to(ROOT)}"
+            )
+
     for name, path in REQUIRED.items():
         if not path.exists():
             failures.append(f"{name}: missing {path.relative_to(ROOT)}")
@@ -51,14 +66,20 @@ def main() -> int:
         for marker in MARKERS[name]:
             if marker not in text:
                 failures.append(f"{name}: missing marker {marker!r}")
+
     if failures:
         print("LIVING-DOCS: FAIL")
         for failure in failures:
             print(f"- {failure}")
         return 1
+
     print("LIVING-DOCS: PASS")
-    print("Master map, evolution contract, interpreter experiments, handoff links, and durable-state documentation law are present.")
+    print(
+        "Exactly one canonical master map is present; living-state delegation, "
+        "interpreter experiments, handoff links, and durable-state documentation law are present."
+    )
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
