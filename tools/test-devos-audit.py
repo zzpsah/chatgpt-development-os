@@ -27,6 +27,9 @@ def test_repository_dependency_closure() -> None:
     assert report["bundle"]["dependency_closed"] is True, report
     assert report["bundle"]["classification"] == "COMPLETE_FOR_ADVERTISED_CHECKS"
     assert report["identity"]["result"] == "PASS"
+    checks = {row["name"]: row for row in report["checks"]}
+    assert checks["interpretation"]["result"] == "PASS", checks["interpretation"]
+    assert checks["evidence_ledger"]["result"] == "PASS", checks["evidence_ledger"]
     assert all(row["result"] == "PASS" for row in report["checks"]), report
     assert report["mutation"] == "NONE"
     assert report["execution"] == "NONE"
@@ -59,6 +62,32 @@ def test_missing_security_dependencies_is_packaging_gap() -> None:
         assert report["overall"] == "UNKNOWN"
 
 
+def test_missing_interpreter_dependency_is_packaging_gap() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        pack = Path(directory)
+        copy_manifest(ROOT, pack)
+        (pack / "tools/human-language-interpreter.py").unlink()
+        report = mod.audit(pack, run_checks=False)
+        interpretation = next(row for row in report["checks"] if row["name"] == "interpretation")
+        assert interpretation["result"] == "UNKNOWN", interpretation
+        assert interpretation["evidence"] == "PACK_INCOMPLETE"
+        assert "tools/human-language-interpreter.py" in interpretation["missing"]
+        assert report["overall"] == "UNKNOWN"
+
+
+def test_missing_ledger_dependency_is_packaging_gap() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        pack = Path(directory)
+        copy_manifest(ROOT, pack)
+        (pack / "config/readiness-evidence.json").unlink()
+        report = mod.audit(pack, run_checks=False)
+        ledger = next(row for row in report["checks"] if row["name"] == "evidence_ledger")
+        assert ledger["result"] == "UNKNOWN", ledger
+        assert ledger["evidence"] == "PACK_INCOMPLETE"
+        assert "config/readiness-evidence.json" in ledger["missing"]
+        assert report["overall"] == "UNKNOWN"
+
+
 def test_wrong_identity_blocks_instead_of_guessing() -> None:
     with tempfile.TemporaryDirectory() as directory:
         pack = Path(directory)
@@ -81,6 +110,8 @@ def main() -> None:
     test_repository_dependency_closure()
     test_missing_runtime_bridge_is_packaging_gap()
     test_missing_security_dependencies_is_packaging_gap()
+    test_missing_interpreter_dependency_is_packaging_gap()
+    test_missing_ledger_dependency_is_packaging_gap()
     test_wrong_identity_blocks_instead_of_guessing()
     print("PASS: Trust-First DevOS audit / audit-pack reproducibility corpus")
 
