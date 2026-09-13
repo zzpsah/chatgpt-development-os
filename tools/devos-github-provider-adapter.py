@@ -22,6 +22,7 @@ import importlib.util
 import json
 import os
 import subprocess
+import sys
 import tempfile
 import time
 import urllib.error
@@ -32,7 +33,6 @@ from pathlib import Path
 from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parents[1]
-AUTH_MODULE_PATH = ROOT / "tools" / "devos-github-actions-auth.py"
 PERMISSION_MODULE_PATH = ROOT / "tools" / "devos-remote-permission-check.py"
 API_ROOT = "https://api.github.com"
 API_VERSION = "2026-03-10"
@@ -51,7 +51,6 @@ SUPPORTED_MUTATIONS = {
     "pr.merge",
 }
 
-
 @dataclass(frozen=True)
 class AuthorizationRecord:
     provider: str
@@ -64,7 +63,6 @@ class AuthorizationRecord:
     impact_ceiling: str
     freshness: str | None
     authorization_id: str
-
 
 @dataclass(frozen=True)
 class OperationRecord:
@@ -86,6 +84,7 @@ def _load_module(path: Path, name: str) -> Any:
     if spec is None or spec.loader is None:
         raise RuntimeError(f"unable to load {path.name}")
     module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -104,6 +103,7 @@ def _make_jwt(app_id: str, private_key: str, now: int | None = None) -> str:
     payload = _b64url(json.dumps({"iat": issued_at - 60, "exp": issued_at + JWT_LIFETIME_SECONDS, "iss": app_number}, separators=(",", ":")).encode())
     unsigned = f"{header}.{payload}".encode("ascii")
     key_path: Path | None = None
+    result = None
     try:
         with tempfile.NamedTemporaryFile(mode="w", prefix="devos-gh-key-", suffix=".pem", delete=False) as handle:
             handle.write(private_key)
@@ -117,13 +117,15 @@ def _make_jwt(app_id: str, private_key: str, now: int | None = None) -> str:
             stderr=subprocess.PIPE,
             check=False,
         )
+    except FileNotFoundError as exc:
+        raise RuntimeError("openssl is required on the GitHub-hosted runner") from exc
     finally:
         if key_path is not None:
             try:
                 key_path.unlink()
             except FileNotFoundError:
                 pass
-    if result.returncode != 0:
+    if result is None or result.returncode != 0:
         raise RuntimeError("GitHub App private-key signing failed")
     return f"{unsigned.decode('ascii')}.{_b64url(result.stdout)}"
 
@@ -177,8 +179,6 @@ def _installation_token(repository: str) -> str:
     installation_id = installation.get("id")
     if not isinstance(installation_id, int):
         raise RuntimeError("GitHub App installation was not resolved for target repository")
-    repository_id = installation.get("repository_selection")
-    del repository_id  # the resolved repository is constrained below
     _, target = _request(f"{API_ROOT}/repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repo)}", token=jwt)
     target_id = target.get("id")
     if not isinstance(target_id, int):
@@ -411,7 +411,6 @@ def main() -> int:
         result = {"status": "BLOCKED", "reason_codes": ["MALFORMED_ADAPTER_INPUT"], "reason": str(exc), "authority": "UNCHANGED", "execution": "NONE", "mutation": "NONE"}
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0 if result["status"] == "COMPLETE" else 2
-
 
 if __name__ == "__main__":
     raise SystemExit(main())
