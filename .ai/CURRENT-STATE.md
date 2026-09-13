@@ -5,15 +5,12 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Source tree + Git are authoritative for implementation and exact project state; ChatGPT Memory/chat history are supplementary only.
 - P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline.
-- P9 through P17 are complete on `main`.
-- Production E2E Harness, Failure + Recovery Proof, Multi-Session / Fresh-AI Continuation Proof, Controlled Remote Mutation Proof, Trust-First audit gap closure, Production-Readiness Evidence Matrix, Foundation Health & State Consistency, Cross-Host Recovery Friction & Onboarding Proof, Recovery Friction → Foundation Health/Doctor Integration, Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, and Current-Source Evidence Refresh are closed at their stated evidence levels.
-- Universal Project Onboarding + Repository Creation merged through PR #19.
-- Host-neutral MCP/App `repository.create` adapter merged through PR #22.
-- Current-Source Evidence Refresh merged through PR #24.
-- PR #24 merge checkpoint: `a93f9f435ffab5f81ce070f07a0da694757ab6cb`.
-- Fresh post-merge verification at that checkpoint: Trust-First 72 / `34774013758`, Contracts 609 / `34774013791`, Full DevOS 531 / `34774013827` — success.
-- No new numbered phase is active or implied by this closure state.
-- Product invariant: DevOS is a Development OS for AI across vendors, models, accounts, coding agents, sessions, machines, and Git-provider adapters; no AI account/chat/model/vendor memory is authoritative project state.
+- P12 Operational Intelligence remains the advisory/runtime-observability and durable recovery substrate used by later governed execution paths.
+- P9 through P17 are complete on `main` at their stated evidence levels.
+- Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, and Current-Source Evidence Refresh are closed at their stated evidence levels.
+- **Active unnumbered bounded objective: MCP/App Permission Control Plane + Multi-Project Agent Isolation.**
+- No new numbered phase is created or implied.
+- DevOS is intended to operate as a long-lived agent across multiple repositories without letting provider write access, API tokens, AI accounts, chats, or model memory become authority.
 
 ## Canonical governed path
 
@@ -21,145 +18,78 @@
 
 Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, continuation packets, and simulated provider evidence never manufacture permission.
 
-## Universal onboarding / repository creation — CLOSED AT CURRENT EVIDENCE LEVEL
+## Active objective — MCP/App Permission Control Plane
 
-PR #19 added provider-independent universal onboarding and governed `repository.create` semantics.
-PR #22 added the host-neutral MCP/App boundary over that capability.
+Purpose: connect the host-neutral MCP/App boundary to a provider-independent remote-resource permission control plane so remote operations are authorized per exact project, repository, resource, capability, workflow, impact, and freshness scope.
 
-Preserved distinctions:
+Governed remote capabilities:
+- `repository.create` — HIGH
+- `repository.delete` — DESTRUCTIVE
+- `branch.create` — LOW by default; higher for protected/default/release/production targets
+- `branch.update` — HIGH for canonical/protected/release/production refs
+- `branch.force_update` — DESTRUCTIVE
+- `branch.delete` — DESTRUCTIVE
 
-```text
-ChatGPT connector capability
-!= provider capability
-!= DevOS authorization
-!= P17 readiness
-!= execution
-```
+Core control flow:
 
-The built-in ChatGPT GitHub connector does not expose repository creation. The capability-unavailable path therefore remains `NEEDS_EXTERNAL_REPO_CREATION`; no live ChatGPT repository creation is claimed.
+`AI host → MCP/App adapter → P15 → P16 → P17 → Actionable Hold / Scoped Approval → Remote Permission Control Plane → provider adapter → fresh readback → durable evidence`
 
-Repository creation remains a high-impact remote mutation. Provider credentials are not DevOS authorization. A provider response is attempt evidence, not completion proof. Uncertain mutation is not blindly replayed.
+The MCP/App adapter is an interface, not an authority. Existing `devos.create_repository` remains host-neutral and provider-nonexecuting. The new control-plane gateway adds the missing authorization boundary before provider execution.
 
-No live repository creation, production mutation, destructive mutation, credential/secret mutation, permission mutation, or deployment mutation was performed for this evidence.
+Implemented on working branch:
+- `tools/devos-mcp-governed-gateway.py`
+- `tools/devos-governed-continuation.py`
+- `tools/test-devos-mcp-governed-gateway.py`
+- `tools/test-devos-governed-continuation.py`
+- `docs/DEVOS-MCP-PERMISSION-CONTROL-PLANE.md`
+- `.github/workflows/verify-mcp-permission-control-plane.yml`
+- `core/remote-resource-permission-governance.md`
+- `tools/devos-remote-permission-check.py`
+- `tools/test-devos-remote-permission-check.py`
+- multi-project isolation and permission-control documentation/checkpoint files
 
-## Current-Source Evidence Refresh — CLOSED
+The provider-neutral remote permission policy defines exact capability separation and consequence disclosure. Provider/API write permission is technical capability only and is never DevOS authorization.
 
-Purpose: add fresh proof for exact current source without rewriting historical readiness evidence.
+## Multi-project agent isolation
 
-Architecture:
+A long-lived DevOS agent may manage multiple projects concurrently, but:
 
-`current source + exact HEAD + ledger-declared test + SHA-256 + observed result → current-source-evidence.py → ephemeral validated packet → Foundation Health → DevOS Doctor`
+`Project A state != Project B state`
 
-Implementation:
+`Project A approval != Project B approval`
 
-- `tools/current-source-evidence.py`
-- `tools/test-current-source-evidence.py`
-- `tools/test-current-source-health-integration.py`
-- `.github/workflows/verify-current-source-evidence.yml`
-- `core/current-source-evidence.md`
-- `docs/CURRENT-SOURCE-EVIDENCE.md`
-- optional packet consumption in `tools/devos-health.py`
-- presentation in `tools/devos-doctor.py`
+`Project A credentials/provider binding != Project B credentials/provider binding`
 
-Protocol: `DEVOS-CURRENT-SOURCE-EVIDENCE-v1`.
+Approval cannot move between repositories, branches, capabilities, or workflows. `continue` can reuse an approval only while the exact approved scope and freshness/security conditions remain valid. A new/high-impact/out-of-scope action becomes an actionable HOLD requiring fresh approval.
 
-The packet binds:
-- exact Git `source_head`;
-- ledger-declared capability, level and test path;
-- SHA-256 of current test bytes;
-- observed exit code;
-- local or current CI execution context.
+## Provider credentials / token boundary
 
-Current-source evidence is ephemeral and additive. It never mutates or relabels historical rows in `config/readiness-evidence.json`.
+Provider/API tokens are technical capabilities only.
 
-Rule:
+They are never DevOS authorization and must never be copied into `.ai/`, MCP arguments, logs, generated evidence, or model output.
 
-`CURRENT_EVIDENCE_ADDS_PROOF_BUT_NEVER_REWRITES_HISTORICAL_PROVENANCE`
+The provider permission set should be minimum necessary for the enabled adapter capabilities. Provider-specific permission names remain adapter concerns and must be verified against the current provider API before live activation.
 
-Historical `source_head`, run IDs, archive digest, and `freshness: historical` remain pinned.
+## Verification boundary
 
-Foundation Health validates an optional packet but never executes its test. Historical drift remains visible as WARN even when an exact current packet proves the drifted test at the current head. Doctor only renders the Health result.
+The control-plane work is **implemented but pending final exact-head independent verification**.
 
-PR #24 final source head: `bc400112d0bbaced6ed699a6863bc8dcf91e47c8`.
-Final exact-head PR verification:
-- Current-Source Evidence 12 / `34773566913`: success.
-- Trust-First Audit 71 / `34773566958`: success.
-- Contracts 608 / `34773566914`: success.
-- Full DevOS 530 / `34773566926`: success.
-- MCP Repository Create 9 / `34773566919`: success where path-applicable.
+No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation has been performed for this objective.
 
-PR #24 merge commit: `a93f9f435ffab5f81ce070f07a0da694757ab6cb`.
-Fresh post-merge `main` verification:
-- Trust-First Audit 72 / `34774013758`: success.
-- Contracts 609 / `34774013791`: success.
-- Full DevOS 531 / `34774013827`: success.
+## Existing production-readiness boundary
 
-The dedicated Current-Source Evidence workflow does not have a `main` push trigger, so no fabricated post-merge dedicated run is claimed.
+- `production_ready = false`.
+- `live_provider_proven = false`.
+- Controlled remote mutation remains provider-simulated / contract-level evidence.
+- Provider response is attempt evidence, not completion proof.
+- Uncertain mutation is not blindly replayed.
+- Historical evidence remains pinned and is never silently rewritten.
 
-## Production-readiness evidence boundary
-
-The readiness ledger remains conservative:
-- `production_ready = false`;
-- live mutation proof remains false;
-- current-source packets require `live_provider_proven = false`;
-- controlled remote mutation remains provider-simulated / contract-level evidence;
-- historical evidence stays pinned to original source/run heads;
-- source divergence remains `historical_source_drift` and is never silently refreshed.
-
-The known historical drift includes `tools/test-step-readiness-orchestrator.py`. A valid current packet may add exact current proof for that test, but the historical row remains historical and visible.
-
-## Foundation Health & State Consistency
-
-Authoritative composition remains:
-
-`Source / Git / Tests / CI → devos-audit.py → readiness evidence ledger → subordinate evidence inputs → devos-health.py → devos-doctor.py`
-
-`devos-health.py` is a machine-derived composition layer, not a competing truth source.
-`devos-doctor.py` is presentation-only.
-
-Health/Doctor remain READ_ONLY with:
-- authority `UNCHANGED`;
-- authorization `UNCHANGED`;
-- execution `NONE`;
-- mutation `NONE`.
-
-WARN/UNKNOWN are never PASS.
-Malformed/tampered current-source packets are BLOCKED; a requested missing packet is UNKNOWN.
-
-## Cross-host recovery boundary
-
-Cross-host recovery/friction evidence remains deterministic host-profile simulation unless separate real cross-vendor/account evidence is obtained.
-
-`real_cross_vendor_account_proven=false` remains conservative.
-
-Universal portability invariant:
+## Universal portability invariant
 
 `AI A + Account A → repository → AI B + Account B → correct state recovery → safe continuation`
 
-## Controlled Remote Mutation evidence boundary
-
-Controlled mutation evidence remains provider-simulated / contract-level only. Provider mutation response is attempt evidence, not completion proof, and failed/uncertain mutation does not authorize automatic replay.
-
-Still unproven unless separately explicitly authorized and bounded:
-- live real-provider DevOS runtime mutation proof;
-- branch/PR/workflow/deployment/production mutation proof as a product capability;
-- database mutation;
-- permission/credential/secret mutation;
-- destructive mutation.
-
-## Safety invariants
-
-```text
-PLAN != EXECUTION
-READY != EXECUTION
-INTERPRETATION != AUTHORIZATION
-OLD APPROVAL != NEW APPROVAL
-PROVIDER CREDENTIAL != DEVOS AUTHORIZATION
-SIMULATED EVIDENCE != LIVE PROVIDER PROOF
-CHAT MEMORY != SOURCE OF TRUTH
-PROVIDER RESPONSE != COMPLETION PROOF
-RECOVERY != AUTOMATIC MUTATION REPLAY
-```
+No private AI memory is authoritative project state.
 
 ## Recovery precedence
 
