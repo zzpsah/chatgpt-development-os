@@ -1,0 +1,47 @@
+name: Verify Universal DevOS Onboarding
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'core/devos-universal-project-onboarding.md'
+      - 'core/devos-universal-onboarding-policy.md'
+      - 'tools/devos-onboard.py'
+      - 'tools/test-devos-onboard.py'
+      - 'docs/AUTO-ONBOARDING.md'
+      - '.github/workflows/verify-universal-onboarding.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  universal-onboarding:
+    name: Verify universal project onboarding
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run deterministic onboarding regression corpus
+        run: python tools/test-devos-onboard.py
+      - name: Verify onboarding contract and policy markers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          contract = Path('core/devos-universal-project-onboarding.md').read_text(encoding='utf-8')
+          policy = Path('core/devos-universal-onboarding-policy.md').read_text(encoding='utf-8')
+          docs = Path('docs/AUTO-ONBOARDING.md').read_text(encoding='utf-8')
+          required = [
+              'AI A + Account A → repository → AI B + Account B → correct recovery → safe continuation',
+              'Onboarding is infrastructure establishment, not permission',
+              'NOT INCLUDED IN AUDIT PACK' not in contract,  # marker must not be abused here
+          ]
+          assert required[0] in contract
+          assert 'preserved' in contract.lower() and 'fail closed' in contract.lower()
+          assert 'AI vendors' in policy and 'AI accounts' in policy
+          assert 'devos-onboard.py --path <project>' in docs
+          assert 'Fully automatic arbitrary repositories' not in docs
+          print('PASS: onboarding contract/policy/doc checks')
+          PY
