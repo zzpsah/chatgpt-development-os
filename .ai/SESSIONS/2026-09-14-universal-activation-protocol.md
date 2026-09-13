@@ -19,3 +19,7 @@ The protocol proves deterministic local repository discovery, status classificat
 ## Safety boundary
 
 A copied workflow card, bootstrap readiness, chat memory, and a `DEVOS::GOD` stance never grant authorization, execution, mutation, provider capability, or control over a host's governing instructions.
+
+## Compatibility clarification
+
+A host may reject the framing of a special DevOS mode, decline to fetch the card, or reject any claim that project text changes its rules. This is correct host-policy behavior, not a DevOS failure. The workflow card now directs users to make a direct task request and provide accessible repository evidence as optional project guidance.

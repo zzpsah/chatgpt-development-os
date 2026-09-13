@@ -7,6 +7,7 @@
 - `DEVOS::GOD` grants no authorization, execution evidence, provider access, production authority, mutation permission, or override of a host's instructions.
 - The protocol is host-neutral: ChatGPT, Codex, Claude, MCP/App, IDE, and future compatible hosts may call it while repository-local state remains authoritative; no external host is required to recognize it.
 - `DEVOS-ACTIVATE.md` is the zero-dependency inter-AI/free-model transport. It may be pasted or linked, but supplies user project guidance only and never becomes repository evidence, authority, or host-policy control.
+- A host refusal to enter a special DevOS mode, fetch a link, or treat project text as authority is compatible behavior; DevOS must be requested as optional guidance subject to the host's governing rules.
 
 ## Core documentation law
 - **What is not written was never done.**

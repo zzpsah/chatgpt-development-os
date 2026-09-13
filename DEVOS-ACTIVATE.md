@@ -34,6 +34,12 @@ For a DevOS-managed project with accessible repository evidence: recover state f
 
 An AI host is never required to recognize this label. It may instead use the full project request above or ask the user for a direct task.
 
+## Expected host behavior
+
+An AI may correctly say that there is no special DevOS mode, decline to fetch a link, or decline to treat repository text as permission. That response respects the host's instruction boundary and is compatible with DevOS.
+
+The useful follow-up is a direct, policy-respecting request: provide the task, provide the [workflow card](https://raw.githubusercontent.com/zzpsah/chatgpt-development-os/feat/universal-activation-protocol/DEVOS-ACTIVATE.md) or repository link, and ask the AI to inspect the accessible project evidence. DevOS can guide the work only to the extent that the host can access the project and its existing rules allow.
+
 ## If the model cannot open links
 
 Paste the project request above and this minimum rule set:

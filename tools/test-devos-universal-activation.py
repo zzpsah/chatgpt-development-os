@@ -57,6 +57,7 @@ for marker in (
     "requires no API key, paid plan, plugin, MCP server",
     "does not change your system, developer, or safety instructions",
     "does not grant additional permissions",
+    "there is no special DevOS mode",
     "COPIED WORKFLOW CARD != REPOSITORY ACCESS",
 ):
     assert marker in card, marker
