@@ -9,12 +9,13 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 from pathlib import Path
 
 CANONICAL_DEVOS = "zzpsah/chatgpt-development-os"
 MINIMUM_FILES = {
     "AGENTS.md": "# Project AI Entry Point\n\nThis project uses Development OS (DevOS) portable project context.\n\nBefore substantial work: read `.ai/manifest.yaml`, `.ai/STATE-INDEX.md`, `.ai/PROJECT.md`, and `.ai/CURRENT-STATE.md`, then inspect source, tests, and Git state.\n\nRepository-local state is authoritative over AI account/chat memory.\n",
-    ".ai/PROJECT.md": "# Project\n\n## Identity\n- Project ID: {project_id}\n- Name: {name}\n\n## Purpose\nDescribe what this project does and why it exists.\n\n## Scope\nDescribe capabilities and boundaries.\n",
+    ".ai/PROJECT.md": "# Project\n\n## Identity\n- Project ID: {project_id}\n- Name: {name}\n- Repository: {canonical_repository}\n\n## Purpose\nDescribe what this project does and why it exists.\n\n## Scope\nDescribe capabilities and boundaries.\n",
     ".ai/CURRENT-STATE.md": "# Current State\n\nLast verified: never\n\n## Working\n-\n\n## In progress\n-\n\n## Known issues\n-\n\n## Next actions\n-\n\n## Verification\n- No verification recorded yet.\n",
     ".ai/ARCHITECTURE.md": "# Architecture\n\nDescribe components, data flows, integrations, and important boundaries.\n",
     ".ai/DECISIONS.md": "# Decisions\n\nRecord material architectural, security, data, UX, deployment, and maintenance decisions.\n",
@@ -24,7 +25,22 @@ MINIMUM_FILES = {
     ".ai/SESSIONS/session-template.md": "# Session — YYYY-MM-DD — Short topic\n\n## Objective\n\n## Work completed\n\n## Decisions\n\n## Verification\n\n## Open issues\n\n## Next action\n\n## Evidence\n\n## Security note\nNever record credentials, tokens, passwords, private keys, session cookies, or unnecessary personal/student data.\n",
 }
 
-GITHUB_CALLER = """# Project-side caller for the reusable Development OS context synchronizer.\nname: Development OS Context Sync\n\non:\n  push:\n    branches: [main, master]\n\npermissions:\n  contents: write\n\njobs:\n  sync:\n    uses: zzpsah/chatgpt-development-os/.github/workflows/context-sync.yml@main\n    permissions:\n      contents: write\n"""
+GITHUB_CALLER = """# Project-side caller for the reusable Development OS context synchronizer.
+name: Development OS Context Sync
+
+on:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    uses: zzpsah/chatgpt-development-os/.github/workflows/context-sync.yml@main
+    permissions:
+      contents: write
+"""
 
 
 def normalize_id(name: str) -> str:
@@ -32,7 +48,37 @@ def normalize_id(name: str) -> str:
     return value or "project"
 
 
-def load_manifest(path: Path) -> dict:
+def git_remote(root: Path) -> str | None:
+    if not (root / ".git").exists():
+        return None
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(root), "config", "--get", "remote.origin.url"],
+            text=True, capture_output=True, check=False,
+        )
+    except OSError:
+        return None
+    value = proc.stdout.strip()
+    return value or None
+
+
+def canonical_repo_from_remote(remote: str | None) -> str | None:
+    if not remote:
+        return None
+    value = remote.strip()
+    patterns = [
+        r"^https?://github\.com/([^/]+/[^/]+?)(?:\.git)?$",
+        r"^git@github\.com:([^/]+/[^/]+?)(?:\.git)?$",
+        r"^ssh://git@github\.com/([^/]+/[^/]+?)(?:\.git)?$",
+    ]
+    for pattern in patterns:
+        match = re.match(pattern, value)
+        if match:
+            return match.group(1)
+    return None
+
+
+def load_manifest(path: Path) -> dict[str, str]:
     manifest = path / ".ai" / "manifest.yaml"
     if not manifest.exists():
         return {}
@@ -47,23 +93,39 @@ def load_manifest(path: Path) -> dict:
 def inventory(root: Path, name: str | None, project_id: str | None) -> dict:
     if not root.exists() or not root.is_dir():
         return {"status": "HOLD", "reason": "project path does not exist or is not a directory"}
-    if (root / ".git").exists():
-        repository_kind = "git"
-    else:
-        repository_kind = "directory"
 
+    repository_kind = "git" if (root / ".git").exists() else "directory"
     resolved_name = name or root.name
     resolved_id = project_id or normalize_id(resolved_name)
+    remote = git_remote(root)
+    repository_identity = canonical_repo_from_remote(remote)
     manifest = load_manifest(root)
-    identity = "UNSET"
-    if manifest:
-        identity = (
-            "OK" if manifest.get("managed_by") == "development-os"
-            and manifest.get("canonical_repository", "").strip() != CANONICAL_DEVOS
-            else "OK"
-        )
-        if manifest.get("managed_by") not in (None, "development-os"):
-            identity = "CONFLICT"
+
+    if manifest.get("managed_by") not in (None, "development-os"):
+        return {
+            "status": "HOLD",
+            "reason": "existing project is managed by another framework",
+            "name": resolved_name,
+            "project_id": resolved_id,
+            "repository_kind": repository_kind,
+        }
+
+    existing_identity = manifest.get("canonical_repository")
+    if existing_identity and existing_identity not in ("null", "None") and repository_identity and existing_identity != repository_identity:
+        return {
+            "status": "HOLD",
+            "reason": "existing DevOS identity conflicts with Git remote",
+            "name": resolved_name,
+            "project_id": resolved_id,
+            "repository_kind": repository_kind,
+            "existing_canonical_repository": existing_identity,
+            "observed_canonical_repository": repository_identity,
+        }
+
+    # An existing DevOS manifest without a canonical GitHub identity is preserved.
+    # New manifests record the project's own repository identity, never the DevOS repository.
+    canonical_repository = existing_identity or repository_identity
+    canonical_url = f"https://github.com/{canonical_repository}" if canonical_repository else ""
 
     actions: list[dict] = []
     for rel, template in MINIMUM_FILES.items():
@@ -71,8 +133,45 @@ def inventory(root: Path, name: str | None, project_id: str | None) -> dict:
         if target.exists():
             actions.append({"path": rel, "action": "PRESERVE"})
         else:
-            content = template.format(name=resolved_name, project_id=resolved_id)
+            content = template.format(
+                name=resolved_name,
+                project_id=resolved_id,
+                canonical_repository=canonical_repository or "null",
+            )
+            if rel == ".ai/PROJECT.md" and canonical_repository is None:
+                content = content.replace("- Repository: null\n", "- Repository: local-only (Git remote not detected)\n")
             actions.append({"path": rel, "action": "CREATE", "content": content})
+
+    if not (root / ".ai/manifest.yaml").exists():
+        manifest_lines = [
+            "context_version: 1",
+            "specification: portable-project-context",
+            f"project_id: {resolved_id}",
+            f'name: "{resolved_name}"',
+            "managed_by: development-os",
+            f"canonical_repository: {canonical_repository or 'null'}",
+            f"canonical_url: {canonical_url}",
+            "devos_repository: zzpsah/chatgpt-development-os",
+            "devos_url: https://github.com/zzpsah/chatgpt-development-os",
+            "context_directory: .ai",
+            "read_first:",
+            "  - STATE-INDEX.md",
+            "  - PROJECT.md",
+            "  - CURRENT-STATE.md",
+            "recommended:",
+            "  - ARCHITECTURE.md",
+            "  - DECISIONS.md",
+            "  - TASKS.md",
+            "  - CHANGELOG.md",
+            "state_index:",
+            "  generated: true",
+            "  authority: repository-evidence-only",
+            "session_records:",
+            "  directory: SESSIONS",
+            "  format: session-template.md",
+            "secrets_policy: never-store-secrets",
+        ]
+        actions.append({"path": ".ai/manifest.yaml", "action": "CREATE", "content": "\n".join(manifest_lines) + "\n"})
 
     caller = root / ".github" / "workflows" / "context-sync.yml"
     if caller.exists():
@@ -80,10 +179,15 @@ def inventory(root: Path, name: str | None, project_id: str | None) -> dict:
     elif repository_kind == "git":
         actions.append({"path": ".github/workflows/context-sync.yml", "action": "CREATE", "content": GITHUB_CALLER})
 
-    if identity == "CONFLICT":
-        return {"status": "HOLD", "reason": "existing project is managed by another framework", "name": resolved_name, "project_id": resolved_id, "repository_kind": repository_kind, "actions": actions}
-
-    return {"status": "READY", "name": resolved_name, "project_id": resolved_id, "repository_kind": repository_kind, "actions": actions}
+    return {
+        "status": "READY",
+        "name": resolved_name,
+        "project_id": resolved_id,
+        "repository_kind": repository_kind,
+        "observed_remote": remote,
+        "canonical_repository": canonical_repository,
+        "actions": actions,
+    }
 
 
 def apply(root: Path, report: dict) -> tuple[int, list[str]]:
@@ -124,14 +228,13 @@ def main() -> int:
 
     if args.json:
         safe = {k: v for k, v in report.items() if k != "actions"}
-        safe["actions"] = [
-            {k: v for k, v in item.items() if k != "content"} for item in report.get("actions", [])
-        ]
+        safe["actions"] = [{k: v for k, v in item.items() if k != "content"} for item in report.get("actions", [])]
         print(json.dumps(safe, indent=2, sort_keys=True))
     else:
         print("DEVOS UNIVERSAL ONBOARDING v1")
         print(f"Project: {root}")
         print(f"Project ID: {report.get('project_id', 'unknown')}")
+        print(f"Project repository: {report.get('canonical_repository') or 'local-only'}")
         print(f"Mode: {'APPLY' if args.apply else 'PLAN'}")
         print("--------------------------------")
         for item in report.get("actions", []):
@@ -145,7 +248,6 @@ def main() -> int:
             print(f"ONBOARDING STATUS: HOLD — {report.get('reason', 'unknown')}")
         print("Execution authority: UNCHANGED")
         print(f"Mutation: {'missing infrastructure only' if args.apply else 'NONE'}")
-
     return code
 
 
