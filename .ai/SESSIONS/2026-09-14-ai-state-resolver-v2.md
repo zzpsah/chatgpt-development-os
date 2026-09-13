@@ -13,3 +13,5 @@ Upgrade the existing P0 AI State Resolver document contract into an executable d
 ## Boundaries
 
 The resolver is read-only. It does not parse all repository prose automatically, run tests, normalize P12 evidence, grant authorization, mark completion, or execute actions.
+
+- Wired resolver v2 into the reference continuation path: supplied claims now flow through `P15 -> resolver -> P16 -> P17 -> controller`; uncited claims stop before readiness.

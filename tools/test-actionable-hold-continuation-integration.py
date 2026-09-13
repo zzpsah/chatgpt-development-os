@@ -138,7 +138,16 @@ def main():
     assert any("approve" in example for example in hold["natural_language_examples"])
     assert "hold" in hold["options"]
 
-    print("PASS: actionable hold integrated P15 -> P16 -> P17 -> controller continuation path")
+    # 8. An uncited state claim is resolved as unknown and cannot enter P17.
+    unresolved = mod.evaluate(payload(state_claims=[{
+        "id": "C1", "statement": "PR state is current", "state_confidence": "observed",
+        "grounding": {"type": "none", "ref": None},
+    }]))
+    assert unresolved["status"] == "BLOCKED", unresolved
+    assert unresolved["state_resolution"]["unresolved_claim_ids"] == ["C1"], unresolved
+    assert unresolved["p16"]["decision"] == "CLARIFY", unresolved
+
+    print("PASS: actionable hold integrated resolver -> P15 -> P16 -> P17 -> controller continuation path")
 
 
 if __name__ == "__main__":

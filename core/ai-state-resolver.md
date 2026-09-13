@@ -229,3 +229,5 @@ P11 recovery -> resolver v2 -> P16 plan -> P17 readiness -> controller
 - No semantic truth claim from a document merely asserting success.
 - No P12 evidence re-normalization.
 - No authorization, completion marking, mutation, or execution.
+
+The reference continuation path (`tools/devos-continuation-path.py`) now calls resolver v2 when its caller supplies `state_claims`, `events`, or `changed_paths`. It returns the resolver result alongside P15/P16/P17 evidence. An unresolved supplied claim yields P16 `CLARIFY` and prevents P17/controller continuation.
