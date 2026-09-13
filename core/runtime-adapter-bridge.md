@@ -25,7 +25,7 @@ Authorized work unit
 request:
   id: unique-request-id
   work_unit: unique-unit-id
-  operation: filesystem.read | filesystem.write_scoped | git.inspect | verification.run | github.inspect.repository | github.inspect.commit | github.inspect.workflow_run | github.mutate.file | other-declared-capability
+  operation: filesystem.read | filesystem.write_scoped | git.inspect | verification.run | github.inspect.repository | github.inspect.commit | github.inspect.workflow_run | github.inspect.file | github.mutate.file | other-declared-capability
   target: "explicit target"
   scope: "explicit bounded scope"
   authorization: NOT_REQUIRED | REQUIRED | ALREADY_GRANTED
@@ -70,7 +70,8 @@ Read-only operations:
 
 - `github.inspect.repository` — inspect a repository identified by `owner/name`;
 - `github.inspect.commit` — inspect a commit within a declared repository;
-- `github.inspect.workflow_run` — inspect a workflow run within a declared repository.
+- `github.inspect.workflow_run` — inspect a workflow run within a declared repository;
+- `github.inspect.file` — inspect one repository-relative file, including current SHA/content evidence exposed by the provider.
 
 Controlled mutation in P8:
 
@@ -94,8 +95,10 @@ For `github.mutate.file` the bridge must:
 4. require the provider's expected current file SHA;
 5. execute one mutation without automatic retry;
 6. classify known concurrency conflicts as `BLOCKED`;
-7. classify uncertain provider completion as `UNVERIFIED` and require remote inspection before retry;
-8. return the actual provider response as evidence.
+7. classify uncertain provider completion as `UNVERIFIED` and require remote inspection before any new mutation attempt;
+8. return the actual provider response as mutation-attempt evidence.
+
+A successful mutation response is not by itself verified completion. The controlled reference proof must use fresh `github.inspect.file` readback to observe the intended remote state. If readback or verification is missing/mismatched after an attempted mutation, the operation must HOLD under the Failure + Recovery `MUTATION_REPLAY_FORBIDDEN` rule rather than retry automatically.
 
 ## Reference implementation boundary
 
@@ -104,8 +107,8 @@ The v1 reference bridge supports:
 - read text within the project root;
 - write explicitly scoped text within the project root;
 - inspect Git status/diff/log/HEAD;
-- bounded read-only GitHub repository, commit, and workflow-run inspection;
-- one controlled GitHub file-update capability with explicit authorization, Security Gate PASS, and optimistic concurrency.
+- bounded read-only GitHub repository, commit, workflow-run, and file inspection;
+- one controlled GitHub file-update capability with explicit authorization, Security Gate PASS, optimistic concurrency, and fresh post-mutation readback verification through the separate controlled-proof layer.
 
 Branch, pull-request, workflow, deployment, permission, and other higher-impact remote mutations remain separate capabilities until their specific controls and tests exist.
 
