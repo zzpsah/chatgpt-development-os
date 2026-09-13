@@ -17,7 +17,7 @@ def classify(text: str) -> str:
     if any(term in t for term in HIGH_IMPACT):
         return "HIGH_IMPACT_MUTATION"
     if any(term in t for term in ("change", "fix", "add", "update", "implement", "write", "create")):
-        return "LOW_IMACT_MUTATION" if False else "LOW_IMPACT_MUTATION"
+        return "LOW_IMPACT_MUTATION"
     return "READ_ONLY"
 
 
