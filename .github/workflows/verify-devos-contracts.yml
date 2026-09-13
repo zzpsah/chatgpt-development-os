@@ -46,6 +46,12 @@ jobs:
       - name: Verify Failure and Recovery Proof
         run: python tools/test-failure-recovery-proof.py
 
+      - name: Verify Multi-Session Fresh-AI Continuation
+        run: python tools/test-multi-session-continuation.py
+
+      - name: Verify Multi-Session Two-Process Proof
+        run: python tools/test-multi-session-two-process.py
+
       - name: Verify AI State Resolver
         run: python tools/verify-state-resolver.py
 

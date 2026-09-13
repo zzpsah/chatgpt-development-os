@@ -1,38 +1,46 @@
 # DevOS Tasks
 
 ## Active
-- **Long-running multi-session / fresh-AI continuation proof** is the active maturity gate after verified Failure + Recovery closure.
-- Prove repository-only continuation across process/agent/session boundaries.
-- Reconstruct active objective, project identity, latest safe checkpoint, and required gates without ChatGPT Memory/chat history.
-- Revalidate repository head before resuming; stale candidates must not replay automatically.
+- **Long-running multi-session / fresh-AI continuation proof** is the active maturity gate.
+- PR #13 branch: `devos/multi-session-fresh-ai`.
+- Prove repository-only continuation across process/agent/session boundaries without relying on chat/account memory.
+- Saved candidates must never replay as authority; same-head continuation requires revalidation and changed-head continuation requires recompilation/revalidation.
 - Preserve exact authorization/Security Gate/runtime/verification boundaries across continuation.
-- Require fresh verification before completion is claimed.
-- Prefer a realistic managed-project proof where the path remains read-only or otherwise explicitly bounded.
+- **P11 Federation & Self-Healing Context v1 remains the repository-first recovery/revalidation baseline.**
+
+## Implemented in this gate
+- Normative `DEVOS-MULTI-SESSION-v1` contract.
+- Repository-only continuation packet/evaluator.
+- Same-head `REVALIDATE_REQUIRED` semantics.
+- Changed-head `RECOMPILE_REQUIRED` semantics with prior authorization explicitly non-reusable.
+- HOLD on project mismatch, unsupported protocol, packet authority/authorization tampering, packet execution authority, and inherited mutation replay prohibition.
+- Deterministic regression corpus.
+- Separate-process Session A/Session B proof using persisted JSON only.
+- Real `zzpsah/automation-suite` verifier with no commit/push.
+- External workflow continuation proof and artifact upload.
+
+## Verification evidence so far
+- Contracts 512 on implementation head `34cd3bc068bd4c744ba62b425412166b23ed19ed`: both continuation tests passed.
+- External Managed Project 25: full external job passed, including Multi-Session Fresh-AI Continuation and evidence artifact upload.
+- Final candidate head `71bc834dd975d0f0362c7c3396612b9cb1fc69fa`: Contracts 516 continuation checks passed and External Managed Project 29 passed.
+- Full DevOS 441 found one durable recovery compatibility regression only: `TASKS.md` no longer explicitly named P11, which `tools/test-fresh-ai-recovery.py` requires alongside `CURRENT-STATE.md`.
+- This document restores the P11 continuity marker without weakening the recovery test or changing continuation runtime behavior.
+
+## Pending closure
+- Take fresh final-head Contracts + Full DevOS + External Managed Project verification after the P11 continuity repair/session provenance update.
+- Repair only evidence-backed failures.
+- Confirm PR #13 mergeable.
+- Merge only at the exact verified final head.
+- Persist closure on `main`.
 
 ## Completed recently
-- Production E2E Harness merged through PR #11 at `1d6031d3578b859a6afe1dca1032287de5beceba`.
-- Failure + Recovery Proof merged through PR #12 at `83fd14e4cc696f3cd96778fe7d447db1216c3fc0`.
-
-## Failure + Recovery final verification
-- Final source head: `29c07deed803df430b2f7fd40bf302bb8deac160`.
-- Contracts 503 / `34756601970`: success.
-- Full DevOS 428 / `34756602046`: success.
-- External Managed Project 24 / `34756601981`: success.
-- Real managed project: `zzpsah/automation-suite`; failure → checkpoint → capability repair → resumed verified E2E, with unchanged HEAD/origin, zero tracked source diff, no commit/push.
-
-## Multi-session acceptance targets
-- Session A writes bounded continuation/checkpoint evidence into repository-local `.ai` state.
-- Session B starts from a fresh process and uses repository evidence only.
-- Same-head continuation returns revalidation-required semantics rather than executable replay.
-- Changed-head continuation escalates/recompiles instead of trusting stale state.
-- Authorization/Security Gate evidence does not leak between sessions or steps.
-- Fresh verification and durable outcome persistence are required after continuation.
-- Add deterministic regression coverage and a real managed-project proof.
-- Require fresh final-head Contracts + Full DevOS + External Managed Project CI before closure.
+- P11 Federation & Self-Healing Context v1 — repository-first recovery/revalidation baseline remains active.
+- Production E2E Harness — PR #11.
+- Failure + Recovery Proof — PR #12 at `83fd14e4cc696f3cd96778fe7d447db1216c3fc0`.
 
 ## Planned after multi-session proof
 - Controlled higher-impact remote mutation, operation by operation.
 - Production-readiness evidence and documented limitations.
 
 ## Safety invariant
-Repository state may preserve facts and checkpoints, but it never preserves or manufactures executable authority. Every resumed candidate must be freshly revalidated against current repository state, capability, authorization, Security Gate, and verification requirements.
+Repository state preserves context, not permission. Every resumed candidate must earn current eligibility again against the current repository, capability, authorization, Security Gate, and verification state.

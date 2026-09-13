@@ -12,6 +12,11 @@ on:
       - 'tools/test-failure-recovery-proof.py'
       - 'tools/verify-failure-recovery-managed-project.py'
       - 'core/failure-recovery-proof.md'
+      - 'tools/multi-session-continuation.py'
+      - 'tools/test-multi-session-continuation.py'
+      - 'tools/test-multi-session-two-process.py'
+      - 'tools/verify-multi-session-managed-project.py'
+      - 'core/multi-session-continuation-proof.md'
       - 'adapters/reference-host.py'
       - 'adapters/reference-verification.py'
       - 'tools/runtime-adapter-bridge.py'
@@ -81,4 +86,22 @@ jobs:
             managed-project/.ai/EVIDENCE/failure-recovery-managed-checkpoint.json
             managed-project/.ai/EVIDENCE/failure-recovery-managed-result.json
             managed-project/.ai/EVIDENCE/failure-recovery-managed-proof.json
+          if-no-files-found: error
+
+      - name: Verify Multi-Session Fresh-AI Continuation against automation-suite
+        run: >-
+          python devos/tools/verify-multi-session-managed-project.py
+          --project-root "$GITHUB_WORKSPACE/managed-project"
+          --expected-repository zzpsah/automation-suite
+
+      - name: Upload Multi-Session continuation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: multi-session-managed-project-evidence
+          path: |
+            managed-project/.ai/EVIDENCE/multi-session-a-input.json
+            managed-project/.ai/EVIDENCE/multi-session-continuation.json
+            managed-project/.ai/EVIDENCE/multi-session-b-current.json
+            managed-project/.ai/EVIDENCE/multi-session-b-drift.json
+            managed-project/.ai/EVIDENCE/multi-session-managed-proof.json
           if-no-files-found: error
