@@ -239,17 +239,15 @@ def _readback(token: str, operation: OperationRecord, result: dict[str, Any], re
 
 
 def _readback_with_retry(token: str, operation: OperationRecord, result: dict[str, Any], *, reader: Callable[[str, OperationRecord], dict[str, Any]], retry_delays: tuple[float, ...], sleep_fn: Callable[[float], None]) -> tuple[dict[str, Any], int]:
-    attempts = 1
-    for delay in (0.0, *retry_delays):
-        if delay:
-            sleep_fn(delay)
-            attempts += 1
+    attempts = 0
+    while True:
+        attempts += 1
         try:
             return _readback(token, operation, result, reader=reader), attempts
         except RuntimeError as exc:
-            if not _is_not_found_error(exc) or delay == retry_delays[-1] if retry_delays else not _is_not_found_error(exc):
+            if not _is_not_found_error(exc) or attempts > len(retry_delays):
                 raise
-    raise RuntimeError("readback retry loop exhausted")
+            sleep_fn(retry_delays[attempts - 1])
 
 
 def execute(operation_data: dict[str, Any], authorization_data: dict[str, Any] | None = None, token_provider: Callable[[str], str] = _installation_token, client_read: Callable[[str, OperationRecord], dict[str, Any]] | None = None, sleep_fn: Callable[[float], None] = time.sleep, readback_retry_delays: tuple[float, ...] = READBACK_RETRY_DELAYS) -> dict[str, Any]:
