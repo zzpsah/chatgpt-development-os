@@ -13,13 +13,32 @@ REQUIRED = {
     "decisions": ROOT / ".ai/DECISIONS.md",
 }
 MARKERS = {
-    "master_map": ["# DevOS Master Engineering Map", "IMPLEMENTED + VERIFIED + DOCUMENTED", "INTERPRETATION != AUTHORIZATION", "Human Language Interpreter: evolution target", "Self-maintaining repository model"],
-    "evolution_contract": ["# DevOS Living State & Evolution Contract", "Source-of-truth precedence", "Automatic vs semantic documentation", "Human Language Interpreter evolution", "LEARNING != AUTHORIZATION"],
-    "experiment_ledger": ["# DevOS Interpreter Experiment Ledger", "experiment_id", "ADOPT|REJECT|DEFER", "INTERPRETATION != AUTHORIZATION"],
+    "master_map": [
+        "# DevOS Master Engineering Map",
+        "What is not written was never done.",
+        "IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE",
+        "Human Language Interpreter evolution",
+        "Self-maintaining knowledge model",
+        "Every-AI maintenance contract",
+    ],
+    "evolution_contract": [
+        "# DevOS Living State & Evolution Contract",
+        "What is not written was never done.",
+        "Source-of-truth precedence",
+        "Automatic vs semantic documentation",
+        "Human Language Interpreter evolution",
+        "LEARNING != AUTHORIZATION",
+    ],
+    "experiment_ledger": [
+        "# DevOS Interpreter Experiment Ledger",
+        "experiment_id",
+        "ADOPT|REJECT|DEFER",
+        "INTERPRETATION != AUTHORIZATION",
+    ],
     "handoff": ["DevOS AI handoff index", "Master Engineering Map", "Interpreter Experiment Ledger"],
-    "current_state": ["# Current State", "Canonical governed path"],
-    "tasks": ["# DevOS Tasks", "Core safety invariants"],
-    "decisions": ["# DevOS Decisions", "P15 Human Language Interpretation"],
+    "current_state": ["# Current State", "Core documentation law", "Canonical governed path"],
+    "tasks": ["# DevOS Tasks", "What is not written was never done.", "Core safety invariants"],
+    "decisions": ["# DevOS Decisions", "What is not written was never done.", "P15 Human Language Interpretation"],
 }
 
 def main() -> int:
@@ -38,7 +57,7 @@ def main() -> int:
             print(f"- {failure}")
         return 1
     print("LIVING-DOCS: PASS")
-    print("Master map, evolution contract, experiment ledger, handoff links, and durable-state markers are present.")
+    print("Master map, evolution contract, interpreter experiments, handoff links, and durable-state documentation law are present.")
     return 0
 
 if __name__ == "__main__":
