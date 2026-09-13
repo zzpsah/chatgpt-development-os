@@ -19,16 +19,21 @@
 ## GitHub Identity & Token Control Plane v1 — in implementation
 
 - Objective: support independently authorized GitHub accounts/installations through a GitHub App-oriented authentication boundary while keeping credentials separate from DevOS authorization.
-- Implemented on branch `feat/github-identity-token-control-plane` at commit `256dbc761dc65f336805a9d6fa5c09a5d80382a6`.
+- Branch: `feat/github-identity-token-control-plane`.
+- Latest branch source head: `9aca648c2469e04a775df824583407725525a5cb`.
 - Added normative contract: `core/devos-github-identity-token-control-plane.md`.
 - Added side-effect-free primitives: `tools/devos-github-auth.py`.
-- Added deterministic regression suite: `tools/test-devos-github-auth.py`.
+- Added deterministic authentication regression suite: `tools/test-devos-github-auth.py`.
+- Added side-effect-free provider-permission → DevOS-capability bridge: `tools/devos-github-capability-discovery.py`.
+- Added deterministic capability-discovery regression suite: `tools/test-devos-github-capability-discovery.py`.
 - Added dedicated CI workflow: `.github/workflows/verify-github-auth-control-plane.yml`.
 - Added implementation/documentation guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`.
-- Added session provenance: `.ai/SESSIONS/2026-09-14-github-identity-token-control-plane.md`.
+- Added durable session provenance for the authentication/control-plane work.
+- Exact-head branch CI for source `113508a32eedcd1d42cb0def9438224fe03aeb1b` passed: GitHub Identity and Token Control Plane 1 / `34781566089`, Current-Source Evidence 44 / `34781566086`, Living Engineering Map 14 / `34781566044`, Trust-First Audit 128 / `34781566045`, Contracts 665 / `34781566015`, Full DevOS 587 / `34781566026`, MCP Repository Create 41 / `34781566048`.
+- Capability-discovery hardening after that CI remains pending fresh branch CI on the latest head.
 - No GitHub App secret, private key, OAuth token, refresh token, JWT signing material, live OAuth exchange, token-vault deployment, or live provider mutation was introduced.
 - `production_ready=false` and `live_provider_proven=false` remain unchanged.
-- Live activation requires external GitHub App registration, secure secret storage, OAuth callback/token exchange, capability discovery, project-scoped identity binding, and a separately authorized disposable provider verification.
+- Live activation requires external GitHub App registration, secure secret storage, OAuth callback/token exchange, live capability discovery, project-scoped identity binding, and a separately authorized disposable provider verification.
 
 ## Core documentation law
 
@@ -110,4 +115,4 @@ Historical evidence snapshots remain dated and do not auto-refresh when source a
 
 ## Next bounded direction
 
-Complete and verify GitHub Identity & Token Control Plane v1 through branch CI and code review. Do not claim live GitHub authentication or production readiness until a separately configured GitHub App, secret vault, OAuth/token exchange, capability discovery, and fresh provider evidence exist. Do not create P18/P19 merely for bookkeeping.
+Re-run fresh branch CI after capability-discovery hardening, then complete PR review/integration. Do not claim live GitHub authentication or production readiness until a separately configured GitHub App, secret vault, OAuth/token exchange, live capability discovery, and fresh provider evidence exist. Do not create P18/P19 merely for bookkeeping.
