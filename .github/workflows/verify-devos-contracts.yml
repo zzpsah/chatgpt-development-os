@@ -31,6 +31,9 @@ jobs:
       - name: Test contextual Human Language Interpreter v2
         run: python tools/test-human-language-interpreter.py
 
+      - name: Verify P16 Semantic Goal-to-Plan Compiler
+        run: python tools/test-semantic-goal-to-plan.py
+
       - name: Verify AI State Resolver
         run: python tools/verify-state-resolver.py
 
