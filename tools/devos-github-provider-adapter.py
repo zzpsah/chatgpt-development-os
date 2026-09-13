@@ -38,18 +38,8 @@ API_ROOT = "https://api.github.com"
 API_VERSION = "2026-03-10"
 USER_AGENT = "DevOS-GitHub-Provider-Adapter/1"
 JWT_LIFETIME_SECONDS = 540
-
 READ_ACTIONS = {"repository.get", "file.get", "branch.get", "pr.get"}
-SUPPORTED_MUTATIONS = {
-    "file.create",
-    "file.update",
-    "file.delete",
-    "branch.create",
-    "branch.update",
-    "branch.force_update",
-    "branch.delete",
-    "pr.merge",
-}
+SUPPORTED_MUTATIONS = {"file.create", "file.update", "file.delete", "branch.create", "branch.update", "branch.force_update", "branch.delete", "pr.merge"}
 
 @dataclass(frozen=True)
 class AuthorizationRecord:
@@ -110,13 +100,7 @@ def _make_jwt(app_id: str, private_key: str, now: int | None = None) -> str:
             handle.flush()
             key_path = Path(handle.name)
         os.chmod(key_path, 0o600)
-        result = subprocess.run(
-            ["openssl", "dgst", "-sha256", "-sign", str(key_path)],
-            input=unsigned,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=False,
-        )
+        result = subprocess.run(["openssl", "dgst", "-sha256", "-sign", str(key_path)], input=unsigned, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
     except FileNotFoundError as exc:
         raise RuntimeError("openssl is required on the GitHub-hosted runner") from exc
     finally:
@@ -142,12 +126,7 @@ def _json_bytes(payload: dict[str, Any]) -> bytes:
 
 
 def _request(url: str, *, token: str, method: str = "GET", body: dict[str, Any] | None = None) -> tuple[int, dict[str, Any]]:
-    headers = {
-        "Accept": "application/vnd.github+json",
-        "X-GitHub-Api-Version": API_VERSION,
-        "User-Agent": USER_AGENT,
-        "Authorization": f"Bearer {token}",
-    }
+    headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": API_VERSION, "User-Agent": USER_AGENT, "Authorization": f"Bearer {token}"}
     raw_body = _json_bytes(body) if body is not None else None
     if raw_body is not None:
         headers["Content-Type"] = "application/json"
@@ -183,12 +162,7 @@ def _installation_token(repository: str) -> str:
     target_id = target.get("id")
     if not isinstance(target_id, int):
         raise RuntimeError("target repository metadata did not include an integer id")
-    _, token_response = _request(
-        f"{API_ROOT}/app/installations/{installation_id}/access_tokens",
-        token=jwt,
-        method="POST",
-        body={"repository_ids": [target_id]},
-    )
+    _, token_response = _request(f"{API_ROOT}/app/installations/{installation_id}/access_tokens", token=jwt, method="POST", body={"repository_ids": [target_id]})
     token = token_response.get("token")
     if not isinstance(token, str) or not token:
         raise RuntimeError("GitHub did not return an installation token")
@@ -197,20 +171,8 @@ def _installation_token(repository: str) -> str:
 
 def _gate(operation: OperationRecord, authorization: AuthorizationRecord | None) -> dict[str, Any]:
     mod = _load_module(PERMISSION_MODULE_PATH, "devos_remote_permission_check")
-    op = mod.Operation(
-        provider=operation.provider,
-        owner=operation.owner,
-        repository=operation.repository,
-        resource=operation.resource,
-        capability=operation.capability,
-        workflow=operation.workflow,
-        project=operation.project,
-        impact=operation.impact,
-        freshness=operation.freshness,
-    )
-    auth = None
-    if authorization is not None:
-        auth = mod.Authorization(**authorization.__dict__)
+    op = mod.Operation(provider=operation.provider, owner=operation.owner, repository=operation.repository, resource=operation.resource, capability=operation.capability, workflow=operation.workflow, project=operation.project, impact=operation.impact, freshness=operation.freshness)
+    auth = mod.Authorization(**authorization.__dict__) if authorization is not None else None
     status, reasons = mod.evaluate(auth, op)
     return {"status": status, "reasons": reasons, "capability": operation.capability}
 
@@ -220,20 +182,15 @@ def _read(token: str, operation: OperationRecord) -> dict[str, Any]:
     repo = urllib.parse.quote(operation.repository or "")
     resource = operation.resource or ""
     if operation.action == "repository.get":
-        _, data = _request(f"{API_ROOT}/repos/{owner}/{repo}", token=token)
-        return data
+        return _request(f"{API_ROOT}/repos/{owner}/{repo}", token=token)[1]
     if operation.action == "file.get":
         path = urllib.parse.quote(resource.lstrip("/"), safe="/")
-        _, data = _request(f"{API_ROOT}/repos/{owner}/{repo}/contents/{path}", token=token)
-        return data
+        return _request(f"{API_ROOT}/repos/{owner}/{repo}/contents/{path}", token=token)[1]
     if operation.action == "branch.get":
         branch = urllib.parse.quote(resource, safe="")
-        _, data = _request(f"{API_ROOT}/repos/{owner}/{repo}/git/ref/heads/{branch}", token=token)
-        return data
+        return _request(f"{API_ROOT}/repos/{owner}/{repo}/git/ref/heads/{branch}", token=token)[1]
     if operation.action == "pr.get":
-        number = int(resource)
-        _, data = _request(f"{API_ROOT}/repos/{owner}/{repo}/pulls/{number}", token=token)
-        return data
+        return _request(f"{API_ROOT}/repos/{owner}/{repo}/pulls/{int(resource)}", token=token)[1]
     raise ValueError(f"unsupported read action: {operation.action}")
 
 
@@ -251,12 +208,7 @@ def _mutate(token: str, operation: OperationRecord) -> tuple[dict[str, Any], dic
             expected_sha = inp.get("expected_sha")
             if not isinstance(expected_sha, str) or not expected_sha:
                 raise ValueError("file.delete requires inputs.expected_sha for exactly-once protection")
-            status, data = _request(
-                f"{API_ROOT}/repos/{owner}/{repo}/contents/{path}",
-                token=token,
-                method="DELETE",
-                body={"message": message, "sha": expected_sha, **({"branch": inp["branch"]} if isinstance(inp.get("branch"), str) else {})},
-            )
+            status, data = _request(f"{API_ROOT}/repos/{owner}/{repo}/contents/{path}", token=token, method="DELETE", body={"message": message, "sha": expected_sha, **({"branch": inp["branch"]} if isinstance(inp.get("branch"), str) else {})})
         else:
             content = inp.get("content")
             if not isinstance(content, str):
@@ -279,28 +231,14 @@ def _mutate(token: str, operation: OperationRecord) -> tuple[dict[str, Any], dic
             source_sha = inp.get("sha")
             if not isinstance(source_sha, str) or not source_sha:
                 raise ValueError("branch.create requires inputs.sha")
-            status, data = _request(
-                f"{API_ROOT}/repos/{owner}/{repo}/git/refs",
-                token=token,
-                method="POST",
-                body={"ref": f"refs/heads/{branch}", "sha": source_sha},
-            )
+            status, data = _request(f"{API_ROOT}/repos/{owner}/{repo}/git/refs", token=token, method="POST", body={"ref": f"refs/heads/{branch}", "sha": source_sha})
         elif action == "branch.delete":
-            status, data = _request(
-                f"{API_ROOT}/repos/{owner}/{repo}/git/refs/heads/{urllib.parse.quote(branch, safe='')}",
-                token=token,
-                method="DELETE",
-            )
+            status, data = _request(f"{API_ROOT}/repos/{owner}/{repo}/git/refs/heads/{urllib.parse.quote(branch, safe='')}", token=token, method="DELETE")
         else:
             target_sha = inp.get("sha")
             if not isinstance(target_sha, str) or not target_sha:
                 raise ValueError(f"{action} requires inputs.sha")
-            status, data = _request(
-                f"{API_ROOT}/repos/{owner}/{repo}/git/refs/heads/{urllib.parse.quote(branch, safe='')}",
-                token=token,
-                method="PATCH",
-                body={"sha": target_sha, "force": action == "branch.force_update"},
-            )
+            status, data = _request(f"{API_ROOT}/repos/{owner}/{repo}/git/refs/heads/{urllib.parse.quote(branch, safe='')}", token=token, method="PATCH", body={"sha": target_sha, "force": action == "branch.force_update"})
         return data, {"http_status": status}
     if action == "pr.merge":
         number = int(operation.resource or "0")
@@ -344,57 +282,43 @@ def _readback(token: str, operation: OperationRecord, result: dict[str, Any]) ->
 
 
 def execute(operation_data: dict[str, Any], authorization_data: dict[str, Any] | None = None, token_provider: Callable[[str], str] = _installation_token, client_read: Callable[[str, OperationRecord], dict[str, Any]] | None = None) -> dict[str, Any]:
-    operation = OperationRecord(
-        provider=operation_data.get("provider", ""),
-        owner=operation_data.get("owner", ""),
-        repository=operation_data.get("repository"),
-        resource=operation_data.get("resource"),
-        capability=operation_data.get("capability", ""),
-        workflow=operation_data.get("workflow", ""),
-        project=operation_data.get("project", ""),
-        impact=operation_data.get("impact", ""),
-        freshness=operation_data.get("freshness"),
-        action=operation_data.get("action", ""),
-        inputs=operation_data.get("inputs", {}),
-    )
+    operation = OperationRecord(provider=operation_data.get("provider", ""), owner=operation_data.get("owner", ""), repository=operation_data.get("repository"), resource=operation_data.get("resource"), capability=operation_data.get("capability", ""), workflow=operation_data.get("workflow", ""), project=operation_data.get("project", ""), impact=operation_data.get("impact", ""), freshness=operation_data.get("freshness"), action=operation_data.get("action", ""), inputs=operation_data.get("inputs", {}))
     if not isinstance(operation.inputs, dict):
         return {"status": "BLOCKED", "reason_codes": ["INVALID_INPUTS"], "authority": "UNCHANGED", "execution": "NONE", "mutation": "NONE"}
     if operation.provider != "github":
         return {"status": "BLOCKED", "reason_codes": ["UNSUPPORTED_PROVIDER"], "authority": "UNCHANGED", "execution": "NONE", "mutation": "NONE"}
+    repository_identity = f"{operation.owner}/{operation.repository}" if operation.repository else None
     if operation.action in READ_ACTIONS:
-        if not operation.repository:
+        if not repository_identity:
             return {"status": "BLOCKED", "reason_codes": ["MISSING_REPOSITORY"], "authority": "UNCHANGED", "execution": "NONE", "mutation": "NONE"}
         try:
-            token = token_provider(operation.repository)
+            token = token_provider(repository_identity)
             reader = client_read or _read
             data = reader(token, operation)
             return {"status": "COMPLETE", "action": operation.action, "target": operation.repository, "result": data, "credential_material": "NOT_INCLUDED", "authority": "UNCHANGED", "execution": "PROVIDER_READ", "mutation": "NONE", "evidence": "FRESH_PROVIDER_READ"}
         except Exception as exc:
-            return {"status": "FAILED", "reason_codes": ["PROVIDER_READ_FAILED"], "reason": str(exc), "authority": "UNCHANGED", "execution": "NONE", "mutation": "NONE"}
+            return {"status": "FAILED", "reason_codes": ["PROVIDER_READ_FAILED"], "reason": repr(exc), "authority": "UNCHANGED", "execution": "NONE", "mutation": "NONE"}
     if operation.action not in SUPPORTED_MUTATIONS:
         return {"status": "BLOCKED", "reason_codes": ["UNSUPPORTED_MUTATION_ACTION"], "authority": "UNCHANGED", "execution": "NONE", "mutation": "NONE"}
-
     authorization = AuthorizationRecord(**authorization_data) if authorization_data else None
     gate = _gate(operation, authorization)
     if gate["status"] != "CONTINUE_WITH_EXISTING_APPROVAL":
         return {"status": gate["status"], "reason_codes": gate["reasons"], "authority": "UNCHANGED", "execution": "NONE", "mutation": "NONE", "decision": "ACTIONABLE_HOLD"}
     if operation.capability != operation.action:
         return {"status": "BLOCKED", "reason_codes": ["CAPABILITY_ACTION_MISMATCH"], "authority": "UNCHANGED", "execution": "NONE", "mutation": "NONE"}
-    if not operation.repository:
+    if not repository_identity:
         return {"status": "BLOCKED", "reason_codes": ["MISSING_REPOSITORY"], "authority": "UNCHANGED", "execution": "NONE", "mutation": "NONE"}
-
     try:
-        token = token_provider(operation.repository)
+        token = token_provider(repository_identity)
         result, transport = _mutate(token, operation)
     except ConnectionError as exc:
         return {"status": "HOLD", "reason_codes": ["UNCERTAIN_PROVIDER_RESULT"], "reason": str(exc), "next_action": "READBACK_BEFORE_RETRY", "authority": "UNCHANGED", "execution": "UNKNOWN", "mutation": "UNKNOWN"}
     except Exception as exc:
-        return {"status": "FAILED", "reason_codes": ["PROVIDER_MUTATION_FAILED"], "reason": str(exc), "authority": "UNCHANGED", "execution": "ATTEMPTED", "mutation": "UNKNOWN"}
-
+        return {"status": "FAILED", "reason_codes": ["PROVIDER_MUTATION_FAILED"], "reason": repr(exc), "authority": "UNCHANGED", "execution": "ATTEMPTED", "mutation": "UNKNOWN"}
     try:
         readback = _readback(token, operation, result)
     except Exception as exc:
-        return {"status": "HOLD", "reason_codes": ["READBACK_REQUIRED"], "reason": str(exc), "provider_response": result, "authority": "UNCHANGED", "execution": "UNKNOWN", "mutation": "UNKNOWN"}
+        return {"status": "HOLD", "reason_codes": ["READBACK_REQUIRED"], "reason": repr(exc), "provider_response": result, "authority": "UNCHANGED", "execution": "UNKNOWN", "mutation": "UNKNOWN"}
     return {"status": "COMPLETE", "action": operation.action, "target": {"repository": operation.repository, "resource": operation.resource}, "provider_response": result, "transport": transport, "readback": readback, "credential_material": "NOT_INCLUDED", "authority": "UNCHANGED", "execution": "PROVIDER_MUTATION", "mutation": "COMPLETE", "evidence": "FRESH_PROVIDER_READBACK"}
 
 
