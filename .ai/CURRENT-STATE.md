@@ -4,10 +4,11 @@
 
 - Repository: `zzpsah/chatgpt-development-os`.
 - Source tree + Git/PR metadata are authoritative for exact implementation/integration state; ChatGPT Memory/chat history are supplementary only.
+- Current verified `main` head at this reconciliation checkpoint: `8d7ff1cde34c0e5d324b9a30034bbf5cff178cfc` (post-PR #42 and post-PR #39 activation-handshake merge).
 - P9 through P17 are complete on `main` at their stated evidence levels.
 - P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P12 Operational Intelligence remains the advisory/runtime-observability and durable recovery substrate used by later governed execution paths.
-- Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, Current-Source Evidence Refresh, MCP/App Permission Control Plane + Multi-Project Agent Isolation, Actionable HOLD + Scoped Approval + Governed Continuation, and GitHub Identity & Token Control Plane v1 are closed at their stated evidence levels.
+- Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, Current-Source Evidence Refresh, MCP/App Permission Control Plane + Multi-Project Agent Isolation, Actionable HOLD + Scoped Approval + Governed Continuation, GitHub Identity & Token Control Plane v1, governed GitHub provider/controller adapter integration, and GitHub mutation readback reconciliation hardening are closed at their stated evidence levels.
 - No new numbered phase is active or implied by the current closure state.
 
 ## Durable principles and boundaries
@@ -34,7 +35,7 @@ Interpretation, planning, readiness, provider credentials, prior approvals, prio
 - Live **read-only GitHub provider authentication** is proven for the DevOS GitHub App runtime.
 - Live **GitHub provider mutation through the governed controller bridge is now proven** on a dedicated isolated test branch/resource using create → update → delete with fresh provider evidence and safe reconciliation.
 - The live proof is scoped to the governed adapter/controller path and isolated test resources; it does not imply production readiness, destructive authorization, or permission to mutate arbitrary repositories/resources.
-- Create/update initially exhibited a short post-write HTTP 404 readback race. The adapter hardening branch adds bounded **readback-only** retries (1s, 2s, 4s) without replaying the mutation. Exhausted reconciliation remains `HOLD / READBACK_REQUIRED`.
+- Create/update initially exhibited a short post-write HTTP 404 readback race. The merged PR #42 hardening adds bounded **readback-only** retries (1s, 2s, 4s) without replaying the mutation. Exhausted reconciliation remains `HOLD / READBACK_REQUIRED`.
 - No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation was performed for this GitHub integration objective.
 - Provider response is attempt evidence; completion still requires fresh provider readback.
 - Uncertain mutation is not blindly replayed.
@@ -84,6 +85,16 @@ Interpretation, planning, readiness, provider credentials, prior approvals, prio
 - Temporary live PRs #40 and #41 were closed and not merged.
 - This evidence proves the governed live provider mutation path without upgrading `production_ready`.
 
+### GitHub mutation readback reconciliation hardening — merged
+
+- PR #42 — `Harden GitHub mutation readback reconciliation` — merged at `0a3ef4a7386e7f94cfa651eef4af75df66cc5933`.
+- Final source head: `aed21d1a3e1f0dd2894144296e5b9c845dfb8521`.
+- Adds bounded post-mutation HTTP 404 readback-only reconciliation delays of 1s, 2s, and 4s.
+- Never replays the mutation as part of reconciliation.
+- Keeps 401/auth, validation, and network uncertainty outside this retry path.
+- Preserves fail-safe `HOLD / READBACK_REQUIRED` after exhausted reconciliation.
+- Records `readback_attempts` in successful completion evidence and includes deterministic regression coverage.
+
 ### Plain Project Context and Recovery Guide v1
 
 - `DEVOS-PROJECT-CONTEXT.md` is the plain, host-neutral first-contact recovery context for fresh external AI chats.
@@ -106,7 +117,8 @@ Interpretation, planning, readiness, provider credentials, prior approvals, prio
 - PR #24 merge commit / verified `main`: `a93f9f435ffab5f81ce070f07a0da694757ab6cb` — Current-Source Evidence Refresh.
 - PR #32 merge commit: `2f1740930116ab520d40d35aaa6dfcb1786a5595` — GitHub Identity & Token Control Plane v1.
 - PR #35 merge commit: `d379277af53155a2695c99b0bdf9682f43bb2d05` — GitHub provider/controller adapter slice and governed bridge.
-- PR #42 is the current hardening PR for bounded post-mutation readback reconciliation; it is intentionally not merged automatically.
+- PR #42 merge commit: `0a3ef4a7386e7f94cfa651eef4af75df66cc5933` — bounded GitHub mutation readback reconciliation hardening.
+- PR #39 merge commit / current checkpoint `main`: `8d7ff1cde34c0e5d324b9a30034bbf5cff178cfc` — DevOS activation handshake, merged after PR #42 without changing the controller/provider mutation semantics.
 
 Historical exact-head CI remains pinned in task/session records and must not be rewritten merely because later source advances.
 
@@ -139,8 +151,8 @@ No private AI memory is authoritative project state.
 
 ## Next bounded direction
 
-- Finish PR #42 verification/review of the GitHub adapter readback reconciliation hardening; do not merge without explicit authorization.
-- Continue AI State Resolver v2 hardening only from fresh repository evidence after the current bounded GitHub adapter objective is closed.
+- PR #42 readback-reconciliation hardening is closed and merged; do not treat it as active work.
+- Continue AI State Resolver v2 hardening only from fresh repository evidence on the current `main` lineage.
 - PRs #33 and #34 are closed obsolete replacement branches; PR #32 is the authoritative merged integration history.
 - Do not create P18/P19 merely for bookkeeping.
 - Resolver cross-claim semantic contradiction remains explicitly out of v2 scope unless promoted by a future bounded objective.
