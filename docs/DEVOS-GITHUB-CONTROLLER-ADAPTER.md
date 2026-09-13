@@ -16,7 +16,7 @@ P15 interpretation
   -> remote permission gate
   -> proven GitHub App installation token
   -> one bounded provider operation
-  -> fresh provider readback
+  -> bounded fresh-provider readback/reconciliation
   -> evidence/persistence
 ```
 
@@ -33,9 +33,7 @@ Required GitHub Actions secrets:
 
 The private key is used only for short-lived JWT signing. It is never emitted as evidence or persisted in the repository.
 
-The current App installation is configured to the target repository. The adapter does not persist the installation token and does not include credential material in evidence. GitHub documents installation tokens as short-lived, expiring after one hour. citeturn195196search0
-
-An early attempt to use the `repository_ids` installation-token request variant through the new adapter path returned `401 Bad credentials`, while the existing proven runtime helper continued to authenticate successfully. The controller bridge therefore deliberately reuses the known-good authentication/token implementation rather than duplicating an unproven provider-auth path.
+The controller bridge deliberately reuses the known-good authentication/token implementation rather than duplicating an unproven provider-auth path. The adapter does not persist the installation token and does not include credential material in evidence.
 
 ## Read operations
 
@@ -47,8 +45,6 @@ Supported provider reads:
 - `pr.get`
 
 A read returns `FRESH_PROVIDER_READ` evidence and never changes authorization or remote state.
-
-`tools/devos-github-proven-auth-read.py` supplies the same proven App token provider to the adapter for live read verification.
 
 ## Governed mutations
 
@@ -69,7 +65,7 @@ Before the provider request, the adapter calls `tools/devos-remote-permission-ch
 
 `branch.force_update` stays distinct from `branch.update`; `file.delete` remains higher impact than ordinary file create/update; `pr.merge` remains HIGH impact.
 
-## Exactly-once and uncertain outcomes
+## Exactly-once, uncertain outcomes, and readback reconciliation
 
 File update/delete requires an `inputs.expected_sha`. This prevents a stale resource from being overwritten or deleted without an explicit state anchor.
 
@@ -83,7 +79,11 @@ After every successful mutation, the adapter performs a fresh provider readback:
 - branch mutation → current branch ref SHA/presence;
 - pull-request merge → current merged/state/merge SHA.
 
-A successful HTTP response without the required readback is never reported as `COMPLETE`.
+GitHub content reads can briefly lag the mutation response. To handle that observed eventual-consistency window without replaying the mutation, the adapter now performs a bounded retry of the **readback only** when the readback specifically fails with HTTP 404. The default delays are 1s, 2s, and 4s, allowing up to four readback attempts total (the initial read plus one attempt after each delay). Authentication failures, validation errors, network uncertainty, and other failures are not converted into automatic retries.
+
+When a post-mutation readback becomes available within the bounded window, the result is `COMPLETE` with `FRESH_PROVIDER_READBACK` plus `readback_attempts`. When the bounded window is exhausted, the adapter remains fail-safe and returns `HOLD` with `READBACK_REQUIRED` and the original provider response for reconciliation. No mutation replay occurs.
+
+For deletion, a fresh 404 is interpreted as `ABSENT`, so delete completion still uses provider evidence rather than assuming the mutation succeeded from the write response alone.
 
 ## Controller bridge
 
@@ -116,10 +116,20 @@ Deterministic checks:
 - `tools/test-devos-github-provider-adapter.py`
 - `tools/test-devos-github-controller-bridge.py`
 
-Fresh exact-head live proof on the final PR head established:
+The deterministic adapter regression suite now covers:
 
-- baseline App authentication: PASS;
-- repository read through the adapter using the proven App auth provider: PASS;
-- deterministic adapter and controller-bridge checks: PASS.
+- read-only success;
+- missing authorization;
+- repository-scope mismatch;
+- capability/action mismatch;
+- bounded 404 readback reconciliation;
+- no retry for a 401 readback failure.
 
-Live mutation remains unexecuted. Any remote mutation still requires the normal DevOS authorization/P17/Security Gate conditions and fresh provider readback.
+Fresh live controller-path mutation evidence has now established the normal governed write path against a dedicated isolated test branch/resource:
+
+- `file.create` through controller bridge: provider commit returned; immediate readback hit 404; external reconciliation confirmed the file and SHA;
+- `file.update` through controller bridge: provider commit returned; immediate readback hit 404; subsequent reconciliation confirmed the updated SHA;
+- `file.delete` through controller bridge: provider commit returned and the adapter obtained fresh `ABSENT` readback;
+- temporary live-test PRs were closed and were not merged.
+
+This proves live provider mutation through the governed controller path, while `production_ready` remains `false` and no production/destructive authorization is implied. The readback hardening closes the remaining known normal-path race without changing authority boundaries.

@@ -32,10 +32,11 @@ Interpretation, planning, readiness, provider credentials, prior approvals, prio
 
 - `production_ready = false`.
 - Live **read-only GitHub provider authentication** is proven for the DevOS GitHub App runtime.
-- Live provider **mutation** is not proven or authorized by that authentication evidence.
-- Controlled remote mutation remains provider-simulated / contract-level evidence unless separately proven through the governed mutation path with fresh readback.
-- No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation was performed for the GitHub auth objective.
-- Provider response is attempt evidence, not completion proof.
+- Live **GitHub provider mutation through the governed controller bridge is now proven** on a dedicated isolated test branch/resource using create → update → delete with fresh provider evidence and safe reconciliation.
+- The live proof is scoped to the governed adapter/controller path and isolated test resources; it does not imply production readiness, destructive authorization, or permission to mutate arbitrary repositories/resources.
+- Create/update initially exhibited a short post-write HTTP 404 readback race. The adapter hardening branch adds bounded **readback-only** retries (1s, 2s, 4s) without replaying the mutation. Exhausted reconciliation remains `HOLD / READBACK_REQUIRED`.
+- No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation was performed for this GitHub integration objective.
+- Provider response is attempt evidence; completion still requires fresh provider readback.
 - Uncertain mutation is not blindly replayed.
 - Historical evidence remains pinned and is never silently rewritten.
 
@@ -71,7 +72,17 @@ Interpretation, planning, readiness, provider credentials, prior approvals, prio
 - The runtime authenticated via a GitHub App installation token, resolved the repository installation, and performed read-only repository verification.
 - Reported evidence included `status: PASS`, `credential_material: NOT_INCLUDED`, `execution: NONE`, and `mutation: NONE`.
 - The inspected workflow log masked secret values and did not expose the App private key or installation token.
-- This proves live provider authentication/capability for the read-only runtime only; it does not authorize or prove provider mutation or production readiness.
+- This proves live provider authentication/capability for the read-only runtime; the separate controller-bridge mutation evidence below proves the governed mutation slice.
+
+### Live GitHub Controller Adapter mutation proof
+
+- The normal controller bridge uses the proven App installation-token provider and the exact P17/runtime-handoff gates.
+- Dedicated live test branch/resource sequence established:
+  - `file.create`: provider commit `e8235f7864678a27bbf036def806a1624fb66678`, returned content SHA `6b08d07761cdaa4ae07bad6d0820239e022d52f6`; immediate adapter readback returned HTTP 404 and safely held for reconciliation.
+  - Reconciliation/update: provider commit `27a3b3cf4f7c8c8511f3c5a8f3283d8a6a883232`, resulting content SHA `349c63f9bacf1efc2a9f5409665803d1e970b201`; immediate readback again returned HTTP 404 and safely held.
+  - Delete: provider commit `3f530da3ee1efd4e52baad10fe4e644d4db5d116`; fresh readback returned `ABSENT`, producing `COMPLETE / PROVIDER_MUTATION / FRESH_PROVIDER_READBACK` evidence.
+- Temporary live PRs #40 and #41 were closed and not merged.
+- This evidence proves the governed live provider mutation path without upgrading `production_ready`.
 
 ### Plain Project Context and Recovery Guide v1
 
@@ -94,6 +105,8 @@ Interpretation, planning, readiness, provider credentials, prior approvals, prio
 - PR #23 merge commit: `7c60c3a4a36982ba894e2f30ba9dd98500f98d02` — Actionable HOLD + Scoped Approval + Governed Continuation.
 - PR #24 merge commit / verified `main`: `a93f9f435ffab5f81ce070f07a0da694757ab6cb` — Current-Source Evidence Refresh.
 - PR #32 merge commit: `2f1740930116ab520d40d35aaa6dfcb1786a5595` — GitHub Identity & Token Control Plane v1.
+- PR #35 merge commit: `d379277af53155a2695c99b0bdf9682f43bb2d05` — GitHub provider/controller adapter slice and governed bridge.
+- PR #42 is the current hardening PR for bounded post-mutation readback reconciliation; it is intentionally not merged automatically.
 
 Historical exact-head CI remains pinned in task/session records and must not be rewritten merely because later source advances.
 
@@ -126,7 +139,8 @@ No private AI memory is authoritative project state.
 
 ## Next bounded direction
 
-- Continue AI State Resolver v2 hardening only from fresh repository evidence.
+- Finish PR #42 verification/review of the GitHub adapter readback reconciliation hardening; do not merge without explicit authorization.
+- Continue AI State Resolver v2 hardening only from fresh repository evidence after the current bounded GitHub adapter objective is closed.
 - PRs #33 and #34 are closed obsolete replacement branches; PR #32 is the authoritative merged integration history.
 - Do not create P18/P19 merely for bookkeeping.
 - Resolver cross-claim semantic contradiction remains explicitly out of v2 scope unless promoted by a future bounded objective.
