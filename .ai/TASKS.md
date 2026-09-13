@@ -2,20 +2,31 @@
 
 ## Active
 - GitHub Identity & Token Control Plane v1 is the current bounded unnumbered objective.
-- Authentication and capability-discovery implementation slices are verified by branch CI; code-review/final integration remains pending.
-- Live activation remains a separate evidence-gated deployment step: GitHub App registration, secret vault, OAuth/token exchange, live capability discovery, project binding, and disposable provider verification.
+- Authentication, capability-discovery, and GitHub-hosted runtime implementation slices are complete and require fresh branch CI before final readiness is claimed.
+- Live activation is now defined for the GitHub-hosted runtime as: GitHub App registration → App installation on target → GitHub Actions secrets → manual read-only runtime workflow → fresh provider evidence.
+- Browser OAuth callback/token exchange is not part of the GitHub-hosted Actions runtime path; it remains a separate interactive-client option.
 - No P18/P19 phase is created merely for this objective.
+
+## Completed — GitHub-hosted runtime implementation slice
+- Added `tools/devos-github-actions-auth.py` for GitHub App JWT + installation-token authentication from GitHub Actions.
+- Added `tools/test-devos-github-actions-auth.py` deterministic regression coverage.
+- Added `.github/workflows/devos-github-app-runtime.yml` as a manual, read-only live-provider smoke workflow.
+- Added `docs/DEVOS-GITHUB-HOSTED-RUNTIME.md` documenting GitHub-native deployment and external activation boundaries.
+- Extended `.github/workflows/verify-github-auth-control-plane.yml` to cover the runtime contract.
+- Runtime requires only external Actions secrets `DEVOS_GITHUB_APP_ID` and `DEVOS_GITHUB_APP_PRIVATE_KEY`.
+- Runtime resolves the App installation from the target repository, mints a short-lived installation token, reads repository metadata, and emits only non-secret evidence.
+- Runtime never creates, updates, deletes, merges, deploys, changes permissions, or stores credentials as durable artifacts.
+- Current branch contains the runtime slice on `feat/github-identity-token-control-plane` and remains separate from `main`/PR integration authorization.
 
 ## Completed — GitHub Identity & Token Control Plane v1 implementation slice
 - Branch: `feat/github-identity-token-control-plane`.
-- Current source head: `ded4ed9a448ed68eb9b17776e5ca83b83b68086e`.
 - Added GitHub App-oriented authentication contract, side-effect-free OAuth state/callback primitives, project-scoped identity binding, non-secret capability metadata, expiry handling, secret fingerprinting, deterministic tests, dedicated CI, implementation guide, and session provenance.
 - Added side-effect-free provider-permission → DevOS-capability discovery bridge with `AVAILABLE | UNAVAILABLE | UNCONFIRMED` results.
 - Capability mappings are adapter-supplied so generic DevOS logic does not encode stale provider permission assumptions.
 - Durable evidence emitted by capability discovery remains `authorization: UNCHANGED`, `execution: NONE`, `mutation: NONE`, and `credential_material: NOT_INCLUDED`.
-- Exact-head branch CI for source `113508a32eedcd1d42cb0def9438224fe03aeb1b` passed: GitHub Identity and Token Control Plane 1 / `34781566089`, Current-Source Evidence 44 / `34781566086`, Living Engineering Map 14 / `34781566044`, Trust-First Audit 128 / `34781566045`, Contracts 665 / `34781566015`, Full DevOS 587 / `34781566026`, MCP Repository Create 41 / `34781566048`.
-- No raw credentials, OAuth secrets, App private keys, refresh tokens, JWT signing material, live OAuth exchange, token-vault deployment, or live provider mutation was introduced.
-- Objective remains pending until PR review/merge and the external live-activation boundary are separately verified.
+- Historical exact-head CI for source `113508a32eedcd1d42cb0def9438224fe03aeb1b` passed: GitHub Identity and Token Control Plane 1 / `34781566089`, Current-Source Evidence 44 / `34781566086`, Living Engineering Map 14 / `34781566044`, Trust-First Audit 128 / `34781566045`, Contracts 665 / `34781566015`, Full DevOS 587 / `34781566026`, MCP Repository Create 41 / `34781566048`.
+- No raw credentials, OAuth secrets, App private keys, refresh tokens, JWT signing material, live OAuth exchange, token-vault deployment, or live provider mutation was introduced into the repository.
+- Objective remains pending until fresh CI/review and the external GitHub App activation boundary are verified.
 
 ## Completed — Actionable HOLD + Scoped Approval + Governed Continuation
 - PR #23 — `Integrate actionable holds and scoped approval into governed continuation` — merged at `7c60c3a4a36982ba894e2f30ba9dd98500f98d02`.
@@ -39,7 +50,6 @@
 - The control plane governs `repository.create`, `repository.delete`, `branch.create`, `branch.update`, `branch.force_update`, and `branch.delete` with exact project/repository/resource/workflow/impact/freshness scope.
 - Provider/API write permission remains technical capability only; it is never DevOS authorization.
 - `FULL APPROVAL` remains scoped, not blanket permission.
-- `continue` may reuse an approval only when exact project/workflow/capability/target/impact/freshness/security scope remains valid.
 - Multi-project isolation keeps state, approval, and provider binding separated per project.
 - No live/destructive/production provider mutation was performed for PR #27.
 
