@@ -5,6 +5,7 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Source tree + Git remain authoritative for implementation state.
 - **ChatGPT Memory and chat history are supplementary only and must never be required to recover authoritative project state.** A fresh AI must be able to recover from repository-local source/Git/`.ai` evidence.
+- P11 Federation & Self-Healing Context remains part of the durable recovery baseline; repository-first recovery, repository revalidation, and cross-AI continuity remain active invariants for all later milestones.
 - `main` is verified/merged through P15 and currently also contains `.ai/P16-P17-AUDIT.md` from commit `f338270429d31df5691f6a02234a1a35553f57af`.
 - Working milestone: P16 Semantic Goal-to-Plan Compiler v1 on branch `devos/p16-goal-to-plan` / PR #9.
 - P16 implementation is materially complete in source but **not closed or merged** until the repaired final head receives fresh passing applicable verification.
@@ -77,13 +78,11 @@ Observed runs for that head:
 - `Verify P13 External Managed Project`, run 9 / id `34750507096`: **success**.
 - `Verify Development OS`, run 400 / id `34750507050`: **failure**.
 
-The full-workflow failure was isolated to job `Verify Repository-Only Fresh-AI Recovery v1`, step `Simulate fresh-AI repository-only recovery`. The exact assertion was:
+The full-workflow failure was isolated to job `Verify Repository-Only Fresh-AI Recovery v1`, step `Simulate fresh-AI repository-only recovery`. The first exact assertion exposed by CI was the missing account-memory boundary. Commit `9445546dee68f3220acf22bca0a4f9c8db6a048e` restored the ChatGPT Memory/chat-history invariant.
 
-`current-state must preserve account-memory boundary`
+Fresh run 401 on that repaired head then advanced the same recovery test to its next invariant: `P11` must remain explicitly discoverable in both `CURRENT-STATE.md` and `TASKS.md`. `TASKS.md` already preserved P11; this file restores the P11 continuity marker without weakening the recovery test.
 
-Root cause: the P16 rewrite of `.ai/CURRENT-STATE.md` had accidentally removed the explicit textual boundary that ChatGPT Memory/chat history are supplementary rather than authoritative. This was a durable-context documentation regression, not a runtime/compiler/controller failure.
-
-This file restores that invariant. Because this repair advances the P16 head, the repaired head still requires fresh applicable verification before closure.
+These are durable-context documentation regressions, not runtime/compiler/controller failures. Because this repair advances the P16 head again, the new final head still requires fresh applicable verification before closure.
 
 Historical queue evidence (many queued runs, zero in-progress jobs, `runner_id: 0`) remains part of the session record, but runner assignment is no longer assumed to be blocked now that new runs have executed.
 
