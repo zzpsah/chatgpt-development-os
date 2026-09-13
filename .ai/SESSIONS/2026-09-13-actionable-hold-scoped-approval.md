@@ -10,9 +10,6 @@ Implement human-language continuation behavior requested by DevOS governance: ac
 - Python 3.14 dynamic-import harness fixed by registering the dynamically loaded module in `sys.modules` before `exec_module`; dataclass implementation was not weakened or changed to hide the failure.
 - Reference-fix head `4796fff53d5f9b8db5201d94e982a66378cc4630` passed Actionable Hold 2 / `34777843251`, Contracts 622 / `34777843239`, Trust-First 85 / `34777843233`, and Full DevOS 544 / `34777843244`.
 
-## History-safe reconciliation
-The PR branch was reconciled non-force with then-current `main` `47ff3df08ab675991d12dcf6b33d514ba96b1730` at merge commit `e1e8720831b724e0dd684ea80be35149f28ef3c1`. No historical evidence was rewritten.
-
 ## Real continuation-path integration
 - Added `tools/devos-continuation-path.py`.
 - Added `tools/test-actionable-hold-continuation-integration.py`.
@@ -31,11 +28,22 @@ The integration regression covers:
 6. Security Gate change → fresh evaluation;
 7. HOLD includes status, reason, next action, consequence/impact, required approval/evidence, options, and natural-language examples.
 
-Actionable Hold CI 6 / `34778139986` passed both the deterministic reference regression and the real continuation-path integration regression on integration head `63d0aa2952df9c86722a0f5d48ce837ff8b7fa2a`.
+Actionable Hold CI 6 / `34778139986` first proved the integrated path. The branch was subsequently reconciled non-force with newer `main` work.
+
+## Final exact-head verification
+Final source/documentation head: `2cfd26a1019ae4fa37bf4d9cc96abebcb9ae9bfd`.
+Final base: `main` `6107d5d91c6f3eae93fa4e9724b8668b9c0d63a7`.
+
+Fresh exact-head CI:
+- Actionable Hold 11 / `34778365304` — success; both reference and real continuation-path regressions passed.
+- Contracts 634 / `34778365175` — success.
+- Trust-First 97 / `34778365197` — success.
+- Full DevOS 556 / `34778365250` — success.
+- Additional applicable gates: Current-Source Evidence 26 / `34778365249` and MCP Repository Create 23 / `34778365285` — success.
 
 ## Documentation
 - `docs/ACTIONABLE-HOLDS-AND-SCOPED-APPROVAL.md` documents the operational UX and integrated path.
-- `docs/ACTIONABLE-HOLD-IMPLEMENTATION-CHECKPOINT.md` records the architecture, acceptance cases, and evidence boundary.
+- `docs/ACTIONABLE-HOLD-IMPLEMENTATION-CHECKPOINT.md` records architecture, acceptance cases, and evidence boundary.
 
 ## Safety and evidence boundary
 - `CONTINUE != BLANKET AUTHORIZATION`.
@@ -44,4 +52,4 @@ Actionable Hold CI 6 / `34778139986` passed both the deterministic reference reg
 - `READY != EXECUTION`.
 - stale HEAD, changed target/capability/impact, or changed Security Gate invalidates reuse as applicable.
 - No live provider, destructive, production, deployment, credential/secret, permission, or database mutation is performed or claimed.
-- PR #23 must not merge until the exact final documentation/source head receives fresh green Actionable Hold + Contracts + Trust-First + Full DevOS CI.
+- PR #23 remains unmerged until separately authorized.
