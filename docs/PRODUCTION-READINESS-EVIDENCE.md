@@ -3,6 +3,18 @@
 The machine-readable ledger is [config/readiness-evidence.json](../config/readiness-evidence.json).
 Run `python tools/verify-readiness-evidence.py` from the repository root. Exit 0 / `VALID` means the ledger passes v1 integrity and claim rules. Exit 2 / `HOLD` means evidence or a claim is inconsistent. Neither outcome authorizes execution or certifies production readiness.
 
+## Gate status
+
+The Production-Readiness Evidence Matrix & Limitations gate closed through PR #16.
+
+- Final PR #16 source head: `6c509d6f65b22666f121dfe86604faae72c08f8c`.
+- Merge commit: `b8e31ae76201b32e4617ef6044b29ef285004f54`.
+- Exact-final-head PR CI: Trust-First 22 / `34762214579`, Contracts 559 / `34762214457`, Full DevOS 484 / `34762214462`, External Managed Project 52 / `34762214609`, all successful.
+- Fresh post-merge main verification: Trust-First 23 / `34762783110`, Contracts 560 / `34762783133`, Full DevOS 485 / `34762783132`, all successful.
+- External Managed Project has no `push` trigger, so no post-merge External run exists for that merge commit.
+
+Closure means the ledger/checker gate is implemented and verified. It does **not** mean DevOS is production ready.
+
 ## Evidence boundaries
 
 The ledger deliberately keeps evidence historical: source snapshot `70c8e0e050660fd6b606150a1370d8fce51e373e`, with external proof at PR #14 source `bf5da56950d32722ce78898854eb3aa660321c38`. The cited run IDs and exact source heads remain in each row and the archived handoff evidence. A current successful ledger check is not a fresh execution of those historical scenarios and does not silently repoint them to current HEAD.
@@ -33,17 +45,13 @@ Deterministic = component/contract corpus; integrated = composed reference path;
 
 Every row in the JSON additionally names concrete implementation/test paths, authorization and Security Gate boundaries, recovery/no-replay policy, and the allowed claim. Live mutation and production proof remain explicitly false, including for high-impact paths.
 
-## Reconciliation with Trust-First main
+## Trust-First composition
 
-PR #16 was reconciled against current `main` after PR #17 Trust-First closure rather than treating its original base as authoritative. The reconciliation preserved PR #16's ledger design and PR #17's read-only audit, audit-pack dependency closure, adversarial Security Gate regressions, and P17 semantic-impact hardening.
+PR #16 was reconciled against Trust-First `main` after PR #17 closure rather than treating its original base as authoritative. The final merged design preserves the ledger and the read-only Trust-First audit, audit-pack dependency closure, adversarial Security Gate regressions, and P17 semantic-impact hardening.
 
-Reconciled implementation head `53492a4c842efcb2b8f07c2b71227599502a00a4` passed:
-- Verify DevOS Trust-First Audit — run 16 / `34761934422`;
-- Verify Development OS Contracts — run 553 / `34761934455`;
-- Verify Development OS — run 478 / `34761934428`;
-- Verify P13 External Managed Project — run 46 / `34761934406`.
+Foundation Health & State Consistency now consumes this ledger through `tools/verify-readiness-evidence.py`; it does not rewrite the ledger. `tools/devos-health.py` combines the verifier result with `tools/devos-audit.py`, and `tools/devos-doctor.py` only presents the machine-derived result.
 
-Those runs prove the reconciled implementation/checking behavior at that exact head. They do **not** upgrade any historical ledger row to current evidence, do not establish live-provider mutation proof, and do not establish production readiness.
+A health `WARN` for historical-source drift is therefore expected when current source has advanced beyond archived evidence. Doctor output never upgrades it to PASS or modifies provenance.
 
 ## Validator scope and maintenance
 
@@ -61,6 +69,8 @@ DevOS remains repository-first and host-neutral. The acceptance invariant is:
 
 AI vendor/model/account/chat state is not authoritative evidence and never manufactures authorization.
 
-## Next direction
+## Current bounded direction
 
-After this gate's exact-final-head CI closure, the smallest bounded direction is Foundation Health & State Consistency: stronger read-only doctor diagnostics, semantic status-drift detection, and portable onboarding/fresh-AI evidence. Live-provider mutation requires a separate exact authorization and is not the default next step.
+The active bounded objective is Foundation Health & State Consistency: read-only machine-derived diagnostics over the existing Trust-First audit and readiness ledger, with a human `devos-doctor.py` presentation layer. It is not a new phase number and not a competing truth system.
+
+Live-provider mutation requires separate exact authorization and is not part of this objective.
