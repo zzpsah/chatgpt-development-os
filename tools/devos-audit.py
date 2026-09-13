@@ -19,10 +19,6 @@ from typing import Any
 PROTOCOL = "DEVOS-TRUST-AUDIT-v1"
 CANONICAL_REPOSITORY = "zzpsah/chatgpt-development-os"
 
-# Explicit dependency closure for the checks advertised by the independent
-# audit. This is the canonical pack manifest for v1; adding an advertised check
-# requires adding its execution dependencies here and a regression proving pack
-# incompleteness is detected.
 CHECKS: dict[str, dict[str, Any]] = {
     "bootstrap": {
         "entrypoint": "tools/test-devos-bootstrap.py",
@@ -124,11 +120,13 @@ def inspect_identity(root: Path) -> dict[str, Any]:
         return {"result": "UNKNOWN", "evidence": "PACK_INCOMPLETE", "missing": missing}
     manifest_text = (root / ".ai/manifest.yaml").read_text(encoding="utf-8")
     agents_text = (root / "AGENTS.md").read_text(encoding="utf-8")
-    ok = CANONICAL_REPOSITORY in manifest_text and CANONICAL_REPOSITORY in agents_text
+    manifest_ok = f"canonical_repository: {CANONICAL_REPOSITORY}" in manifest_text
+    agents_ok = CANONICAL_REPOSITORY in agents_text and "core/ai-bootstrap-protocol.md" in agents_text
+    ok = manifest_ok and agents_ok
     return {
         "result": "PASS" if ok else "FAIL",
         "evidence": "VERIFIED" if ok else "BLOCKED",
-        "reason": "canonical repository identity present" if ok else "canonical repository identity mismatch",
+        "reason": "canonical repository identity fields match" if ok else "canonical repository identity mismatch",
     }
 
 
