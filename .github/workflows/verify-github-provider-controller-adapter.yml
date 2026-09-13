@@ -8,6 +8,7 @@ on:
       - 'tools/devos-github-controller-bridge.py'
       - 'tools/test-devos-github-controller-bridge.py'
       - 'tools/devos-github-actions-auth.py'
+      - 'tools/devos-github-proven-auth-read.py'
       - 'docs/DEVOS-GITHUB-CONTROLLER-ADAPTER.md'
       - 'core/remote-resource-permission-governance.md'
       - 'tools/devos-remote-permission-check.py'
@@ -49,11 +50,10 @@ jobs:
         run: >-
           python tools/devos-github-actions-auth.py
           --repository zzpsah/chatgpt-development-os
-      - name: Live repository read through governed provider adapter
+      - name: Live repository read through adapter with proven App auth
         env:
           DEVOS_GITHUB_APP_ID: ${{ secrets.DEVOS_GITHUB_APP_ID }}
           DEVOS_GITHUB_APP_PRIVATE_KEY: ${{ secrets.DEVOS_GITHUB_APP_PRIVATE_KEY }}
         run: >-
-          python tools/devos-github-provider-adapter.py
-          --operation-json
-          '{"provider":"github","owner":"zzpsah","repository":"chatgpt-development-os","resource":null,"capability":"read.repository","workflow":"devos-controller-v1","project":"chatgpt-development-os","impact":"READ_ONLY","freshness":"main","action":"repository.get","inputs":{}}'
+          python tools/devos-github-proven-auth-read.py
+          --repository zzpsah/chatgpt-development-os
