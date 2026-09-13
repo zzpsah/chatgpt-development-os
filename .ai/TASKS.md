@@ -1,56 +1,39 @@
 # DevOS Tasks
 
 ## Active
-- **Controlled Remote Mutation Proof** is the active gap-driven maturity gate.
-- PR #14 branch: `devos/controlled-remote-mutation-proof`.
-- Prove the existing `github.mutate.file` capability using provider-simulated exact-state/readback tests before making any live-provider mutation claim.
+- **Production-Readiness Evidence Matrix & Limitations** is the active maturity gate after verified Controlled Remote Mutation Proof closure.
 - Preserve P11 Federation & Self-Healing Context v1 as the repository-first recovery/revalidation baseline.
-- Do not perform a live runtime remote mutation, destructive/production/database/credential/secret/security-sensitive mutation without separate explicit authorization for the exact operation/target/path.
-
-## Implemented in this gate
-- Normative `DEVOS-CONTROLLED-MUTATION-v1` contract.
-- New read-only `github.inspect.file` provider capability for current-state/readback evidence.
-- Runtime bridge support for bounded GitHub file inspection.
-- One-attempt controlled mutation supervisor over existing `github.mutate.file`.
-- Fresh provider pre-read and exact expected-SHA binding.
-- Mandatory fresh post-mutation provider readback before `VERIFIED`.
-- BLOCKED before mutation on missing auth, missing Security Gate, invalid path, unavailable pre-read, or stale expected SHA.
-- HOLD + replay forbidden after an attempted mutation when conflict/final state/readback verification is not proven.
-- Reconciliation of uncertain provider response through readback without issuing a second mutation.
-- Provider-simulated regression corpus with explicit read/mutation call counts.
-- GitHub adapter/runtime bridge tests extended for `github.inspect.file`.
-- Remote Mutation Controls docs/verifier strengthened.
-- Contracts CI wiring.
-
-## Verification evidence so far
-- Implementation head `776d2836a73bb564e61dfb6b89871ac4d4b6e670`: Contracts 523 passed the new Controlled Remote Mutation Proof and all observed contract steps.
-- Full DevOS 448 passed every observed job except the focused `Verify Remote Mutation Controls v1` job.
-- That Full 448 failure was only a contract wording mismatch: the verifier required literal `actual provider evidence` while the rewritten contract described the same rule with different wording.
-- Commit `f072bda4fb8110880878e69af82c99881b5f65f5` restored the required wording without runtime changes.
-
-## Pending closure
-- Persist durable CURRENT-STATE/TASKS/DECISIONS/session provenance on the branch.
-- Take fresh final-head Contracts + Full DevOS + applicable External Managed Project CI after all documentation commits.
-- Repair only evidence-backed failures.
-- Confirm PR #14 mergeable.
-- Merge only at the exact verified final head.
-- Persist provider-simulated controlled-mutation proof closure on `main`.
-
-## Explicitly not proven / not authorized by this stage
-- A live DevOS runtime `github.mutate.file` against a real provider resource.
-- Branch, pull-request, workflow, deployment, production, database, permission, credential/secret, or destructive mutation.
-
-Normal repository edits used to develop DevOS do not count as the runtime mutation proof.
+- Inventory major DevOS capability families and classify each as deterministic/component proven, integrated proven, real managed-project read-only proven, provider-simulated mutation proven, live-provider mutation proven, or unproven.
+- Map authorization, Security Gate, verification, recovery/no-replay, persistence, and continuation boundaries for each capability.
+- Explicitly document limitations rather than using a blanket “production ready” claim.
+- Do not perform a live runtime remote mutation or destructive/production/database/credential/secret/security-sensitive mutation merely to fill an evidence gap; such actions require separate explicit authorization for the exact operation/target/path.
 
 ## Completed recently
-- P11 Federation & Self-Healing Context v1 — repository-first recovery/revalidation baseline remains active.
 - Production E2E Harness — PR #11.
 - Failure + Recovery Proof — PR #12.
-- Multi-Session / Fresh-AI Continuation Proof — PR #13 at `cd8524b11f923e5e29eeaf445869b6239954ed1f`.
+- Multi-Session / Fresh-AI Continuation Proof — PR #13.
+- Controlled Remote Mutation Proof — PR #14 at `ffbdd7a4849dd012604911accd1211f172bde53b`.
 
-## Planned after controlled mutation proof
-- Production-readiness evidence matrix covering proven vs simulated vs unproven paths and known limits.
+## Controlled mutation final verification
+- Final source head: `bf5da56950d32722ce78898854eb3aa660321c38`.
+- Contracts 528 / `34757546919`: success.
+- Full DevOS 453 / `34757546920`: success.
+- External Managed Project 37 / `34757546868`: success.
+- Provider-simulated proof only: no live DevOS runtime remote mutation was claimed or executed as proof.
+
+## Production-readiness matrix acceptance targets
+- Capability inventory covers interpretation, project/state resolution, planning, readiness, controller/orchestration, runtime adapters, verification, security, persistence/recovery, multi-session continuation, self-healing, external read-only integrations, and remote mutation.
+- Every row names concrete repository evidence/tests/runs where available.
+- Every row states whether evidence is deterministic, integrated, real read-only managed-project, provider-simulated, or live-provider.
+- Every row states authorization/Security Gate boundaries and recovery/no-replay behavior where applicable.
+- Unproven live mutation/high-impact paths are explicitly marked not production-proven.
+- Known systemic limitations and assumptions are documented.
+- Add a machine-checkable/readable verifier so future regressions cannot silently inflate readiness claims.
+- Fresh final-head CI required before closing the matrix gate.
+
+## Planned after readiness evidence matrix
+- Gap-driven hardening only where the matrix identifies a coherent missing capability or insufficient evidence.
 - A live real-provider mutation proof only if separately explicitly authorized for an exact bounded target/path/operation.
 
 ## Safety invariant
-Repository state, provider credentials, prior approvals, prior successful runs, continuation packets, recovery checkpoints, test success, and simulated provider evidence never create new mutation authority. Higher-impact execution remains exact-step, current-state, capability, authorization, Security Gate, verification, and recovery bounded.
+Evidence classification never creates authority. A “proven” capability means the stated behavior has supporting evidence at the declared level; it does not grant permission to execute that capability in a new context.
