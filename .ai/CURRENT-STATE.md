@@ -6,8 +6,8 @@
 - Source tree + Git are authoritative for implementation and exact project state; ChatGPT Memory/chat history are supplementary only.
 - P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P9 through P17 are complete on `main`.
-- Production E2E Harness, Failure + Recovery Proof, Multi-Session / Fresh-AI Continuation Proof, Controlled Remote Mutation Proof, Trust-First audit gap closure, Production-Readiness Evidence Matrix, Foundation Health & State Consistency, and Cross-Host Recovery Friction & Onboarding Proof are closed at their stated evidence levels.
-- **Active bounded objective: Recovery Friction → Foundation Health/Doctor Integration.** This is unnumbered; no P18/P19 phase is created.
+- Production E2E Harness, Failure + Recovery Proof, Multi-Session / Fresh-AI Continuation Proof, Controlled Remote Mutation Proof, Trust-First audit gap closure, Production-Readiness Evidence Matrix, Foundation Health & State Consistency, Cross-Host Recovery Friction & Onboarding Proof, and Recovery Friction → Foundation Health/Doctor Integration are closed at their stated evidence levels.
+- **Active bounded objective: Current-Source Evidence Refresh Protocol.** This is unnumbered; no P18/P19 phase is created.
 - Product invariant: DevOS is a Development OS for AI across vendors, models, accounts, coding agents, sessions, machines, and Git-provider adapters; no AI account/chat/model/vendor memory is authoritative project state.
 
 ## Canonical governed path
@@ -16,23 +16,22 @@
 
 Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, continuation packets, and simulated provider evidence never manufacture permission.
 
-## PR #16 readiness-evidence closure
+## Production-readiness evidence boundary
 
-PR #16 final source head: `6c509d6f65b22666f121dfe86604faae72c08f8c`.
-Merge commit on `main`: `b8e31ae76201b32e4617ef6044b29ef285004f54`.
+The v1 readiness ledger remains conservative:
+- `production_ready = false`;
+- live mutation proof remains false;
+- controlled remote mutation remains provider-simulated / contract-level evidence;
+- historical evidence stays pinned to the original source/run heads;
+- current-source divergence is exposed as `historical_source_drift` and is never silently refreshed.
 
-Fresh post-merge `main` verification at `b8e31ae76201b32e4617ef6044b29ef285004f54`:
-- Trust-First Audit 23 / `34762783110`: success.
-- Contracts 560 / `34762783133`: success.
-- Full DevOS 485 / `34762783132`: success.
-
-The v1 readiness ledger remains conservative: `production_ready = false`, live mutation proof remains false, historical evidence stays pinned, and source drift is never silently refreshed.
+The persistent known drift remains `tools/test-step-readiness-orchestrator.py`. That historical evidence is still valid only for its pinned source. A current-source claim requires separate new evidence rather than rewriting history.
 
 ## Foundation Health & State Consistency — CLOSED
 
 Architecture:
 
-`Source / Git / Tests / CI → devos-audit.py → readiness evidence ledger → machine-derived status → devos-doctor.py`
+`Source / Git / Tests / CI → devos-audit.py → readiness evidence ledger → recovery-friction evidence → devos-health.py → devos-doctor.py`
 
 Normative contract: `core/foundation-health-state-consistency.md`.
 Machine health: `tools/devos-health.py`.
@@ -47,48 +46,54 @@ Health/doctor remain READ_ONLY with authority/authorization unchanged and execut
 
 ## Cross-Host Recovery Friction & Onboarding Proof — CLOSED
 
-Normative contract: `core/cross-host-recovery-friction.md`.
 Analyzer: `tools/recovery-friction.py`.
 Protocol: `DEVOS-RECOVERY-FRICTION-v1`.
-Regression corpus: `tools/test-recovery-friction.py`.
-Host profile source: existing `DEVOS-HOST-PROFILE-v1` validator.
-
-Architecture:
-
-`Repository evidence + Git + host profile → recovery-friction.py → deterministic machine-readable recovery/friction evidence`
+Normative contract: `core/cross-host-recovery-friction.md`.
 
 Final source head: `55b3a8e64ecefae6058529ea18c6ca04b80d2860`.
 PR #20 merge commit: `4161abf357bbca1e8bb844c7d87f74cfb34b94e6`.
+Fresh post-merge main: Trust-First 42 / `34764727276`, Contracts 579 / `34764727340`, Full DevOS 504 / `34764727299`: success.
+Closure-state main `9258a5e53be542b6ed246ed5c72155f1521b80e7`: Trust-First 45 / `34764829953`, Contracts 582 / `34764829874`, Full DevOS 507 / `34764829850`: success.
+
+Evidence classification remains `DETERMINISTIC_HOST_PROFILE_SIMULATION`; `real_cross_vendor_account_proven` remains false. Recovery success is distinct from continuation capability. Friction units are transparent issue counts, not readiness/authorization/probability scores.
+
+## Recovery Friction → Foundation Health/Doctor Integration — CLOSED
+
+Final source head: `869a95894dad5feaafcbc286ec1fb0027c8321df`.
+PR #21 merge commit: `c3c7597a5b475c7060efc8fb9e6df81f88716e8c`.
 
 Fresh exact-final-head PR verification:
-- Trust-First Audit 41 / `34764671486`: success.
-- Contracts 578 / `34764671499`: success.
-- Full DevOS 503 / `34764671501`: success.
+- Trust-First Audit 54 / `34765090674`: success.
+- Contracts 591 / `34765090663`: success.
+- Full DevOS 516 / `34765090662`: success.
 
-Fresh post-merge `main` verification at `4161abf357bbca1e8bb844c7d87f74cfb34b94e6`:
-- Trust-First Audit 42 / `34764727276`: success.
-- Contracts 579 / `34764727340`: success.
-- Full DevOS 504 / `34764727299`: success.
+Fresh post-merge `main` verification at `c3c7597a5b475c7060efc8fb9e6df81f88716e8c`:
+- Trust-First Audit 55 / `34765164604`: success.
+- Contracts 592 / `34765164610`: success.
+- Full DevOS 517 / `34765164649`: success.
 
-Evidence classification remains `DETERMINISTIC_HOST_PROFILE_SIMULATION`; `real_cross_vendor_account_proven` remains false. Recovery success is kept distinct from continuation capability. Friction units are transparent issue counts, not readiness/authorization/probability scores.
+The integration adds one subordinate `cross_host_recovery` row to Foundation Health by invoking the existing recovery-friction analyzer. `devos-doctor.py` only renders the health-supplied result; it does not independently recompute recovery truth.
 
-No live provider, destructive, production, permission, credential, secret, deployment, or database mutation was performed.
+Conservative propagation is proven for missing/malformed host profile evidence, stale expected HEAD, critical host capability gaps, canonical identity tampering, and simulated-evidence non-promotion. No live/destructive/provider mutation was performed.
 
-## Active bounded objective — Recovery Friction → Foundation Health/Doctor Integration
+## Active bounded objective — Current-Source Evidence Refresh Protocol
 
-The next smallest gap is presentation/integration, not another truth source. Foundation Health should consume the recovery-friction analyzer as a subordinate read-only evidence source so `devos-doctor.py` can present recovery/continuation friction without duplicating recovery logic.
+The next smallest observed evidence gap is the known historical-source drift. DevOS needs a reviewed way to add **new current-source evidence** without mutating or relabeling historical records.
 
-Acceptance direction:
-- health/doctor invokes or composes the existing `DEVOS-RECOVERY-FRICTION-v1` result;
-- no recovery claim is recomputed independently in doctor;
-- recovery `WARN`/`UNKNOWN`/`BLOCKED` propagates conservatively and never becomes PASS;
-- deterministic host-profile simulation remains explicitly distinct from actual cross-vendor/account evidence;
-- doctor remains READ_ONLY and non-authorizing;
+Goal:
+- preserve historical ledger rows and archived provenance unchanged;
+- allow separately generated current-source verification evidence to be recorded with exact source head/run/test provenance;
+- require current evidence to prove only the level actually observed;
+- never infer live-provider/production proof from deterministic or integrated CI;
+- make Health/Doctor distinguish historical drift from newly verified current-source evidence;
+- keep evidence refresh itself non-authorizing and READ_ONLY with respect to project/runtime execution;
 - no live/destructive/provider mutation is required.
+
+This objective must extend the existing readiness evidence system rather than create another truth ledger.
 
 ## Controlled Remote Mutation evidence boundary
 
-The existing controlled mutation proof is provider-simulated / contract-level proof only. Provider mutation response is attempt evidence, not completion proof, and failed/uncertain mutation does not authorize automatic replay.
+The existing controlled mutation proof remains provider-simulated / contract-level only. Provider mutation response is attempt evidence, not completion proof, and failed/uncertain mutation does not authorize automatic replay.
 
 Still unproven unless separately explicitly authorized and bounded:
 - live real-provider DevOS runtime mutation proof;
