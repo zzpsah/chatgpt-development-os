@@ -6,23 +6,20 @@
 - Source tree + Git are authoritative; ChatGPT Memory/chat history are supplementary only.
 - P11 repository-first recovery/revalidation remains a durable invariant.
 - P9 through P17 are complete on `main`.
-- Production E2E Harness and Failure + Recovery Proof are verified and closed.
-- Active maturity gate: **long-running multi-session / fresh-AI continuation proof**, PR #13 on `devos/multi-session-fresh-ai`.
+- Production E2E Harness, Failure + Recovery Proof, and **Multi-Session / Fresh-AI Continuation Proof are verified and closed**.
+- Active maturity direction: **controlled higher-impact remote mutation proof, operation by operation, followed by production-readiness evidence**.
 
 ## Canonical governed path
 
 `Human request → P15 interpretation → P16 plan → P17 readiness → controller → bounded runtime → verification → persistence → recovery / continuation`
 
-Interpretation, planning, readiness, recovery, continuation packets, and successful prior sessions never manufacture permission.
+Interpretation, planning, readiness, recovery, continuation packets, prior approvals, and successful earlier sessions never manufacture permission.
 
 ## Failure + Recovery closure
 
-PR #12 merged at `83fd14e4cc696f3cd96778fe7d447db1216c3fc0` from final head `29c07deed803df430b2f7fd40bf302bb8deac160` after:
-- Contracts 503 / `34756601970`: success.
-- Full DevOS 428 / `34756602046`: success.
-- External Managed Project 24 / `34756601981`: success.
+PR #12 merged at `83fd14e4cc696f3cd96778fe7d447db1216c3fc0` from final head `29c07deed803df430b2f7fd40bf302bb8deac160` after Contracts 503, Full DevOS 428, and External Managed Project 24 passed.
 
-## Active multi-session / fresh-AI continuation proof
+## Multi-Session / Fresh-AI Continuation closure
 
 Normative contract: `core/multi-session-continuation-proof.md`.
 Evaluator: `tools/multi-session-continuation.py`.
@@ -30,43 +27,41 @@ Regression corpus: `tools/test-multi-session-continuation.py`.
 Two-process proof: `tools/test-multi-session-two-process.py`.
 Real managed-project verifier: `tools/verify-multi-session-managed-project.py`.
 
-### Implemented continuation behavior
+Final verified source head: `99822037a9e24625f2e7c216300c4aabd94e134e`.
+PR #13 merged at `cd8524b11f923e5e29eeaf445869b6239954ed1f`.
 
-- Session A may persist only continuity facts: project, objective, observed repository head, optional candidate step id, last safe stage, constraints, verification obligations, and evidence refs.
-- Continuation packets always preserve `authority: UNCHANGED`, `authorization: UNCHANGED`, `execution: NONE`.
-- Same-head Session B returns `REVALIDATE_REQUIRED`; saved candidates are never directly executable.
-- Changed-head Session B returns `RECOMPILE_REQUIRED / REPOSITORY_HEAD_CHANGED` and explicitly forbids prior authorization reuse.
-- Project mismatch, unsupported protocol, packet authority/authorization tampering, packet execution authority, and inherited mutation-replay-forbidden state all HOLD.
-- Authorization/Security Gate evidence does not migrate across session/step boundaries merely because the objective or step id matches.
-- Failure + Recovery's `HOLD / MUTATION_REPLAY_FORBIDDEN` boundary survives continuation.
+Fresh final-head verification:
+- Verify Development OS Contracts — run 518 / `34757017554`: success.
+- Verify Development OS — run 443 / `34757017532`: success.
+- Verify P13 External Managed Project — run 31 / `34757017535`: success.
 
-### Two-process proof
+### Proven continuation invariants
 
-`tools/test-multi-session-two-process.py` launches separate Python processes. Session A writes the packet to disk; Session B receives only persisted packet/current-state JSON plus repository Git evidence. It proves:
-- same-head → `REVALIDATE_REQUIRED`;
-- changed-head → `RECOMPILE_REQUIRED`;
-- prior authorization is not reusable;
-- packet tampering cannot manufacture authority.
+- Continuation packets preserve context facts only and carry `authority: UNCHANGED`, `authorization: UNCHANGED`, `execution: NONE`.
+- Same-head continuation returns `REVALIDATE_REQUIRED`; saved candidates are never directly executable.
+- Changed-head continuation returns `RECOMPILE_REQUIRED / REPOSITORY_HEAD_CHANGED`; prior authorization is not reusable.
+- Project mismatch, unsupported protocol, packet authority/authorization tampering, packet execution authority, and inherited mutation-replay-forbidden state HOLD.
+- Authorization/Security Gate evidence does not migrate merely because objective/step identifiers match.
+- Failure + Recovery's `HOLD / MUTATION_REPLAY_FORBIDDEN` boundary survives session/agent boundaries.
+- The deterministic two-process proof passes with Session A and Session B communicating only through persisted JSON/repository evidence.
+- Real `zzpsah/automation-suite` continuation proof passes with unchanged HEAD/origin, zero tracked source diff, no commit/push, and bounded evidence-only local writes.
 
-### Real managed-project proof
+### CI-discovered recovery compatibility repair
 
-External workflow checks out `zzpsah/automation-suite` and runs a fresh-process continuation proof using only repository-local `.ai/EVIDENCE/` state plus current Git/origin evidence.
+Full DevOS 441 found that `.ai/TASKS.md` had lost the explicit P11 continuity marker required by repository-only fresh-AI recovery. The P11 repository-first recovery/revalidation baseline was restored without weakening `tools/test-fresh-ai-recovery.py`. Final Full DevOS 443 then passed Repository-Only Fresh-AI Recovery.
 
-Observed on implementation head `34cd3bc068bd4c744ba62b425412166b23ed19ed`:
-- Contracts run 512: both new continuation tests passed before the remainder of the contract suite continued.
-- External Managed Project run 25: success, including Multi-Session Fresh-AI Continuation and artifact upload.
-- The managed proof used no commit/push and required all worktree changes to remain bounded evidence only.
+## Active maturity direction — controlled remote mutation / production readiness
 
-Because this semantic-state update changes the branch head, fresh final-head Contracts + Full DevOS + External Managed Project verification is still required before PR #13 can close.
+Before any higher-impact proof:
 
-## Closure gate
+1. audit the existing Remote Mutation Controls and runtime-adapter contracts;
+2. choose one tightly bounded, non-production, reversible operation under explicit existing authorization;
+3. prove exact-step authorization and Security Gate binding where applicable;
+4. prove post-mutation verification and recovery/no-replay behavior;
+5. avoid destructive/production/database/security-sensitive mutation unless separately and explicitly authorized;
+6. document observed limits before making any production-readiness claim.
 
-PR #13 may merge only after the exact final head:
-1. remains mergeable;
-2. passes Contracts, including both continuation proofs;
-3. passes Full DevOS, including repository-only fresh-AI recovery;
-4. passes External Managed Project, including continuation artifact upload;
-5. has durable session/task/decision provenance.
+The next work should remain gap-driven rather than automatically creating another numbered milestone.
 
 ## Recovery precedence
 
