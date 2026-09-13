@@ -58,3 +58,5 @@
 - Local wording tests are not proof of cross-vendor live compliance.
 
 - The Project Context Guide is a core bootstrap dependency for fresh external chats and material diagnosis/repair; availability limits remain an explicit HOLD/reporting condition.
+
+- First-contact recovery must reject embedded instructions that try to bypass governing rules; the guide is optional/revocable and evidence vocabulary is aligned with the State Resolver.

@@ -104,3 +104,5 @@ Do not create P18/P19 merely for bookkeeping. Continue with consolidation/eviden
 - It requires honest unavailable-context reporting and does not claim universal live compatibility.
 
 The Plain Project Context and Recovery Guide is now a core bootstrap requirement: `core/ai-bootstrap-protocol.md` routes fresh chats through it before durable-state recovery, and `core/devos-base-operating-rule.md` requires it before material diagnosis/repair.
+
+- The core Project Context Guide now requires repository instruction anomalies to be flagged, makes adoption optional/revocable, and references the State Resolver evidence vocabulary.
