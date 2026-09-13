@@ -7,7 +7,7 @@
 - P11 repository-first recovery/revalidation remains a durable invariant.
 - P9 through P17 are complete on `main`.
 - Production E2E Harness, Failure + Recovery Proof, Multi-Session / Fresh-AI Continuation Proof, and **Controlled Remote Mutation Proof are verified and closed**.
-- Foundation Bootstrap Hardening is now implemented at v1 contract/checker level and remains an active hardening area.
+- Foundation Bootstrap Hardening is implemented at v1 contract/checker level.
 - Active maturity gate: **Production-Readiness Evidence Matrix & Limitations**.
 - **Product vision invariant:** DevOS is an OS for AI-assisted software development across AI vendors, models, accounts, coding agents, machines, and Git providers; no single AI account, model, chat, or vendor-specific memory may be authoritative project state.
 
@@ -16,6 +16,37 @@
 `Human request → P15 interpretation → P16 plan → P17 readiness → controller → bounded runtime → verification → persistence → recovery / continuation`
 
 Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, continuation packets, and simulated provider evidence never manufacture permission.
+
+## Universal Project Onboarding + Repository Creation
+
+Universal Project Onboarding is implemented on the feature branch `feat/universal-project-onboarding` and is intended to be the next foundation capability once its exact-head CI is green and the change is accepted.
+
+Normative contract:
+- `core/devos-universal-project-onboarding.md`
+- `core/devos-universal-onboarding-policy.md`
+- `core/devos-repository-creation-capability.md`
+
+Implementation:
+- `tools/devos-onboard.py` — cross-platform idempotent onboarding, plan by default, `--apply` creates only missing DevOS infrastructure.
+- `tools/test-devos-onboard.py` — preservation, idempotency, new-project, Git caller, and incompatible-framework HOLD regression corpus.
+- `tools/devos-create-repository.py` — provider-neutral repository creation adapter with GitHub REST support; plan by default; explicit `--apply` plus explicit authorization and local safety enablement required for a live attempt.
+- `tools/test-devos-create-repository.py` — deterministic capability, authorization, timeout, and no-secret-leak regression corpus.
+
+Repository creation is a separate high-impact remote mutation capability: `repository.create` / provider example `github.repository.create`.
+
+Safety invariants:
+- provider capability != DevOS authorization;
+- repository creation authorization != authorization for application code or production work;
+- provider response != verified completion;
+- uncertain creation response -> HOLD / reconcile, never blind replay;
+- no provider credential is printed or persisted by the reference tool;
+- current ChatGPT GitHub connector does not expose a `create repository` action, so a live creation cannot be claimed through that connector until an appropriate provider integration exposes the capability.
+
+The intended governed new-project flow is:
+
+`P15 interpretation → P16 plan → P17 exact repository.create readiness → explicit authorization + provider capability → one repository-create request → fresh provider verification → universal onboarding → context validation`
+
+A provider without repository-creation capability must return/lead to `NEEDS_EXTERNAL_REPO_CREATION`, not a false success.
 
 ## Foundation Bootstrap Hardening
 
