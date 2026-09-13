@@ -4,15 +4,13 @@
 >
 > **Audience:** AI engineers, coding agents, maintainers, and fresh AI/account/platform handoffs.
 >
-> **Status:** living design document. It describes verified repository facts separately from future goals and unproven capability targets.
+> **Status:** living design document. Verified repository facts, engineering goals, and unproven future targets are intentionally distinguished.
 
 ## 1. The objective
 
 DevOS is a repository-first Development OS for AI-assisted software engineering.
 
 The objective is not to build one autonomous coding bot tied to one vendor. The objective is to make software-development context, governance, planning, execution boundaries, verification, recovery, and engineering knowledge portable across AI models/vendors, AI accounts/chats, coding agents/MCP hosts, machines, Git providers, provider adapters, and multiple concurrently managed projects.
-
-The durable invariant is:
 
 ```text
 AI A + Account A
@@ -53,7 +51,7 @@ This is why DevOS can become more autonomous without turning the AI into an unre
 
 ## 3. What has been built so far
 
-P0–P7 established the foundational project-context, evidence, security, bounded-autonomy, runtime, portability, and onboarding substrate. The repository subsequently closed the following verified architecture layers:
+P0–P7 established the foundational project-context, evidence, security, bounded-autonomy, runtime, portability, and onboarding substrate. The repository subsequently closed:
 
 ```text
 P9   Development Task Controller
@@ -82,7 +80,7 @@ Cross-Host Recovery Friction / Health integration
 Host-neutral MCP/App repository.create
 Current-Source Evidence Refresh
 MCP/App Permission Control Plane + Multi-Project Agent Isolation
-Actionable HOLD + Scoped Approval + governed continuation (PR #23)
+Actionable HOLD + Scoped Approval + governed continuation (PR #23; merged)
 ```
 
 These labels are architecture history, not a command to invent endless numbered phases.
@@ -108,13 +106,9 @@ flowchart TD
     FR --> V
 ```
 
-### Important interpretation of the flow
-
-The flow is a governed loop, not a single linear script. Every continuation re-enters current state and current gates. An old plan, approval, checkpoint, or successful run cannot silently manufacture new permission.
+The flow is a governed loop, not a single linear script. Every continuation re-enters current state and current gates. Old plans, approvals, checkpoints, or successful runs cannot silently manufacture permission.
 
 ## 5. Semantic architecture model
-
-The system has four different kinds of information. They must never be collapsed into one blob of AI memory.
 
 ```mermaid
 flowchart LR
@@ -135,15 +129,13 @@ flowchart LR
     E[Evidence ledger] --> V
 ```
 
-### Semantic ownership
-
 | Layer | Meaning | May it grant authority? |
 |---|---|---|
 | Human language | What the user is asking | No |
 | P15 interpretation | Canonical intent, constraints, ambiguity | No |
 | P16 plan | How the objective could be accomplished | No |
 | P17 readiness | Whether the exact step is currently eligible | No |
-| Authorization | Explicit permission for an exact bounded action | Yes, only within its stated scope |
+| Authorization | Explicit permission for an exact bounded action | Yes, only within stated scope |
 | Runtime | What actually happened | No |
 | Verification | What can be proven after the action | No |
 | Repository/.ai | Durable project truth and provenance | No, it stores evidence/decisions rather than creating permission |
@@ -151,17 +143,11 @@ flowchart LR
 
 ## 6. Human Language Interpreter: evolution target
 
-The Human Language Interpreter must evolve by **evidence-driven experimentation**, not by silently rewriting its own authority rules.
+P15 must evolve by **evidence-driven experimentation**, not by silently rewriting authority rules.
 
-### Current role
+Current role: convert natural human requests into bounded semantic intent across contextual English/Hinglish, shorthand, corrections, referents, negative constraints, ambiguity, and safe intent composition.
 
-P15 converts natural human requests into bounded semantic intent. It handles contextual English/Hinglish, shorthand, corrections, referents, negative constraints, ambiguity, and safe intent composition.
-
-### Future target
-
-The interpreter should continuously improve at typo/noise tolerance, short conversational commands, context and referent resolution, temporal phrases such as “continue”, project-aware vocabulary, domain-specific engineering language, multilingual and mixed-language input, clarification selection, hidden scope expansion detection, and learning from accepted/rejected interpretations without learning new authority.
-
-### Self-evolution loop
+Future target: improve typo/noise tolerance, short conversational commands, context/referent resolution, temporal phrases, project-aware vocabulary, domain engineering language, multilingual/mixed-language input, clarification selection, hidden scope expansion detection, and learning from accepted/rejected interpretations without learning new authority.
 
 ```mermaid
 flowchart TD
@@ -180,17 +166,11 @@ flowchart TD
     NEW --> BASE
 ```
 
-The key rule is:
-
 > **The interpreter may learn how to understand language better; it may not learn that language itself grants permission.**
 
-### Experiment discipline
-
-A future interpreter experiment should record experiment ID, input examples, context snapshot, old interpretation, candidate interpretation, expected semantic delta, security/authorization impact, regression corpus, observed result, review decision, and source commit. The experiment record belongs in the repository.
+Every persistent experiment belongs in the repository with input/context, baseline/candidate output, semantic delta, risk analysis, regression evidence, decision, and source commit.
 
 ## 7. Any-account / any-AI / any-platform target
-
-The long-term compatibility target is a vendor-neutral agent contract.
 
 ```mermaid
 flowchart LR
@@ -207,7 +187,7 @@ flowchart LR
     CORE --> EXT[Delegated external tools]
 ```
 
-A compatible AI host should be able to discover the project, recover `.ai` + Git state, inspect source/current HEAD, interpret language through P15, compile bounded plans through P16, obtain current P17 readiness and exact authorization, execute only through supported adapters/runtime boundaries, verify actual results, persist evidence and semantic state, and recover safely in a fresh session or on another host.
+A compatible AI host should be able to discover the project, recover `.ai` + Git state, inspect source/current HEAD, interpret language through P15, compile bounded plans through P16, obtain P17 readiness and exact authorization, execute only through supported runtime/adapters, verify actual results, persist evidence/semantic state, and recover safely in a fresh session or on another host.
 
 ## 8. Future automated-development flow
 
@@ -236,32 +216,18 @@ Durable evidence + semantic documentation
    ↓
 Regression / CI
    ↓
-Continuation decision
-   ├── CONTINUE
-   ├── HOLD
-   ├── STOP
-   └── ESCALATE
+CONTINUE | HOLD | STOP | ESCALATE
 ```
 
-For larger objectives, orchestration may decompose the work into independent units, but each unit must preserve project identity, scope, dependencies, authorization, evidence, and verification.
+Larger objectives may be decomposed into independent work units, but each unit preserves project identity, scope, dependencies, authorization, evidence, and verification.
 
 ## 9. Self-maintaining repository model
 
-The repository should continuously keep itself **machine-current** and **semantically explicit**.
+The repository should continuously stay **machine-current** and **semantically explicit**.
 
-### Machine-derived updates
+Automation may safely update exact source heads, Git/CI observations, changelogs, evidence references, generated indexes, timestamps/run metadata, and bounded health diagnostics.
 
-Automation may safely update exact source heads, Git/CI observations, change logs, test evidence references, generated indexes, timestamps/run metadata, and bounded health diagnostics.
-
-### Semantic updates
-
-AI engineering work must update when applicable architecture, decisions, requirements, objectives, active/completed tasks, session provenance, future plans, experiment results, and evidence limitations.
-
-Automation must not invent these semantic decisions from commit text alone.
-
-### Change-to-document rule
-
-Every material implementation change should leave a durable record in the same change boundary or an explicitly linked immediate closure change:
+AI/engineering judgment is required for architecture, decisions, requirements, objectives, future plans, experiment conclusions, and semantic security/authorization changes. Automation must not infer semantic truth from commit messages alone.
 
 ```text
 material code / contract change
@@ -279,42 +245,31 @@ CI / review
 
 ## 10. Future goals
 
-### G1 — Universal project recovery
-A fresh AI on a fresh account and machine should recover the correct project state from repository evidence without chat-history dependency.
+**G1 — Universal project recovery.** Fresh AI/account/machine recovers the correct project state from repository evidence without chat-history dependency.
 
-### G2 — Universal host adapter
-Any compatible AI host should connect through the same governed semantic/runtime contracts.
+**G2 — Universal host adapter.** Any compatible AI host connects through the same governed semantic/runtime contracts.
 
-### G3 — Provider-neutral remote operations
-Provider adapters should expose capabilities while DevOS remains the authority boundary for exact actions.
+**G3 — Provider-neutral remote operations.** Provider adapters expose capability while DevOS remains the authority boundary for exact actions.
 
-### G4 — Safe long-running engineering agent
-DevOS should handle long objectives across many sessions with checkpoints, recovery, scoped continuation, and no-blind-replay semantics.
+**G4 — Safe long-running engineering agent.** Long objectives work across many sessions with checkpoints, recovery, scoped continuation, and no-blind-replay semantics.
 
-### G5 — Evidence-native development
-Every important claim should be traceable to source, test, CI, runtime evidence, or clearly marked deterministic simulation.
+**G5 — Evidence-native development.** Important claims trace to source, tests, CI, runtime evidence, or clearly marked deterministic simulation.
 
-### G6 — Self-improving human-language interface
-P15 should improve from experiment/evidence while the authorization model remains invariant.
+**G6 — Self-improving human-language interface.** P15 improves from experiment/evidence while authorization rules remain invariant.
 
-### G7 — Multi-project isolation
-A long-lived agent may work on many projects without cross-project state, approval, credential, or context leakage.
+**G7 — Multi-project isolation.** A long-lived agent can work on many projects without cross-project state, approval, credential, or context leakage.
 
-### G8 — Automated engineering lifecycle
-The mature system should support inspect → plan → implement → verify → document → continue across supported stacks, with escalation where human authority is still required.
+**G8 — Automated engineering lifecycle.** Mature DevOS supports inspect → plan → implement → verify → document → continue across supported stacks, escalating when human authority is still required.
 
-### G9 — Production evidence, not production claims
-Production readiness should become a measured evidence outcome, not a prose label.
+**G9 — Production evidence, not production claims.** Production readiness is a measured evidence outcome, not a prose label.
 
-## 11. What remains deliberately outside automatic authority
+## 11. Deliberately outside automatic authority
 
-Even a future highly autonomous DevOS must separately gate destructive deletion, force updates, production deployments, permission/credential/secret changes, database migrations or destructive data changes, security-policy weakening, account/identity changes, and irreversible external side effects.
+Even a future highly autonomous DevOS must separately gate destructive deletion, force updates, production deployments, permission/credential/secret changes, destructive database changes, security-policy weakening, account/identity changes, and irreversible external side effects.
 
 More autonomy means better planning, recovery, verification, and tool coordination—not weaker authorization.
 
 ## 12. Fresh-AI continuation protocol
-
-A fresh AI should:
 
 ```text
 1. Read AGENTS.md.
@@ -328,17 +283,21 @@ A fresh AI should:
 9. Reconcile conflicts using repository-first precedence.
 10. Identify the active bounded objective.
 11. Rebuild the current plan rather than trusting stale chat instructions.
-12. Continue only through the normal P15/P16/P17/controller/runtime gates.
+12. Continue only through P15/P16/P17/controller/runtime gates.
 13. Persist what changed and what was proven.
 ```
 
 ## 13. How this document stays alive
 
-This document is a durable **map**, not a second source of truth.
+This map is a durable **navigation/design layer**, not a competing source of truth.
 
-Its maintenance contract is defined in `core/devos-living-state-and-evolution.md`; the experiment ledger is `docs/DEVOS-INTERPRETER-EXPERIMENT-LEDGER.md`; stable fresh-AI discovery starts at `docs/handoff/README.md`.
+Maintenance contract: `core/devos-living-state-and-evolution.md`.
 
-When the architecture materially changes, update the map, affected semantic records, and evidence references before declaring the change complete.
+Interpreter experiment ledger: `docs/DEVOS-INTERPRETER-EXPERIMENT-LEDGER.md`.
+
+Stable fresh-AI discovery: `docs/handoff/README.md`.
+
+When architecture materially changes, update the map, affected semantic records, and evidence references before declaring the change complete.
 
 ## 14. Final product direction
 
@@ -357,5 +316,3 @@ Vendor-neutral engineering OS
 + durable future roadmap
 = continuously developable AI engineering platform
 ```
-
-That is the DevOS target.
