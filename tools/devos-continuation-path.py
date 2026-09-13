@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Real DevOS continuation path: P15 -> P16 -> P17 -> controller.
+"""Real DevOS continuation path: P15 -> state resolver -> P16 -> P17 -> controller.
 
 This module is orchestration glue, not a new authorization system. Scoped approval
 is validated before it is represented to P17 as step-bound authorization evidence.
@@ -27,6 +27,7 @@ def _load(name: str, filename: str):
 
 
 P15 = _load("devos_p15_interpreter", "human-language-interpreter.py")
+STATE_RESOLVER = _load("devos_ai_state_resolver", "ai-state-resolver.py")
 P16 = _load("devos_p16_planner", "semantic-goal-to-plan.py")
 P17 = _load("devos_p17_readiness", "step-readiness-orchestrator.py")
 CONTROLLER = _load("devos_controller", "development-task-controller.py")
@@ -117,14 +118,23 @@ def evaluate(payload: dict[str, Any]) -> dict[str, Any]:
             "mutation": "NONE",
         }
 
+    state_resolution = STATE_RESOLVER.resolve({
+        "claims": payload.get("state_claims", []),
+        "events": payload.get("events", []),
+        "changed_paths": payload.get("changed_paths", []),
+    })
     intent = interpretation.get("intents", ["RESUME_WORK"])[0]
-    plan = P16.compile_plan(intent, active_objective, project, interpretation.get("constraints", []), interpretation.get("ambiguity", []))
+    plan = P16.compile_plan(
+        intent, active_objective, project, interpretation.get("constraints", []),
+        interpretation.get("ambiguity", []), state_resolution,
+    )
     if plan.get("decision") != "PLANNED":
         return {
             "protocol": "DEVOS-CONTINUATION-PATH-v1",
             "status": "BLOCKED",
             "reason": "P16 did not produce a planned continuation",
             "p15": interpretation,
+            "state_resolution": state_resolution,
             "p16": plan,
             "authority": "UNCHANGED",
             "authorization": "UNCHANGED",
@@ -139,6 +149,7 @@ def evaluate(payload: dict[str, Any]) -> dict[str, Any]:
             "protocol": "DEVOS-CONTINUATION-PATH-v1",
             "status": "NO_ACTION",
             "p15": interpretation,
+            "state_resolution": state_resolution,
             "p16": plan,
             "authority": "UNCHANGED",
             "authorization": "UNCHANGED",
@@ -169,7 +180,7 @@ def evaluate(payload: dict[str, Any]) -> dict[str, Any]:
             reasons=["STEP_SCOPE_EVIDENCE_MISSING"],
         )
         return {"protocol": "DEVOS-CONTINUATION-PATH-v1", "status": "HOLD", "hold": hold,
-                "p15": interpretation, "p16": plan, "authority": "UNCHANGED",
+                "p15": interpretation, "state_resolution": state_resolution, "p16": plan, "authority": "UNCHANGED",
                 "authorization": "UNCHANGED", "execution": "NONE", "mutation": "NONE"}
 
     approval = _approval(payload.get("scoped_approval"))
@@ -194,7 +205,7 @@ def evaluate(payload: dict[str, Any]) -> dict[str, Any]:
             reasons=reasons,
         )
         return {"protocol": "DEVOS-CONTINUATION-PATH-v1", "status": "HOLD", "hold": hold,
-                "p15": interpretation, "p16": plan, "approval_reuse": "REJECTED",
+                "p15": interpretation, "state_resolution": state_resolution, "p16": plan, "approval_reuse": "REJECTED",
                 "authority": "UNCHANGED", "authorization": "UNCHANGED",
                 "execution": "NONE", "mutation": "NONE"}
 
@@ -226,7 +237,7 @@ def evaluate(payload: dict[str, Any]) -> dict[str, Any]:
             reasons=[str(x) for x in readiness.get("reasons", [])],
         )
         return {"protocol": "DEVOS-CONTINUATION-PATH-v1", "status": "HOLD", "hold": hold,
-                "p15": interpretation, "p16": plan, "p17": readiness,
+                "p15": interpretation, "state_resolution": state_resolution, "p16": plan, "p17": readiness,
                 "approval_reuse": "SCOPED_APPROVAL_REUSED",
                 "authority": "UNCHANGED", "authorization": "UNCHANGED",
                 "execution": "NONE", "mutation": "NONE"}
@@ -250,6 +261,7 @@ def evaluate(payload: dict[str, Any]) -> dict[str, Any]:
         "status": status,
         "approval_reuse": "SCOPED_APPROVAL_REUSED",
         "p15": interpretation,
+        "state_resolution": state_resolution,
         "p16": plan,
         "p17": readiness,
         "controller": controller,

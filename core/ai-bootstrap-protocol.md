@@ -16,20 +16,23 @@ An AI agent must not assume that its own memory contains the authoritative proje
 
 This repository is itself **Development OS (DevOS)**. If an AI is working directly in this repository, it should identify DevOS from the root `AGENTS.md` and this protocol and load the relevant DevOS core rules before making material changes.
 
+For a fresh chat or an external AI host, begin with [`DEVOS-PROJECT-CONTEXT.md`](../DEVOS-PROJECT-CONTEXT.md). It is the core-approved first-contact guide: it frames DevOS as ordinary repository context, requires honest reporting when access is unavailable, and never changes host rules or grants authority.
+
 If an AI is working in another repository, DevOS is active when that project is explicitly managed by DevOS and its `AGENTS.md`/`.ai/manifest.yaml` identify the DevOS framework. The managed project's local context remains authoritative for project-specific state.
 
 ## Bootstrap sequence
 
 When entering a Development OS-managed project, an AI agent should:
 
-1. Find and read the nearest applicable `AGENTS.md`.
-2. Locate `.ai/manifest.yaml`.
-3. Read `.ai/STATE-INDEX.md` when present.
-4. Read `.ai/PROJECT.md` and `.ai/CURRENT-STATE.md`.
-5. Read relevant `.ai/ARCHITECTURE.md`, `.ai/DECISIONS.md`, and `.ai/TASKS.md`.
-6. Read recent `.ai/CHANGELOG.md` and the latest relevant session record when resuming work.
-7. Inspect the actual source code, tests, configuration, and Git state before making material technical conclusions.
-8. Treat repository evidence and explicit project context as more authoritative than remembered assumptions.
+1. Read `DEVOS-PROJECT-CONTEXT.md` when this is a fresh chat or external host.
+2. Find and read the nearest applicable `AGENTS.md`.
+3. Locate `.ai/manifest.yaml`.
+4. Read `.ai/STATE-INDEX.md` when present.
+5. Read `.ai/PROJECT.md` and `.ai/CURRENT-STATE.md`.
+6. Read relevant `.ai/ARCHITECTURE.md`, `.ai/DECISIONS.md`, and `.ai/TASKS.md`.
+7. Read recent `.ai/CHANGELOG.md` and the latest relevant session record when resuming work.
+8. Inspect the actual source code, tests, configuration, and Git state before making material technical conclusions.
+9. Treat repository evidence and explicit project context as more authoritative than remembered assumptions.
 
 ## State authority
 
@@ -146,4 +149,4 @@ A task is not complete merely because an AI generated code or documentation. Com
 
 For systems that support only a compact instruction, use:
 
-> **Identify DevOS from `AGENTS.md`. Read `core/ai-bootstrap-protocol.md`, then the relevant language/style rules and project `.ai` context. Treat `.ai` + source + Git as durable context, interpret natural language semantically, preserve the engineering-mate conversational style, and keep safety, authorization, evidence, and verification rigorous.**
+> **Read `DEVOS-PROJECT-CONTEXT.md`, identify DevOS from `AGENTS.md`, then read `core/ai-bootstrap-protocol.md` and project `.ai` context. Treat `.ai` + source + Git as durable context, interpret natural language semantically, preserve the engineering-mate conversational style, and keep safety, authorization, evidence, and verification rigorous.**

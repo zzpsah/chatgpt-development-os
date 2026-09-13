@@ -130,6 +130,12 @@ def main():
     constraint["plan"]["steps"][1]["authorization_required"] = True
     assert mod.evaluate(constraint)["status"] == "BLOCKED"
 
+    unresolved_state = payload("S1")
+    unresolved_state["plan"]["state_resolution"] = {"protocol": "DEVOS-AI-STATE-RESOLUTION-v2", "unresolved_claim_ids": ["C1"]}
+    unresolved_result = mod.evaluate(unresolved_state)
+    assert unresolved_result["status"] == "BLOCKED"
+    assert "PLAN_STATE_CLAIMS_UNRESOLVED=C1" in unresolved_result["reasons"]
+
     print("PASS: P17 Step Readiness & Authorization Orchestrator regression corpus")
 
 

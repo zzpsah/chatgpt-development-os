@@ -29,6 +29,9 @@ jobs:
           python tools/verify-documentation-integrity.py
           python tools/test-documentation-integrity.py
 
+      - name: Verify first-contact project context guide
+        run: python tools/test-devos-project-context.py
+
       - name: Install parser dependency
         run: python -m pip install pyyaml
 
@@ -84,7 +87,10 @@ jobs:
         run: python tools/test-controlled-remote-mutation-proof.py
 
       - name: Verify AI State Resolver
-        run: python tools/verify-state-resolver.py
+        run: |
+          python tools/verify-state-resolver.py
+          python tools/test-ai-state-resolver.py
+          python tools/test-ai-state-resolver-p16-p17.py
 
       - name: Verify Verification / Test Engine
         run: python tools/verify-verification-engine.py

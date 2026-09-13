@@ -8,6 +8,12 @@ DevOS is a living engineering system. Its implementation, architecture, evidence
 
 This contract defines how implementation changes become durable project knowledge and how the Human Language Interpreter can improve through controlled experiments without gaining authority from those experiments.
 
+## Authority relationship
+
+`core/documentation-integrity.md` is the normative authority for the documentation-at-change rule and the deterministic `IMPLEMENTED + VERIFIED + DOCUMENTED` closure guard. This living-state contract extends that authority for architecture continuity, semantic evolution, P15 experimentation, and fresh-AI maintenance. It does not redefine, replace, weaken, or independently compete with the documentation-integrity contract.
+
+When these documents appear to conflict, the narrower existing documentation-integrity contract governs documentation-at-change enforcement; source/Git, explicit approved decisions, tests, and evidence remain authoritative for implementation truth.
+
 ## Core documentation law
 
 > **What is not written was never done.**
