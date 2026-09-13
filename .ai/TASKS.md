@@ -1,9 +1,42 @@
 # DevOS Tasks
 
 ## Active
-- No numbered phase is active from the current consolidation state.
-- Continue with evidence hardening and the next repository-supported bounded objective only after inspecting current `main`, open PRs, CI, and durable project state.
-- Do not create P18/P19 merely for bookkeeping.
+- GitHub Identity & Token Control Plane v1 integration is pending through clean replacement PR #33 on `fix/github-identity-token-control-plane-clean`.
+- PR #32 contains the development history and reached a fully green reconciled head, but GitHub's merge engine reported `mergeable_state: dirty`; do not merge or force-update it. PR #33 is the clean descendant of current `main` carrying the same final implementation.
+- Repository implementation includes authentication primitives, capability discovery, GitHub-hosted runtime, audit hardening, deterministic tests, dedicated CI, durable state, and master-map integration.
+- AI State Resolver v2 is also an active bounded unnumbered hardening objective on current `main`; PR #33 preserves its P12/P16/P17 semantics and latest documentation alignment.
+- Plain Project Context and Recovery Guide v1 remains part of bootstrap/recovery.
+- No P18/P19 phase is created merely for these objectives.
+
+## Completed — GitHub Identity & Token Control Plane v1 implementation slice
+- Added `tools/devos-github-auth.py` with GitHub App-oriented identity binding, OAuth transaction creation, constant-time state comparison, bounded freshness, one-time callback validation, expiry handling, and secret fingerprinting.
+- Added `tools/devos-github-capability-discovery.py` with fail-closed provider-permission → DevOS-capability evaluation.
+- Capability mappings are adapter-supplied and permission-level-aware; `read` cannot satisfy a required `write` level.
+- Existing-repository capabilities require an explicit target repository within provider-reported repository scope before `AVAILABLE` can be returned.
+- Added `tools/devos-github-actions-auth.py` for GitHub App JWT + installation-token authentication from GitHub Actions.
+- Added deterministic regression coverage for auth, capability discovery, and GitHub-hosted runtime behavior.
+- Added `.github/workflows/devos-github-app-runtime.yml` as a read-only provider-authentication verification workflow.
+- Added/extended `.github/workflows/verify-github-auth-control-plane.yml` to test repository implementation on PRs and relevant pushes to `main`.
+- Added hosted-runtime and identity/token-control-plane guides, master-map integration, and durable session provenance.
+- Durable capability evidence remains `authorization: UNCHANGED`, `execution: NONE`, `mutation: NONE`, and `credential_material: NOT_INCLUDED`.
+- No raw credentials, OAuth secrets, App private keys, refresh tokens, JWT signing material, destructive provider action, deployment, permission change, or production mutation is introduced by this repository implementation.
+
+## Completed — live read-only GitHub App authentication proof
+- DevOS GitHub App Runtime Auth run 6 / `34785659043` succeeded on the equivalent final implementation tree.
+- The live run resolved the configured App installation and target repository, used masked Actions secrets, and returned `status: PASS`.
+- Evidence reported `authentication: github_app_installation_token`, `credential_material: NOT_INCLUDED`, `execution: NONE`, and `mutation: NONE`.
+- This proves live read-only provider authentication/capability for the repository runtime. It does **not** prove destructive/write mutation or production readiness.
+
+## AI State Resolver v2 — active bounded objective
+- Upgrade the existing P0 documentation contract into a deterministic, read-only claim resolver.
+- Preserve P12 ownership of execution-evidence normalization and freshness.
+- Durable-state claims cannot self-upgrade to `observed`; current P12 execution evidence with citable provenance is required.
+- Propagate unresolved claim identifiers through P16 as `CLARIFY` and reject any tampered P17 `PLANNED` envelope that carries unresolved claims.
+- This is an unnumbered hardening objective; it does not create P18/P19.
+
+## Plain Project Context and Recovery Guide v1
+- Completed on `main`: root guide, core recovery protocol, bootstrap/base-rule integration, and deterministic guardrails.
+- It remains an unnumbered portability hardening objective; no P18/P19 was created.
 
 ## Completed — Actionable HOLD + Scoped Approval + Governed Continuation
 - PR #23 — `Integrate actionable holds and scoped approval into governed continuation` — merged at `7c60c3a4a36982ba894e2f30ba9dd98500f98d02`.
@@ -16,7 +49,7 @@
 
 ## Core documentation law
 - **What is not written was never done.**
-- Every material AI action, decision, repair, experiment, verification result, evidence change, architecture change, or externally relevant outcome must leave a durable repository record.
+- Every material AI engineering action, decision, repair, experiment, verification result, evidence change, architecture change, roadmap change, or externally relevant outcome must leave a durable repository record.
 - Completion requires `IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE`.
 - Undocumented material work is unfinished work, even when code or CI exists.
 
@@ -27,7 +60,6 @@
 - The control plane governs `repository.create`, `repository.delete`, `branch.create`, `branch.update`, `branch.force_update`, and `branch.delete` with exact project/repository/resource/workflow/impact/freshness scope.
 - Provider/API write permission remains technical capability only; it is never DevOS authorization.
 - `FULL APPROVAL` remains scoped, not blanket permission.
-- `continue` may reuse an approval only when exact project/workflow/capability/target/impact/freshness/security scope remains valid.
 - Multi-project isolation keeps state, approval, and provider binding separated per project.
 - No live/destructive/production provider mutation was performed for PR #27.
 
@@ -59,7 +91,7 @@
 - P11/P12 are historical completed foundations; later unnumbered objectives must not be re-labeled as new numbered phases.
 
 ## Universal portability invariant
-`AI A + Account A → repository → AI B + Account B → correct state recovery → safe continuation`
+`AI A + Account A → repository → AI B + Account B → correct recovery → safe continuation`
 
 The repository, not any AI account/chat/model/vendor memory, carries authoritative project state.
 
@@ -80,15 +112,3 @@ The repository, not any AI account/chat/model/vendor memory, carries authoritati
 - `REPOSITORY DELETE != REPOSITORY CREATE`
 - `BRANCH DELETE != BRANCH CREATE`
 - `NORMAL BRANCH UPDATE != FORCE UPDATE`
-
-## AI State Resolver v2 — active bounded objective
-
-- Upgrade the existing P0 documentation contract into a deterministic, read-only claim resolver.
-- Preserve P12 ownership of execution-evidence normalization and freshness.
-- Propagate unresolved claim identifiers through P16 as `CLARIFY` and reject any tampered P17 `PLANNED` envelope that carries unresolved claims.
-- This is an unnumbered hardening objective; it does not create P18/P19.
-
-## Plain Project Context and Recovery Guide v1
-
-- Completed on main before Resolver v2 merge: root guide, core recovery protocol, bootstrap/base-rule integration, and deterministic guardrails.
-- It remains an unnumbered portability hardening objective; no P18/P19 was created.
