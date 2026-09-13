@@ -4,9 +4,10 @@
 
 - Repository: `zzpsah/chatgpt-development-os`.
 - Source tree + Git remain authoritative for implementation state.
+- **ChatGPT Memory and chat history are supplementary only and must never be required to recover authoritative project state.** A fresh AI must be able to recover from repository-local source/Git/`.ai` evidence.
 - `main` is verified/merged through P15 and currently also contains `.ai/P16-P17-AUDIT.md` from commit `f338270429d31df5691f6a02234a1a35553f57af`.
 - Working milestone: P16 Semantic Goal-to-Plan Compiler v1 on branch `devos/p16-goal-to-plan` / PR #9.
-- P16 implementation is materially complete in source but **not closed or merged** because final-head GitHub Actions verification has not run to completion.
+- P16 implementation is materially complete in source but **not closed or merged** until the repaired final head receives fresh passing applicable verification.
 - P17 remains stacked separately and must not merge ahead of P16.
 
 ## P16 implemented architecture
@@ -41,7 +42,7 @@ Regression coverage in `tools/test-semantic-goal-to-plan.py` includes high-impac
 
 ## Executable controller integration completed
 
-`tools/development-task-controller.py` now supports both the legacy P12 task-inventory path and direct P16 compiled-plan consumption.
+`tools/development-task-controller.py` supports both the legacy P12 task-inventory path and direct P16 compiled-plan consumption.
 
 For the P16 path it validates:
 
@@ -66,29 +67,34 @@ High-impact/security/production-destructive steps require `authorization: ALREAD
 
 `.ai/ARCHITECTURE.md` explicitly places P16 between Project/State Resolution and the Development Task Controller and documents the executable compiled-plan boundary.
 
-## Verification infrastructure blocker
+## Fresh verification evidence and repair
 
-GitHub Actions is currently the remaining closure blocker, not an observed implementation failure.
+GitHub Actions runner assignment resumed for P16 head `ce48196aa116eb2b843259ad562a3c27dad3a59f`.
 
-Evidence observed during this session:
+Observed runs for that head:
 
-- P16 old final-head run 447 (`34737915568`) remained `queued`; its single `ubuntu-latest` job had `runner_id: 0`, no runner name/group, and no executed steps.
-- Full DevOS run 391 (`34737915598`) also remained queued.
-- Repository-wide query showed roughly 40 queued workflows and zero in-progress runs.
-- Latest completed DevOS workflows observed were the successful P15 feature runs.
-- Available GitHub connector actions do not expose workflow cancellation, so stale queued runs cannot be drained safely from this session.
-- The sandbox shell cannot resolve `github.com`, so a direct local clone/test was not possible; no local-test success is claimed.
+- `Verify Development OS Contracts`, run 473 / id `34750507062`: **success**.
+- `Verify P13 External Managed Project`, run 9 / id `34750507096`: **success**.
+- `Verify Development OS`, run 400 / id `34750507050`: **failure**.
 
-Every new P16 commit creates a newer verification head. Closure therefore requires fresh applicable verification for the eventual final head; older queued runs cannot close P16.
+The full-workflow failure was isolated to job `Verify Repository-Only Fresh-AI Recovery v1`, step `Simulate fresh-AI repository-only recovery`. The exact assertion was:
+
+`current-state must preserve account-memory boundary`
+
+Root cause: the P16 rewrite of `.ai/CURRENT-STATE.md` had accidentally removed the explicit textual boundary that ChatGPT Memory/chat history are supplementary rather than authoritative. This was a durable-context documentation regression, not a runtime/compiler/controller failure.
+
+This file restores that invariant. Because this repair advances the P16 head, the repaired head still requires fresh applicable verification before closure.
+
+Historical queue evidence (many queued runs, zero in-progress jobs, `runner_id: 0`) remains part of the session record, but runner assignment is no longer assumed to be blocked now that new runs have executed.
 
 ## Merge rule
 
-P16 remains open and unmerged until fresh final-head verification succeeds. Do not use the unprotected `main` branch as a reason to bypass the project-level verification invariant.
+P16 remains open and unmerged until the repaired final head receives fresh applicable passing verification. Do not use the unprotected `main` branch as a reason to bypass the project-level verification invariant.
 
 ## Next exact action
 
-1. Observe fresh workflow runs for the final P16 head.
-2. If they fail, inspect exact jobs/logs and repair the smallest defect.
-3. If they pass, merge PR #9 with the verified expected head SHA.
+1. Observe fresh workflows for this repaired final P16 head.
+2. If any fail, inspect exact jobs/logs and repair only the demonstrated defect.
+3. If all applicable final-head verification passes, merge PR #9 with the verified expected head SHA.
 4. Persist P16 closure on `main`.
 5. Revalidate/retarget P17 against resulting `main` and require fresh P17 verification before merge.
