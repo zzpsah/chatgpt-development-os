@@ -16,6 +16,20 @@
 - PR #23 exact-head verification passed: Actionable Hold 16, Contracts 639, Trust-First 102, Full DevOS 561, Current-Source Evidence 31, MCP Repository Create 28.
 - No new numbered phase is active or implied by this closure state.
 
+## GitHub Identity & Token Control Plane v1 — in implementation
+
+- Objective: support independently authorized GitHub accounts/installations through a GitHub App-oriented authentication boundary while keeping credentials separate from DevOS authorization.
+- Implemented on branch `feat/github-identity-token-control-plane` at commit `256dbc761dc65f336805a9d6fa5c09a5d80382a6`.
+- Added normative contract: `core/devos-github-identity-token-control-plane.md`.
+- Added side-effect-free primitives: `tools/devos-github-auth.py`.
+- Added deterministic regression suite: `tools/test-devos-github-auth.py`.
+- Added dedicated CI workflow: `.github/workflows/verify-github-auth-control-plane.yml`.
+- Added implementation/documentation guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`.
+- Added session provenance: `.ai/SESSIONS/2026-09-14-github-identity-token-control-plane.md`.
+- No GitHub App secret, private key, OAuth token, refresh token, JWT signing material, live OAuth exchange, token-vault deployment, or live provider mutation was introduced.
+- `production_ready=false` and `live_provider_proven=false` remain unchanged.
+- Live activation requires external GitHub App registration, secure secret storage, OAuth callback/token exchange, capability discovery, project-scoped identity binding, and a separately authorized disposable provider verification.
+
 ## Core documentation law
 
 > **What is not written was never done.**
@@ -91,8 +105,9 @@ No private AI memory is authoritative project state.
 Stable AI discovery path: `docs/handoff/README.md`.
 Master architecture: `docs/DEVOS-MASTER-ENGINEERING-MAP.md`.
 Normative living-state contract: `core/devos-living-state-and-evolution.md`.
+GitHub authentication/control-plane guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`.
 Historical evidence snapshots remain dated and do not auto-refresh when source advances. Exact implementation remains authoritative in Git history.
 
 ## Next bounded direction
 
-Do not create P18/P19 merely for bookkeeping. Continue with consolidation/evidence-hardening and the next repository-supported bounded objective only after inspecting current `main`, open PRs, CI, and durable task/decision/state records. Any material next action must update the affected durable records before completion.
+Complete and verify GitHub Identity & Token Control Plane v1 through branch CI and code review. Do not claim live GitHub authentication or production readiness until a separately configured GitHub App, secret vault, OAuth/token exchange, capability discovery, and fresh provider evidence exist. Do not create P18/P19 merely for bookkeeping.
