@@ -51,14 +51,35 @@ Implementation/proof head: `34cd3bc068bd4c744ba62b425412166b23ed19ed`.
 - Contracts 512: both `Verify Multi-Session Fresh-AI Continuation` and `Verify Multi-Session Two-Process Proof` passed.
 - External Managed Project 25: success, including the continuation proof and artifact upload.
 
-These runs are not final closure evidence because subsequent durable semantic-state commits changed the branch head.
+Semantic-state candidate head: `71bc834dd975d0f0362c7c3396612b9cb1fc69fa`.
+
+- Contracts 516: both continuation proofs and all contract steps passed.
+- External Managed Project 29: success, including real `automation-suite` continuation proof and artifact upload.
+- Full DevOS 441: every observed runtime/security/context job passed except `Verify Repository-Only Fresh-AI Recovery v1`.
+
+## CI-discovered repository-recovery compatibility repair
+
+Full DevOS 441 failed only this assertion from `tools/test-fresh-ai-recovery.py`:
+
+`P11` must remain explicitly present in both `.ai/CURRENT-STATE.md` and `.ai/TASKS.md` so a fresh AI can recover the durable repository-first continuity baseline.
+
+`CURRENT-STATE.md` still carried P11, but the multi-session rewrite of `TASKS.md` had omitted the literal P11 continuity marker.
+
+Repair:
+- restored `P11 Federation & Self-Healing Context v1 remains the repository-first recovery/revalidation baseline` in `.ai/TASKS.md`;
+- did not weaken `tools/test-fresh-ai-recovery.py`;
+- did not change continuation/runtime/authorization behavior.
+
+The P11 TASKS repair commit is `ad87b7c89f1ffe8946c69ee48c7f26c6c1813349`.
+
+This session update changes the branch head again, so final closure still requires fresh applicable CI on the exact new head.
 
 ## Durable state updates
 
 - `.ai/CURRENT-STATE.md` records the active implementation, proof behavior and pending final-head verification.
-- `.ai/TASKS.md` records implemented work versus remaining closure gates.
+- `.ai/TASKS.md` records implemented work, remaining closure gates, and the restored P11 recovery baseline.
 - `.ai/DECISIONS.md` records context-not-permission, same-head revalidation, changed-head recompilation, no authorization reuse, two-process proof, and real managed-project proof decisions.
-- This session record preserves action provenance.
+- This session record preserves implementation, verification and CI-repair provenance.
 
 ## Safety invariants
 
@@ -71,7 +92,7 @@ These runs are not final closure evidence because subsequent durable semantic-st
 
 ## Remaining closure steps
 
-1. Take fresh Contracts, Full DevOS and External Managed Project CI on the exact semantic-state final head.
+1. Take fresh Contracts, Full DevOS and External Managed Project CI on the exact post-P11-repair/session head.
 2. Repair only evidence-backed failures if any.
 3. Confirm PR #13 mergeable.
 4. Merge only at the exact verified final head.
