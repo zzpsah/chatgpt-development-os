@@ -2,10 +2,12 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[1]
 SECURITY_RELEVANT = {"HIGH_IMPACT_MUTATION", "SECURITY_SENSITIVE", "PRODUCTION_OR_DESTRUCTIVE"}
 ALLOWED_IMPACTS = {"READ_ONLY", "LOW_IMPACT_MUTATION", "HIGH_IMPACT_MUTATION", "SECURITY_SENSITIVE", "PRODUCTION_OR_DESTRUCTIVE"}
 CONSTRAINT_TERMS = {
@@ -19,6 +21,19 @@ CONSTRAINT_TERMS = {
     "DO_NOT_CREDENTIAL": "credential",
     "DO_NOT_PERMISSION": "permission",
 }
+
+
+def _load_p16_classifier():
+    path = ROOT / "tools" / "semantic-goal-to-plan.py"
+    spec = importlib.util.spec_from_file_location("p16_semantic_classifier", path)
+    if spec is None or spec.loader is None:
+        raise ImportError("cannot load P16 semantic classifier")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.classify
+
+
+classify_objective = _load_p16_classifier()
 
 
 def _base(plan: dict[str, Any], step_id: str | None, compiled_head: str | None, current_head: str | None) -> dict[str, Any]:
@@ -109,6 +124,13 @@ def _validated_steps(plan: dict[str, Any]) -> tuple[dict[str, dict[str, Any]] | 
         impact = raw.get("impact")
         if impact not in ALLOWED_IMPACTS:
             return None, "PLAN_STEP_IMPACT_INVALID=" + sid
+        # P17 must not trust a mutable impact label when the same repository
+        # contains the deterministic P16 classifier that produced it. Recompute
+        # the minimum semantic impact from the objective and fail closed if a
+        # compiled envelope was downgraded after planning.
+        expected_impact = classify_objective(objective)
+        if impact != expected_impact:
+            return None, f"PLAN_STEP_IMPACT_MISMATCH={sid}:{impact}:{expected_impact}"
         auth_required = raw.get("authorization_required")
         if auth_required not in (True, False):
             return None, "PLAN_STEP_AUTHORIZATION_FLAG_INVALID=" + sid

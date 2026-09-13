@@ -105,6 +105,25 @@ def main():
     inconsistent = payload("S3"); inconsistent["plan"]["steps"][2]["authorization_required"] = False
     assert mod.evaluate(inconsistent)["status"] == "BLOCKED"
 
+    # A compiled envelope cannot downgrade the P16 semantic impact after planning.
+    # This closes the adversarial path where destructive/security-sensitive text is
+    # relabelled LOW_IMPACT_MUTATION to avoid exact authorization/Security Gate.
+    downgraded = payload("S1")
+    downgraded["plan"]["steps"][0]["objective"] = "delete production database"
+    downgraded["plan"]["steps"][0]["impact"] = "LOW_IMPACT_MUTATION"
+    downgraded["plan"]["steps"][0]["authorization_required"] = False
+    downgraded_result = mod.evaluate(downgraded)
+    assert downgraded_result["status"] == "BLOCKED"
+    assert any(x.startswith("PLAN_STEP_IMPACT_MISMATCH=S1:") for x in downgraded_result["reasons"])
+
+    downgraded_security = payload("S1")
+    downgraded_security["plan"]["steps"][0]["objective"] = "change authorization policy"
+    downgraded_security["plan"]["steps"][0]["impact"] = "LOW_IMPACT_MUTATION"
+    downgraded_security["plan"]["steps"][0]["authorization_required"] = False
+    downgraded_security_result = mod.evaluate(downgraded_security)
+    assert downgraded_security_result["status"] == "BLOCKED"
+    assert any(x.startswith("PLAN_STEP_IMPACT_MISMATCH=S1:") for x in downgraded_security_result["reasons"])
+
     constraint = payload("S2"); constraint["plan"]["constraints"] = ["DO_NOT_DEPLOY"]
     constraint["plan"]["steps"][1]["objective"] = "deploy production"
     constraint["plan"]["steps"][1]["impact"] = "PRODUCTION_OR_DESTRUCTIVE"
