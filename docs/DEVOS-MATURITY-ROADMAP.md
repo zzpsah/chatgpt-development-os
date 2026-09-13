@@ -2,27 +2,28 @@
 
 ## Current position
 
-**P0–P16: VERIFIED FOUNDATION / CURRENT MAINLINE.**
+**P0–P17: VERIFIED FOUNDATION / CURRENT MAINLINE.**
 
-P0–P16 have been audited by current architectural value and evidence. No wholesale rebuild is justified. P17 remains a separate active maturity track.
+P0–P17 have been audited or verified by current architectural value and fresh evidence. No wholesale rebuild is justified.
 
 ## Phase closure
 
 - P0–P7: foundational substrate — RETAIN / CONSOLIDATE where historical boundaries overlap.
 - P8–P12: operational control plane — RETAIN / CORE.
 - P13–P15: orchestration, adaptive recovery, and human semantic interface — RETAIN / E2E HARDEN.
-- P16: Semantic Goal-to-Plan Compiler — **CLOSED ON MAIN** with final-head verification evidence.
+- P16 Semantic Goal-to-Plan Compiler — CLOSED ON MAIN.
+- P17 Step Readiness & Authorization Orchestrator — **CLOSED ON MAIN**.
 
 P16 merge commit: `460a212ebb7600619f396a455ac3e47e5a5c80fa`.
-Verified final source head: `877833ef0f11d5a869284f9b86407c155125d96f`.
+P16 verified final source head: `877833ef0f11d5a869284f9b86407c155125d96f`.
 
-## P17 — current active gate
+P17 merge commit: `2f29ac1de367fb270c00d73b2ca44405ce09fc00`.
+P17 verified final source head: `8011783962d6dddd33bcc50049c8aa4a8748cc52`.
+P17 final verification: Contracts 483, Full DevOS 408, External Managed Project 12 — all success.
 
-Revalidate the Step Readiness & Authorization Orchestrator against the P16-closed mainline, then require fresh final-head CI and E2E regression evidence. Do not treat pre-retarget P17 evidence as closure evidence.
+## Current active maturity gate — Production E2E Harness
 
-## First post-P17 maturity gate — Production E2E Harness
-
-Prove the complete path on a managed software project:
+Prove the complete governed path on a realistic managed software project:
 
 ```text
 Human request
@@ -48,10 +49,20 @@ Durable Persistence
 Recovery / continuation
 ```
 
+### Acceptance
+
+- deterministic executable reference harness built by composing existing DevOS modules;
+- no parallel authority/execution path;
+- successful safe/read-only or bounded low-impact end-to-end scenario;
+- durable evidence and recovery state produced from the run;
+- negative/failure cases for stale plans, dependency/capability failures, authorization mismatch, Security Gate failure, verification failure, persistence corruption, and provider/connection failure;
+- realistic managed-project proof;
+- fresh CI on the final harness head.
+
 ## Following maturity gates
 
-1. **Failure + Recovery Proof** — inject bounded failures and prove diagnose/repair/dry-test/re-verify/regression/persist/resume or safe HOLD.
-2. **Long-Running Development** — prove multi-session work and fresh-AI continuation without chat-memory dependency.
+1. **Failure + Recovery Proof** — diagnose/repair/dry-test/re-verify/regression/persist/resume or safe HOLD under injected bounded failures.
+2. **Long-Running Development** — multi-session and fresh-AI continuation without chat-memory dependency.
 3. **Controlled Remote Mutation** — expand real mutations operation-by-operation with read-before-write, explicit authorization, Security Gate, preview, verification and recovery.
 4. **Production Readiness** — whole-system E2E, security, recovery, observability, reproducible CI and documented limitations.
 
