@@ -1,9 +1,24 @@
 # DevOS Tasks
 
 ## Active
-- No numbered phase is active from PR #27 closure.
-- Continue with consolidation, evidence hardening, and the next repository-supported bounded objective only after inspecting current `main`, open PRs, CI, and durable project state.
+- No numbered phase is active from the current consolidation state.
+- Continue with evidence hardening and the next repository-supported bounded objective only after inspecting current `main`, open PRs, CI, and durable project state.
 - Do not create P18/P19 merely for bookkeeping.
+
+## Completed — Actionable HOLD + Scoped Approval + Governed Continuation
+- PR #23 — `Integrate actionable holds and scoped approval into governed continuation` — merged at `7c60c3a4a36982ba894e2f30ba9dd98500f98d02`.
+- Exact final PR head: `954b094a3832c300d371426d682eac90156cbb04`.
+- Exact-head CI passed: Actionable Hold 16 / `34778601254`; Contracts 639 / `34778601256`; Trust-First 102 / `34778601246`; Full DevOS 561 / `34778601273`; Current-Source Evidence 31 / `34778601271`; MCP Repository Create 28 / `34778601263`.
+- `continue` reuses approval only when project/workflow/capability/target/impact/freshness/security scope remains valid.
+- Missing approval, stale HEAD, changed target/capability, impact escalation, or changed Security Gate produces HOLD/fresh-evaluation behavior.
+- Scoped approval never replaces P17 or the controller and never grants execution by itself.
+- No live/destructive/provider/production mutation was performed.
+
+## Core documentation law
+- **What is not written was never done.**
+- Every material AI action, decision, repair, experiment, verification result, evidence change, architecture change, or externally relevant outcome must leave a durable repository record.
+- Completion requires `IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE`.
+- Undocumented material work is unfinished work, even when code or CI exists.
 
 ## Completed — MCP/App Permission Control Plane + Multi-Project Agent Isolation
 - PR #27 — `Integrate MCP/App remote permission control plane` — merged at `2bb8d978113b64ab88d6ba5f8e357fa595162c9c`.
@@ -36,6 +51,7 @@
 - Host-neutral MCP/App `repository.create` adapter — PR #22.
 - Current-Source Evidence Refresh — PR #24.
 - MCP/App Permission Control Plane + Multi-Project Agent Isolation — PR #27.
+- Actionable HOLD + Scoped Approval + Governed Continuation — PR #23.
 
 ## Platform foundations retained in the durable task map
 - **P11 Federation & Self-Healing Context** remains the repository-first recovery/revalidation/cross-AI continuity baseline.
@@ -48,9 +64,12 @@
 The repository, not any AI account/chat/model/vendor memory, carries authoritative project state.
 
 ## Core safety invariants
+- `WHAT IS NOT WRITTEN = NOT DONE`
 - `PLAN != EXECUTION`
 - `READY != EXECUTION`
 - `INTERPRETATION != AUTHORIZATION`
+- `DOCUMENTATION != AUTHORIZATION`
+- `CI PASS != AUTHORIZATION`
 - `OLD APPROVAL != NEW APPROVAL` when scope/freshness/security changes
 - `FULL APPROVAL != BLANKET PERMISSION`
 - `PROVIDER CREDENTIAL != DEVOS AUTHORIZATION`
