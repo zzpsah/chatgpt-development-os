@@ -3,64 +3,51 @@
 ## Durable project state authority
 - DevOS project-local `.ai` is the portable durable context layer.
 - Source tree + Git are authoritative for implementation state and exact changes.
-- AI account memory is supplementary and not project authority.
+- AI account memory/chat history are supplementary and not project authority.
 - `STATE-INDEX.md` is evidence/navigation, not semantic authority.
 
 ## Canonical repository identity
 - Canonical repository: `zzpsah/chatgpt-development-os`.
 - Name-only similarity never overrides exact repository identity evidence.
 
-## Foundation value decision
-- P0–P15 are dependency-bearing foundations; age alone is not a reason for deletion.
-- Capability ledger: `docs/P0-P15-FOUNDATION-VALUE-AUDIT.md`.
-
 ## P9–P11 continuity decisions
-- P9 Development Task Controller v1 remains the governed controller boundary for bounded execution candidacy.
-- P10 Context Continuity & Recovery v1 established repository-local continuity independent of chat memory.
-- P11 Federation & Self-Healing Context v1 remains the repository-first recovery/revalidation/cross-AI continuity baseline.
+- P9 Development Task Controller remains the governed controller boundary for bounded execution candidacy.
+- P10 Context Continuity & Recovery established repository-local continuity independent of chat memory.
+- P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 
 ## P15–P17 decisions
 - P15 Human Language Interpretation is the top-level semantic entry capability and never grants authority.
-- P16 Semantic Goal-to-Plan Compiler is complete; planning remains non-executing/non-authorizing.
-- P17 Step Readiness & Authorization Orchestrator is complete; `READY` means eligibility only and preserves unchanged authority/authorization/execution boundaries.
+- P16 planning remains non-executing/non-authorizing.
+- P17 `READY` means eligibility only; authority/authorization/execution remain unchanged.
 
-## Production E2E Harness decision
-- Production E2E Harness is complete and merged through PR #11 at `1d6031d3578b859a6afe1dca1032287de5beceba`.
-- Final source head `4270440533925628a88daa17a6620aa51295319a` passed Contracts 490, Full DevOS 415 and External Managed Project 15.
-- The harness composes existing DevOS contracts; it does not create a parallel runtime or permission source.
-- READ_ONLY steps may not execute mutation operations.
-- Runtime mutation requires exact-step authorization; GitHub remote mutation additionally requires Security Gate PASS.
-- Verification remains explicit argv through the bounded verification adapter.
-- Persistence is a separate authorized `.ai/` write boundary and does not imply commit/push.
+## Production E2E Harness closure
+- PR #11 merged at `1d6031d3578b859a6afe1dca1032287de5beceba` after Contracts 490, Full 415, External 15 passed on final head `4270440533925628a88daa17a6620aa51295319a`.
+- The harness composes existing DevOS contracts and does not create a parallel runtime or permission source.
 
-## Failure + Recovery Proof decision
-- Failure + Recovery Proof is a gap-driven maturity gate, not an automatic numbered milestone.
-- Recovery composes P14 adaptive verification/self-healing, P13 checkpoint/resume, P11 repository-first recovery, and the merged Production E2E Harness rather than creating a second recovery architecture.
-- Failure checkpoints preserve observed evidence and the last safe stage; they are evidence, never execution authority.
-- Repository drift/stale plans require recompilation and revalidation before retry.
-- Replay-safe read-only paths may retry only after the ordinary P15/P16/P17/controller/runtime/verification gates run again.
-- Once a mutation operation reaches the runtime adapter, automatic replay is forbidden. The required outcome is `HOLD / MUTATION_REPLAY_FORBIDDEN` pending explicit re-evaluation.
-- A preflight-blocked mutation is not treated as an executed mutation; it may be reconsidered only after exact authorization/Security Gate/capability evidence is repaired and revalidated.
-- Persisted evidence must itself be readable and structurally valid before a recovery can be accepted.
-- Checkpoint authority/authorization tampering is an immediate HOLD.
-- Successful recovery must produce fresh verification before completion is claimed.
+## Failure + Recovery Proof closure
+- PR #12 merged at `83fd14e4cc696f3cd96778fe7d447db1216c3fc0` from final head `29c07deed803df430b2f7fd40bf302bb8deac160`.
+- Final verification: Contracts 503, Full DevOS 428, External Managed Project 24 all succeeded.
+- Recovery checkpoints preserve evidence and last-safe state but never become execution authority.
+- Repository drift requires recompilation/revalidation before retry.
+- Replay-safe read-only paths may retry only after ordinary gates re-run.
+- Once a mutation reaches the runtime adapter, automatic replay is forbidden: `HOLD / MUTATION_REPLAY_FORBIDDEN`.
+- Checkpoint authority/authorization tampering and invalid/corrupt persisted evidence fail closed.
+- Real `zzpsah/automation-suite` proof confirmed failure → checkpoint → capability repair → verified read-only resume with unchanged HEAD/origin, zero tracked source diff, and no commit/push.
 
 ## High-impact semantic gating decision
-- P15's `HIGH_IMPACT_REQUIRES_AUTHORIZATION_CHECK` marker is a gating annotation, not material ambiguity by itself.
-- P16 must preserve that annotation while continuing to block genuine unresolved ambiguity.
-- This does not grant authorization: high-impact/security steps still carry independent authorization/Security Gate requirements and must pass P17/controller/runtime gates.
-- A direct P16 regression permanently covers this P15→P16 boundary.
+- `HIGH_IMPACT_REQUIRES_AUTHORIZATION_CHECK` is a gating annotation, not material ambiguity by itself.
+- Genuine unresolved ambiguity still blocks.
+- The annotation never grants permission; downstream authorization/Security Gate checks remain mandatory.
 
-## Real managed-project recovery proof decision
-- `zzpsah/automation-suite` remains the real external managed-project target for read-only recovery proof.
-- The proof may write only bounded local `.ai/EVIDENCE/` files in the ephemeral checkout; it may not commit, push, or alter tracked source/history.
-- Git porcelain may collapse multiple untracked evidence files into a single `.ai/EVIDENCE/` directory entry. Proof validity therefore depends on explicit evidence-file existence/content, unchanged HEAD/origin, evidence-only worktree status, and zero tracked diff—not on one porcelain line per evidence file.
-
-## Future persistence rule
-- Meaningful engineering state must be persisted in repository-local `.ai` state rather than chat history.
-- Session outcomes belong in `.ai/SESSIONS/`; active work/decisions/current state belong in `TASKS.md`, `DECISIONS.md`, and `CURRENT-STATE.md`.
+## Multi-session / fresh-AI continuation decision
+- The next maturity gate is long-running multi-session / fresh-AI continuation, not an automatic numbered milestone.
+- Repository-local state must be sufficient for a fresh process/AI to recover project identity, active objective, latest safe checkpoint, and required next validation without relying on chat memory.
+- Saved candidates must never be replayed as authority. Same-head continuation requires fresh revalidation; changed-head continuation must stop/escalate/recompile.
+- Authorization and Security Gate evidence must remain exact-step/session scoped and must not leak across continuation boundaries.
+- Fresh verification is required before resumed work can be declared complete.
+- The proof should compose existing P10/P11/P13/P14/P17/E2E/recovery primitives rather than create a second persistence or execution architecture.
 
 ## Verification boundary
-- Static contracts and earlier successful runs are necessary but insufficient for a new final head.
-- PR #12 closure requires fresh applicable Contracts, Full DevOS, and External Managed Project success on the exact final head.
+- Earlier successful runs are necessary historical evidence but never final evidence for a new head.
+- Each maturity gate closes only after fresh applicable verification on the exact final head.
 - Higher-impact execution remains separately authorized and Security-Gate controlled.
