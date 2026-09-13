@@ -68,10 +68,14 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
             if confidence == "observed": confidence = "likely"
             reasons.append("P12_EXECUTION_EVIDENCE_NOT_CURRENT")
         if grounding_type == "durable_state" and confidence == "observed":
+            # A durable record proves that the assertion was recorded, not that
+            # its underlying implementation/result was freshly established.
+            # Only current P12 execution evidence may retain `observed`.
+            confidence = "likely"; reasons.append("DURABLE_STATE_CANNOT_SELF_UPGRADE_TO_OBSERVED")
             if BOUNDARY_EVENTS.intersection(rules).intersection(events):
-                confidence = "likely"; reasons.append("REVALIDATION_BOUNDARY_REACHED")
+                reasons.append("REVALIDATION_BOUNDARY_REACHED")
             elif _changed([rule for rule in rules if rule not in BOUNDARY_EVENTS], changed_paths):
-                confidence = "likely"; reasons.append("REVALIDATION_PATH_CHANGED")
+                reasons.append("REVALIDATION_PATH_CHANGED")
 
         resolved.append({
             "id": claim_id or None, "statement": statement if _is_text(statement) else None,

@@ -52,8 +52,9 @@ The runtime is deliberately read-only: authentication/discovery/readback only. I
 ## AI State Resolver v2
 
 - An unnumbered resolver-hardening objective on current `main` upgrades the existing P0 contract with a deterministic read-only claim resolver while preserving P12 and P17 authority boundaries.
-- `observed` requires citable primary/P12 grounding; document wording cannot self-upgrade a claim.
-- Durable-state claims revalidate at recovery/handoff boundaries or relevant changed paths. Execution-evidence claims inherit P12 freshness and are not normalized again.
+- `observed` requires current P12 execution evidence with citable provenance; durable-state wording cannot self-upgrade a claim.
+- Durable-state claims are capped at `likely`; recovery/handoff boundaries and relevant changed paths remain explicit revalidation reasons.
+- Execution-evidence claims inherit P12 freshness and are not normalized again.
 - The resolver can only cause a plan/readiness HOLD through named unresolved claims; it never grants authority.
 
 ## Plain Project Context and Recovery Guide v1
@@ -119,6 +120,10 @@ Normative living-state contract: `core/devos-living-state-and-evolution.md`.
 GitHub authentication/control-plane guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`.
 GitHub-hosted runtime guide: `docs/DEVOS-GITHUB-HOSTED-RUNTIME.md`.
 Historical evidence snapshots remain dated and do not auto-refresh when source advances. Exact implementation remains authoritative in Git history.
+
+## Resolver grounding correction
+
+- Durable state cannot self-upgrade a claim to `observed`; only current P12 execution evidence with citable provenance may retain `observed`.
 
 ## Next bounded direction
 
