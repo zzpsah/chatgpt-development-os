@@ -1,0 +1,101 @@
+name: Live DevOS GitHub Adapter Mutation Test
+
+on:
+  push:
+    branches:
+      - live-test/devos-github-adapter-20260914
+
+permissions:
+  contents: read
+
+jobs:
+  live-mutation:
+    name: Execute governed App mutations against isolated test file
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout test branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Execute create, update, delete through DevOS adapter
+        env:
+          DEVOS_GITHUB_APP_ID: ${{ secrets.DEVOS_GITHUB_APP_ID }}
+          DEVOS_GITHUB_APP_PRIVATE_KEY: ${{ secrets.DEVOS_GITHUB_APP_PRIVATE_KEY }}
+        run: |
+          python - <<'PY'
+          import importlib.util
+          import json
+          import sys
+          from pathlib import Path
+
+          root = Path.cwd()
+          module_path = root / 'tools' / 'devos-github-provider-adapter.py'
+          spec = importlib.util.spec_from_file_location('devos_live_adapter', module_path)
+          module = importlib.util.module_from_spec(spec)
+          sys.modules[spec.name] = module
+          assert spec and spec.loader
+          spec.loader.exec_module(module)
+
+          repo = 'chatgpt-development-os'
+          owner = 'zzpsah'
+          resource = 'artifacts/live-test/devos-github-adapter-20260914.txt'
+          workflow = 'devos-live-provider-mutation-test-v1'
+          project = 'chatgpt-development-os'
+          branch = 'live-test/devos-github-adapter-20260914'
+
+          def run(action, capability, content=None, expected_sha=None, impact='LOW', auth_impact='LOW'):
+              operation = {
+                  'provider': 'github',
+                  'owner': owner,
+                  'repository': repo,
+                  'resource': resource,
+                  'capability': capability,
+                  'workflow': workflow,
+                  'project': project,
+                  'impact': impact,
+                  'freshness': None,
+                  'action': action,
+                  'inputs': {'message': f'DevOS live adapter test: {action}', 'branch': branch},
+              }
+              if content is not None:
+                  operation['inputs']['content'] = content
+              if expected_sha is not None:
+                  operation['inputs']['expected_sha'] = expected_sha
+              authorization = {
+                  'provider': 'github',
+                  'owner': owner,
+                  'repository': repo,
+                  'resource': resource,
+                  'capability': capability,
+                  'workflow': workflow,
+                  'project': project,
+                  'impact_ceiling': auth_impact,
+                  'freshness': None,
+                  'authorization_id': f'LIVE-TEST-{capability.upper().replace(".", "-")}-20260914',
+              }
+              result = module.execute(operation, authorization)
+              print(json.dumps({'operation': operation, 'result': result}, indent=2, sort_keys=True))
+              if result.get('status') != 'COMPLETE' or result.get('mutation') != 'COMPLETE' or result.get('evidence') != 'FRESH_PROVIDER_READBACK':
+                  raise SystemExit(f'{action} failed: {result}')
+              return result
+
+          created = run('file.create', 'file.create', content='DevOS live mutation test v1\n', impact='LOW', auth_impact='LOW')
+          create_sha = created['readback'].get('sha')
+          if not create_sha:
+              raise SystemExit(f'create readback missing sha: {created}')
+
+          updated = run('file.update', 'file.update', content='DevOS live mutation test v1\nUPDATED\n', expected_sha=create_sha, impact='LOW', auth_impact='LOW')
+          update_sha = updated['readback'].get('sha')
+          if not update_sha:
+              raise SystemExit(f'update readback missing sha: {updated}')
+
+          deleted = run('file.delete', 'file.delete', expected_sha=update_sha, impact='HIGH', auth_impact='HIGH')
+          if deleted.get('readback', {}).get('status') != 'ABSENT':
+              raise SystemExit(f'delete readback did not prove absence: {deleted}')
+
+          print('LIVE_DEVOS_GITHUB_ADAPTER_MUTATION_TEST: PASS')
+          PY
