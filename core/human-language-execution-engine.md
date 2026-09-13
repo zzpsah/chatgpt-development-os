@@ -99,11 +99,12 @@ After interpretation:
 1. resolve the project with `core/project-router.md`;
 2. load durable project `.ai` context and recover current state;
 3. select or compose the appropriate workflow;
-4. inspect actual source/config/tests/Git;
-5. determine scope and authorization;
-6. execute the smallest authorized action;
-7. verify with fresh applicable evidence;
-8. persist meaningful semantic progress.
+4. route `SECURITY_REVIEW` explicitly through `workflows/security.md` and the Security Gate rather than treating security review as a generic workflow;
+5. inspect actual source/config/tests/Git;
+6. determine scope and authorization;
+7. execute the smallest authorized action;
+8. verify with fresh applicable evidence;
+9. persist meaningful semantic progress.
 
 ## Verification contract
 
