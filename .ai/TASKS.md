@@ -1,47 +1,66 @@
 # DevOS Tasks
 
 ## Active
-- **Production-Readiness Evidence Matrix & Limitations** remains the active maturity gate until PR #16's exact final documentation head has fresh successful Trust-First Audit, Contracts, Full DevOS and External Managed Project verification.
-- PR #16 has been reconciled against current Trust-First `main`; do not reuse its old pre-reconciliation CI as closure evidence.
-- Preserve the 15-family machine-readable ledger and conservative evidence vocabulary.
-- Historical evidence remains pinned to its original run/source heads; current-source divergence is reported as `historical_source_drift`, not silently refreshed.
-- Keep `production_ready = false` and every `live_mutation_proven = false` unless separately authorized new evidence genuinely proves a reviewed future protocol level.
-- Preserve P11 repository-first recovery/revalidation and PR #17 Trust-First audit/adversarial Security Gate controls.
-- Do not perform a live runtime remote mutation or destructive/production/database/credential/secret/security-sensitive mutation merely to fill an evidence gap.
+- **Foundation Health & State Consistency** is the current bounded objective. No P18/P19 phase is created.
+- Preserve the architecture: `Source / Git / Tests / CI → devos-audit.py → readiness evidence ledger → machine-derived status → devos-doctor.py`.
+- Keep `devos-doctor.py` presentation-only and READ_ONLY; it must not grant authority, execute work, mutate state, rewrite evidence, refresh historical proof, or promote `WARN`/`UNKNOWN` to `PASS`.
+- Preserve P11 Federation & Self-Healing Context as the repository-first recovery/revalidation baseline.
+- Require conservative detection for canonical identity, bootstrap/dependency closure, malformed `.ai`, Git/source mismatch, historical-source drift, capability/evidence inconsistency, missing verification evidence, contradictory status documentation, Security Gate wiring, P15/P16/P17 check consistency, and unsupported evidence promotion.
+- Require the adversarial regression gate: `python tools/test-devos-audit.py && python tools/test-foundation-health.py`.
+- Fresh exact-final-head Trust-First, Contracts and Full DevOS CI is required after durable documentation is complete. External Managed Project is required only when its path-filtered workflow is applicable; never invent a non-triggered run.
+- Keep `production_ready = false` and all live-mutation proof false unless a reviewed future protocol plus separately authorized appropriate evidence genuinely proves otherwise.
+- Do not run live/destructive/production/provider mutation merely to fill a diagnostic or evidence cell.
 
-## Reconciled implementation verification
-- Reconciled implementation head: `53492a4c842efcb2b8f07c2b71227599502a00a4`.
-- Trust-First Audit 16 / `34761934422`: success.
-- Contracts 553 / `34761934455`: success.
-- Full DevOS 478 / `34761934428`: success.
-- External Managed Project 46 / `34761934406`: success.
-- These runs prove that implementation head only; readiness documentation was updated afterward, so a fresh exact-final-head CI cycle is still required before closure.
+## Foundation Health implementation evidence
+- Verified implementation head: `f7e0dd67561efedc27819bcd7b2fe2788565be2a`.
+- Trust-First Audit 24 / `34763165651`: success.
+- Contracts 561 / `34763165669`: success; Foundation Health regression step passed.
+- Full DevOS 486 / `34763165638`: success; dedicated Foundation Health job passed.
+- These runs precede durable documentation updates and are not final-head closure evidence.
 
 ## Completed recently
 - Production E2E Harness — PR #11.
 - Failure + Recovery Proof — PR #12.
 - Multi-Session / Fresh-AI Continuation Proof — PR #13.
 - Controlled Remote Mutation Proof — PR #14 at `ffbdd7a4849dd012604911accd1211f172bde53b`.
-- Trust-First audit gap closure and adversarial Security Gate proof — PR #17, merged to main at `e13ce8df8c46ae95e26b3a8d02be374274eb2185`.
+- Trust-First audit gap closure / adversarial Security Gate proof — PR #17, merged at `e13ce8df8c46ae95e26b3a8d02be374274eb2185`.
+- Production-Readiness Evidence Matrix & Limitations — PR #16 final head `6c509d6f65b22666f121dfe86604faae72c08f8c`, merged at `b8e31ae76201b32e4617ef6044b29ef285004f54`.
 
-## Production-readiness matrix acceptance targets
-- Capability inventory covers bootstrap/state, interpretation, planning, readiness, controller/orchestration, runtime, verification, security, persistence/recovery, continuation, self-healing, external reads, remote mutation and high-impact operations.
-- Every evidence row names concrete source/test/run provenance where available.
-- Evidence is classified only at the level actually proven: deterministic, integrated, real read-only managed-project, provider-simulated, or unproven.
-- Authorization, Security Gate, verification and recovery/no-replay boundaries remain explicit.
-- Fabricated run IDs, source-head mismatches, stale evidence presented as fresh, unsupported production/live claims, missing limitations and malformed/duplicate capability records fail closed.
-- Current-source drift must not alter the historical source head.
-- Fresh exact-final-head CI is mandatory before reporting the PR safe to merge.
+## PR #16 final verification
+- Trust-First Audit 22 / `34762214579`: success.
+- Contracts 559 / `34762214457`: success.
+- Full DevOS 484 / `34762214462`: success.
+- External Managed Project 52 / `34762214609`: success.
 
-## Planned after readiness evidence matrix
-- Gap-driven Foundation Health & State Consistency work only after this gate closes.
-- Prefer a read-only Doctor/presentation layer over the audit/evidence engines rather than creating another independent truth source.
-- A live real-provider mutation proof only if separately explicitly authorized for an exact bounded target/path/operation.
+## PR #16 post-merge main verification
+At merge commit `b8e31ae76201b32e4617ef6044b29ef285004f54`:
+- Trust-First Audit 23 / `34762783110`: success.
+- Contracts 560 / `34762783133`: success.
+- Full DevOS 485 / `34762783132`: success.
+- External Managed Project does not run on `main` push and therefore has no post-merge run for this commit.
+
+## Foundation Health acceptance targets
+- `tools/devos-audit.py` remains an authoritative read-only dependency/check audit and includes bootstrap, P15 interpretation, P16 planning, P17 readiness, evidence-ledger, Security Gate/adversarial, and controlled-mutation dependency closure.
+- `tools/devos-health.py` composes audit + ledger results into PASS/WARN/UNKNOWN/FAIL/BLOCKED without creating a new authority source.
+- `tools/devos-doctor.py` only renders machine-derived status for humans.
+- Historical source drift remains pinned and visible; it is never silently refreshed.
+- Stale expected HEAD blocks; unavailable Git provenance remains UNKNOWN rather than guessed.
+- Contradictory prose can warn, but prose never overrules source/Git/test/evidence truth.
+- Missing dependencies/evidence remain UNKNOWN or FAIL according to the governing contract, never PASS.
+- Unsupported production/live-provider promotion fails closed.
+- Exact final-head CI must pass before closure.
 
 ## Universal portability invariant
 `AI A + Account A → repository → AI B + Account B → correct recovery → safe continuation`
 
 The repository, not any AI account/chat/model/vendor memory, carries authoritative project state.
 
-## Safety invariant
-Evidence classification never creates authority. A “proven” capability means the stated behavior has supporting evidence at the declared level; it does not grant permission to execute that capability in a new context.
+## Safety invariants
+- `PLAN != EXECUTION`
+- `READY != EXECUTION`
+- `INTERPRETATION != AUTHORIZATION`
+- `OLD APPROVAL != NEW APPROVAL`
+- `SIMULATED EVIDENCE != LIVE PROVIDER PROOF`
+- `CHAT MEMORY != SOURCE OF TRUTH`
+- `PROVIDER RESPONSE != COMPLETION PROOF`
+- `RECOVERY != AUTOMATIC MUTATION REPLAY`
