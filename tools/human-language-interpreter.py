@@ -83,13 +83,19 @@ def interpret(payload: dict[str, Any]) -> dict[str, Any]:
     confidence = "LOW" if material_ambiguity else ("MEDIUM" if contextual or high_impact_requested else "HIGH")
     decision = "CLARIFY" if material_ambiguity else "INTERPRETED"
 
+    # A fresh, explicit, non-referential request carries its own objective.
+    # Context remains authoritative for elliptical continuation/referential requests.
+    objective = active_objective
+    if decision == "INTERPRETED" and phrase and not generic_action and not referential:
+        objective = phrase
+
     return {
         "protocol": "DEVOS-HUMAN-LANGUAGE-v2",
         "phrase": phrase,
         "normalized": text,
         "intents": intents,
         "project": project,
-        "objective": active_objective,
+        "objective": objective,
         "constraints": constraints,
         "context_used": contextual,
         "confidence": confidence,
