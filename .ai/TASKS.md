@@ -1,9 +1,10 @@
 # DevOS Tasks
 
 ## Active
-- No numbered phase is active from the current consolidation state.
-- Continue with evidence hardening and the next repository-supported bounded objective only after inspecting current `main`, open PRs, CI, and durable project state.
-- Do not create P18/P19 merely for bookkeeping.
+- GitHub Identity & Token Control Plane v1 is the current bounded unnumbered objective.
+- Complete branch CI, review, and integration hardening before declaring the objective complete.
+- Live activation remains a separate evidence-gated deployment step: GitHub App registration, secret vault, OAuth/token exchange, capability discovery, project binding, and disposable provider verification.
+- No P18/P19 phase is created merely for this objective.
 
 ## Completed — Actionable HOLD + Scoped Approval + Governed Continuation
 - PR #23 — `Integrate actionable holds and scoped approval into governed continuation` — merged at `7c60c3a4a36982ba894e2f30ba9dd98500f98d02`.
@@ -16,7 +17,7 @@
 
 ## Core documentation law
 - **What is not written was never done.**
-- Every material AI action, decision, repair, experiment, verification result, evidence change, architecture change, or externally relevant outcome must leave a durable repository record.
+- Every material AI engineering action, decision, repair, experiment, verification result, evidence change, architecture change, or externally relevant outcome must leave a durable repository record.
 - Completion requires `IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE`.
 - Undocumented material work is unfinished work, even when code or CI exists.
 
@@ -30,6 +31,13 @@
 - `continue` may reuse an approval only when exact project/workflow/capability/target/impact/freshness/security scope remains valid.
 - Multi-project isolation keeps state, approval, and provider binding separated per project.
 - No live/destructive/production provider mutation was performed for PR #27.
+
+## Completed — GitHub Identity & Token Control Plane v1 implementation slice
+- Branch: `feat/github-identity-token-control-plane`.
+- Source commit: `256dbc761dc65f336805a9d6fa5c09a5d80382a6` before durable state update.
+- Added GitHub App-oriented authentication contract, side-effect-free OAuth state/callback primitives, project-scoped identity binding, non-secret capability metadata, expiry handling, secret fingerprinting, deterministic tests, dedicated CI, implementation guide, and session provenance.
+- No raw credentials, OAuth secrets, App private keys, refresh tokens, JWT signing material, or live provider mutation were introduced.
+- Objective remains pending until CI/review and the external live-activation boundary are separately verified.
 
 ## Current-Source Evidence Refresh Protocol — completed
 - Unnumbered bounded objective; merged through PR #24.
