@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Human-readable read-only presentation layer for DevOS foundation health.
 
-Truth remains in the Trust-First audit and readiness evidence ledger. This tool
-only renders machine-derived health and never grants authority or mutates state.
+Truth remains in the Trust-First audit, readiness evidence ledger, and subordinate
+machine-derived health inputs such as recovery friction. This tool only renders
+health output and never grants authority, recomputes recovery truth, or mutates state.
 """
 from __future__ import annotations
 
@@ -36,6 +37,20 @@ def render(report: dict) -> str:
         evidence = row.get("evidence")
         if evidence:
             lines.append(f"  evidence: {evidence}")
+
+    recovery = report.get("recovery_friction")
+    if isinstance(recovery, dict):
+        friction = recovery.get("friction", {}) if isinstance(recovery.get("friction"), dict) else {}
+        lines.extend([
+            "",
+            "Cross-host recovery friction:",
+            f"- evidence_class: {recovery.get('evidence_class', 'UNKNOWN')}",
+            f"- recovery_status: {recovery.get('recovery_status', 'UNKNOWN')}",
+            f"- continuation_status: {recovery.get('continuation_status', 'UNKNOWN')}",
+            f"- friction_units: {friction.get('friction_units', 'UNKNOWN')}",
+            f"- real_cross_vendor_account_proven: {str(recovery.get('real_cross_vendor_account_proven', False)).lower()}",
+        ])
+
     lines.extend([
         "",
         f"production_ready: {str(report.get('production_ready', False)).lower()}",
@@ -65,9 +80,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=".")
     parser.add_argument("--no-run-checks", action="store_true")
+    parser.add_argument("--host-profile", default="adapters/host-profile.example.json")
     args = parser.parse_args()
     health = _load_health()
-    report = health.derive_health(Path(args.root), run_checks=not args.no_run_checks)
+    report = health.derive_health(
+        Path(args.root),
+        run_checks=not args.no_run_checks,
+        host_profile=args.host_profile,
+    )
     print(render(report))
     return 0 if report.get("overall") == "PASS" else 2
 
