@@ -79,7 +79,7 @@ After every successful mutation, the adapter performs a fresh provider readback:
 - branch mutation → current branch ref SHA/presence;
 - pull-request merge → current merged/state/merge SHA.
 
-GitHub content reads can briefly lag the mutation response. To handle that observed eventual-consistency window without replaying the mutation, the adapter now performs a bounded retry of the **readback only** when the readback specifically fails with HTTP 404. The default delays are 1s, 2s, and 4s. Authentication failures, validation errors, network uncertainty, and other failures are not converted into automatic retries.
+GitHub content reads can briefly lag the mutation response. To handle that observed eventual-consistency window without replaying the mutation, the adapter now performs a bounded retry of the **readback only** when the readback specifically fails with HTTP 404. The default delays are 1s, 2s, and 4s, allowing up to four readback attempts total (the initial read plus one attempt after each delay). Authentication failures, validation errors, network uncertainty, and other failures are not converted into automatic retries.
 
 When a post-mutation readback becomes available within the bounded window, the result is `COMPLETE` with `FRESH_PROVIDER_READBACK` plus `readback_attempts`. When the bounded window is exhausted, the adapter remains fail-safe and returns `HOLD` with `READBACK_REQUIRED` and the original provider response for reconciliation. No mutation replay occurs.
 
