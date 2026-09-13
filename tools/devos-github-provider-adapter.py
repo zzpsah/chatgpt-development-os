@@ -1,18 +1,8 @@
 #!/usr/bin/env python3
 """Governed GitHub provider adapter for the DevOS controller.
 
-The adapter is the provider-side execution boundary after P17/controller approval.
-It obtains a short-lived GitHub App installation token, evaluates the existing
-remote-permission gate before any mutation, performs one bounded provider action,
-then performs a fresh readback. It never prints or persists credentials.
-
-Required environment variables:
-  DEVOS_GITHUB_APP_ID
-  DEVOS_GITHUB_APP_PRIVATE_KEY
-
-The operation JSON is intentionally explicit. Mutation capabilities must match the
-existing DevOS remote permission model. Read operations are provider reads only and
-never create authorization.
+Provider execution happens only after P17/controller readiness and the existing
+remote-permission gate. GitHub App credentials stay external to the repository.
 """
 from __future__ import annotations
 
@@ -20,11 +10,7 @@ import argparse
 import base64
 import importlib.util
 import json
-import os
-import subprocess
 import sys
-import tempfile
-import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -33,13 +19,18 @@ from pathlib import Path
 from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parents[1]
+AUTH_MODULE_PATH = ROOT / "tools" / "devos-github-actions-auth.py"
 PERMISSION_MODULE_PATH = ROOT / "tools" / "devos-remote-permission-check.py"
 API_ROOT = "https://api.github.com"
 API_VERSION = "2026-03-10"
 USER_AGENT = "DevOS-GitHub-Provider-Adapter/1"
-JWT_LIFETIME_SECONDS = 540
+
 READ_ACTIONS = {"repository.get", "file.get", "branch.get", "pr.get"}
-SUPPORTED_MUTATIONS = {"file.create", "file.update", "file.delete", "branch.create", "branch.update", "branch.force_update", "branch.delete", "pr.merge"}
+SUPPORTED_MUTATIONS = {
+    "file.create", "file.update", "file.delete",
+    "branch.create", "branch.update", "branch.force_update", "branch.delete",
+    "pr.merge",
+}
 
 @dataclass(frozen=True)
 class AuthorizationRecord:
@@ -79,41 +70,6 @@ def _load_module(path: Path, name: str) -> Any:
     return module
 
 
-def _b64url(data: bytes) -> str:
-    return base64.urlsafe_b64encode(data).rstrip(b"=").decode("ascii")
-
-
-def _make_jwt(app_id: str, private_key: str, now: int | None = None) -> str:
-    try:
-        app_number = int(app_id)
-    except ValueError as exc:
-        raise ValueError("DEVOS_GITHUB_APP_ID must be an integer") from exc
-    issued_at = int(time.time()) if now is None else int(now)
-    header = _b64url(json.dumps({"alg": "RS256", "typ": "JWT"}, separators=(",", ":")).encode())
-    payload = _b64url(json.dumps({"iat": issued_at - 60, "exp": issued_at + JWT_LIFETIME_SECONDS, "iss": app_number}, separators=(",", ":")).encode())
-    unsigned = f"{header}.{payload}".encode("ascii")
-    key_path: Path | None = None
-    result = None
-    try:
-        with tempfile.NamedTemporaryFile(mode="w", prefix="devos-gh-key-", suffix=".pem", delete=False) as handle:
-            handle.write(private_key)
-            handle.flush()
-            key_path = Path(handle.name)
-        os.chmod(key_path, 0o600)
-        result = subprocess.run(["openssl", "dgst", "-sha256", "-sign", str(key_path)], input=unsigned, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
-    except FileNotFoundError as exc:
-        raise RuntimeError("openssl is required on the GitHub-hosted runner") from exc
-    finally:
-        if key_path is not None:
-            try:
-                key_path.unlink()
-            except FileNotFoundError:
-                pass
-    if result is None or result.returncode != 0:
-        raise RuntimeError("GitHub App private-key signing failed")
-    return f"{unsigned.decode('ascii')}.{_b64url(result.stdout)}"
-
-
 def _parse_repository(value: str) -> tuple[str, str]:
     parts = value.strip().split("/")
     if len(parts) != 2 or not all(parts) or any(part in {".", ".."} for part in parts):
@@ -126,7 +82,12 @@ def _json_bytes(payload: dict[str, Any]) -> bytes:
 
 
 def _request(url: str, *, token: str, method: str = "GET", body: dict[str, Any] | None = None) -> tuple[int, dict[str, Any]]:
-    headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": API_VERSION, "User-Agent": USER_AGENT, "Authorization": f"Bearer {token}"}
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": API_VERSION,
+        "User-Agent": USER_AGENT,
+        "Authorization": f"Bearer {token}",
+    }
     raw_body = _json_bytes(body) if body is not None else None
     if raw_body is not None:
         headers["Content-Type"] = "application/json"
@@ -148,30 +109,55 @@ def _request(url: str, *, token: str, method: str = "GET", body: dict[str, Any] 
 
 
 def _installation_token(repository: str) -> str:
-    app_id = os.environ.get("DEVOS_GITHUB_APP_ID", "").strip()
-    private_key = os.environ.get("DEVOS_GITHUB_APP_PRIVATE_KEY", "")
+    """Use the already-proven DevOS GitHub App authentication implementation."""
+    auth = _load_module(AUTH_MODULE_PATH, "devos_github_actions_auth")
+    app_id = auth.os.environ.get("DEVOS_GITHUB_APP_ID", "").strip()
+    private_key = auth.os.environ.get("DEVOS_GITHUB_APP_PRIVATE_KEY", "")
     if not app_id or not private_key:
         raise RuntimeError("DEVOS_GITHUB_APP_ID and DEVOS_GITHUB_APP_PRIVATE_KEY are required")
+
     owner, repo = _parse_repository(repository)
-    jwt = _make_jwt(app_id, private_key)
-    _, installation = _request(f"{API_ROOT}/repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repo)}/installation", token=jwt)
+    app_jwt = auth.make_jwt(app_id, private_key)
+    installation = auth.request_json(
+        f"{AUTH_MODULE_API_ROOT}/repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repo)}/installation",
+        method="GET",
+        bearer=app_jwt,
+    )
     installation_id = installation.get("id")
     if not isinstance(installation_id, int):
         raise RuntimeError("GitHub App installation was not resolved for target repository")
-    _, target = _request(f"{API_ROOT}/repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repo)}", token=jwt)
+
+    target = auth.request_json(
+        f"{AUTH_MODULE_API_ROOT}/repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repo)}",
+        method="GET",
+        bearer=app_jwt,
+    )
     target_id = target.get("id")
     if not isinstance(target_id, int):
         raise RuntimeError("target repository metadata did not include an integer id")
-    _, token_response = _request(f"{API_ROOT}/app/installations/{installation_id}/access_tokens", token=jwt, method="POST", body={"repository_ids": [target_id]})
+
+    token_response = auth.request_json(
+        f"{AUTH_MODULE_API_ROOT}/app/installations/{installation_id}/access_tokens",
+        method="POST",
+        bearer=app_jwt,
+        body=_json_bytes({"repository_ids": [target_id]}),
+    )
     token = token_response.get("token")
     if not isinstance(token, str) or not token:
         raise RuntimeError("GitHub did not return an installation token")
     return token
 
 
+AUTH_MODULE_API_ROOT = "https://api.github.com"
+
+
 def _gate(operation: OperationRecord, authorization: AuthorizationRecord | None) -> dict[str, Any]:
     mod = _load_module(PERMISSION_MODULE_PATH, "devos_remote_permission_check")
-    op = mod.Operation(provider=operation.provider, owner=operation.owner, repository=operation.repository, resource=operation.resource, capability=operation.capability, workflow=operation.workflow, project=operation.project, impact=operation.impact, freshness=operation.freshness)
+    op = mod.Operation(
+        provider=operation.provider, owner=operation.owner, repository=operation.repository,
+        resource=operation.resource, capability=operation.capability, workflow=operation.workflow,
+        project=operation.project, impact=operation.impact, freshness=operation.freshness,
+    )
     auth = mod.Authorization(**authorization.__dict__) if authorization is not None else None
     status, reasons = mod.evaluate(auth, op)
     return {"status": status, "reasons": reasons, "capability": operation.capability}
@@ -282,7 +268,8 @@ def _readback(token: str, operation: OperationRecord, result: dict[str, Any]) ->
 
 
 def execute(operation_data: dict[str, Any], authorization_data: dict[str, Any] | None = None, token_provider: Callable[[str], str] = _installation_token, client_read: Callable[[str, OperationRecord], dict[str, Any]] | None = None) -> dict[str, Any]:
-    operation = OperationRecord(provider=operation_data.get("provider", ""), owner=operation_data.get("owner", ""), repository=operation_data.get("repository"), resource=operation_data.get("resource"), capability=operation_data.get("capability", ""), workflow=operation_data.get("workflow", ""), project=operation_data.get("project", ""), impact=operation_data.get("impact", ""), freshness=operation_data.get("freshness"), action=operation_data.get("action", ""), inputs=operation_data.get("inputs", {}))
+    operation = OperationRecord(
+        provider=operation_data.get("provider", ""), owner=operation_data.get("owner", ""), repository=operation_data.get("repository"), resource=operation_data.get("resource"), capability=operation_data.get("capability", ""), workflow=operation_data.get("workflow", ""), project=operation_data.get("project", ""), impact=operation_data.get("impact", ""), freshness=operation_data.get("freshness"), action=operation_data.get("action", ""), inputs=operation_data.get("inputs", {}))
     if not isinstance(operation.inputs, dict):
         return {"status": "BLOCKED", "reason_codes": ["INVALID_INPUTS"], "authority": "UNCHANGED", "execution": "NONE", "mutation": "NONE"}
     if operation.provider != "github":
