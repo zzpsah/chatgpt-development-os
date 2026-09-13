@@ -3,103 +3,152 @@
 ## Snapshot
 
 - Repository: `zzpsah/chatgpt-development-os`
-- Branch: `main`
-- Current state is established from Git/source evidence; this file is a durable recovery summary, not a replacement for source inspection.
-- P9 Development Task Controller v1 is complete.
-- P10 Context Continuity & Recovery v1 is complete.
-- P11 DevOS Federation & Self-Healing Context v1 is complete.
-- P12 Operational Intelligence is complete.
-- P13 Autonomous Development Orchestration is complete.
-- P14 Adaptive Verification & Self-Healing v1 is complete.
-- P15 Human Language Interpretation v2 is implemented, merged to `main`, and established as the normative top-level semantic entry capability.
+- Durable implementation authority: source tree + Git.
+- This file is a recovery summary and must be revalidated against Git/source before material action.
+- `main` contains completed DevOS maturity work through P15 Human Language Interpretation v2.
+- P16 Semantic Goal-to-Plan Compiler v1 source implementation is complete on PR #9, branch `devos/p16-goal-to-plan`, final source head `981ac5f02ff3d64ac2caf3f49a9dbe008fbe8b6a`.
+- P16 is **not closed or merged yet** because fresh final-head GitHub Actions runs remain queued rather than passed or failed.
+- P17 Step Readiness & Authorization Orchestrator v1 is active on stacked branch `devos/p17-step-readiness`, based on the P16 branch.
+- P17 must not merge before P16 passes fresh final-head verification and merges to `main`.
 
-## Canonical DevOS repository identity
+## Canonical repository identity
 
 - Canonical alias: `DEVOS` / `Development OS`.
 - Canonical repository: `zzpsah/chatgpt-development-os`.
 - Canonical URL: `https://github.com/zzpsah/chatgpt-development-os`.
-- `.ai/manifest.yaml` and `projects/registry.md` carry this durable identity so a fresh AI session does not depend on prior chat/account memory.
-- Name-only GitHub search results are not authoritative project identity evidence.
-- `tools/discover-project-identity.py` compares observed Git/CI repository evidence with the canonical manifest identity and surfaces mismatches as `CONFLICT` instead of silently switching repositories.
+- `.ai/manifest.yaml` and `projects/registry.md` carry durable identity.
+- Similar repository names are not identity evidence.
 
-## Implemented architecture
+## Completed maturity layers
 
-DevOS includes the established execution, recovery, intelligence, orchestration, verification, bounded-healing, and human-language layers through P15. The normative human-originated path begins:
+- P9 Development Task Controller v1: complete.
+- P10 Context Continuity & Recovery v1: complete.
+- P11 Federation & Self-Healing Context v1: complete.
+- P12 Operational Intelligence: complete.
+- P13 Autonomous Development Orchestration: complete.
+- P14 Adaptive Verification & Self-Healing v1: complete.
+- P15 Human Language Interpretation v2: merged to `main` through PR #8 and established as the normative top-level semantic input layer.
 
-`Human input → Human Language Execution Engine → Project Router / State Resolver → Development Task Controller → bounded workflow/runtime → Verification + Security → durable state`
+P11–P14 have fresh passing GitHub Actions closure evidence recorded in durable project state. P15 feature-branch verification passed before merge; post-merge infrastructure runs were observed queued rather than failed.
 
-Human Language Interpretation is a top-level DevOS functionality, not a side branch/module in the architecture. The deterministic v2 interpreter is the minimum executable language contract; richer multilingual/model-assisted interpretation may evolve above it only while preserving project identity, constraints, authorization, evidence, Security Gate, and verification boundaries.
+## Current canonical architecture under development
 
-## P8 status
+The intended human-originated path is now:
 
-P8 Remote Mutation Controls v1 has a provider-backed, explicitly authorized GitHub file-update reference path connected to the runtime bridge, with target/scope validation, optimistic concurrency, Security Gate requirements, bounded retry semantics, and mutation safety verification. Higher-impact remote mutations remain separately gated.
+`Human input → P15 Human Language Interpretation → Project Router / State Resolver → P16 Semantic Goal-to-Plan Compiler → P17 Step Readiness & Authorization Orchestrator → Development Task Controller → bounded runtime → Verification + Security → durable state`
 
-## P9–P11 status
+Interpretation, planning, readiness, intelligence, and orchestration never manufacture authority. Execution remains separately gated.
 
-P9 Development Task Controller v1, P10 Context Continuity & Recovery v1, and P11 DevOS Federation & Self-Healing Context v1 are complete. P11 established versioned project identity, context freshness/integrity detection, safe deterministic derived-context reconciliation, bounded self-healing, cross-AI recovery handoff, repository-first recovery precedence, and fresh-AI repository-only recovery.
+## P16 current state
 
-## Stance/style contract
+P16 bridges interpreted semantic intent and the Development Task Controller with an explicit bounded plan graph.
 
-Preferred high-autonomy user invocation:
+Reference implementation:
 
-```text
-DEVOS::GOD::DESI
-```
+- `core/semantic-goal-to-plan-compiler.md`
+- `tools/semantic-goal-to-plan.py`
+- `tools/test-semantic-goal-to-plan.py`
 
-`GOD` controls execution posture. `DESI` controls conversational presentation. Neither layer changes authorization, security, or verification requirements. Stance processing does not bypass top-level semantic interpretation for ordinary human-originated work.
+Key properties:
+
+- emits `DEVOS-GOAL-PLAN-v1`;
+- preserves constraints, dependencies, ambiguity, authority requirements, expected evidence, verification obligations, and stop/escalation conditions;
+- automatically inserts read-before-write planning for mutations where needed;
+- returns `execution: NONE`, `authority: UNCHANGED`, `authorization: UNCHANGED`;
+- cannot grant permission.
+
+PR #9 final source head: `981ac5f02ff3d64ac2caf3f49a9dbe008fbe8b6a`.
+
+Latest repeatedly observed P16 CI state:
+
+- `Verify Development OS Contracts`, run 447 / id `34737915568`: queued, no conclusion.
+- `Verify Development OS`, run 391 / id `34737915598`: queued, no conclusion.
+
+Queued is not treated as failure or success. Do not merge P16 until fresh final-head verification succeeds.
+
+## P17 current state
+
+P17 closes the gap between “this is the planned step” and “this exact step is currently eligible to proceed.”
+
+Reference implementation and contract:
+
+- `core/step-readiness-authorization-orchestrator.md`
+- `tools/step-readiness-orchestrator.py`
+- `tools/test-step-readiness-orchestrator.py`
+- `tools/test-p17-end-to-end.py`
+- readiness-aware path in `tools/devos-runtime-handoff.py`
+
+P17 outcomes:
+
+- `READY`
+- `NEEDS_EVIDENCE`
+- `NEEDS_APPROVAL`
+- `BLOCKED`
+- `STOP`
+
+Every outcome preserves:
+
+- `authority: UNCHANGED`
+- `authorization: UNCHANGED`
+- `execution: NONE`
+
+P17 currently enforces:
+
+- exact compiled plan protocol and PLANNED state;
+- exact step identity;
+- compilation/current repository-head freshness;
+- dependency completion;
+- capability availability;
+- exact-step authorization with no approval leakage;
+- Security Gate evidence for security/high-impact/destructive classes;
+- non-empty verification path;
+- malformed-plan rejection for duplicate/missing step ids, empty objectives, invalid impact/authorization metadata, unknown/self dependencies, and fake completion ids.
+
+P17 also contains a reference maturity proof covering:
+
+`P15 Human Language → P16 Plan → P17 Readiness → Development Task Controller → Runtime Handoff`
+
+The P15→P16 integration was hardened so a clear fresh request such as `check repository` supplies its own objective instead of requiring pre-existing `active_objective` context; contextual continuation such as `continue` still reuses durable/current objective context.
+
+PR #10 is stacked on P16. Before documentation commits it was observed open and mergeable; re-check current PR/head metadata before any merge decision.
+
+Latest repeatedly observed P17 implementation-head CI before the documentation commits:
+
+- P17 head `ee9bbf5f1b07f41f05b10d7953c011eaafc9cced`.
+- `Verify Development OS Contracts`, run 454 / id `34738765144`: queued, no conclusion.
+
+Documentation commits after that head are material state changes and require fresh head verification before any P17 closure.
+
+## Documentation / recovery record
+
+Detailed P16/P17 development actions, discovered gaps, fixes, commits, CI observations, and next steps are recorded in:
+
+`.ai/SESSIONS/2026-09-13-p16-p17-gap-closure.md`
+
+This session record is semantic recovery context; exact changes remain authoritative in Git history.
+
+## Current merge and verification rule
+
+1. Re-check P16 final-head CI.
+2. If P16 fails, inspect exact jobs/logs and repair only the defect.
+3. If P16 passes, merge PR #9 using its verified expected head.
+4. Persist P16 closure on `main`.
+5. Retarget/revalidate P17 against the resulting `main`.
+6. Require fresh P17 verification on the final P17 head.
+7. Merge P17 only after those checks pass.
+8. After P17, prioritize an end-to-end real managed-project maturity proof and gap-driven hardening rather than inventing milestone numbers.
 
 ## Recovery precedence
 
 1. Source tree + Git for exact implementation state.
-2. Explicit requirements/decisions for intentional project state.
-3. Durable `.ai` state for project context and handoff.
-4. Generated indexes for navigation/evidence only.
-5. AI account memory/chat history as supplementary context and never as authoritative repository evidence.
+2. Explicit requirements and `.ai/DECISIONS.md` for intentional state.
+3. `.ai/TASKS.md` and `.ai/CURRENT-STATE.md` for current work/recovery context.
+4. `.ai/SESSIONS/` for detailed session provenance.
+5. Generated indexes for navigation/evidence only.
+6. AI/chat memory as supplementary context, never repository authority.
 
-## Self-healing boundary
+## Safety / authority boundary
 
-Only deterministic derived artifacts are eligible for automated recreation: `STATE-INDEX.md`, `CHANGELOG.md`, and `PROJECT-IDENTITY.json`. Semantic project files such as `PROJECT.md`, `DECISIONS.md`, `TASKS.md`, `CURRENT-STATE.md`, and `ARCHITECTURE.md` remain outside the automatic self-healing write boundary.
+No interpretation, compiler output, readiness result, Operational Intelligence recommendation, orchestration result, prior approval, successful test, provider credential, or chat instruction can independently authorize a new high-impact operation.
 
-## P12 completion
-
-P12 Operational Intelligence is complete on commit `1f544f2f000a8357bf801cb0682c1a0e797997b1`. It supplies deterministic dependency/readiness analysis, advisory prioritization, checkpoint signals, failure/evidence intelligence, advisory next actions, and an executable controller decision envelope without granting authority or executing work. Fresh GitHub Actions workflows 415 and 360 succeeded for the verified P12 state.
-
-## P13 completion
-
-P13 Autonomous Development Orchestration is complete on commit `cee2d894af4c1230240456fa635a31bbd1586248`. It converts a human goal and recovered task inventory into one independently gated runtime candidate or an explicit `CONTINUE`, `STOP`, or `ESCALATE` decision. Verified runtime outcomes alone unlock dependent work, and durable checkpoints require fresh Git revalidation rather than replaying saved work. Fresh GitHub Actions workflows 417 and 362 succeeded for the managed-project proof.
-
-## P14 completion
-
-P14 Adaptive Verification & Self-Healing v1 is complete on implementation commit `b8a2996be1efd8642b1ef99230d20fc1ee80061c`. It adds risk- and boundary-aware verification selection, fresh-evidence gating, bounded repair budgets, deterministic derived-context healing execution, and mandatory fresh re-verification after healing. Automatic repair remains restricted to the existing deterministic derived-context allowlist; semantic state, source code, configuration, database, deployment/infrastructure, and security/authentication repairs remain proposal-only or separately gated.
-
-Fresh P14 GitHub Actions evidence:
-- `Verify Development OS Contracts`, run `34715729808` / run 428: success.
-- `Verify Development OS`, run `34715729692` / run 372: success.
-
-## P15 completion
-
-P15 Human Language Interpretation v2 is merged to `main` through PR #8 on merge commit `770c8b3583515e3c947562854be7a2d2fd34710d`.
-
-P15 establishes:
-- Human Language Execution Engine as the normative top-level semantic input layer.
-- Contextual English/Hinglish short-command interpretation and referent-aware continuation.
-- Compatible multi-intent composition and durable negative constraints.
-- Confidence/ambiguity separation from technical evidence.
-- Explicit unchanged authority/authorization and no direct execution from interpretation.
-- Independent high-impact authorization checks.
-- Explicit `SECURITY_REVIEW → workflows/security.md → Security Gate` routing.
-- A regression-tested evolution contract for future multilingual/contextual improvements.
-
-The final P15 repair commit `0be462dac63501a31221fcd972e0de078657d110` passed both feature-branch workflows before merge:
-- `Verify Development OS Contracts`, run `34735399593` / run 433: success.
-- `Verify Development OS`, run `34735399564` / run 377: success.
-
-Post-merge `main` workflows were automatically triggered. At the last observation they were queued by GitHub Actions rather than failing; this is recorded as verification infrastructure state, not an implementation defect. P15 must be reopened if those fresh main runs later expose a regression.
-
-## Durable future-work rule
-
-Future meaningful engineering work, decisions, blockers, verification evidence, and recovery notes must be persisted in repository-local `.ai` context. Use `.ai/SESSIONS/` for session-level semantic records and update `TASKS.md`, `DECISIONS.md`, and `CURRENT-STATE.md` when durable project state changes. Chat history is not the authoritative recovery layer.
-
-## Authority
-
-For implementation state use source tree + Git. For intentional decisions use `DECISIONS.md`. For remaining work use `TASKS.md` plus current evidence. `STATE-INDEX.md` is deterministic evidence indexing only. ChatGPT memory and old conversations are supplementary.
+Production, destructive, database, deployment, merge, security-sensitive, credential, and other high-impact actions remain operation-specific, independently authorized, Security-Gate controlled where applicable, and evidence-verified.
