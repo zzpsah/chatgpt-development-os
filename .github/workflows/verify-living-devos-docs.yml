@@ -1,0 +1,29 @@
+name: Verify DevOS Living Engineering Map
+
+on:
+  pull_request:
+    paths:
+      - 'docs/DEVOS-MASTER-ENGINEERING-MAP.md'
+      - 'docs/DEVOS-INTERPRETER-EXPERIMENT-LEDGER.md'
+      - 'core/devos-living-state-and-evolution.md'
+      - 'docs/handoff/README.md'
+      - '.ai/CURRENT-STATE.md'
+      - '.ai/TASKS.md'
+      - '.ai/DECISIONS.md'
+      - 'tools/test-devos-living-docs.py'
+      - '.github/workflows/verify-living-devos-docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify living DevOS documentation surface
+        run: python tools/test-devos-living-docs.py

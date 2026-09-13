@@ -1,5 +1,13 @@
 # DevOS Decisions
 
+## Core documentation law
+- **What is not written was never done.**
+- Every material AI engineering action, decision, repair, experiment, verification result, evidence change, architecture change, roadmap change, or externally relevant outcome must leave a durable repository record.
+- Completion requires `IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE`.
+- The durable record must preserve what happened, why, where, how it was verified, supporting evidence, remaining unknowns, and next-AI continuation guidance.
+- `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture/navigation layer and must be updated when material architecture, capability, evidence-boundary, interpreter, portability, security/authorization, or future-goal semantics change.
+- Automation may synchronize machine-observable facts; semantic decisions require evidence-driven AI/engineering judgment.
+
 ## MCP/App Permission Control Plane
 - Remote provider/API write access is a technical capability, not DevOS authorization.
 - MCP/App host adapters must route remote mutation eligibility through the provider-independent DevOS permission control plane.
@@ -11,6 +19,14 @@
 - Provider mutation response is not completion proof; fresh readback is required.
 - Uncertain remote mutation enters HOLD/reconciliation and cannot be blindly replayed.
 - Initial control-plane work is side-effect-free; live provider mutation remains a separate explicitly authorized sandbox activity.
+
+## Actionable HOLD + Scoped Approval — closure
+- PR #23 is merged at `7c60c3a4a36982ba894e2f30ba9dd98500f98d02`.
+- Final source head before merge: `954b094a3832c300d371426d682eac90156cbb04`.
+- Scoped approval never replaces P17/controller authorization.
+- `continue` may reuse approval only within exact project/workflow/capability/target/impact/freshness/security scope.
+- Stale repository state, changed target/capability, impact escalation, or changed Security Gate requires fresh evaluation.
+- No live/destructive/provider/production mutation was performed for this objective.
 
 ## Current-Source Evidence Refresh — closure
 - This was a bounded, unnumbered objective; no P18/P19 phase was created.
