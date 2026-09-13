@@ -1,18 +1,32 @@
 # Decisions
 
-## Foundation Health & State Consistency
-- Foundation Health is a bounded objective, not a new P18/P19 phase.
+## Cross-Host Recovery Friction & Onboarding Proof
+- This is a bounded, unnumbered objective; no P18/P19 phase is created.
+- The gap is not another portability contract. Existing Multi-AI portability, host-profile, auto-onboarding, fresh-AI recovery, continuation, and P11 repository-first contracts already exist.
+- The missing evidence is measurable repository-only recovery/adoption friction: what a fresh host can recover, what is missing/ambiguous, and which host capabilities are unavailable or delegatable.
+- The recovery/friction layer must be READ_ONLY and machine-readable.
+- It may inspect repository files, Git state, existing host profiles, bootstrap contracts, and existing recovery evidence; it must not create authority, authorize execution, mutate project state, rewrite evidence, or infer live-provider proof.
+- Missing/ambiguous recovery inputs are `UNKNOWN` or `BLOCKED`, never PASS.
+- Deterministic host-profile simulation is not real cross-vendor/account proof. `SIMULATED EVIDENCE != LIVE PROVIDER PROOF` remains explicit.
+- Authorization, Security Gate, verification, and no-replay rules are invariant across AI vendors/models/accounts.
+- Recovery/adoption friction should be represented with stable fields/counts so future hosts/revisions can be compared without rewriting historical evidence.
+
+## Foundation Health & State Consistency — closure
+- Foundation Health is a bounded objective, not a P18/P19 phase.
 - Authoritative flow: `Source / Git / Tests / CI → tools/devos-audit.py → readiness evidence ledger → tools/devos-health.py → tools/devos-doctor.py`.
 - `tools/devos-health.py` composes authoritative audit/evidence inputs; it does not become a competing truth source.
 - `tools/devos-doctor.py` is presentation-only and READ_ONLY.
-- Health/doctor always preserve `authority: UNCHANGED`, `authorization: UNCHANGED`, `execution: NONE`, and `mutation: NONE`.
-- Status vocabulary is `PASS`, `WARN`, `UNKNOWN`, `FAIL`, `BLOCKED`; the most severe observed state wins. `WARN` and `UNKNOWN` are never promoted to `PASS`.
-- Historical-source drift is a truthful `WARN`; it never rewrites the source/run head of historical evidence.
-- Missing audit-pack dependencies or unavailable Git provenance remain `UNKNOWN`; absence of proof is never inferred as success.
-- Canonical identity or exact expected-head mismatch is `BLOCKED`.
-- Unsupported capability/evidence promotion is `FAIL` through the existing readiness-evidence verifier.
+- Health/doctor preserve `authority: UNCHANGED`, `authorization: UNCHANGED`, `execution: NONE`, and `mutation: NONE`.
+- Status vocabulary is `PASS`, `WARN`, `UNKNOWN`, `FAIL`, `BLOCKED`; WARN/UNKNOWN are never promoted to PASS.
+- Historical-source drift is a truthful WARN; it never rewrites the source/run head of historical evidence.
+- Canonical identity or exact expected-head mismatch is BLOCKED.
+- Unsupported capability/evidence promotion fails through the existing readiness-evidence verifier.
 - Status prose may be diagnosed for contradictions but never overrules source/Git/test/ledger evidence.
 - No live/destructive/provider mutation is required or authorized by the health objective.
+- Final source head `77a8f6f8d8ce012d872b20343bded2e00c53ed7d` merged as PR #18 at `657ae461c0d6df62ca428d8bdd0404bd241b5c84`.
+- Final PR verification: Trust-First 29 / `34763332363`, Contracts 566 / `34763332344`, Full DevOS 491 / `34763332347` — success.
+- Fresh post-merge main verification: Trust-First 33 / `34764171968`, Contracts 570 / `34764171939`, Full DevOS 495 / `34764171923` — success.
+- `tools/test-step-readiness-orchestrator.py` remains intentionally visible historical-source drift; closure does not refresh or promote that historical proof.
 
 ## PR #16 readiness-evidence closure
 - PR #16 final source head `6c509d6f65b22666f121dfe86604faae72c08f8c` merged at `b8e31ae76201b32e4617ef6044b29ef285004f54` only after exact-head Trust-First 22, Contracts 559, Full DevOS 484, and External Managed Project 52 succeeded.
@@ -28,7 +42,6 @@
 - Current-source evolution does not rewrite historical evidence. Changed referenced paths are exposed as `historical_source_drift`; a new current-source claim requires separate new evidence.
 - Fabricated CI run IDs, source-head mismatches, stale evidence relabeled as fresh, malformed/duplicate capability records, missing limitations, and unsupported production/live-mutation promotion fail closed.
 - The readiness ledger composes with `tools/devos-audit.py` and adversarial Security Gate checks rather than duplicating them.
-- Foundation bootstrap participates in Contracts and Full CI; diagnostics remain read-only.
 
 ## Durable project state authority
 - DevOS project-local `.ai` is the portable durable context layer.
@@ -60,36 +73,18 @@
 - No-blind-mutation-replay remains a durable safety invariant across recovery and session boundaries.
 
 ## Controlled Remote Mutation Proof decision
-- This gate strengthens the existing `github.mutate.file` path; it does not add a general remote mutation framework.
-- The missing maturity evidence was fresh readback of the exact remote file after a mutation attempt.
-- `github.inspect.file` is therefore added as a read-only capability for precondition/current-state and post-mutation observation.
-- The reference controlled proof is `fresh inspect.file → exact SHA match → exact-step authorization + Security Gate → one mutate.file attempt → fresh inspect.file readback → observed-state verification`.
-- A provider update response is mutation-attempt evidence, not verified completion.
-- `VERIFIED` requires fresh readback proving the intended content and current SHA.
-- Missing authorization, missing Security Gate, stale SHA, invalid path, or failed pre-read BLOCK before mutation.
-- Once the mutation adapter is invoked, conflict, failed/mismatched readback, or unproven final state HOLDs with replay forbidden.
-- An uncertain provider response may be reconciled by fresh readback if the exact intended state is observed; the mutation itself is still never automatically retried.
-- Normal GitHub commits used to develop DevOS are not counted as the DevOS runtime mutation proof.
+- The existing proof covers `github.mutate.file` with fresh pre-read, expected SHA binding, exact-step authorization + Security Gate, one mutation attempt, fresh readback, and observed-state verification.
+- Provider mutation response is attempt evidence, not completion proof.
+- Stale SHA, missing authorization/Security Gate, failed readback, or unproven state block/hold according to the governing contracts.
+- Once mutation is attempted, automatic replay remains forbidden.
+- This evidence is provider-simulated / contract-level only, not live-provider production proof.
 
 ## Live-provider boundary decision
-- PR #14 is provider-simulated / contract-level evidence only.
-- No new live DevOS runtime remote mutation has been authorized or executed by this gate.
-- A future live-provider `github.mutate.file` proof requires separate explicit authorization for the exact repository, file path, intended content/change, and operation.
-- Branch, pull-request, workflow, deployment, production, database, permission, credential/secret, and destructive mutations remain unproven and unavailable/out of scope unless separately bounded and explicitly authorized.
-
-## Verification / no-replay decision
-- Controlled remote mutation is attempted at most once per governed attempt.
-- Stale optimistic-concurrency evidence must trigger refresh, not unconditional overwrite.
-- Provider uncertainty or failed post-mutation verification inherits Failure + Recovery's `MUTATION_REPLAY_FORBIDDEN` rule.
-- A later attempt, if separately justified, is a new governed attempt requiring fresh provider state and current exact authorization/Security Gate evidence.
-
-## Production-readiness decision
-- Production readiness is an evidence claim, not a phase label.
-- Provider-simulated controlled mutation proof may strengthen the evidence matrix but does not by itself prove live-provider or production mutation safety.
-- The readiness matrix distinguishes deterministic/component proof, integrated proof, real read-only managed-project proof, provider-simulated proof, live-provider proof, and unproven capabilities.
-- Current v1 deliberately cannot express `LIVE_PROVIDER_VERIFIED` or `PRODUCTION_VERIFIED` as successful proof levels.
+- No new live DevOS runtime remote mutation is authorized by current portability/health work.
+- A future live-provider file-mutation proof requires separate explicit authorization for exact repository, path, intended change, and operation.
+- Branch, PR, workflow, deployment, production, database, permission, credential/secret, and destructive mutations remain unproven/out of scope unless separately bounded and explicitly authorized.
 
 ## Verification boundary
 - Earlier successful runs are historical evidence only for a new head.
-- Fresh CI on a later PR head proves that later implementation/checker behavior only; it does not silently refresh historical ledger rows.
+- Fresh CI on a later head proves that head's implementation/checker behavior only; it does not silently refresh historical ledger rows.
 - Higher-impact execution remains separately authorized and Security-Gate controlled.
