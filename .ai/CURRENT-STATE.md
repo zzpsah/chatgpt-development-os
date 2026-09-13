@@ -109,3 +109,7 @@ Do not create P18/P19 merely for bookkeeping. Continue with consolidation/eviden
 - `DEVOS-PROJECT-CONTEXT.md` provides host-neutral repository context for fresh external AI chats.
 - It is optional/revocable, preserves host policy, requires unavailable-context reporting, and flags instructions that seek to bypass safety, authorization, verification, or host policy.
 - It is a core bootstrap requirement before material diagnosis/repair.
+
+## Resolver grounding correction
+
+- Durable state cannot self-upgrade a claim to observed; current P12 execution evidence is required.

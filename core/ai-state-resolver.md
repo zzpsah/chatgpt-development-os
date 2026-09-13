@@ -207,11 +207,11 @@ Those belong to later Development OS milestones.
   revalidate_on: [RECOVERY_BOUNDARY, HANDOFF_BOUNDARY, path-glob]
 ```
 
-`observed` requires a non-empty grounding reference. An uncited observed claim is malformed and resolves to `unknown`. Duplicate claim identifiers also resolve to `unknown`; conflicts must be surfaced, never silently selected.
+`observed` requires current P12 `execution_evidence` with a non-empty grounding reference. An uncited observed claim is malformed and resolves to `unknown`. A `durable_state` record proves only that an assertion was recorded, so an observed durable-state claim resolves to `likely` even when it has a file/line reference. Duplicate claim identifiers also resolve to `unknown`; conflicts must be surfaced, never silently selected.
 
 `execution_evidence` belongs to P12. The resolver accepts it only by reference and uses P12 freshness: an observed claim based on non-current P12 evidence decays to `likely`. It never re-normalizes the evidence.
 
-`durable_state` is broader semantic project context. An observed durable-state claim decays to `likely` at a configured recovery/handoff boundary or when a configured path glob has changed. The default revalidation boundaries are recovery and handoff.
+`durable_state` is broader semantic project context. It is capped at `likely` until independently supported by current P12 execution evidence. Recovery/handoff boundaries and configured path changes remain explicit reasons to revalidate it. The default revalidation boundaries are recovery and handoff.
 
 ### Downstream propagation
 

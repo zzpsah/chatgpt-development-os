@@ -21,7 +21,8 @@ def claim(claim_id="C1", confidence="observed", grounding_type="durable_state", 
 
 def main():
     stable = module.resolve({"claims": [claim()]})
-    assert stable["status"] == "RESOLVED" and stable["weakest_state_confidence"] == "observed", stable
+    assert stable["status"] == "RESOLVED" and stable["weakest_state_confidence"] == "likely", stable
+    assert "DURABLE_STATE_CANNOT_SELF_UPGRADE_TO_OBSERVED" in stable["claims"][0]["reasons"], stable
     assert stable["authority"] == "UNCHANGED" and stable["execution"] == "NONE", stable
 
     boundary = module.resolve({"claims": [claim()], "events": [{"type": "RECOVERY_BOUNDARY"}]})

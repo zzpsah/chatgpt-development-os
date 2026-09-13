@@ -28,7 +28,7 @@ observed = resolver.resolve({"claims": [{
 }]})
 plan = p16.compile_plan("FEATURE_CHANGE", "update docs", "DEVOS", [], [], observed)
 assert plan["decision"] == "PLANNED", plan
-assert plan["state_resolution"]["weakest_state_confidence"] == "observed", plan
+assert plan["state_resolution"]["weakest_state_confidence"] == "likely", plan
 
 ready = p17.evaluate({
     "plan": plan, "step_id": "S1", "compiled_repository_head": "head", "current_repository_head": "head",
