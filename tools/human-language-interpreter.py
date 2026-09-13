@@ -9,27 +9,44 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import unicodedata
 from typing import Any
 
 INTENT_PATTERNS = {
-    "RESUME_WORK": [r"\bcontinue\b", r"\bresume\b", r"\bcarry on\b", r"\bproceed\b", r"\baage\b", r"\bchalu\b"],
-    "BUG_FIX": [r"\bfix\b", r"\bbug\b", r"\berror\b", r"\bbroken\b", r"\bthik\b", r"\bsahi\b"],
-    "FEATURE_CHANGE": [r"\badd\b", r"\bbuild\b", r"\bimplement\b", r"\bchange\b", r"\bupdate\b", r"\bbana\b", r"\bkro\b", r"\bkaro\b"],
-    "VALIDATION": [r"\bcheck\b", r"\btest\b", r"\bverify\b", r"\bvalidate\b"],
-    "SECURITY_REVIEW": [r"\bsecurity\b", r"\bauth\b", r"\bpermission\b"],
-    "INVESTIGATE": [r"\bwhy\b", r"\bkyu\b", r"\bproblem\b", r"\binvestigate\b", r"\bdiagnos"],
-    "QUALITY_IMPROVEMENT": [r"\bbetter\b", r"\bimprove\b", r"\bprofessional\b", r"\bach[ha]+\b", r"\bacha\b"],
-    "EXPLAIN_CHANGE": [r"\bexplain\b", r"\bkya kiya\b", r"\bwhat did\b"],
+    "RESUME_WORK": [r"\bcontinue\b", r"\bresume\b", r"\bcarry on\b", r"\bproceed\b", r"\baage\b", r"\bchalu\b", r"जारी\s+रखो", r"आगे\s+बढ़ो"],
+    "BUG_FIX": [r"\bfix\b", r"\bbug\b", r"\berror\b", r"\bbroken\b", r"\bthik\b", r"\bsahi\b", r"ठीक\s+करो", r"समस्या", r"गलती"],
+    "FEATURE_CHANGE": [r"\badd\b", r"\bbuild\b", r"\bimplement\b", r"\bchange\b", r"\bupdate\b", r"\bbana\b", r"\bkro\b", r"\bkaro\b", r"बनाओ", r"जोड़ो", r"अपडेट", r"डिप्लॉय", r"तैनात"],
+    "VALIDATION": [r"\bcheck\b", r"\btest\b", r"\bverify\b", r"\bvalidate\b", r"जांचो", r"जाँचो", r"परीक्षण"],
+    "SECURITY_REVIEW": [r"\bsecurity\b", r"\bauth\b", r"\bpermission\b", r"सुरक्षा", r"अनुमति"],
+    "INVESTIGATE": [r"\bwhy\b", r"\bkyu\b", r"\bproblem\b", r"\binvestigate\b", r"\bdiagnos", r"क्यों", r"समस्या\s+देखो"],
+    "QUALITY_IMPROVEMENT": [r"\bbetter\b", r"\bimprove\b", r"\bprofessional\b", r"\bach[ha]+\b", r"\bacha\b", r"बेहतर", r"सुधारो"],
+    "EXPLAIN_CHANGE": [r"\bexplain\b", r"\bkya kiya\b", r"\bwhat did\b", r"समझाओ", r"क्या\s+किया"],
 }
 
-NEGATIVE = [r"\bdon'?t\b", r"\bdo not\b", r"\bmat\b", r"\bnahi\b", r"\bwithout\b"]
-DEICTIC = [r"\bthis\b", r"\bthat\b", r"\bit\b", r"\bye\b", r"\bwo\b", r"\bwahi\b", r"\bsame\b", r"\bpehle wala\b"]
-HIGH_IMPACT = ["delete", "deploy", "production", "merge", "database", "migration", "secret", "permission", "security"]
+NEGATIVE = [r"\bdon'?t\b", r"\bdo not\b", r"\bmat\b", r"\bnahi\b", r"\bwithout\b", r"मत", r"नहीं", r"बिना"]
+DEICTIC = [r"\bthis\b", r"\bthat\b", r"\bit\b", r"\bye\b", r"\bwo\b", r"\bwahi\b", r"\bsame\b", r"\bpehle wala\b", r"यह", r"ये", r"वो", r"वही", r"पहले\s+वाला", r"पिछला\s+काम"]
+HIGH_IMPACT_TERMS = {
+    "DELETE": ("delete", "डिलीट", "हटाओ", "मिटाओ"),
+    "DEPLOY": ("deploy", "deployment", "डिप्लॉय", "तैनात"),
+    "PRODUCTION": ("production", "प्रोडक्शन", "उत्पादन"),
+    "MERGE": ("merge", "मर्ज"),
+    "DATABASE": ("database", "डेटाबेस"),
+    "MIGRATION": ("migration", "माइग्रेशन"),
+    "SECRET": ("secret", "गुप्त"),
+    "PERMISSION": ("permission", "अनुमति"),
+    "SECURITY": ("security", "सुरक्षा"),
+}
 
 
 def norm(text: str) -> str:
-    text = text.lower().strip()
-    text = re.sub(r"[^a-z0-9\s_-]", " ", text)
+    # Keep Unicode letters *and combining marks* so Devanagari Hindi survives
+    # normalization. Python's \w class alone would drop vowel/sign marks such as
+    # ा and ो, changing words before the interpreter can inspect them.
+    text = text.casefold().strip()
+    text = "".join(
+        char if (char.isalnum() or char.isspace() or char in "_-" or unicodedata.category(char).startswith("M")) else " "
+        for char in text
+    )
     return re.sub(r"\s+", " ", text)
 
 
@@ -51,7 +68,7 @@ def interpret(payload: dict[str, Any]) -> dict[str, Any]:
 
     short = len(text.split()) <= 4
     referential = matches(text, DEICTIC)
-    generic_action = text in {"continue", "continue it", "do it", "kr do", "kar do", "kro", "karo", "wahi", "same", "proceed", "aage"}
+    generic_action = text in {"continue", "continue it", "do it", "kr do", "kar do", "kro", "karo", "wahi", "same", "proceed", "aage", "जारी रखो", "आगे बढ़ो", "कर दो", "करो", "वही"}
 
     if (generic_action or referential or (short and not intents)) and previous:
         if "RESUME_WORK" not in intents and generic_action:
@@ -64,12 +81,15 @@ def interpret(payload: dict[str, Any]) -> dict[str, Any]:
         contextual = True
 
     constraints = []
+    matched_high_impact = [
+        canonical
+        for canonical, terms in HIGH_IMPACT_TERMS.items()
+        if any(term in text for term in terms)
+    ]
     if matches(text, NEGATIVE):
-        for term in HIGH_IMPACT:
-            if term in text:
-                constraints.append(f"DO_NOT_{term.upper()}")
+        constraints.extend(f"DO_NOT_{canonical}" for canonical in matched_high_impact)
 
-    high_impact_requested = any(term in text for term in HIGH_IMPACT) and not constraints
+    high_impact_requested = bool(matched_high_impact) and not constraints
     if not project:
         ambiguity.append("PROJECT_UNKNOWN")
     if not intents:

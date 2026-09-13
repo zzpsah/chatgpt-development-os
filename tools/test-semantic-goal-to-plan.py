@@ -71,6 +71,19 @@ def main():
     db_block = mod.compile_plan("FEATURE_CHANGE", "update database", "DEVOS", ["DO_NOT_DATABASE"], [])
     check(db_block["decision"] == "BLOCKED", "database negative constraint must block database mutation")
 
+    hindi_deploy = mod.compile_plan("FEATURE_CHANGE", "प्रोडक्शन में तैनात करो", "DEVOS", [], [])
+    check(hindi_deploy["steps"][-1]["impact"] == "PRODUCTION_OR_DESTRUCTIVE", "Hindi deployment must remain production/destructive")
+    check(hindi_deploy["steps"][-1]["authorization_required"] is True, "Hindi deployment must require authorization")
+
+    hindi_block = mod.compile_plan("FEATURE_CHANGE", "स्टेजिंग पर डिप्लॉय करो", "DEVOS", ["DO_NOT_DEPLOY"], [])
+    check(hindi_block["decision"] == "BLOCKED", "Hindi deployment must honor DO_NOT_DEPLOY")
+
+    early_hindi_block = mod.compile_plan("FEATURE_CHANGE", "स्टेजिंग पर डिप्लॉय करो then update docs", "DEVOS", ["DO_NOT_DEPLOY"], [])
+    check(early_hindi_block["decision"] == "BLOCKED", "a constrained Hindi deployment must be blocked even when later plan steps do not mention deployment")
+
+    hindi_inspect = mod.compile_plan("VALIDATION", "डेटाबेस जांचो", "DEVOS", [], [])
+    check(hindi_inspect["steps"][0]["impact"] == "READ_ONLY", "Hindi inspection must not be mislabeled as mutation")
+
     print("PASS: P16 Semantic Goal-to-Plan Compiler regression corpus")
 
 

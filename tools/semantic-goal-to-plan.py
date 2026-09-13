@@ -3,33 +3,34 @@ import argparse
 import json
 import re
 
-HIGH_IMPACT = {"deploy", "production", "merge", "database", "migration", "delete", "secret", "credential", "permission"}
-SECURITY_TERMS = {"security", "auth", "authentication", "authorization", "credential", "secret"}
+HIGH_IMPACT = {"deploy", "deployment", "production", "merge", "database", "migration", "delete", "secret", "credential", "permission", "डिप्लॉय", "तैनात", "प्रोडक्शन", "उत्पादन", "मर्ज", "डेटाबेस", "माइग्रेशन", "डिलीट", "हटाओ", "मिटाओ", "गुप्त", "क्रेडेंशियल", "अनुमति"}
+SECURITY_TERMS = {"security", "auth", "authentication", "authorization", "credential", "secret", "सुरक्षा", "क्रेडेंशियल", "गुप्त"}
 MUTATING_IMPACTS = {"LOW_IMPACT_MUTATION", "HIGH_IMPACT_MUTATION", "PRODUCTION_OR_DESTRUCTIVE"}
 READ_ONLY_PREFIXES = ("inspect ", "read ", "list ", "show ", "examine ", "view ")
+READ_ONLY_TERMS = ("जांचो", "जाँचो", "देखो", "पढ़ो", "सूची")
 NON_MATERIAL_GATING_ANNOTATIONS = {"HIGH_IMPACT_REQUIRES_AUTHORIZATION_CHECK"}
 CONSTRAINT_TERMS = {
-    "DO_NOT_DEPLOY": "deploy",
-    "DO_NOT_PRODUCTION": "production",
-    "DO_NOT_MERGE": "merge",
-    "DO_NOT_DATABASE": "database",
-    "DO_NOT_MIGRATION": "migration",
-    "DO_NOT_DELETE": "delete",
-    "DO_NOT_SECRET": "secret",
-    "DO_NOT_CREDENTIAL": "credential",
-    "DO_NOT_PERMISSION": "permission",
+    "DO_NOT_DEPLOY": ("deploy", "deployment", "डिप्लॉय", "तैनात"),
+    "DO_NOT_PRODUCTION": ("production", "प्रोडक्शन", "उत्पादन"),
+    "DO_NOT_MERGE": ("merge", "मर्ज"),
+    "DO_NOT_DATABASE": ("database", "डेटाबेस"),
+    "DO_NOT_MIGRATION": ("migration", "माइग्रेशन"),
+    "DO_NOT_DELETE": ("delete", "डिलीट", "हटाओ", "मिटाओ"),
+    "DO_NOT_SECRET": ("secret", "गुप्त"),
+    "DO_NOT_CREDENTIAL": ("credential", "क्रेडेंशियल"),
+    "DO_NOT_PERMISSION": ("permission", "अनुमति"),
 }
 
 
 def classify(text: str) -> str:
-    t = text.lower().strip()
+    t = text.casefold().strip()
     # Security-sensitive reads remain gated, but ordinary inspection is read-only
     # even when the subject contains mutation words such as update/deploy/database.
     if any(term in t for term in SECURITY_TERMS):
         return "SECURITY_SENSITIVE"
-    if t.startswith(READ_ONLY_PREFIXES):
+    if t.startswith(READ_ONLY_PREFIXES) or any(term in t for term in READ_ONLY_TERMS):
         return "READ_ONLY"
-    if any(term in t for term in ("delete", "production", "deploy")):
+    if any(term in t for term in ("delete", "production", "deploy", "डिलीट", "हटाओ", "मिटाओ", "प्रोडक्शन", "उत्पादन", "डिप्लॉय", "तैनात")):
         return "PRODUCTION_OR_DESTRUCTIVE"
     if any(term in t for term in HIGH_IMPACT):
         return "HIGH_IMPACT_MUTATION"
@@ -51,8 +52,8 @@ def expand_read_before_write(phrases: list[str]) -> list[str]:
 
 def _negative_constraint_conflict(steps: list[dict], constraints: list[str]) -> str | None:
     for constraint in constraints:
-        term = CONSTRAINT_TERMS.get(constraint)
-        if not term:
+        terms = CONSTRAINT_TERMS.get(constraint)
+        if not terms:
             continue
         for step in steps:
             # Ordinary read-before-write inspection does not itself violate a
@@ -60,7 +61,7 @@ def _negative_constraint_conflict(steps: list[dict], constraints: list[str]) -> 
             # their own classification and downstream Security Gate.
             if step["impact"] == "READ_ONLY":
                 continue
-            if term in step["objective"].lower():
+            if any(term in step["objective"].casefold() for term in terms):
                 return f"compiled step conflicts with explicit negative constraint {constraint}"
     return None
 

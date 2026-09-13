@@ -22,12 +22,12 @@ Stable intents include `RESUME_WORK`, `BUG_FIX`, `FEATURE_CHANGE`, `VALIDATION`,
 
 ## Contextual interpretation
 
-v2 treats short and elliptical language as first-class input. Phrases such as `continue`, `kr do`, `wahi continue`, `same wala`, `jo error tha fix`, and `pehle wala` may inherit a referent only from explicit available context such as the previous interpreted intent, active objective, resolved project, or durable project state.
+v2 treats short and elliptical language as first-class input. Phrases such as `continue`, `kr do`, `wahi continue`, `same wala`, `jo error tha fix`, `pehle wala`, `जारी रखो`, and `पहले वाला ठीक करो` may inherit a referent only from explicit available context such as the previous interpreted intent, active objective, resolved project, or durable project state.
 
 The interpreter must:
 
 1. interpret meaning rather than exact keywords;
-2. tolerate common Hinglish/code-switching, shorthand, spelling variation, and incomplete conversational phrasing;
+2. tolerate common Hinglish/code-switching, Devanagari Hindi, shorthand, spelling variation, and incomplete conversational phrasing;
 3. resolve pronouns/deictic phrases (`ye`, `wo`, `wahi`, `this`, `that`, `same`) only when a usable referent exists;
 4. preserve corrections and negative constraints such as `deploy mat karna`;
 5. support safe multiple-intent composition rather than dropping compatible intents;
@@ -64,7 +64,7 @@ authority: UNCHANGED
 execution: NONE
 ```
 
-The reference interpreter is a deterministic minimum behavior contract, not the ceiling of DevOS language understanding. DevOS may evolve richer model-assisted semantic interpretation for multilingual language, corrections, ellipsis, referents, temporal context, intent composition, and conversational continuity. Richer interpretation must preserve the same structured boundaries and must never manufacture authority.
+The reference interpreter is a deterministic minimum behavior contract, not the ceiling of DevOS language understanding. It preserves Unicode input and provides a bounded Devanagari Hindi regression corpus for common continuation, validation, repair, security, deployment, and negative-constraint phrases. DevOS may evolve richer model-assisted semantic interpretation for broader multilingual language, corrections, ellipsis, referents, temporal context, intent composition, and conversational continuity. Richer interpretation must preserve the same structured boundaries and must never manufacture authority.
 
 ## Short-command rule
 
@@ -118,7 +118,7 @@ Evolution must be regression-tested against prior language behavior. A language 
 
 ## Test corpus
 
-`tools/test-human-language-interpreter.py` exercises short commands, contextual continuation, Hinglish shorthand, referential language, multi-intent phrases, explicit negative deployment constraints, unknown-context clarification, and high-impact authorization escalation. It runs in the contract CI suite.
+`tools/test-human-language-interpreter.py` exercises short commands, contextual continuation, Hinglish shorthand, Devanagari Hindi phrases, referential language, multi-intent phrases, explicit negative deployment constraints, unknown-context clarification, and high-impact authorization escalation. It runs in the contract CI suite.
 
 ## Safety invariant
 
