@@ -11,19 +11,32 @@ This file tracks **work state**, not normative law. Durable principles and autho
 
 ## Active bounded work
 
-### AI State Resolver v2
+### Priority 1 — GitHub Provider Controller Adapter v1 / PR #35
+- PR #35 — `Integrate GitHub App with governed DevOS provider adapter` — is the current integration priority.
+- Purpose: connect the proven GitHub App authentication path to the normal P17/controller/remote-permission governed execution path without creating a new authorization model.
+- Current PR head: `a7c4aad059c2b1c31d62356a2b42155f7f3accbe`.
+- Current `main` checkpoint at this planning update: `867f9b3f0e74137691d92b7746b7fe3398403505`.
+- Git comparison shows PR #35 is **20 commits ahead and 5 commits behind** current `main`; therefore its earlier green exact-head evidence is not sufficient for merge against the current repository state.
+- Required next action: reconcile PR #35 with fresh `main` history-safely, preserve the durable-state restructuring and Resolver v2 semantics, re-audit the final diff, and rerun exact-final-head CI including the dedicated adapter workflow, Contracts, Trust-First, Current-Source Evidence, MCP Repository Create, Living Engineering Map where applicable, and Full DevOS.
+- Only after the reconciled exact head is green and mergeable should merge authorization be requested/applied.
+- The PR has proven live **read-only** GitHub access through the controller-facing adapter path on its earlier head; no live mutation has been performed.
+- Any future live mutation proof is a separate objective and requires exact fresh authorization, disposable/sandbox scope, state anchors where applicable, and fresh provider readback. No production/destructive mutation is implied by merging PR #35.
+
+### Priority 2 — AI State Resolver v2
 - Unnumbered resolver-hardening objective on current `main`.
 - Upgrade the existing P0 documentation contract into a deterministic, read-only claim resolver.
 - Preserve P12 ownership of execution-evidence normalization and freshness.
 - `observed` requires current P12 execution evidence with citable provenance; durable-state grounding is capped at `likely`.
 - Propagate unresolved claim identifiers through P16 as `CLARIFY`; P17 rejects a tampered `PLANNED` envelope that still carries unresolved claims.
 - Resolver confidence never grants authorization, execution, mutation, or completion.
+- Continue Resolver v2 hardening after PR #35 reconciliation/integration unless a fresh repository review shows a dependency requiring the order to change.
 - No P18/P19 phase is created for this hardening work.
 
-### Next bounded integration/cleanup work
-- Treat GitHub Identity & Token Control Plane v1 as merged through PR #32, not as an open implementation objective.
-- PRs #33 and #34 are obsolete replacement PRs and have been closed.
-- Continue only after inspecting fresh `main`, open PRs, CI, and durable state.
+### Priority 3 — evidence-gated live mutation proof, only if explicitly authorized later
+- Do not treat GitHub App authentication, read-only provider proof, CI success, or merged adapter code as mutation authorization.
+- If a future objective is to prove live mutation, use a disposable repository/branch/file target rather than production state.
+- Start with the lowest-impact reversible mutation, require exact scoped authorization, verify expected resource state before dispatch, perform one bounded operation, then require fresh provider readback before claiming completion.
+- Uncertain provider outcomes enter HOLD / READBACK_BEFORE_RETRY; never blind-replay a mutation.
 
 ## Completed — GitHub Identity & Token Control Plane v1
 
