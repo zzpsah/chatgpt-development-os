@@ -31,6 +31,9 @@ jobs:
       - name: Test Human Language Execution Engine v2 interpreter
         run: python tools/test-human-language-interpreter.py
 
+      - name: Verify Human Language v2 safety invariants
+        run: python tools/test-human-language-v2-safety.py
+
       - name: Verify AI State Resolver
         run: python tools/verify-state-resolver.py
 
