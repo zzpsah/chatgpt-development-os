@@ -11,7 +11,7 @@
 - P12 Operational Intelligence is complete.
 - P13 Autonomous Development Orchestration is complete.
 - P14 Adaptive Verification & Self-Healing v1 is complete.
-- No P15 milestone has been designated yet; the next milestone must be defined from repository evidence and explicit project intent rather than invented from chat context.
+- P15 Human Language Interpretation v2 is implemented, merged to `main`, and established as the normative top-level semantic entry capability.
 
 ## Canonical DevOS repository identity
 
@@ -24,7 +24,11 @@
 
 ## Implemented architecture
 
-DevOS now includes the established execution, recovery, intelligence, orchestration, verification, and bounded-healing layers through P14. Core capabilities include the AI State Resolver, Human Language Execution Engine, Verification/Test Engine, Security Gate, Teaching Engine, Multi-AI Portability, Auto-Onboarding, Agent Orchestration, Autonomous Development Loop, Executable Development Runtime, host/external adapters, Runtime–Adapter Execution Bridge, Remote Mutation Controls, P9 Development Task Controller, P10 Context Continuity & Recovery, P11 Federation & Self-Healing Context, P12 Operational Intelligence, P13 Autonomous Development Orchestration, and P14 Adaptive Verification & Self-Healing.
+DevOS includes the established execution, recovery, intelligence, orchestration, verification, bounded-healing, and human-language layers through P15. The normative human-originated path begins:
+
+`Human input → Human Language Execution Engine → Project Router / State Resolver → Development Task Controller → bounded workflow/runtime → Verification + Security → durable state`
+
+Human Language Interpretation is a top-level DevOS functionality, not a side branch/module in the architecture. The deterministic v2 interpreter is the minimum executable language contract; richer multilingual/model-assisted interpretation may evolve above it only while preserving project identity, constraints, authorization, evidence, Security Gate, and verification boundaries.
 
 ## P8 status
 
@@ -42,7 +46,7 @@ Preferred high-autonomy user invocation:
 DEVOS::GOD::DESI
 ```
 
-`GOD` controls execution posture. `DESI` controls conversational presentation. Neither layer changes authorization, security, or verification requirements.
+`GOD` controls execution posture. `DESI` controls conversational presentation. Neither layer changes authorization, security, or verification requirements. Stance processing does not bypass top-level semantic interpretation for ordinary human-originated work.
 
 ## Recovery precedence
 
@@ -66,15 +70,31 @@ P13 Autonomous Development Orchestration is complete on commit `cee2d894af4c1230
 
 ## P14 completion
 
-P14 Adaptive Verification & Self-Healing v1 is complete on implementation commit `b8a2996be1efd8642b1ef99230d20fc1ee80061c`.
+P14 Adaptive Verification & Self-Healing v1 is complete on implementation commit `b8a2996be1efd8642b1ef99230d20fc1ee80061c`. It adds risk- and boundary-aware verification selection, fresh-evidence gating, bounded repair budgets, deterministic derived-context healing execution, and mandatory fresh re-verification after healing. Automatic repair remains restricted to the existing deterministic derived-context allowlist; semantic state, source code, configuration, database, deployment/infrastructure, and security/authentication repairs remain proposal-only or separately gated.
 
-P14 adds risk- and boundary-aware verification selection, fresh-evidence gating, bounded repair budgets, deterministic derived-context healing execution, and mandatory fresh re-verification after healing. Automatic repair remains restricted to the existing P11 deterministic derived-context allowlist; semantic state, source code, configuration, database, deployment/infrastructure, and security/authentication repairs remain proposal-only or separately gated.
+Fresh P14 GitHub Actions evidence:
+- `Verify Development OS Contracts`, run `34715729808` / run 428: success.
+- `Verify Development OS`, run `34715729692` / run 372: success.
 
-Fresh GitHub Actions evidence for the P14 implementation commit:
-- `Verify Development OS Contracts`, run `34715729808` / run number 428: **success**. Its P14 adaptive-verification policy test and deterministic heal/re-verification test both passed.
-- `Verify Development OS`, run `34715729692` / run number 372: **success**. The broader DevOS contract suite also passed on the same commit.
+## P15 completion
 
-This evidence closes P14. A future milestone must not widen mutation authority merely because adaptive verification or self-healing exists.
+P15 Human Language Interpretation v2 is merged to `main` through PR #8 on merge commit `770c8b3583515e3c947562854be7a2d2fd34710d`.
+
+P15 establishes:
+- Human Language Execution Engine as the normative top-level semantic input layer.
+- Contextual English/Hinglish short-command interpretation and referent-aware continuation.
+- Compatible multi-intent composition and durable negative constraints.
+- Confidence/ambiguity separation from technical evidence.
+- Explicit unchanged authority/authorization and no direct execution from interpretation.
+- Independent high-impact authorization checks.
+- Explicit `SECURITY_REVIEW → workflows/security.md → Security Gate` routing.
+- A regression-tested evolution contract for future multilingual/contextual improvements.
+
+The final P15 repair commit `0be462dac63501a31221fcd972e0de078657d110` passed both feature-branch workflows before merge:
+- `Verify Development OS Contracts`, run `34735399593` / run 433: success.
+- `Verify Development OS`, run `34735399564` / run 377: success.
+
+Post-merge `main` workflows were automatically triggered. At the last observation they were queued by GitHub Actions rather than failing; this is recorded as verification infrastructure state, not an implementation defect. P15 must be reopened if those fresh main runs later expose a regression.
 
 ## Durable future-work rule
 
