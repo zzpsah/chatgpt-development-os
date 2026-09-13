@@ -9,31 +9,47 @@
 - P9 through P17 are complete on `main` at their stated evidence levels.
 - Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, Current-Source Evidence Refresh, MCP/App Permission Control Plane + Multi-Project Agent Isolation, and Actionable HOLD + Scoped Approval + Governed Continuation are closed at their stated evidence levels.
 - PR #27 merge commit: `2bb8d978113b64ab88d6ba5f8e357fa595162c9c`.
-- PR #27 exact-head source: `99a48fea51bd2d9d33860115c0212f7b25ca4ad8`.
-- PR #27 exact-head verification passed: Full DevOS 543, Contracts 621, Trust-First 84, MCP Permission Control Plane 3, Remote Resource Permission Governance 4, MCP Repository Create 13, Current-Source Evidence 16.
 - PR #23 merge commit: `7c60c3a4a36982ba894e2f30ba9dd98500f98d02`.
-- PR #23 exact final source head: `954b094a3832c300d371426d682eac90156cbb04`.
-- PR #23 exact-head verification passed: Actionable Hold 16, Contracts 639, Trust-First 102, Full DevOS 561, Current-Source Evidence 31, MCP Repository Create 28.
 - No new numbered phase is active or implied by this closure state.
 
 ## GitHub Identity & Token Control Plane v1 — in implementation
 
 - Objective: support independently authorized GitHub accounts/installations through a GitHub App-oriented authentication boundary while keeping credentials separate from DevOS authorization.
 - Branch: `feat/github-identity-token-control-plane`.
-- Latest branch source head: `9aca648c2469e04a775df824583407725525a5cb`.
+- Latest implementation commit before this durable-state write: `6b8aaa5805684321e93fee56063eb690d7301972`.
 - Added normative contract: `core/devos-github-identity-token-control-plane.md`.
 - Added side-effect-free primitives: `tools/devos-github-auth.py`.
 - Added deterministic authentication regression suite: `tools/test-devos-github-auth.py`.
 - Added side-effect-free provider-permission → DevOS-capability bridge: `tools/devos-github-capability-discovery.py`.
 - Added deterministic capability-discovery regression suite: `tools/test-devos-github-capability-discovery.py`.
-- Added dedicated CI workflow: `.github/workflows/verify-github-auth-control-plane.yml`.
-- Added implementation/documentation guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`.
+- Added GitHub-hosted runtime authenticator: `tools/devos-github-actions-auth.py`.
+- Added deterministic GitHub-hosted runtime regression suite: `tools/test-devos-github-actions-auth.py`.
+- Added GitHub-hosted manual runtime workflow: `.github/workflows/devos-github-app-runtime.yml`.
+- Extended control-plane CI to verify the GitHub-hosted runtime contract.
+- Added deployment/runtime guide: `docs/DEVOS-GITHUB-HOSTED-RUNTIME.md`.
 - Added durable session provenance for the authentication/control-plane work.
-- Exact-head branch CI for source `113508a32eedcd1d42cb0def9438224fe03aeb1b` passed: GitHub Identity and Token Control Plane 1 / `34781566089`, Current-Source Evidence 44 / `34781566086`, Living Engineering Map 14 / `34781566044`, Trust-First Audit 128 / `34781566045`, Contracts 665 / `34781566015`, Full DevOS 587 / `34781566026`, MCP Repository Create 41 / `34781566048`.
-- Capability-discovery hardening after that CI remains pending fresh branch CI on the latest head.
-- No GitHub App secret, private key, OAuth token, refresh token, JWT signing material, live OAuth exchange, token-vault deployment, or live provider mutation was introduced.
-- `production_ready=false` and `live_provider_proven=false` remain unchanged.
-- Live activation requires external GitHub App registration, secure secret storage, OAuth callback/token exchange, live capability discovery, project-scoped identity binding, and a separately authorized disposable provider verification.
+- Historical exact-head CI for source `113508a32eedcd1d42cb0def9438224fe03aeb1b` passed: GitHub Identity and Token Control Plane 1 / `34781566089`, Current-Source Evidence 44 / `34781566086`, Living Engineering Map 14 / `34781566044`, Trust-First Audit 128 / `34781566045`, Contracts 665 / `34781566015`, Full DevOS 587 / `34781566026`, MCP Repository Create 41 / `34781566048`.
+- Later capability-discovery hardening and GitHub-hosted runtime changes require fresh branch CI before final readiness is claimed.
+
+## GitHub-hosted runtime model
+
+When DevOS itself runs inside GitHub Actions, the primary live provider-authentication path is **GitHub App installation-token authentication**, not a browser OAuth callback. The workflow creates a short-lived App JWT, resolves the App installation for the target repository, mints an installation token, and performs read-only provider verification.
+
+Required GitHub Actions secrets are external configuration only:
+
+- `DEVOS_GITHUB_APP_ID`
+- `DEVOS_GITHUB_APP_PRIVATE_KEY`
+
+The private key is used only during the runner's signing operation and is never written to Git, `.ai`, artifacts, logs, evidence, or model output.
+
+The manual workflow is deliberately read-only: it authenticates, discovers the installation, inspects target-repository metadata, and emits redacted metadata. It does not create/update/delete/merge/deploy or change permissions.
+
+## Live activation boundary
+
+- The GitHub repository-side runtime implementation is present.
+- Live proof still requires a real GitHub App registered and installed on the target repository/account, Actions secrets configured, and the manual runtime workflow completing successfully against that installation.
+- Browser OAuth callback configuration is **not required for the GitHub-hosted Actions runtime**. A callback remains relevant only if a separate interactive web/OAuth client is introduced.
+- `production_ready=false` and `live_provider_proven=false` remain unchanged until fresh live evidence exists.
 
 ## Core documentation law
 
@@ -51,41 +67,12 @@ Completion is `IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE`. An undocume
 
 Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, continuation packets, and simulated provider evidence never manufacture permission.
 
-## MCP/App Permission Control Plane — CLOSED AT CURRENT EVIDENCE LEVEL
-
-Purpose: connect the host-neutral MCP/App boundary to provider-independent remote-resource permission governance and multi-project agent isolation.
-
-Governed capabilities remain distinct: `repository.create`, `repository.delete`, `branch.create`, `branch.update`, `branch.force_update`, and `branch.delete`.
-
-## Actionable HOLD + Scoped Approval — CLOSED AT CURRENT EVIDENCE LEVEL
-
-- Scoped approval never replaces P17/controller authorization.
-- `continue` may reuse approval only when project/workflow/capability/target/impact/freshness/security scope remains valid.
-- Stale repository state, changed target/capability, impact escalation, or changed Security Gate requires fresh evaluation.
-- Every actionable HOLD should explain status, reason, next action, consequence/impact, required evidence/approval, and valid next choices.
-
-## Multi-project agent isolation
-
-A long-lived DevOS agent may manage multiple projects concurrently, but:
-
-`Project A state != Project B state`
-
-`Project A approval != Project B approval`
-
-`Project A credentials/provider binding != Project B credentials/provider binding`
-
-Approval cannot move between repositories, branches, capabilities, or workflows. A new/high-impact/out-of-scope action becomes an actionable HOLD requiring fresh approval.
-
-## Provider credentials / token boundary
-
-Provider/API tokens are technical capabilities only. They are never DevOS authorization and must never be copied into `.ai/`, MCP arguments, logs, generated evidence, or model output.
-
 ## Production-readiness boundary
 
 - `production_ready = false`.
 - `live_provider_proven = false`.
 - Controlled remote mutation remains provider-simulated / contract-level evidence.
-- No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation was performed for PR #27 or PR #23.
+- No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation was performed for the current auth objective.
 - Provider response is attempt evidence, not completion proof.
 - Uncertain mutation is not blindly replayed.
 - Historical evidence remains pinned and is never silently rewritten.
@@ -111,8 +98,9 @@ Stable AI discovery path: `docs/handoff/README.md`.
 Master architecture: `docs/DEVOS-MASTER-ENGINEERING-MAP.md`.
 Normative living-state contract: `core/devos-living-state-and-evolution.md`.
 GitHub authentication/control-plane guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`.
+GitHub-hosted runtime guide: `docs/DEVOS-GITHUB-HOSTED-RUNTIME.md`.
 Historical evidence snapshots remain dated and do not auto-refresh when source advances. Exact implementation remains authoritative in Git history.
 
 ## Next bounded direction
 
-Re-run fresh branch CI after capability-discovery hardening, then complete PR review/integration. Do not claim live GitHub authentication or production readiness until a separately configured GitHub App, secret vault, OAuth/token exchange, live capability discovery, and fresh provider evidence exist. Do not create P18/P19 merely for bookkeeping.
+Run fresh branch CI on the current head, then configure the external GitHub App + Actions secrets and execute the read-only runtime workflow against the intended repository. Do not claim live GitHub authentication or production readiness until that evidence exists. Do not create P18/P19 merely for bookkeeping.
