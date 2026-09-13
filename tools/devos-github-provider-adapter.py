@@ -7,6 +7,7 @@ import base64
 import importlib.util
 import json
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -20,6 +21,7 @@ PERMISSION_MODULE_PATH = ROOT / "tools" / "devos-remote-permission-check.py"
 API_ROOT = "https://api.github.com"
 API_VERSION = "2026-03-10"
 USER_AGENT = "DevOS-GitHub-Provider-Adapter/1"
+READBACK_RETRY_DELAYS = (1.0, 2.0, 4.0)
 
 READ_ACTIONS = {"repository.get", "file.get", "branch.get", "pr.get"}
 SUPPORTED_MUTATIONS = {"file.create", "file.update", "file.delete", "branch.create", "branch.update", "branch.force_update", "branch.delete", "pr.merge"}
@@ -204,34 +206,53 @@ def _mutate(token: str, operation: OperationRecord) -> tuple[dict[str, Any], dic
     raise ValueError(f"unsupported mutation action: {action}")
 
 
-def _readback(token: str, operation: OperationRecord, result: dict[str, Any]) -> dict[str, Any]:
+def _is_not_found_error(exc: BaseException) -> bool:
+    return "HTTP 404" in str(exc)
+
+
+def _readback(token: str, operation: OperationRecord, result: dict[str, Any], reader: Callable[[str, OperationRecord], dict[str, Any]] | None = None) -> dict[str, Any]:
     action = operation.action
+    read = reader or _read
     if action.startswith("file."):
         if action == "file.delete":
             try:
-                current = _read(token, OperationRecord(**{**operation.__dict__, "action": "file.get"}))
+                current = read(token, OperationRecord(**{**operation.__dict__, "action": "file.get"}))
             except RuntimeError as exc:
-                if "HTTP 404" in str(exc):
+                if _is_not_found_error(exc):
                     return {"status": "ABSENT", "resource": operation.resource}
                 raise
             return {"status": "STILL_PRESENT", "resource": operation.resource, "current_sha": current.get("sha")}
-        current = _read(token, OperationRecord(**{**operation.__dict__, "action": "file.get"}))
+        current = read(token, OperationRecord(**{**operation.__dict__, "action": "file.get"}))
         return {"status": "PRESENT", "resource": operation.resource, "sha": current.get("sha")}
     if action in {"branch.create", "branch.update", "branch.force_update", "branch.delete"}:
         try:
-            current = _read(token, OperationRecord(**{**operation.__dict__, "action": "branch.get"}))
+            current = read(token, OperationRecord(**{**operation.__dict__, "action": "branch.get"}))
         except RuntimeError as exc:
-            if action == "branch.delete" and "HTTP 404" in str(exc):
+            if action == "branch.delete" and _is_not_found_error(exc):
                 return {"status": "ABSENT", "resource": operation.resource}
             raise
         return {"status": "PRESENT", "resource": operation.resource, "sha": current.get("object", {}).get("sha")}
     if action == "pr.merge":
-        current = _read(token, OperationRecord(**{**operation.__dict__, "action": "pr.get"}))
+        current = read(token, OperationRecord(**{**operation.__dict__, "action": "pr.get"}))
         return {"status": current.get("state"), "merged": current.get("merged"), "merged_at": current.get("merged_at"), "sha": current.get("merge_commit_sha")}
     return {"status": "NOT_APPLICABLE"}
 
 
-def execute(operation_data: dict[str, Any], authorization_data: dict[str, Any] | None = None, token_provider: Callable[[str], str] = _installation_token, client_read: Callable[[str, OperationRecord], dict[str, Any]] | None = None) -> dict[str, Any]:
+def _readback_with_retry(token: str, operation: OperationRecord, result: dict[str, Any], *, reader: Callable[[str, OperationRecord], dict[str, Any]], retry_delays: tuple[float, ...], sleep_fn: Callable[[float], None]) -> tuple[dict[str, Any], int]:
+    attempts = 1
+    for delay in (0.0, *retry_delays):
+        if delay:
+            sleep_fn(delay)
+            attempts += 1
+        try:
+            return _readback(token, operation, result, reader=reader), attempts
+        except RuntimeError as exc:
+            if not _is_not_found_error(exc) or delay == retry_delays[-1] if retry_delays else not _is_not_found_error(exc):
+                raise
+    raise RuntimeError("readback retry loop exhausted")
+
+
+def execute(operation_data: dict[str, Any], authorization_data: dict[str, Any] | None = None, token_provider: Callable[[str], str] = _installation_token, client_read: Callable[[str, OperationRecord], dict[str, Any]] | None = None, sleep_fn: Callable[[float], None] = time.sleep, readback_retry_delays: tuple[float, ...] = READBACK_RETRY_DELAYS) -> dict[str, Any]:
     operation = OperationRecord(provider=operation_data.get("provider", ""), owner=operation_data.get("owner", ""), repository=operation_data.get("repository"), resource=operation_data.get("resource"), capability=operation_data.get("capability", ""), workflow=operation_data.get("workflow", ""), project=operation_data.get("project", ""), impact=operation_data.get("impact", ""), freshness=operation_data.get("freshness"), action=operation_data.get("action", ""), inputs=operation_data.get("inputs", {}))
     if not isinstance(operation.inputs, dict):
         return {"status": "BLOCKED", "reason_codes": ["INVALID_INPUTS"], "authority": "UNCHANGED", "execution": "NONE", "mutation": "NONE"}
@@ -265,11 +286,12 @@ def execute(operation_data: dict[str, Any], authorization_data: dict[str, Any] |
         return {"status": "HOLD", "reason_codes": ["UNCERTAIN_PROVIDER_RESULT"], "reason": str(exc), "next_action": "READBACK_BEFORE_RETRY", "authority": "UNCHANGED", "execution": "UNKNOWN", "mutation": "UNKNOWN"}
     except Exception as exc:
         return {"status": "FAILED", "reason_codes": ["PROVIDER_MUTATION_FAILED"], "reason": repr(exc), "authority": "UNCHANGED", "execution": "ATTEMPTED", "mutation": "UNKNOWN"}
+    reader = client_read or _read
     try:
-        readback = _readback(token, operation, result)
+        readback, attempts = _readback_with_retry(token, operation, result, reader=reader, retry_delays=tuple(readback_retry_delays), sleep_fn=sleep_fn)
     except Exception as exc:
         return {"status": "HOLD", "reason_codes": ["READBACK_REQUIRED"], "reason": repr(exc), "provider_response": result, "authority": "UNCHANGED", "execution": "UNKNOWN", "mutation": "UNKNOWN"}
-    return {"status": "COMPLETE", "action": operation.action, "target": {"repository": operation.repository, "resource": operation.resource}, "provider_response": result, "transport": transport, "readback": readback, "credential_material": "NOT_INCLUDED", "authority": "UNCHANGED", "execution": "PROVIDER_MUTATION", "mutation": "COMPLETE", "evidence": "FRESH_PROVIDER_READBACK"}
+    return {"status": "COMPLETE", "action": operation.action, "target": {"repository": operation.repository, "resource": operation.resource}, "provider_response": result, "transport": transport, "readback": readback, "readback_attempts": attempts, "credential_material": "NOT_INCLUDED", "authority": "UNCHANGED", "execution": "PROVIDER_MUTATION", "mutation": "COMPLETE", "evidence": "FRESH_PROVIDER_READBACK"}
 
 
 def main() -> int:
