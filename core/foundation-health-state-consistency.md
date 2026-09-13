@@ -4,7 +4,7 @@ Protocol: `DEVOS-FOUNDATION-HEALTH-v1`.
 
 ## Purpose
 
-DevOS must be able to diagnose its structural/project health from repository evidence without treating manually written status prose as the source of truth. This layer does not create a second truth system. It composes the existing Trust-First audit and production-readiness evidence ledger, derives a conservative machine status, and presents that status through a human-readable doctor command.
+DevOS must diagnose structural/project health from repository evidence without treating manually written status prose as the source of truth. This layer does not create a second truth system. It composes the existing Trust-First audit, production-readiness evidence ledger, and bounded machine-readable recovery-friction evidence, derives a conservative machine status, and presents that status through a human-readable doctor command.
 
 Canonical flow:
 
@@ -15,12 +15,14 @@ tools/devos-audit.py
         ↓
 config/readiness-evidence.json + tools/verify-readiness-evidence.py
         ↓
+tools/recovery-friction.py + DEVOS-HOST-PROFILE-v1
+        ↓
 tools/devos-health.py
         ↓
 tools/devos-doctor.py
 ```
 
-`devos-doctor.py` is presentation only. The authoritative inputs remain source/Git/test/CI evidence, the Trust-First audit, and the versioned readiness ledger.
+`devos-doctor.py` is presentation only. The authoritative inputs remain source/Git/test/CI evidence, the Trust-First audit, the versioned readiness ledger, and the existing `DEVOS-RECOVERY-FRICTION-v1` analyzer. Doctor does not independently recompute recovery truth.
 
 ## Read-only boundary
 
@@ -60,9 +62,36 @@ The composed health report detects or surfaces at minimum:
 9. missing dependency closure;
 10. Security Gate wiring/dependency problems;
 11. P15 interpretation, P16 planning, and P17 readiness contract/check availability;
-12. evidence stronger than the declared protocol actually proves.
+12. evidence stronger than the declared protocol actually proves;
+13. cross-host repository recovery status;
+14. continuation status distinct from recovery status;
+15. transparent recovery-friction counts;
+16. missing/malformed host profile evidence;
+17. critical host-capability gaps;
+18. deterministic host-profile evidence attempting unsupported promotion to real cross-vendor/account proof.
 
 Offline checks cannot prove a remote branch has not moved unless an expected source head is supplied. That remains an explicit limitation, not a guessed PASS.
+
+## Recovery-friction composition rule
+
+Foundation Health does not implement a second recovery classifier. It invokes/composes `tools/recovery-friction.py` and preserves that analyzer's protocol, evidence class, recovery status, continuation status, friction counts, repository state, and host-capability evidence.
+
+The composed health row is `cross_host_recovery`.
+
+Conservative propagation rules:
+- analyzer `PASS` remains `PASS` only for that deterministic recovery/profile scope;
+- analyzer `WARN` remains `WARN`;
+- analyzer `UNKNOWN` remains `UNKNOWN`;
+- analyzer `BLOCKED` remains `BLOCKED`;
+- a missing host profile is `UNKNOWN`;
+- malformed host-profile JSON is `BLOCKED`;
+- unsupported promotion where deterministic evidence claims `real_cross_vendor_account_proven=true` is `BLOCKED`.
+
+The deterministic evidence class remains:
+
+`DETERMINISTIC_HOST_PROFILE_SIMULATION`
+
+and does not establish an actual independent AI vendor/account trial. `devos-doctor.py` may display this evidence but never upgrade it.
 
 ## Historical evidence rule
 
@@ -99,11 +128,12 @@ No AI vendor, model, account, chat/session, machine, or Git-provider adapter is 
 
 ## Runnable checks
 
-Authoritative component checks:
+Authoritative/subordinate component checks:
 
 ```bash
 python tools/devos-audit.py
 python tools/verify-readiness-evidence.py
+python tools/recovery-friction.py
 ```
 
 Machine-derived status and human presentation:
@@ -119,11 +149,12 @@ Milestone PASS/FAIL regression gate:
 
 ```bash
 python tools/test-devos-audit.py
+python tools/test-recovery-friction.py
 python tools/test-foundation-health.py
 ```
 
-The adversarial corpus covers identity tampering, missing dependencies, unsupported claim promotion, contradictory status prose, historical-source drift, stale expected HEAD, malformed `.ai` state, and doctor non-promotion behavior.
+The adversarial corpus covers identity tampering, missing dependencies, unsupported claim promotion, contradictory status prose, historical-source drift, stale expected HEAD, malformed `.ai` state, missing/malformed host profiles, critical recovery capability gaps, and doctor non-promotion behavior.
 
 ## Non-goals
 
-This layer does not prove production readiness, does not add a live mutation test, does not create an approval service, does not replace the readiness evidence ledger, and does not perform self-healing or automatic mutation replay. Any future mutation remains separately governed by exact authorization, Security Gate, verification, and recovery/no-replay rules.
+This layer does not prove production readiness, does not add a live mutation test, does not create an approval service, does not replace the readiness evidence ledger or recovery-friction analyzer, and does not perform self-healing or automatic mutation replay. Any future mutation remains separately governed by exact authorization, Security Gate, verification, and recovery/no-replay rules.
