@@ -25,7 +25,6 @@ def _load_module(name: str, path: Path):
 adapter = _load_module("reference_host", ROOT / "adapters" / "reference-host.py")
 github_adapter = _load_module("github_reference", ROOT / "adapters" / "github-reference.py")
 
-# Remote mutation capability currently enabled by the reference bridge.
 GITHUB_FILE_MUTATION_OPERATION = "github.mutate.file"
 
 
@@ -57,6 +56,10 @@ def _github_execute(request: dict[str, Any], client: Any) -> dict[str, Any]:
             except (TypeError, ValueError):
                 return {"status": "BLOCKED", "reason": "workflow-run scope must be a positive numeric run id"}
             result = github_adapter.inspect_workflow_run(client, repository, run_id)
+        elif operation == "github.inspect.file":
+            if not isinstance(scope, str) or not scope or scope.startswith("/") or ".." in scope.split("/"):
+                return {"status": "BLOCKED", "reason": "file scope must remain within repository"}
+            result = github_adapter.inspect_file(client, repository, scope)
         else:
             return {"status": "UNAVAILABLE", "reason": "operation not supported by external bridge"}
     elif operation in github_adapter.MUTATION_CAPABILITIES:

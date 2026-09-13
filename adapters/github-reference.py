@@ -16,6 +16,7 @@ class GitHubClient(Protocol):
     def get_repo(self, repository: str) -> Any: ...
     def get_commit(self, repository: str, commit_sha: str) -> Any: ...
     def get_workflow_run(self, repository: str, run_id: int) -> Any: ...
+    def get_file(self, repository: str, path: str) -> Any: ...
     def update_file(self, repository: str, path: str, content: str, message: str, expected_sha: str) -> Any: ...
 
 
@@ -23,6 +24,7 @@ READ_CAPABILITIES = {
     "github.inspect.repository",
     "github.inspect.commit",
     "github.inspect.workflow_run",
+    "github.inspect.file",
 }
 
 MUTATION_CAPABILITIES = {
@@ -34,6 +36,14 @@ def capability_status(name: str) -> str:
     if name in READ_CAPABILITIES or name in MUTATION_CAPABILITIES:
         return "AVAILABLE"
     return "MISSING"
+
+
+def _valid_repo(repository: str) -> bool:
+    return isinstance(repository, str) and repository.count("/") == 1 and all(repository.split("/"))
+
+
+def _valid_repo_path(path: str) -> bool:
+    return isinstance(path, str) and bool(path) and not path.startswith("/") and ".." not in path.split("/")
 
 
 def _read_operation(call: Any, operation: str, **metadata: Any) -> dict[str, Any]:
@@ -78,21 +88,40 @@ def _read_with_retry(
 
 
 def inspect_repository(client: GitHubClient, repository: str) -> dict[str, Any]:
-    if not repository or "/" not in repository or repository.count("/") != 1:
+    if not _valid_repo(repository):
         return {"status": "BLOCKED", "reason": "repository must be owner/name"}
     return _read_with_retry(lambda: client.get_repo(repository), "inspect_repository", repository=repository)
 
 
 def inspect_commit(client: GitHubClient, repository: str, commit_sha: str) -> dict[str, Any]:
-    if not repository or "/" not in repository or not commit_sha:
+    if not _valid_repo(repository) or not commit_sha:
         return {"status": "BLOCKED", "reason": "repository and commit are required"}
     return _read_with_retry(lambda: client.get_commit(repository, commit_sha), "inspect_commit", repository=repository, commit=commit_sha)
 
 
 def inspect_workflow_run(client: GitHubClient, repository: str, run_id: int) -> dict[str, Any]:
-    if not repository or "/" not in repository or not isinstance(run_id, int) or run_id <= 0:
+    if not _valid_repo(repository) or not isinstance(run_id, int) or run_id <= 0:
         return {"status": "BLOCKED", "reason": "repository and positive workflow run id are required"}
     return _read_with_retry(lambda: client.get_workflow_run(repository, run_id), "inspect_workflow_run", repository=repository, run_id=run_id)
+
+
+def inspect_file(client: GitHubClient, repository: str, path: str) -> dict[str, Any]:
+    """Read one repository-relative file as provider evidence.
+
+    This is intentionally read-only and exists so a controlled mutation can be
+    verified by observing current remote state rather than trusting only the
+    mutation response.
+    """
+    if not _valid_repo(repository):
+        return {"status": "BLOCKED", "reason": "repository must be owner/name"}
+    if not _valid_repo_path(path):
+        return {"status": "BLOCKED", "reason": "file path must remain within repository"}
+    return _read_with_retry(
+        lambda: client.get_file(repository, path),
+        "inspect_file",
+        repository=repository,
+        path=path,
+    )
 
 
 def mutate_file(
@@ -111,9 +140,9 @@ def mutate_file(
     """
     if authorization != "ALREADY_GRANTED":
         return {"status": "BLOCKED", "reason": "explicit authorization required"}
-    if not repository or repository.count("/") != 1:
+    if not _valid_repo(repository):
         return {"status": "BLOCKED", "reason": "repository must be owner/name"}
-    if not isinstance(path, str) or not path or path.startswith("/") or ".." in path.split("/"):
+    if not _valid_repo_path(path):
         return {"status": "BLOCKED", "reason": "mutation path must remain within repository"}
     if not isinstance(content, str) or not isinstance(message, str) or not message:
         return {"status": "BLOCKED", "reason": "content and commit message are required"}

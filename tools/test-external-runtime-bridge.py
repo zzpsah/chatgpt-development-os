@@ -20,6 +20,9 @@ class FakeClient:
     def get_workflow_run(self, repository, run_id):
         return {"repository": repository, "id": run_id, "conclusion": "success"}
 
+    def get_file(self, repository, path):
+        return {"repository": repository, "path": path, "sha": "file-sha", "content": "hello\n"}
+
     def update_file(self, repository, path, content, message, expected_sha):
         return {"commit": {"sha": "new-commit"}, "content": {"path": path, "sha": "new-file-sha"}}
 
@@ -45,6 +48,19 @@ run = module.execute(
     root, client,
 )
 assert run["status"] == "SUCCESS"
+
+file_read = module.execute(
+    {"operation": "github.inspect.file", "target": "zzpsah/chatgpt-development-os", "scope": "docs/example.md", "authorization": "NOT_REQUIRED"},
+    root, client,
+)
+assert file_read["status"] == "SUCCESS"
+assert file_read["provider_result"]["response"]["sha"] == "file-sha"
+assert file_read["provider_result"]["response"]["content"] == "hello\n"
+
+assert module.execute(
+    {"operation": "github.inspect.file", "target": "zzpsah/chatgpt-development-os", "scope": "../outside", "authorization": "NOT_REQUIRED"},
+    root, client,
+)["status"] == "BLOCKED"
 
 assert module.execute(
     {"operation": "github.inspect.repository", "target": "invalid", "scope": "repository-read"}, root, client

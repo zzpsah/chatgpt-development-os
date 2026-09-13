@@ -12,6 +12,7 @@ spec.loader.exec_module(module)
 class FakeClient:
     def __init__(self):
         self.repo_calls = 0
+        self.file_calls = 0
         self.update_calls = 0
 
     def get_repo(self, repository):
@@ -23,6 +24,10 @@ class FakeClient:
 
     def get_workflow_run(self, repository, run_id):
         return {"repository": repository, "id": run_id, "conclusion": "success"}
+
+    def get_file(self, repository, path):
+        self.file_calls += 1
+        return {"repository": repository, "path": path, "sha": "file-sha", "content": "hello\n"}
 
     def update_file(self, repository, path, content, message, expected_sha):
         self.update_calls += 1
@@ -51,11 +56,17 @@ class UncertainClient(FakeClient):
 
 client = FakeClient()
 assert module.capability_status("github.inspect.repository") == "AVAILABLE"
+assert module.capability_status("github.inspect.file") == "AVAILABLE"
 assert module.capability_status("github.mutate.file") == "AVAILABLE"
 assert module.capability_status("github.mutate.repository") == "MISSING"
 assert module.inspect_repository(client, "zzpsah/chatgpt-development-os")["status"] == "SUCCESS"
 assert module.inspect_commit(client, "zzpsah/chatgpt-development-os", "abc123")["status"] == "SUCCESS"
 assert module.inspect_workflow_run(client, "zzpsah/chatgpt-development-os", 123)["status"] == "SUCCESS"
+file_result = module.inspect_file(client, "zzpsah/chatgpt-development-os", "docs/example.md")
+assert file_result["status"] == "SUCCESS"
+assert file_result["response"]["sha"] == "file-sha"
+assert client.file_calls == 1
+assert module.inspect_file(client, "zzpsah/chatgpt-development-os", "../outside")["status"] == "BLOCKED"
 assert module.inspect_repository(client, "invalid")["status"] == "BLOCKED"
 
 flaky = FlakyClient()
