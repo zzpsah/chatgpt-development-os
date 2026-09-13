@@ -1,0 +1,52 @@
+name: Verify DevOS GitHub Provider Controller Adapter
+
+on:
+  pull_request:
+    paths:
+      - 'tools/devos-github-provider-adapter.py'
+      - 'tools/test-devos-github-provider-adapter.py'
+      - 'tools/devos-github-controller-bridge.py'
+      - 'tools/test-devos-github-controller-bridge.py'
+      - 'docs/DEVOS-GITHUB-CONTROLLER-ADAPTER.md'
+      - 'core/remote-resource-permission-governance.md'
+      - 'tools/devos-remote-permission-check.py'
+      - 'tools/devos-runtime-handoff.py'
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic:
+    name: Verify governed adapter boundaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Test GitHub provider adapter
+        run: python tools/test-devos-github-provider-adapter.py
+      - name: Test GitHub controller bridge
+        run: python tools/test-devos-github-controller-bridge.py
+
+  live-read:
+    name: Verify live GitHub App read path
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Live repository read through provider adapter
+        env:
+          DEVOS_GITHUB_APP_ID: ${{ secrets.DEVOS_GITHUB_APP_ID }}
+          DEVOS_GITHUB_APP_PRIVATE_KEY: ${{ secrets.DEVOS_GITHUB_APP_PRIVATE_KEY }}
+        run: >-
+          python tools/devos-github-provider-adapter.py
+          --operation-json
+          '{"provider":"github","owner":"zzpsah","repository":"chatgpt-development-os","resource":null,"capability":"read.repository","workflow":"devos-controller-v1","project":"chatgpt-development-os","impact":"READ_ONLY","freshness":"main","action":"repository.get","inputs":{}}'
