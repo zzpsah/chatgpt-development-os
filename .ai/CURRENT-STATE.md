@@ -6,93 +6,79 @@
 - Source tree + Git are authoritative; ChatGPT Memory/chat history are supplementary only.
 - P11 repository-first recovery/revalidation remains a durable invariant.
 - P9 through P17 are complete on `main`.
-- **P17 Step Readiness & Authorization Orchestrator v1 is verified and merged through PR #10.**
-- Active maturity work: **Production E2E Harness** on branch `devos/production-e2e-harness` / PR #11.
-- Production E2E implementation and real managed-project proof are source-complete; closure remains gated on fresh CI for the eventual final branch head and merge.
+- **Production E2E Harness is verified, merged, and closed on `main`.**
+- Active maturity gate: **Failure + Recovery Proof**.
 
 ## Canonical governed path
 
-`Human request → P15 interpretation → Project/State Resolution → P16 goal-to-plan → P17 step readiness → P16 compiled-plan controller → P17 runtime handoff → bounded runtime-adapter operation → explicit verification → authorized durable evidence persistence → recovery readback`
+`Human request → P15 interpretation → P16 plan → P17 readiness → P16 controller → P17 runtime handoff → bounded runtime-adapter operation → explicit verification → authorized persistence → recovery / continuation`
 
-Interpretation, planning, readiness, orchestration and successful tests never manufacture permission. Runtime execution remains capability-, scope-, authorization-, Security-Gate- and verification-bounded.
+Interpretation, planning, readiness, orchestration and successful tests never manufacture permission. Runtime mutation, persistence, remote mutation and production/destructive actions remain independently bounded by capability, exact authorization, Security Gate, verification and recovery rules.
 
-## P16 and P17 verified baseline
+## P16 / P17 verified baseline
 
 P16 merged through PR #9 at `460a212ebb7600619f396a455ac3e47e5a5c80fa`; final head `877833ef0f11d5a869284f9b86407c155125d96f` passed Contracts 476, Full 402, External 11.
 
 P17 merged through PR #10 at `2f29ac1de367fb270c00d73b2ca44405ce09fc00`; final head `8011783962d6dddd33bcc50049c8aa4a8748cc52` passed Contracts 483, Full 408, External 12.
 
-P17 closure state was persisted on `main` at `747082635094c458d72e9f3914fe661bee29803c`.
-
-## Production E2E Harness implementation
+## Production E2E Harness closure
 
 Normative contract: `core/production-e2e-harness.md`.
 Executable harness: `tools/production-e2e-harness.py`.
 Regression corpus: `tools/test-production-e2e-harness.py`.
 Real managed-project verifier: `tools/verify-production-e2e-managed-project.py`.
 
-Reference protocol: `DEVOS-PRODUCTION-E2E-v1`.
+Final verified source head: `4270440533925628a88daa17a6620aa51295319a`.
+PR #11 merged to `main` at `1d6031d3578b859a6afe1dca1032287de5beceba`.
 
-The harness composes existing DevOS modules instead of creating a parallel executor. It fails closed at the earliest stage and records a stage trace across interpretation, planning, readiness, controller, handoff, runtime, verification, persistence and recovery.
+Fresh final-head verification:
+- Verify Development OS Contracts — run 490 / `34751784035`: success.
+- Verify Development OS — run 415 / `34751784082`: success.
+- Verify P13 External Managed Project — run 15 / `34751784049`: success.
 
-### Runtime semantic binding
+The E2E proof composes existing DevOS modules and proves the whole governed read-only path through runtime, verification, persistence and recovery. It does not introduce a general shell executor or new authority source.
 
-- Explicit bounded read allowlist: `filesystem.read`, `git.inspect`, and supported GitHub inspect operations.
-- Explicit bounded mutation allowlist: `filesystem.write_scoped`, `github.mutate.file`.
-- A `READ_ONLY` compiled step cannot execute a mutation operation.
-- Any runtime mutation requires exact-step `ALREADY_GRANTED` authorization.
+### Proven runtime/persistence boundaries
+
+- `READ_ONLY` compiled steps cannot execute mutation operations.
+- Every runtime mutation requires exact-step `ALREADY_GRANTED` authorization.
 - GitHub remote mutation additionally requires exact-step Security Gate `PASS`.
-- Eligibility authorization and runtime-operation authorization remain distinct; an approved security review may still execute a read operation using adapter-level `NOT_REQUIRED` authorization.
-- Unknown runtime operations are blocked.
+- Eligibility authorization and runtime-operation authorization remain distinct.
+- Verification uses explicit argv through the existing reference verification adapter.
+- Evidence persistence is restricted to bounded `.ai/` paths and requires independent authorization.
+- Persistence does not itself commit or push.
+- Recovery reads the evidence packet back through the bounded host adapter.
 
-### Verification, persistence and recovery
+### Real managed-project proof
 
-- Verification uses the existing explicit-argv reference verification adapter; the harness introduces no shell interpretation.
-- Runtime success is insufficient; verification must return `VERIFIED` before persistence.
-- Evidence persistence is restricted to bounded `.ai/` paths and requires independent `ALREADY_GRANTED` persistence authorization.
-- Persistence does not commit or push.
-- Recovery reads the evidence packet back through the bounded reference host adapter.
-- The persisted packet is marked `execution_evidence: true` only after observed runtime success + verification success; planning/readiness/controller metadata remain non-execution evidence.
+The external workflow checks out `zzpsah/automation-suite` and proves a read-only `filesystem.read` path against its real repository state. The verifier confirms exact origin identity, unchanged HEAD, verification success, bounded evidence persistence and recovery, with no commit or push to the managed repository.
 
-## Regression proof
+Final External Managed Project run 15 passed the P13 proof, Production E2E proof and evidence artifact upload.
 
-The isolated regression corpus proves:
-- successful read-only whole path to `COMPLETE / RECOVERY`;
-- stale compiled repository head stops at P17 readiness;
-- READ_ONLY → mutation mismatch is blocked before mutation;
-- failed verification blocks persistence success;
-- missing persistence authorization blocks evidence write;
-- missing capability blocks at readiness.
+## Active maturity gate — Failure + Recovery Proof
 
-On branch head `4ae1cfa21a2c6149829d9a5b104f165f33cc5ed3`, Contracts run 488 executed `Verify Production E2E Harness` successfully and completed successfully overall.
+Goal: prove that the merged Production E2E path fails safely, classifies bounded failures, preserves evidence, and can resume or deliberately HOLD after recovery without replaying unsafe work.
 
-## Real managed-project proof
+Required failure classes include:
+- stale plan / repository drift;
+- dependency failure;
+- missing capability;
+- exact-step authorization mismatch;
+- Security Gate failure;
+- runtime/provider unavailable or failed;
+- verification failure;
+- persistence write/corruption failure;
+- recovery readback failure;
+- ambiguous or invalid resume state.
 
-CI checks out the real DevOS-managed repository `zzpsah/automation-suite` on `main` and runs the harness with a read-only `filesystem.read` operation against `README.md`.
-
-The verifier independently confirms:
-- Git remote identity is exactly `zzpsah/automation-suite`;
-- repository HEAD is unchanged;
-- runtime operation is read-only;
-- README/AGENTS/.ai verification succeeds;
-- the only local delta created by the proof is the explicitly authorized `.ai/EVIDENCE/production-e2e-managed-project.json` packet;
-- no commit or push is performed by the verifier.
-
-External Managed Project run 13 / `34751659403` succeeded, including the new Production E2E proof and evidence upload.
-
-Evidence artifact:
-- artifact id: `10316730199`
-- name: `production-e2e-managed-project-evidence`
-- digest: `sha256:bea3ec2c742be2a57d7f09066802dd31731b2b863dbb96c7c149a7085a42f7eb`
-- associated proof head: `4ae1cfa21a2c6149829d9a5b104f165f33cc5ed3`
-
-This artifact is CI evidence only; it does not mutate or deploy the managed project's remote repository.
-
-## Current closure rule
-
-The branch is not closed merely because the implementation and first proof are green. This semantic-state commit creates a newer final candidate head, so fresh applicable Contracts, Full DevOS and External Managed Project verification must pass on the eventual final head before PR #11 may merge.
-
-If final-head CI fails, repair only the demonstrated defect and require newer fresh verification.
+Required outcomes:
+- deterministic failure classification;
+- no downstream execution after the failing gate;
+- evidence of the failure and last safe checkpoint;
+- bounded repair/revalidation where deterministic and authorized;
+- otherwise safe `HOLD` / escalation;
+- no blind replay of a previously uncertain or failed mutation;
+- fresh verification after recovery before completion is claimed.
 
 ## Recovery precedence
 
