@@ -80,11 +80,59 @@ Machine-readable output:
 python tools/devos-onboard.py --path <project> --json
 ```
 
-The existing PowerShell wrapper remains supported for Windows workflows:
+The existing PowerShell wrapper remains supported for Windows workflows.
 
-```powershell
-.\tools\onboard-project.ps1 -Path 'D:\Projects\MyApp'
+## Repository creation capability
+
+For new remote repositories, DevOS now defines an explicit provider-dependent capability:
+
+`repository.create`
+
+Reference implementation:
+
+```bash
+python tools/devos-create-repository.py --owner @me --name <name>
 ```
+
+The default is **plan-only**. A live creation attempt requires all of the following:
+
+```bash
+python tools/devos-create-repository.py \
+  --owner @me \
+  --name <name> \
+  --authorization EXPLICIT \
+  --apply
+```
+
+and the local safety gate:
+
+```text
+DEVOS_ALLOW_REPO_CREATE=1
+```
+
+A GitHub token is read from `GITHUB_TOKEN`; credentials are never printed or persisted by the tool.
+
+The implementation supports the authenticated GitHub user with `--owner @me` and GitHub organizations by explicit owner name. It performs one provider create request and returns `ATTEMPTED`, `NEEDS_READBACK`, `HOLD`, or `BLOCKED`; it does not call an operation `VERIFIED` merely because the provider returned success. Fresh provider readback is required for a verified completion claim.
+
+### Important connector limitation
+
+The ChatGPT GitHub connector may expose branch/file/commit/PR write operations without exposing repository creation. When the selected AI/provider does not expose `repository.create`, DevOS must return a capability-unavailable outcome such as:
+
+`NEEDS_EXTERNAL_REPO_CREATION`
+
+The workflow then becomes:
+
+```text
+Create repository outside current provider capability
+            ↓
+Discover the new repository
+            ↓
+Universal DevOS onboarding
+            ↓
+Verify context
+```
+
+Never claim that a repository was created when the provider capability was unavailable.
 
 ## What onboarding creates
 
@@ -109,104 +157,72 @@ For Git repositories, onboarding may also add:
 .github/workflows/context-sync.yml
 ```
 
-The reusable context synchronizer remains in the DevOS repository and is called by the project repository workflow.
-
 ## Preservation rule
 
-Existing project files and existing semantic `.ai/` files are preserved by default.
-
-Onboarding never:
-
-- replaces application source;
-- overwrites existing semantic project decisions;
-- replaces an existing `AGENTS.md`;
-- silently replaces another framework's context;
-- claims that generated placeholders describe the actual architecture or requirements.
+Existing project files and existing semantic `.ai/` files are preserved by default. Onboarding never replaces application source, overwrites existing semantic decisions, replaces another framework's context, or silently claims generated placeholders describe the actual architecture.
 
 If an existing manifest identifies another framework as the managed authority, onboarding returns `HOLD` rather than overwriting it.
+
+## New-project flow
+
+The preferred fully governed flow is:
+
+```text
+Human goal
+   ↓
+P15 interpretation
+   ↓
+P16 plan
+   ↓
+P17 exact repository.create readiness
+   ↓
+explicit authorization + provider capability
+   ↓
+repository.create (one request)
+   ↓
+fresh provider verification
+   ↓
+DevOS onboarding
+   ↓
+context verification
+   ↓
+first development action
+```
+
+Repository creation does **not** authorize application development, production deployment, database mutation, credential changes, or other high-impact actions.
 
 ## Existing projects
 
 For a project that already exists:
 
 1. Run plan mode.
-2. Review the paths proposed for creation/preservation.
+2. Review paths proposed for creation/preservation.
 3. Run `--apply` only when the project is intended to be managed by DevOS.
 4. Validate bootstrap/health state.
-5. Commit and push the onboarding infrastructure if remote portability is required.
-
-This creates a durable handoff point for future AI sessions/accounts.
-
-## New projects
-
-For new projects, the preferred path is:
-
-```text
-Create project
-   ↓
-DevOS template OR cross-platform initializer
-   ↓
-First commit includes durable AI context
-   ↓
-Development begins
-```
-
-The `templates/project` template should remain aligned with the onboarding contract. A new project should not depend on an AI conversation to reconstruct its initial context later.
+5. Commit and push onboarding infrastructure if remote portability is required.
 
 ## Automatic onboarding levels
 
-DevOS distinguishes three kinds of automation.
+DevOS distinguishes:
 
 ### Local automatic onboarding
-
-A configured local worker may watch explicitly configured project roots and invoke the idempotent onboarding command for new Git repositories/directories.
-
-This is the correct mechanism for projects created or cloned on a user's machine.
+A configured local worker may discover projects under explicitly configured roots and invoke idempotent onboarding.
 
 ### Template automatic onboarding
-
-Projects created from an approved DevOS template can start with the DevOS context already present.
+Approved DevOS templates can start with the durable context already present.
 
 ### Remote organization automatic onboarding
+An explicitly installed GitHub App, organization workflow, or equivalent authorized integration can create/onboard repositories within its granted scope.
 
-An explicitly installed GitHub App, organization workflow, or equivalent authorized integration can onboard newly created repositories that it is permitted to observe and modify.
-
-The public DevOS repository itself does **not** automatically gain permission to modify arbitrary repositories.
-
-This distinction is mandatory for security and truthful capability claims.
-
-## GitHub-side synchronization
-
-Once a project contains the caller workflow, the reusable DevOS workflow can synchronize deterministic repository-derived context after configured pushes/pull requests.
-
-The synchronizer is evidence-oriented and does not replace semantic project understanding.
+The public DevOS repository itself does **not** grant permission to modify arbitrary repositories.
 
 ## Semantic onboarding boundary
 
-The initializer may safely derive basic facts such as:
-
-- directory/project name;
-- stable project identifier;
-- presence/absence of expected infrastructure;
-- Git/non-Git state.
-
-It must not silently invent:
-
-- business requirements;
-- architecture;
-- product decisions;
-- security guarantees;
-- deployment correctness;
-- test success;
-- root causes.
-
-Those require AI-assisted inspection and evidence.
+The initializer may derive basic facts such as project name, project identifier, infrastructure presence, and Git/non-Git state. It must not invent business requirements, architecture, product decisions, security guarantees, deployment correctness, test success, or root causes.
 
 ## Health / validation
 
 After onboarding, run the project's DevOS bootstrap/health validation.
-
-Onboarding status and application health are separate claims.
 
 ```text
 ONBOARDED
@@ -218,55 +234,34 @@ PRODUCTION READY
 
 ## Security and authorization
 
-Onboarding itself can create files and therefore is a mutation. `--apply` is an explicit operation.
+Repository creation and onboarding are mutations and remain separate capability/authorization decisions.
 
-Onboarding must never be used as a route to:
+All downstream work remains subject to normal DevOS planning, readiness, authorization, Security Gate, runtime, and verification controls.
 
-- production mutation;
-- database mutation;
-- permission changes;
-- credential/secret changes;
-- destructive operations;
-- arbitrary remote execution.
+Failure or uncertain provider response must lead to reconciliation/readback, never blind replay.
 
-All downstream project work remains subject to normal DevOS planning, readiness, authorization, Security Gate, runtime, and verification controls.
+## Universal AI portability
 
-## Universal AI portability requirements
+A managed project must be recoverable by a fresh AI with no prior chat memory. The AI must discover bootstrap, identity, current state, tasks, decisions, recent evidence, verified/unverified claims, and the safe next action from repository evidence.
 
-A managed project should be recoverable by a fresh AI with no prior chat memory.
+## Acceptance
 
-The fresh AI must be able to discover:
-
-1. the DevOS bootstrap entrypoint;
-2. project identity;
-3. current state;
-4. tasks/decisions/architecture;
-5. recent evidence/change history;
-6. the distinction between verified and unverified claims;
-7. the current safe next action.
-
-## Reproducibility and acceptance
-
-The canonical implementation is:
-
-```text
-core/devos-universal-project-onboarding.md
-tools/devos-onboard.py
-tools/test-devos-onboard.py
-```
-
-Acceptance requires:
+Universal Project Onboarding v1 acceptance includes:
 
 - valid existing project → READY;
 - missing infrastructure → CREATE only missing files;
-- second onboarding → all preserved/no duplicate creation;
-- existing semantic context → unchanged;
-- other managed framework identity → HOLD;
+- second onboarding → preserve/no duplicate creation;
+- semantic context preservation;
+- incompatible managed identity → HOLD;
 - new Git project → caller workflow can be created;
-- non-Git project → context can be initialized without silently inventing Git state;
+- non-Git project → local context can be initialized;
 - plan mode → no mutation;
 - apply mode → only DevOS infrastructure mutation;
-- output → explicitly states authority unchanged;
+- `repository.create` plan mode → deterministic READY for valid targets;
+- repository creation without explicit authorization → NEEDS_APPROVAL;
+- repository creation without provider safety enablement → BLOCKED;
+- provider uncertainty → HOLD and replay forbidden;
+- authority remains UNCHANGED;
 - regression suite → PASS.
 
 ## Safety rules
@@ -275,19 +270,13 @@ Acceptance requires:
 - Never overwrite application source during onboarding.
 - Never put credentials, tokens, private keys, session cookies, or unnecessary personal/student data into `.ai`.
 - Never claim tests passed merely because onboarding succeeded.
+- Never claim repository creation succeeded without provider evidence and required readback.
+- Never treat provider capability as authorization.
+- Never treat authorization as unlimited provider permission.
 - Git history remains authoritative for exact repository changes.
 - `.ai` is portable project context, not permission.
 - AI account memory is supplementary only.
 
 ## Completion criterion
 
-Universal Project Onboarding v1 is complete when the repository provides:
-
-1. a cross-platform idempotent onboarding initializer;
-2. deterministic regression coverage;
-3. existing-project preservation and conflict HOLD behavior;
-4. new-project/template guidance;
-5. explicit local/template/remote automation boundaries;
-6. a documented universal-AI/account portability contract;
-7. bootstrap/health validation integration;
-8. no false implication that DevOS can silently modify arbitrary remote repositories.
+Universal Project Onboarding and Repository Creation v1 are complete only when the repository provides deterministic onboarding, a governed provider-dependent repository-creation capability, regression coverage, explicit unavailable-capability handling, documented local/template/remote automation boundaries, and the universal AI/account portability contract.
