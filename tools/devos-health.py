@@ -66,7 +66,7 @@ def inspect_git(root: Path) -> dict[str, Any]:
         if status.returncode != 0:
             return _row("git_source_state", "UNKNOWN", "Git worktree state could not be inspected", {"head": head_sha})
         dirty = bool(status.stdout.strip())
-        expected = os.environ.get("GITHUB_SHA") or os.environ.get("DEVOS_EXPECTED_HEAD")
+        expected = os.environ.get("DEVOS_EXPECTED_HEAD") or os.environ.get("GITHUB_SHA")
         if expected and expected != head_sha:
             return _row(
                 "git_source_state", "BLOCKED", "checked source HEAD does not match expected execution/source HEAD",
