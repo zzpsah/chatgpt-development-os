@@ -47,6 +47,12 @@ def main():
     dep["completed_steps"] = ["S1"]
     assert mod.evaluate(dep)["status"] == "READY"
 
+    fake_completion = payload("S2")
+    fake_completion["completed_steps"] = ["S1", "NOT_A_PLAN_STEP"]
+    fake_result = mod.evaluate(fake_completion)
+    assert fake_result["status"] == "BLOCKED"
+    assert any(reason.startswith("COMPLETED_STEP_UNKNOWN=") for reason in fake_result["reasons"])
+
     missing_cap = payload("S1")
     missing_cap["capabilities"] = {"S1": "MISSING"}
     assert mod.evaluate(missing_cap)["status"] == "BLOCKED"
@@ -75,6 +81,24 @@ def main():
 
     missing_head = payload("S1") | {"compiled_repository_head": None}
     assert mod.evaluate(missing_head)["status"] == "NEEDS_EVIDENCE"
+
+    duplicate = payload("S1")
+    duplicate["plan"]["steps"].append({"id": "S1", "objective": "duplicate", "depends_on": [], "impact": "READ_ONLY", "authorization_required": False, "verification": "evidence"})
+    duplicate_result = mod.evaluate(duplicate)
+    assert duplicate_result["status"] == "BLOCKED"
+    assert "PLAN_STEP_ID_DUPLICATE=S1" in duplicate_result["reasons"]
+
+    unknown_dep = payload("S2")
+    unknown_dep["plan"]["steps"][1]["depends_on"] = ["S404"]
+    unknown_result = mod.evaluate(unknown_dep)
+    assert unknown_result["status"] == "BLOCKED"
+    assert "PLAN_DEPENDENCY_UNKNOWN=S2:S404" in unknown_result["reasons"]
+
+    no_objective = payload("S1")
+    no_objective["plan"]["steps"][0]["objective"] = ""
+    objective_result = mod.evaluate(no_objective)
+    assert objective_result["status"] == "BLOCKED"
+    assert "PLAN_STEP_OBJECTIVE_MISSING=S1" in objective_result["reasons"]
 
     print("PASS: P17 Step Readiness & Authorization Orchestrator regression corpus")
 
