@@ -41,6 +41,15 @@ host_adapter = _load("e2e_host", "adapters/reference-host.py")
 
 PROTOCOL = "DEVOS-PRODUCTION-E2E-v1"
 TERMINAL_FAILURES = {"BLOCKED", "UNAVAILABLE", "FAILED"}
+READ_OPERATIONS = {
+    "filesystem.read",
+    "git.inspect",
+    "github.inspect.repository",
+    "github.inspect.commit",
+    "github.inspect.workflow_run",
+}
+MUTATION_OPERATIONS = {"filesystem.write_scoped", "github.mutate.file"}
+GATED_IMPACTS = {"HIGH_IMPACT_MUTATION", "SECURITY_SENSITIVE", "PRODUCTION_OR_DESTRUCTIVE"}
 
 
 def _blocked(stage: str, reason: Any, trace: dict[str, Any]) -> dict[str, Any]:
@@ -79,6 +88,47 @@ def _persist_evidence(project_root: Path, payload: dict[str, Any], trace: dict[s
     }
     content = json.dumps(evidence_packet, indent=2, sort_keys=True) + "\n"
     return host_adapter.write_text(project_root, path, content, authorization)
+
+
+def _prepare_runtime_request(
+    step: dict[str, Any],
+    step_id: str,
+    raw_request: Any,
+    authorization_by_step: dict[str, Any],
+    security_gate_by_step: dict[str, Any],
+) -> tuple[dict[str, Any] | None, str | None]:
+    if not isinstance(raw_request, dict):
+        return None, "runtime_request must be an object"
+    if raw_request.get("step_id") not in (None, step_id):
+        return None, "runtime request step_id does not match selected step"
+
+    request = dict(raw_request)
+    request.pop("step_id", None)
+    operation = request.get("operation")
+    if operation not in READ_OPERATIONS | MUTATION_OPERATIONS:
+        return None, "runtime operation is not in the bounded E2E allowlist"
+
+    impact = step.get("impact")
+    if impact == "READ_ONLY" and operation not in READ_OPERATIONS:
+        return None, "read-only compiled step cannot execute a mutation operation"
+
+    if operation in MUTATION_OPERATIONS:
+        if impact == "READ_ONLY":
+            return None, "mutation operation conflicts with read-only step impact"
+        if authorization_by_step.get(step_id) != "ALREADY_GRANTED":
+            return None, "mutation operation requires exact-step authorization"
+        request["authorization"] = "ALREADY_GRANTED"
+        if operation.startswith("github."):
+            if security_gate_by_step.get(step_id) != "PASS":
+                return None, "remote mutation requires exact-step Security Gate PASS"
+            request["security_gate"] = "PASS"
+    else:
+        # Eligibility authorization and runtime-operation authorization are distinct.
+        # A security-sensitive review may require approval to become READY while the
+        # underlying read capability itself remains a NOT_REQUIRED operation.
+        request["authorization"] = "NOT_REQUIRED"
+
+    return request, None
 
 
 def run(payload: dict[str, Any], github_client: Any = None) -> dict[str, Any]:
@@ -127,6 +177,8 @@ def run(payload: dict[str, Any], github_client: Any = None) -> dict[str, Any]:
     capabilities = payload.get("capabilities") or {}
     authorization_by_step = payload.get("authorization_by_step") or {}
     security_gate_by_step = payload.get("security_gate_by_step") or {}
+    if not all(isinstance(x, dict) for x in (capabilities, authorization_by_step, security_gate_by_step)):
+        return _blocked("READINESS", "capability/auth/security evidence maps must be objects", trace)
 
     readiness = readiness_mod.evaluate({
         "plan": plan,
@@ -146,7 +198,7 @@ def run(payload: dict[str, Any], github_client: Any = None) -> dict[str, Any]:
     controller_authorization = "ALREADY_GRANTED" if auth_required else "NOT_REQUIRED"
     if auth_required and authorization_by_step.get(step_id) != "ALREADY_GRANTED":
         return _blocked("CONTROLLER", "exact-step authorization missing", trace)
-    gated = step.get("impact") in {"HIGH_IMPACT_MUTATION", "SECURITY_SENSITIVE", "PRODUCTION_OR_DESTRUCTIVE"}
+    gated = step.get("impact") in GATED_IMPACTS
     controller_security = "PASS" if gated else "NOT_APPLICABLE"
     if gated and security_gate_by_step.get(step_id) != "PASS":
         return _blocked("CONTROLLER", "Security Gate PASS missing for gated impact", trace)
@@ -169,19 +221,16 @@ def run(payload: dict[str, Any], github_client: Any = None) -> dict[str, Any]:
     if handoff.get("status") != "READY_FOR_RUNTIME":
         return _blocked("HANDOFF", handoff.get("reason"), trace)
 
-    runtime_request = payload.get("runtime_request") or {}
-    if not isinstance(runtime_request, dict):
-        return _blocked("RUNTIME", "runtime_request must be an object", trace)
-    if runtime_request.get("step_id") not in (None, step_id):
-        return _blocked("RUNTIME", "runtime request step_id does not match selected step", trace)
-    runtime_request = dict(runtime_request)
-    runtime_request.pop("step_id", None)
-    if auth_required:
-        runtime_request["authorization"] = "ALREADY_GRANTED"
-    else:
-        runtime_request.setdefault("authorization", "NOT_REQUIRED")
-    if gated:
-        runtime_request["security_gate"] = "PASS"
+    runtime_request, runtime_error = _prepare_runtime_request(
+        step,
+        step_id,
+        payload.get("runtime_request") or {},
+        authorization_by_step,
+        security_gate_by_step,
+    )
+    if runtime_error:
+        return _blocked("RUNTIME", runtime_error, trace)
+    assert runtime_request is not None
 
     runtime_result = bridge.execute(runtime_request, project_root, github_client=github_client)
     trace["runtime"] = runtime_result
