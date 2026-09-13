@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Machine-derived, read-only DevOS foundation health and consistency status.
 
-This module composes the existing Trust-First audit and readiness-evidence ledger.
-It does not create authority, execute project work, mutate the repository, rewrite
-historical evidence, or promote UNKNOWN/WARN to PASS.
+This module composes the existing Trust-First audit, readiness-evidence ledger,
+and cross-host recovery-friction evidence. It does not create authority, execute
+project work, mutate the repository, rewrite historical evidence, or promote
+UNKNOWN/WARN to PASS.
 """
 from __future__ import annotations
 
@@ -19,6 +20,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = "DEVOS-FOUNDATION-HEALTH-v1"
 CANONICAL_REPOSITORY = "zzpsah/chatgpt-development-os"
+DEFAULT_HOST_PROFILE = "adapters/host-profile.example.json"
 SEVERITY = {"PASS": 0, "WARN": 1, "UNKNOWN": 2, "FAIL": 3, "BLOCKED": 4}
 INVARIANTS = [
     "PLAN != EXECUTION",
@@ -132,7 +134,46 @@ def inspect_status_docs(root: Path, production_ready: bool, live_mutation_any: b
     return _row("status_document_consistency", "PASS", "no supported machine/prose contradiction detected")
 
 
-def derive_health(root: Path = ROOT, *, run_checks: bool = True) -> dict[str, Any]:
+def inspect_recovery_friction(root: Path, profile_rel: str = DEFAULT_HOST_PROFILE) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    """Compose the authoritative recovery-friction analyzer without reimplementing it."""
+    try:
+        profile_path = (root / profile_rel).resolve()
+        if not profile_path.is_relative_to(root.resolve()):
+            return _row("cross_host_recovery", "BLOCKED", "host profile path escapes repository"), None
+        if not profile_path.is_file():
+            return _row("cross_host_recovery", "UNKNOWN", "host profile is missing; recovery friction cannot be established", {"profile": profile_rel}), None
+        profile = json.loads(profile_path.read_text(encoding="utf-8"))
+        module = _load("recovery_friction_health", root / "tools" / "recovery-friction.py")
+        report = module.analyze(root, profile)
+    except json.JSONDecodeError as exc:
+        return _row("cross_host_recovery", "BLOCKED", "host profile JSON is malformed", {"profile": profile_rel, "error": str(exc)}), None
+    except (OSError, RuntimeError, ValueError, TypeError) as exc:
+        return _row("cross_host_recovery", "UNKNOWN", "recovery-friction evidence could not be inspected", {"profile": profile_rel, "error": str(exc)}), None
+
+    status = report.get("overall", "UNKNOWN")
+    if status not in SEVERITY:
+        status = "BLOCKED"
+    evidence = {
+        "protocol": report.get("protocol"),
+        "evidence_class": report.get("evidence_class"),
+        "real_cross_vendor_account_proven": report.get("real_cross_vendor_account_proven", False),
+        "recovery_status": report.get("recovery_status", "UNKNOWN"),
+        "continuation_status": report.get("continuation_status", "UNKNOWN"),
+        "friction": report.get("friction", {}),
+        "host": report.get("host", {}),
+        "repository_state": report.get("repository_state", {}),
+    }
+    if report.get("real_cross_vendor_account_proven") is not False:
+        return _row("cross_host_recovery", "BLOCKED", "deterministic recovery evidence attempted unsupported real cross-vendor/account promotion", evidence), report
+    reason = (
+        f"recovery={report.get('recovery_status', 'UNKNOWN')}; "
+        f"continuation={report.get('continuation_status', 'UNKNOWN')}; "
+        f"friction_units={report.get('friction', {}).get('friction_units', 'UNKNOWN')}"
+    )
+    return _row("cross_host_recovery", status, reason, evidence), report
+
+
+def derive_health(root: Path = ROOT, *, run_checks: bool = True, host_profile: str = DEFAULT_HOST_PROFILE) -> dict[str, Any]:
     root = root.resolve()
     audit_mod = _load("devos_audit_health", root / "tools" / "devos-audit.py")
     evidence_mod = _load("readiness_evidence_health", root / "tools" / "verify-readiness-evidence.py")
@@ -210,6 +251,9 @@ def derive_health(root: Path = ROOT, *, run_checks: bool = True) -> dict[str, An
     else:
         rows.append(_row("verification_evidence_presence", "PASS", "implemented/partial capabilities have declared evidence records"))
 
+    recovery_row, recovery_report = inspect_recovery_friction(root, host_profile)
+    rows.append(recovery_row)
+
     production_ready = ledger.get("production_ready") is True
     rows.append(inspect_status_docs(root, production_ready, live_mutation_any))
 
@@ -227,6 +271,7 @@ def derive_health(root: Path = ROOT, *, run_checks: bool = True) -> dict[str, An
         "audit_protocol": audit.get("protocol"),
         "audit_overall": audit.get("overall"),
         "evidence_protocol": ledger.get("protocol"),
+        "recovery_friction": recovery_report,
         "production_ready": bool(ledger.get("production_ready") is True),
         "live_mutation_proven": live_mutation_any,
         "historical_source_drift": drift,
@@ -235,6 +280,7 @@ def derive_health(root: Path = ROOT, *, run_checks: bool = True) -> dict[str, An
         "limitations": [
             "Offline health cannot prove remote Git freshness unless the caller supplies an expected HEAD.",
             "Historical evidence drift is WARN, never silently refreshed or promoted.",
+            "Recovery-friction host-profile evidence is deterministic simulation, not an independent cross-vendor/account trial.",
             "Doctor/health status never creates execution authority or production readiness.",
         ],
     }
@@ -244,9 +290,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=".")
     parser.add_argument("--no-run-checks", action="store_true")
+    parser.add_argument("--host-profile", default=DEFAULT_HOST_PROFILE)
     args = parser.parse_args()
     try:
-        report = derive_health(Path(args.root), run_checks=not args.no_run_checks)
+        report = derive_health(Path(args.root), run_checks=not args.no_run_checks, host_profile=args.host_profile)
     except Exception as exc:  # fail closed at the presentation boundary
         report = {
             "protocol": PROTOCOL,
