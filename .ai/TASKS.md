@@ -2,6 +2,7 @@
 
 ## Active
 - **Current-Source Evidence Refresh Protocol** is the current bounded objective. It is unnumbered; do not create P18/P19.
+- **P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline for this and every later objective.**
 - Extend the existing readiness-evidence system; do not create a second evidence ledger or competing truth source.
 - Preserve all historical evidence rows, source heads, run IDs, archive digests, and `historical_source_drift` semantics unchanged.
 - Add a reviewed current-source evidence path that records exact source head/test/run provenance separately from historical evidence.
