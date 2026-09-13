@@ -30,16 +30,15 @@ The integration regression covers:
 
 Actionable Hold CI 6 / `34778139986` first proved the integrated path. The branch was subsequently reconciled non-force with newer `main` work.
 
-## Final exact-head verification
-Final source/documentation head: `2cfd26a1019ae4fa37bf4d9cc96abebcb9ae9bfd`.
-Final base: `main` `6107d5d91c6f3eae93fa4e9724b8668b9c0d63a7`.
-
-Fresh exact-head CI:
+## Verified integration checkpoint
+Checkpoint source head `2cfd26a1019ae4fa37bf4d9cc96abebcb9ae9bfd` was based on `main` `6107d5d91c6f3eae93fa4e9724b8668b9c0d63a7` and passed:
 - Actionable Hold 11 / `34778365304` — success; both reference and real continuation-path regressions passed.
 - Contracts 634 / `34778365175` — success.
 - Trust-First 97 / `34778365197` — success.
 - Full DevOS 556 / `34778365250` — success.
 - Additional applicable gates: Current-Source Evidence 26 / `34778365249` and MCP Repository Create 23 / `34778365285` — success.
+
+This is a historical verified checkpoint, not a moving-HEAD claim. The actual PR tip must receive its own fresh exact-head CI before merge readiness is asserted.
 
 ## Documentation
 - `docs/ACTIONABLE-HOLDS-AND-SCOPED-APPROVAL.md` documents the operational UX and integrated path.
