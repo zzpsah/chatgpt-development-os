@@ -1,45 +1,49 @@
 # DevOS Tasks
 
 ## Active
-- **Recovery Friction → Foundation Health/Doctor Integration** is the current bounded objective. It is unnumbered; do not create P18/P19.
-- `tools/devos-health.py` now composes the existing `DEVOS-RECOVERY-FRICTION-v1` analyzer; recovery rules are not duplicated.
-- `tools/devos-doctor.py` renders only health-supplied recovery/continuation status, friction counts, and evidence classification.
-- Recovery-friction status propagates conservatively: `WARN`, `UNKNOWN`, or `BLOCKED` never becomes PASS.
-- `DETERMINISTIC_HOST_PROFILE_SIMULATION` remains distinct from actual independent cross-vendor/account evidence.
-- Doctor remains READ_ONLY, non-authorizing, non-mutating, and presentation-only.
-- P11 repository-first recovery, readiness evidence, Security Gate, and no-replay boundaries remain unchanged.
-- No live/destructive/production/provider mutation is required or authorized.
+- **Current-Source Evidence Refresh Protocol** is the current bounded objective. It is unnumbered; do not create P18/P19.
+- Extend the existing readiness-evidence system; do not create a second evidence ledger or competing truth source.
+- Preserve all historical evidence rows, source heads, run IDs, archive digests, and `historical_source_drift` semantics unchanged.
+- Add a reviewed current-source evidence path that records exact source head/test/run provenance separately from historical evidence.
+- New current-source evidence must prove only the level actually observed; deterministic/integrated CI cannot become live-provider or production proof.
+- Health/Doctor may consume current-source evidence only through the authoritative readiness-evidence verifier; they must not manufacture freshness independently.
+- Evidence refresh never grants authority or authorization and never permits execution/mutation by itself.
+- No live/destructive/production/provider mutation is required or authorized for this objective.
 
-## Health-integration implementation evidence
-- Verified implementation head: `40eea000d57f160781f2e2d846c126d366f42b86`.
-- Trust-First Audit 51 / `34764991027`: success.
-- Contracts 588 / `34764990970`: success; Foundation Health integration regressions and standalone recovery-friction gate passed.
-- Full DevOS 513 / `34764991036`: success.
-- The integration adds one subordinate `cross_host_recovery` health row sourced from `tools/recovery-friction.py`.
-- Missing host profile → `UNKNOWN`; malformed host-profile JSON → `BLOCKED`; critical recovery capability gap → `BLOCKED`; stale expected HEAD propagates `BLOCKED`.
-- Deterministic recovery evidence claiming `real_cross_vendor_account_proven=true` is rejected as `BLOCKED`.
-- Doctor visibly preserves evidence class, recovery status, continuation status, friction units, and `real_cross_vendor_account_proven=false` without recomputing the analyzer.
-- These runs prove the implementation head only; documentation commits after this point require fresh exact-final-head CI before closure.
+## Recovery Friction → Foundation Health/Doctor Integration — completed
+- Final source head: `869a95894dad5feaafcbc286ec1fb0027c8321df`.
+- PR #21 merge commit: `c3c7597a5b475c7060efc8fb9e6df81f88716e8c`.
+- Final PR verification: Trust-First 54 / `34765090674`, Contracts 591 / `34765090663`, Full DevOS 516 / `34765090662` — success.
+- Fresh post-merge main: Trust-First 55 / `34765164604`, Contracts 592 / `34765164610`, Full DevOS 517 / `34765164649` — success.
+- Health composes the existing `DEVOS-RECOVERY-FRICTION-v1` analyzer as subordinate evidence; Doctor only presents Health output.
+- Missing profile remains UNKNOWN; malformed profile, stale expected HEAD, critical host capability gaps, canonical identity tampering, and unsupported simulated→real claim promotion remain BLOCKED.
+- Evidence remains deterministic/read-only; no real independent cross-vendor/account trial is claimed.
 
 ## Cross-Host Recovery Friction & Onboarding Proof — completed
 - Analyzer: `tools/recovery-friction.py`.
 - Protocol: `DEVOS-RECOVERY-FRICTION-v1`.
 - Normative contract: `core/cross-host-recovery-friction.md`.
-- Adversarial corpus: `tools/test-recovery-friction.py`.
-- Runnable gate: `python tools/test-host-profile.py && python tools/test-fresh-ai-recovery.py && python tools/test-recovery-friction.py`.
-- Implementation head `d7b4a84d3f9321091aac0bff2a3438647dcf8ec2`: Trust-First 39 / `34764579792`, Contracts 576 / `34764579787`, Full DevOS 501 / `34764579789` — success.
-- Final source head `55b3a8e64ecefae6058529ea18c6ca04b80d2860`: Trust-First 41 / `34764671486`, Contracts 578 / `34764671499`, Full DevOS 503 / `34764671501` — success.
-- PR #20 merge commit: `4161abf357bbca1e8bb844c7d87f74cfb34b94e6`.
-- Fresh post-merge main: Trust-First 42 / `34764727276`, Contracts 579 / `34764727340`, Full DevOS 504 / `34764727299` — success.
+- Final source head `55b3a8e64ecefae6058529ea18c6ca04b80d2860`.
+- PR #20 merge `4161abf357bbca1e8bb844c7d87f74cfb34b94e6`.
+- Post-merge main: Trust-First 42 / `34764727276`, Contracts 579 / `34764727340`, Full DevOS 504 / `34764727299` — success.
 - Closure-state main `9258a5e53be542b6ed246ed5c72155f1521b80e7`: Trust-First 45 / `34764829953`, Contracts 582 / `34764829874`, Full DevOS 507 / `34764829850` — success.
-- Evidence class remains `DETERMINISTIC_HOST_PROFILE_SIMULATION`; `real_cross_vendor_account_proven = false`.
+- `DETERMINISTIC_HOST_PROFILE_SIMULATION` remains distinct from real cross-vendor/account proof.
 
 ## Foundation Health & State Consistency — completed
-- Final source head: `77a8f6f8d8ce012d872b20343bded2e00c53ed7d`.
-- PR #18 merge commit: `657ae461c0d6df62ca428d8bdd0404bd241b5c84`.
-- Final PR verification: Trust-First 29 / `34763332363`, Contracts 566 / `34763332344`, Full DevOS 491 / `34763332347` — success.
-- Fresh post-merge main: Trust-First 33 / `34764171968`, Contracts 570 / `34764171939`, Full DevOS 495 / `34764171923` — success.
-- `tools/test-step-readiness-orchestrator.py` remains historical-source drift in the readiness ledger and remains WARN rather than silently refreshed.
+- Final source head `77a8f6f8d8ce012d872b20343bded2e00c53ed7d`.
+- PR #18 merge `657ae461c0d6df62ca428d8bdd0404bd241b5c84`.
+- Post-merge main: Trust-First 33 / `34764171968`, Contracts 570 / `34764171939`, Full DevOS 495 / `34764171923` — success.
+- `tools/test-step-readiness-orchestrator.py` remains the known historical-source drift and must not be silently refreshed.
+
+## Current-source evidence acceptance targets
+- Historical evidence remains byte/provenance stable; no old source head/run is rewritten.
+- New current-source evidence has an explicit protocol/schema and exact source head.
+- The verifier rejects stale/current-head mismatches and fabricated run/test mappings.
+- Current-source evidence distinguishes deterministic, integrated, real read-only, provider-simulated, live-provider, and production claims conservatively; v1 must not introduce unsupported higher proof levels.
+- Current evidence can resolve a current-source drift only for the exact test/capability/level it actually proves; historical provenance remains visible.
+- Missing current evidence remains UNKNOWN/WARN as appropriate, never PASS by implication.
+- Health/Doctor consume only verified ledger-derived current-evidence status.
+- Runnable PASS/FAIL regression command and fresh exact-final-head CI are mandatory before closure.
 
 ## Completed recently
 - Production E2E Harness — PR #11.
@@ -50,16 +54,7 @@
 - Trust-First audit gap closure / adversarial Security Gate proof — PR #17.
 - Foundation Health & State Consistency — PR #18.
 - Cross-Host Recovery Friction & Onboarding Proof — PR #20.
-
-## Health-integration acceptance targets
-- Health composes the existing recovery-friction analyzer/result rather than reimplementing its recovery rules. **Implemented/tested.**
-- Doctor presents recovery and continuation status plus friction counts clearly. **Implemented/tested.**
-- Missing/invalid host profile or recovery evidence is `UNKNOWN`/`BLOCKED`, never hidden. **Implemented/tested.**
-- Simulated host evidence remains labeled simulated and never becomes real cross-vendor/account proof. **Implemented/tested.**
-- Existing health outcomes retain conservative worst-status semantics. **Implemented/tested.**
-- No authority, authorization, execution, mutation, evidence rewrite, or automatic historical refresh is introduced. **Preserved/tested.**
-- Runnable final gate: `python tools/test-devos-audit.py && python tools/test-recovery-friction.py && python tools/test-foundation-health.py`.
-- Fresh exact-final-head Trust-First, Contracts, and Full DevOS CI remains mandatory before closure.
+- Recovery Friction → Foundation Health/Doctor Integration — PR #21.
 
 ## Universal portability invariant
 `AI A + Account A → repository → AI B + Account B → correct recovery → safe continuation`
