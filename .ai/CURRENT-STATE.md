@@ -7,7 +7,8 @@
 - P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P9 through P17 are complete on `main`.
 - Production E2E Harness, Failure + Recovery Proof, Multi-Session / Fresh-AI Continuation Proof, Controlled Remote Mutation Proof, Trust-First audit gap closure, Production-Readiness Evidence Matrix, Foundation Health & State Consistency, Cross-Host Recovery Friction & Onboarding Proof, and Recovery Friction → Foundation Health/Doctor Integration are closed at their stated evidence levels.
-- **Active bounded objective: Current-Source Evidence Refresh Protocol.** This is unnumbered; no P18/P19 phase is created.
+- **Active dependency chain: Universal Project Onboarding + Repository Creation (PR #19), followed by host-neutral MCP/App `repository.create` adapter reconciliation (PR #22).**
+- The previously started **Current-Source Evidence Refresh Protocol** remains preserved but paused until PR #19/#22 are stable; it is not discarded and is not independently promoted.
 - Product invariant: DevOS is a Development OS for AI across vendors, models, accounts, coding agents, sessions, machines, and Git-provider adapters; no AI account/chat/model/vendor memory is authoritative project state.
 
 ## Canonical governed path
@@ -15,6 +16,25 @@
 `Human request → P15 interpretation → P16 plan → P17 readiness → controller → bounded runtime → verification → persistence → recovery / continuation`
 
 Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, continuation packets, and simulated provider evidence never manufacture permission.
+
+## Universal Project Onboarding + Repository Creation — ACTIVE PR #19
+
+PR #19 adds provider-independent universal onboarding and the governed `repository.create` capability while preserving the repository as the durable cross-AI source of truth.
+
+Normative contracts:
+- `core/devos-universal-project-onboarding.md`
+- `core/devos-universal-onboarding-policy.md`
+- `core/devos-repository-creation-capability.md`
+
+Implementation:
+- `tools/devos-onboard.py` — cross-platform idempotent onboarding; read-only plan by default; apply creates only missing DevOS infrastructure.
+- `tools/test-devos-onboard.py` — preservation/idempotency/new-project/incompatible-framework regression corpus.
+- `tools/devos-create-repository.py` — provider-neutral repository creation reference adapter with GitHub REST support, explicit apply/authorization/safety gates, one mutation request maximum per governed attempt, and no completion claim without fresh readback.
+- `tools/test-devos-create-repository.py` — deterministic capability/authorization/timeout/no-secret-leak regression corpus.
+
+Repository creation is a separate high-impact remote mutation capability. Provider capability, provider credentials, DevOS authorization, P17 readiness, and execution remain distinct. The built-in ChatGPT GitHub connector does not expose repository creation, so connector use must preserve the capability-unavailable path rather than imply a live create.
+
+PR #22 is stacked on PR #19 and must be reconciled only after PR #19 reaches a fresh exact-head verified state.
 
 ## Production-readiness evidence boundary
 
@@ -76,20 +96,17 @@ The integration adds one subordinate `cross_host_recovery` row to Foundation Hea
 
 Conservative propagation is proven for missing/malformed host profile evidence, stale expected HEAD, critical host capability gaps, canonical identity tampering, and simulated-evidence non-promotion. No live/destructive/provider mutation was performed.
 
-## Active bounded objective — Current-Source Evidence Refresh Protocol
+## Paused bounded objective — Current-Source Evidence Refresh Protocol
 
-The next smallest observed evidence gap is the known historical-source drift. DevOS needs a reviewed way to add **new current-source evidence** without mutating or relabeling historical records.
+The known historical-source drift still requires a reviewed way to add **new current-source evidence** without mutating or relabeling historical records. This work is preserved but paused behind the active onboarding/MCP dependency chain.
 
-Goal:
+Requirements remain:
 - preserve historical ledger rows and archived provenance unchanged;
-- allow separately generated current-source verification evidence to be recorded with exact source head/run/test provenance;
-- require current evidence to prove only the level actually observed;
+- bind current-source evidence to exact source head, test path/digest, observed verification result and CI context;
+- prove only the level actually observed;
 - never infer live-provider/production proof from deterministic or integrated CI;
-- make Health/Doctor distinguish historical drift from newly verified current-source evidence;
-- keep evidence refresh itself non-authorizing and READ_ONLY with respect to project/runtime execution;
-- no live/destructive/provider mutation is required.
-
-This objective must extend the existing readiness evidence system rather than create another truth ledger.
+- extend the existing readiness evidence system rather than create another truth ledger;
+- keep evidence refresh non-authorizing and read-only with respect to project/runtime execution.
 
 ## Controlled Remote Mutation evidence boundary
 
@@ -109,6 +126,7 @@ PLAN != EXECUTION
 READY != EXECUTION
 INTERPRETATION != AUTHORIZATION
 OLD APPROVAL != NEW APPROVAL
+PROVIDER CREDENTIAL != DEVOS AUTHORIZATION
 SIMULATED EVIDENCE != LIVE PROVIDER PROOF
 CHAT MEMORY != SOURCE OF TRUTH
 PROVIDER RESPONSE != COMPLETION PROOF
