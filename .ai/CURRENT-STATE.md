@@ -6,9 +6,12 @@
 - Source tree + Git are authoritative for implementation and exact project state; ChatGPT Memory/chat history are supplementary only.
 - P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P9 through P17 are complete on `main`.
-- Production E2E Harness, Failure + Recovery Proof, Multi-Session / Fresh-AI Continuation Proof, Controlled Remote Mutation Proof, Trust-First audit gap closure, Production-Readiness Evidence Matrix, Foundation Health & State Consistency, Cross-Host Recovery Friction & Onboarding Proof, and Recovery Friction → Foundation Health/Doctor Integration are closed at their stated evidence levels.
-- **Active dependency chain: Universal Project Onboarding + Repository Creation (PR #19), followed by host-neutral MCP/App `repository.create` adapter reconciliation (PR #22).**
-- The previously started **Current-Source Evidence Refresh Protocol** remains preserved but paused until PR #19/#22 are stable; it is not discarded and is not independently promoted.
+- Production E2E Harness, Failure + Recovery Proof, Multi-Session / Fresh-AI Continuation Proof, Controlled Remote Mutation Proof, Trust-First audit gap closure, Production-Readiness Evidence Matrix, Foundation Health & State Consistency, Cross-Host Recovery Friction & Onboarding Proof, and Recovery Friction → Foundation Health/Doctor Integration remain closed at their stated evidence levels.
+- Universal Project Onboarding + Repository Creation PR #19 is merged.
+- Host-neutral MCP/App `repository.create` adapter PR #22 is merged.
+- Post-merge `main` for the onboarding/MCP chain is `535d20ecf5528d0b118f220a98c4c519578b00cf` with Trust-First 68 / `34768878981`, Contracts 605 / `34768878980`, and Full DevOS 527 / `34768878994` successful.
+- **Active bounded objective: Current-Source Evidence Refresh Protocol, draft PR #24.**
+- No numbered phase is created for this objective.
 - Product invariant: DevOS is a Development OS for AI across vendors, models, accounts, coding agents, sessions, machines, and Git-provider adapters; no AI account/chat/model/vendor memory is authoritative project state.
 
 ## Canonical governed path
@@ -17,104 +20,121 @@
 
 Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, continuation packets, and simulated provider evidence never manufacture permission.
 
-## Universal Project Onboarding + Repository Creation — ACTIVE PR #19
+## Universal onboarding / repository creation — CLOSED AT CURRENT EVIDENCE LEVEL
 
-PR #19 adds provider-independent universal onboarding and the governed `repository.create` capability while preserving the repository as the durable cross-AI source of truth.
+PR #19 added provider-independent universal onboarding and governed `repository.create` semantics.
+PR #22 added the host-neutral MCP/App boundary over that capability.
 
-Normative contracts:
-- `core/devos-universal-project-onboarding.md`
-- `core/devos-universal-onboarding-policy.md`
-- `core/devos-repository-creation-capability.md`
+Preserved distinctions:
 
-Implementation:
-- `tools/devos-onboard.py` — cross-platform idempotent onboarding; read-only plan by default; apply creates only missing DevOS infrastructure.
-- `tools/test-devos-onboard.py` — preservation/idempotency/new-project/incompatible-framework regression corpus.
-- `tools/devos-create-repository.py` — provider-neutral repository creation reference adapter with GitHub REST support, explicit apply/authorization/safety gates, one mutation request maximum per governed attempt, and no completion claim without fresh readback.
-- `tools/test-devos-create-repository.py` — deterministic capability/authorization/timeout/no-secret-leak regression corpus.
+```text
+ChatGPT connector capability
+!= provider capability
+!= DevOS authorization
+!= P17 readiness
+!= execution
+```
 
-Repository creation is a separate high-impact remote mutation capability. Provider capability, provider credentials, DevOS authorization, P17 readiness, and execution remain distinct. The built-in ChatGPT GitHub connector does not expose repository creation, so connector use must preserve the capability-unavailable path rather than imply a live create.
+The built-in ChatGPT GitHub connector does not expose repository creation. The capability-unavailable path therefore remains `NEEDS_EXTERNAL_REPO_CREATION`; no live ChatGPT repository creation is claimed.
 
-PR #22 is stacked on PR #19 and must be reconciled only after PR #19 reaches a fresh exact-head verified state.
+Repository creation remains a high-impact remote mutation. Provider credentials are not DevOS authorization. A provider response is attempt evidence, not completion proof. Uncertain mutation is not blindly replayed.
 
-## Production-readiness evidence boundary
+No live repository creation, production mutation, destructive mutation, credential/secret mutation, permission mutation, or deployment mutation was performed for this evidence.
 
-The v1 readiness ledger remains conservative:
-- `production_ready = false`;
-- live mutation proof remains false;
-- controlled remote mutation remains provider-simulated / contract-level evidence;
-- historical evidence stays pinned to the original source/run heads;
-- current-source divergence is exposed as `historical_source_drift` and is never silently refreshed.
+## Active bounded objective — Current-Source Evidence Refresh Protocol
 
-The persistent known drift remains `tools/test-step-readiness-orchestrator.py`. That historical evidence is still valid only for its pinned source. A current-source claim requires separate new evidence rather than rewriting history.
-
-## Foundation Health & State Consistency — CLOSED
+Purpose: add fresh proof for exact current source without rewriting historical readiness evidence.
 
 Architecture:
 
-`Source / Git / Tests / CI → devos-audit.py → readiness evidence ledger → recovery-friction evidence → devos-health.py → devos-doctor.py`
+`current source + exact HEAD + ledger-declared test + SHA-256 + observed result → current-source-evidence.py → ephemeral validated packet → Foundation Health → DevOS Doctor`
 
-Normative contract: `core/foundation-health-state-consistency.md`.
-Machine health: `tools/devos-health.py`.
-Presentation: `tools/devos-doctor.py`.
-Adversarial gate: `tools/test-foundation-health.py`.
+Implementation:
 
-Foundation Health final source head: `77a8f6f8d8ce012d872b20343bded2e00c53ed7d`.
-PR #18 merge commit: `657ae461c0d6df62ca428d8bdd0404bd241b5c84`.
-Post-merge main verification: Trust-First 33 / `34764171968`, Contracts 570 / `34764171939`, Full DevOS 495 / `34764171923`: success.
+- `tools/current-source-evidence.py`
+- `tools/test-current-source-evidence.py`
+- `tools/test-current-source-health-integration.py`
+- `.github/workflows/verify-current-source-evidence.yml`
+- `core/current-source-evidence.md`
+- `docs/CURRENT-SOURCE-EVIDENCE.md`
+- optional packet consumption in `tools/devos-health.py`
+- presentation in `tools/devos-doctor.py`
 
-Health/doctor remain READ_ONLY with authority/authorization unchanged and execution/mutation NONE. WARN/UNKNOWN are never PASS.
+Current protocol: `DEVOS-CURRENT-SOURCE-EVIDENCE-v1`.
 
-## Cross-Host Recovery Friction & Onboarding Proof — CLOSED
+The packet binds:
+- exact Git `source_head`;
+- ledger-declared capability, level and test path;
+- SHA-256 of current test bytes;
+- observed exit code;
+- local or current CI execution context.
 
-Analyzer: `tools/recovery-friction.py`.
-Protocol: `DEVOS-RECOVERY-FRICTION-v1`.
-Normative contract: `core/cross-host-recovery-friction.md`.
+Current-source evidence is ephemeral and additive. It never mutates or relabels historical rows in `config/readiness-evidence.json`.
 
-Final source head: `55b3a8e64ecefae6058529ea18c6ca04b80d2860`.
-PR #20 merge commit: `4161abf357bbca1e8bb844c7d87f74cfb34b94e6`.
-Fresh post-merge main: Trust-First 42 / `34764727276`, Contracts 579 / `34764727340`, Full DevOS 504 / `34764727299`: success.
-Closure-state main `9258a5e53be542b6ed246ed5c72155f1521b80e7`: Trust-First 45 / `34764829953`, Contracts 582 / `34764829874`, Full DevOS 507 / `34764829850`: success.
+Rule:
 
-Evidence classification remains `DETERMINISTIC_HOST_PROFILE_SIMULATION`; `real_cross_vendor_account_proven` remains false. Recovery success is distinct from continuation capability. Friction units are transparent issue counts, not readiness/authorization/probability scores.
+`CURRENT_EVIDENCE_ADDS_PROOF_BUT_NEVER_REWRITES_HISTORICAL_PROVENANCE`
 
-## Recovery Friction → Foundation Health/Doctor Integration — CLOSED
+Historical `source_head`, run IDs, archive digest, and `freshness: historical` remain pinned.
 
-Final source head: `869a95894dad5feaafcbc286ec1fb0027c8321df`.
-PR #21 merge commit: `c3c7597a5b475c7060efc8fb9e6df81f88716e8c`.
+Foundation Health validates an optional packet but never executes its test. Historical drift remains visible as WARN even when an exact current packet proves the drifted test at the current head. Doctor only renders the Health result.
 
-Fresh exact-final-head PR verification:
-- Trust-First Audit 54 / `34765090674`: success.
-- Contracts 591 / `34765090663`: success.
-- Full DevOS 516 / `34765090662`: success.
+Implementation head before durable-state closure: `9a998248eb6d9bb7123f67fd767f6a91c1e97182`.
+Fresh implementation-head CI:
+- Current-Source Evidence 8 / `34773472433`: success.
+- Trust-First Audit 69 / `34773472435`: success.
+- Contracts 606 / `34773472413`: success.
+- Full DevOS 528 / `34773472487`: success.
 
-Fresh post-merge `main` verification at `c3c7597a5b475c7060efc8fb9e6df81f88716e8c`:
-- Trust-First Audit 55 / `34765164604`: success.
-- Contracts 592 / `34765164610`: success.
-- Full DevOS 517 / `34765164649`: success.
+PR #24 remains DRAFT until the final documentation/state head receives a new exact-head CI cycle.
 
-The integration adds one subordinate `cross_host_recovery` row to Foundation Health by invoking the existing recovery-friction analyzer. `devos-doctor.py` only renders the health-supplied result; it does not independently recompute recovery truth.
+## Production-readiness evidence boundary
 
-Conservative propagation is proven for missing/malformed host profile evidence, stale expected HEAD, critical host capability gaps, canonical identity tampering, and simulated-evidence non-promotion. No live/destructive/provider mutation was performed.
+The readiness ledger remains conservative:
+- `production_ready = false`;
+- live mutation proof remains false;
+- current-source packets require `live_provider_proven = false`;
+- controlled remote mutation remains provider-simulated / contract-level evidence;
+- historical evidence stays pinned to original source/run heads;
+- source divergence remains `historical_source_drift` and is never silently refreshed.
 
-## Paused bounded objective — Current-Source Evidence Refresh Protocol
+The known historical drift includes `tools/test-step-readiness-orchestrator.py`. A valid current packet may add exact current proof for that test, but the historical row remains historical and visible.
 
-The known historical-source drift still requires a reviewed way to add **new current-source evidence** without mutating or relabeling historical records. This work is preserved but paused behind the active onboarding/MCP dependency chain.
+## Foundation Health & State Consistency
 
-Requirements remain:
-- preserve historical ledger rows and archived provenance unchanged;
-- bind current-source evidence to exact source head, test path/digest, observed verification result and CI context;
-- prove only the level actually observed;
-- never infer live-provider/production proof from deterministic or integrated CI;
-- extend the existing readiness evidence system rather than create another truth ledger;
-- keep evidence refresh non-authorizing and read-only with respect to project/runtime execution.
+Authoritative composition remains:
+
+`Source / Git / Tests / CI → devos-audit.py → readiness evidence ledger → subordinate evidence inputs → devos-health.py → devos-doctor.py`
+
+`devos-health.py` is a machine-derived composition layer, not a competing truth source.
+`devos-doctor.py` is presentation-only.
+
+Health/Doctor remain READ_ONLY with:
+- authority `UNCHANGED`;
+- authorization `UNCHANGED`;
+- execution `NONE`;
+- mutation `NONE`.
+
+WARN/UNKNOWN are never PASS.
+Malformed/tampered current-source packets are BLOCKED; a requested missing packet is UNKNOWN.
+
+## Cross-host recovery boundary
+
+Cross-host recovery/friction evidence remains deterministic host-profile simulation unless separate real cross-vendor/account evidence is obtained.
+
+`real_cross_vendor_account_proven=false` remains conservative.
+
+Universal portability invariant:
+
+`AI A + Account A → repository → AI B + Account B → correct state recovery → safe continuation`
 
 ## Controlled Remote Mutation evidence boundary
 
-The existing controlled mutation proof remains provider-simulated / contract-level only. Provider mutation response is attempt evidence, not completion proof, and failed/uncertain mutation does not authorize automatic replay.
+Controlled mutation evidence remains provider-simulated / contract-level only. Provider mutation response is attempt evidence, not completion proof, and failed/uncertain mutation does not authorize automatic replay.
 
 Still unproven unless separately explicitly authorized and bounded:
 - live real-provider DevOS runtime mutation proof;
-- branch/PR/workflow/deployment/production mutation;
+- branch/PR/workflow/deployment/production mutation proof as a product capability;
 - database mutation;
 - permission/credential/secret mutation;
 - destructive mutation.
@@ -132,12 +152,6 @@ CHAT MEMORY != SOURCE OF TRUTH
 PROVIDER RESPONSE != COMPLETION PROOF
 RECOVERY != AUTOMATIC MUTATION REPLAY
 ```
-
-## Universal AI/account portability gate
-
-`AI A + Account A → repository → AI B + Account B → correct state recovery → safe continuation`
-
-A fresh AI must recover authoritative state from repository evidence without the previous AI's hidden memory. Host-specific capabilities remain adapter concerns; authorization rules do not change with vendor/model/account.
 
 ## Recovery precedence
 
