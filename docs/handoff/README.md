@@ -5,8 +5,10 @@
 1. Start with the repository [AGENTS.md](../../AGENTS.md) and [manifest](../../.ai/manifest.yaml).
 2. Recover [current state](../../.ai/CURRENT-STATE.md), [tasks](../../.ai/TASKS.md), and [decisions](../../.ai/DECISIONS.md), then inspect current source and Git.
 3. Read the [master handoff](DevOS-Master-Handoff.md) for scratch-to-current history, P0–P17 naming caveats, architecture, PR/CI evidence, proof boundaries, limitations, independent review checklist and roadmap choices.
-4. Consult the [evidence snapshot](DevOS-Evidence-Snapshot.json) for source hashes, PR/CI records and local checks. It is historical metadata, not the planned machine-checkable production-readiness gate.
-5. Optionally use the [verification helper](verify_devos_snapshot.py) in a disposable clone after reviewing the scripts it runs.
+4. Read the [Master Engineering Map](../DEVOS-MASTER-ENGINEERING-MAP.md) for the product objective, completed architecture, future flow diagrams, semantic model, any-AI/any-platform target, human-language interpreter evolution model, and living-documentation contract.
+5. Read the [Interpreter Experiment Ledger](../DEVOS-INTERPRETER-EXPERIMENT-LEDGER.md) when changing P15 behavior. Experiments must remain repository-recorded and authority-neutral.
+6. Consult the [evidence snapshot](DevOS-Evidence-Snapshot.json) for source hashes, PR/CI records and local checks. It is historical metadata, not the planned machine-checkable production-readiness gate.
+7. Optionally use the [verification helper](verify_devos_snapshot.py) in a disposable clone after reviewing the scripts it runs.
 
 ## Snapshot and authority
 
