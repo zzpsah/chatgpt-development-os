@@ -4,11 +4,13 @@
 
 - Repository: `zzpsah/chatgpt-development-os`.
 - Source tree + Git/PR metadata are authoritative for exact implementation/integration state; ChatGPT Memory/chat history are supplementary only.
+- Current verified `main` checkpoint at this update: `867f9b3f0e74137691d92b7746b7fe3398403505`.
 - P9 through P17 are complete on `main` at their stated evidence levels.
 - P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P12 Operational Intelligence remains the advisory/runtime-observability and durable recovery substrate used by later governed execution paths.
 - Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, Current-Source Evidence Refresh, MCP/App Permission Control Plane + Multi-Project Agent Isolation, Actionable HOLD + Scoped Approval + Governed Continuation, and GitHub Identity & Token Control Plane v1 are closed at their stated evidence levels.
-- No new numbered phase is active or implied by the current closure state.
+- PR #35 is the only current open implementation PR and is the next integration priority.
+- No new numbered phase is active or implied by the current state.
 
 ## Durable principles and boundaries
 
@@ -32,16 +34,28 @@ Interpretation, planning, readiness, provider credentials, prior approvals, prio
 
 - `production_ready = false`.
 - Live **read-only GitHub provider authentication** is proven for the DevOS GitHub App runtime.
-- Live provider **mutation** is not proven or authorized by that authentication evidence.
+- Live read-only provider access through the controller-facing adapter path has also been proven on PR #35's earlier verified head.
+- Live provider **mutation** is not proven or authorized by either form of read-only evidence.
 - Controlled remote mutation remains provider-simulated / contract-level evidence unless separately proven through the governed mutation path with fresh readback.
-- No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation was performed for the GitHub auth objective.
+- No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation was performed for the GitHub auth/provider-adapter objectives.
 - Provider response is attempt evidence, not completion proof.
 - Uncertain mutation is not blindly replayed.
 - Historical evidence remains pinned and is never silently rewritten.
 
 ## Active bounded work
 
-### AI State Resolver v2
+### Priority 1 — GitHub Provider Controller Adapter v1 / PR #35
+
+- PR #35 — `Integrate GitHub App with governed DevOS provider adapter` — is open, draft, and mergeable at the time of this update.
+- Current PR head: `a7c4aad059c2b1c31d62356a2b42155f7f3accbe`.
+- Purpose: connect the proven GitHub App authentication path to the normal P17/controller/remote-permission governed provider path.
+- The adapter supports bounded repository/file/branch/PR reads and defines governed mutation operations without creating authorization.
+- Deterministic checks and live read-only adapter proof passed on the earlier PR head.
+- Fresh comparison against current `main` shows PR #35 is **20 commits ahead and 5 commits behind**; its previous green evidence therefore cannot be treated as final merge evidence.
+- Required next action: reconcile PR #35 history-safely onto fresh `main`, preserve the durable-state restructuring and Resolver v2 semantics, re-audit the final diff, rerun exact-final-head CI, and require explicit merge authorization only after the reconciled head is green and mergeable.
+- No live mutation should be attempted as part of reconciliation or merge verification.
+
+### Priority 2 — AI State Resolver v2
 
 - Unnumbered resolver-hardening objective on current `main`.
 - Upgrades the existing P0 contract with a deterministic read-only claim resolver while preserving P12 and P17 authority boundaries.
@@ -50,6 +64,15 @@ Interpretation, planning, readiness, provider credentials, prior approvals, prio
 - Execution-evidence claims inherit P12 freshness and are not normalized again.
 - Unresolved claims propagate to P16 as `CLARIFY`; P17 rejects a tampered `PLANNED` envelope that still carries unresolved claim IDs.
 - Resolver confidence never grants authorization, execution, mutation, or completion.
+- Continue Resolver v2 hardening after PR #35 integration unless fresh repository evidence shows a dependency requiring the order to change.
+
+### Future evidence gate — live mutation proof
+
+- Not active by default.
+- If explicitly requested later, use a disposable/sandbox target and the lowest-impact reversible mutation first.
+- Require exact scoped authorization, expected resource state/sha where applicable, one bounded provider operation, and fresh provider readback before completion.
+- Any uncertain outcome enters HOLD / READBACK_BEFORE_RETRY; never blind-replay a mutation.
+- Production/destructive targets remain outside this evidence step unless separately and explicitly authorized.
 
 ## Current verified capability state
 
@@ -73,6 +96,13 @@ Interpretation, planning, readiness, provider credentials, prior approvals, prio
 - The inspected workflow log masked secret values and did not expose the App private key or installation token.
 - This proves live provider authentication/capability for the read-only runtime only; it does not authorize or prove provider mutation or production readiness.
 
+### GitHub provider/controller adapter evidence — PR #35, not yet merged
+
+- Dedicated adapter workflow and companion CI passed on PR head `a7c4aad059c2b1c31d62356a2b42155f7f3accbe`.
+- Live repository read through the controller-facing adapter path succeeded using the proven GitHub App authentication helper.
+- No live mutation was performed.
+- Because PR #35 is currently behind `main`, this evidence is retained as historical branch evidence and must be refreshed after reconciliation before merge.
+
 ### Plain Project Context and Recovery Guide v1
 
 - `DEVOS-PROJECT-CONTEXT.md` is the plain, host-neutral first-contact recovery context for fresh external AI chats.
@@ -94,6 +124,7 @@ Interpretation, planning, readiness, provider credentials, prior approvals, prio
 - PR #23 merge commit: `7c60c3a4a36982ba894e2f30ba9dd98500f98d02` — Actionable HOLD + Scoped Approval + Governed Continuation.
 - PR #24 merge commit / verified `main`: `a93f9f435ffab5f81ce070f07a0da694757ab6cb` — Current-Source Evidence Refresh.
 - PR #32 merge commit: `2f1740930116ab520d40d35aaa6dfcb1786a5595` — GitHub Identity & Token Control Plane v1.
+- PR #36 merge commit: `867f9b3f0e74137691d92b7746b7fe3398403505` — durable-state/task-map restructuring.
 
 Historical exact-head CI remains pinned in task/session records and must not be rewritten merely because later source advances.
 
@@ -126,7 +157,10 @@ No private AI memory is authoritative project state.
 
 ## Next bounded direction
 
-- Continue AI State Resolver v2 hardening only from fresh repository evidence.
-- PRs #33 and #34 are closed obsolete replacement branches; PR #32 is the authoritative merged integration history.
-- Do not create P18/P19 merely for bookkeeping.
-- Resolver cross-claim semantic contradiction remains explicitly out of v2 scope unless promoted by a future bounded objective.
+1. Reconcile PR #35 onto fresh `main` without force-pushing or dropping concurrent history.
+2. Re-audit provider adapter/controller bridge authorization boundaries, replay/uncertain-result handling, readback requirements, and secret exclusion on the reconciled tree.
+3. Run fresh exact-final-head CI and live read-only adapter proof on the reconciled head.
+4. If and only if the reconciled PR is green and mergeable, request/apply explicit merge authorization and verify fresh post-merge `main` CI.
+5. Resume/close the remaining AI State Resolver v2 hardening objective from fresh `main` evidence.
+6. Consider a separate disposable-sandbox live mutation proof only after an explicit new authorization; do not infer it from authentication, CI, or adapter merge success.
+7. Do not create P18/P19 merely for bookkeeping; Resolver cross-claim semantic contradiction remains outside v2 scope unless promoted by a future bounded objective.
