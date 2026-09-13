@@ -1,0 +1,37 @@
+name: DevOS GitHub App Runtime Auth
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: 'Target GitHub repository in owner/name form'
+        required: true
+        default: 'zzpsah/chatgpt-development-os'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  authenticate:
+    name: Authenticate DevOS GitHub App (read-only)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout DevOS
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Verify authentication runner contract
+        run: python tools/test-devos-github-actions-auth.py
+
+      - name: Resolve GitHub App installation and verify target repository
+        env:
+          DEVOS_GITHUB_APP_ID: ${{ secrets.DEVOS_GITHUB_APP_ID }}
+          DEVOS_GITHUB_APP_PRIVATE_KEY: ${{ secrets.DEVOS_GITHUB_APP_PRIVATE_KEY }}
+        run: >-
+          python tools/devos-github-actions-auth.py
+          --repository "${{ inputs.repository }}"
