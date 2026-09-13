@@ -2,9 +2,9 @@
 """Machine-derived, read-only DevOS foundation health and consistency status.
 
 This module composes the existing Trust-First audit, readiness-evidence ledger,
-and cross-host recovery-friction evidence. It does not create authority, execute
-project work, mutate the repository, rewrite historical evidence, or promote
-UNKNOWN/WARN to PASS.
+cross-host recovery-friction evidence, and optional validated current-source evidence.
+It does not create authority, execute project work, mutate the repository, rewrite
+historical evidence, or promote UNKNOWN/WARN to PASS.
 """
 from __future__ import annotations
 
@@ -173,7 +173,45 @@ def inspect_recovery_friction(root: Path, profile_rel: str = DEFAULT_HOST_PROFIL
     return _row("cross_host_recovery", status, reason, evidence), report
 
 
-def derive_health(root: Path = ROOT, *, run_checks: bool = True, host_profile: str = DEFAULT_HOST_PROFILE) -> dict[str, Any]:
+def inspect_current_source_packet(
+    root: Path,
+    ledger: dict[str, Any],
+    packet_rel: str | None,
+) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    """Validate an optional ephemeral packet without executing tests or rewriting history."""
+    if not packet_rel:
+        return None, None
+    try:
+        packet_path = (root / packet_rel).resolve()
+        if not packet_path.is_relative_to(root.resolve()):
+            return _row("current_source_evidence", "BLOCKED", "current-source packet path escapes repository"), None
+        if not packet_path.is_file():
+            return _row("current_source_evidence", "UNKNOWN", "current-source packet is missing", {"packet": packet_rel}), None
+        packet = json.loads(packet_path.read_text(encoding="utf-8"))
+        module = _load("current_source_evidence_health", root / "tools" / "current-source-evidence.py")
+        status = module.current_drift_status(packet, ledger, root)
+    except json.JSONDecodeError as exc:
+        return _row("current_source_evidence", "BLOCKED", "current-source packet JSON is malformed", {"packet": packet_rel, "error": str(exc)}), None
+    except (OSError, RuntimeError, ValueError, TypeError) as exc:
+        return _row("current_source_evidence", "UNKNOWN", "current-source evidence could not be inspected", {"packet": packet_rel, "error": str(exc)}), None
+
+    if status.get("packet_status") != "VALID":
+        return _row("current_source_evidence", "BLOCKED", "current-source packet failed authoritative validation", status), status
+    unresolved = status.get("unresolved_historical_drift", [])
+    row_status = "PASS" if not unresolved else "WARN"
+    reason = "current-source packet validates at exact source HEAD; historical provenance remains pinned"
+    if unresolved:
+        reason += f"; unresolved_historical_drift={len(unresolved)}"
+    return _row("current_source_evidence", row_status, reason, status), status
+
+
+def derive_health(
+    root: Path = ROOT,
+    *,
+    run_checks: bool = True,
+    host_profile: str = DEFAULT_HOST_PROFILE,
+    current_source_packet: str | None = None,
+) -> dict[str, Any]:
     root = root.resolve()
     audit_mod = _load("devos_audit_health", root / "tools" / "devos-audit.py")
     evidence_mod = _load("readiness_evidence_health", root / "tools" / "verify-readiness-evidence.py")
@@ -237,6 +275,10 @@ def derive_health(root: Path = ROOT, *, run_checks: bool = True, host_profile: s
     else:
         rows.append(_row("historical_source_freshness", "PASS", "no current-source drift detected for pinned historical test evidence"))
 
+    current_row, current_report = inspect_current_source_packet(root, ledger, current_source_packet)
+    if current_row is not None:
+        rows.append(current_row)
+
     missing_evidence = []
     live_mutation_any = False
     for capability in ledger.get("capabilities", []) if isinstance(ledger.get("capabilities"), list) else []:
@@ -272,6 +314,7 @@ def derive_health(root: Path = ROOT, *, run_checks: bool = True, host_profile: s
         "audit_overall": audit.get("overall"),
         "evidence_protocol": ledger.get("protocol"),
         "recovery_friction": recovery_report,
+        "current_source_evidence": current_report,
         "production_ready": bool(ledger.get("production_ready") is True),
         "live_mutation_proven": live_mutation_any,
         "historical_source_drift": drift,
@@ -279,7 +322,8 @@ def derive_health(root: Path = ROOT, *, run_checks: bool = True, host_profile: s
         "universal_product_goal": "AI A + Account A -> repository -> AI B + Account B -> correct state recovery -> safe continuation",
         "limitations": [
             "Offline health cannot prove remote Git freshness unless the caller supplies an expected HEAD.",
-            "Historical evidence drift is WARN, never silently refreshed or promoted.",
+            "Historical evidence drift remains WARN even when a current-source packet adds fresh proof; history is never silently refreshed.",
+            "Current-source packets are optional ephemeral inputs and never rewrite readiness evidence.",
             "Recovery-friction host-profile evidence is deterministic simulation, not an independent cross-vendor/account trial.",
             "Doctor/health status never creates execution authority or production readiness.",
         ],
@@ -291,9 +335,15 @@ def main() -> int:
     parser.add_argument("--root", default=".")
     parser.add_argument("--no-run-checks", action="store_true")
     parser.add_argument("--host-profile", default=DEFAULT_HOST_PROFILE)
+    parser.add_argument("--current-source-packet")
     args = parser.parse_args()
     try:
-        report = derive_health(Path(args.root), run_checks=not args.no_run_checks, host_profile=args.host_profile)
+        report = derive_health(
+            Path(args.root),
+            run_checks=not args.no_run_checks,
+            host_profile=args.host_profile,
+            current_source_packet=args.current_source_packet,
+        )
     except Exception as exc:  # fail closed at the presentation boundary
         report = {
             "protocol": PROTOCOL,
