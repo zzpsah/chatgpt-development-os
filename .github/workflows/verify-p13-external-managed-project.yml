@@ -5,12 +5,19 @@ on:
     branches: [main]
     paths:
       - 'tools/verify-managed-project-orchestration.py'
+      - 'tools/production-e2e-harness.py'
+      - 'tools/verify-production-e2e-managed-project.py'
+      - 'core/production-e2e-harness.md'
+      - 'adapters/reference-host.py'
+      - 'adapters/reference-verification.py'
+      - 'tools/runtime-adapter-bridge.py'
+      - 'tools/step-readiness-orchestrator.py'
+      - 'tools/development-task-controller.py'
+      - 'tools/devos-runtime-handoff.py'
       - '.github/workflows/verify-p13-external-managed-project.yml'
       - 'tools/autonomous-orchestrator.py'
       - 'tools/orchestration-checkpoint.py'
-      - 'tools/development-task-controller.py'
       - 'tools/operational-intelligence.py'
-      - 'tools/devos-runtime-handoff.py'
   workflow_dispatch:
 
 permissions:
@@ -42,3 +49,16 @@ jobs:
           python devos/tools/verify-managed-project-orchestration.py
           --project-root "$GITHUB_WORKSPACE/managed-project"
           --expected-repository zzpsah/automation-suite
+
+      - name: Verify Production E2E Harness against automation-suite
+        run: >-
+          python devos/tools/verify-production-e2e-managed-project.py
+          --project-root "$GITHUB_WORKSPACE/managed-project"
+          --expected-repository zzpsah/automation-suite
+
+      - name: Upload Production E2E evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-e2e-managed-project-evidence
+          path: managed-project/.ai/EVIDENCE/production-e2e-managed-project.json
+          if-no-files-found: error
