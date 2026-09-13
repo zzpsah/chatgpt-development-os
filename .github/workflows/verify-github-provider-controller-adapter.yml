@@ -35,7 +35,6 @@ jobs:
 
   live-read:
     name: Verify live GitHub App read path
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
