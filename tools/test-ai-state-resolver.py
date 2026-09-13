@@ -6,6 +6,7 @@ import importlib.util
 from pathlib import Path
 
 MODULE = Path(__file__).with_name("ai-state-resolver.py")
+DOCUMENT = Path(__file__).resolve().parents[1] / "core" / "ai-state-resolver.md"
 spec = importlib.util.spec_from_file_location("ai_state_resolver", MODULE)
 module = importlib.util.module_from_spec(spec)
 assert spec and spec.loader
@@ -48,6 +49,14 @@ def main():
 
     unknown = module.resolve({"claims": [claim(confidence="unknown", grounding_type="none", ref=None)]})
     assert unknown["status"] == "NEEDS_EVIDENCE" and unknown["unresolved_claim_ids"] == ["C1"], unknown
+    document = DOCUMENT.read_text(encoding="utf-8")
+    for marker in (
+        "only a claim with current P12 execution evidence",
+        "DURABLE_STATE_CANNOT_SELF_UPGRADE_TO_OBSERVED",
+        "only preserves or downgrades caller-supplied confidence",
+        "`likely` remains an explicit uncertainty signal",
+    ):
+        assert marker in document, marker
     print("PASS: AI State Resolver v2 rejects uncited/conflicting claims and decays at revalidation boundaries")
     print("PASS: resolver preserves P12 evidence ownership and never grants authority or execution")
 

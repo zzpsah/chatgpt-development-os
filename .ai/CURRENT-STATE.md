@@ -113,3 +113,5 @@ Do not create P18/P19 merely for bookkeeping. Continue with consolidation/eviden
 ## Resolver grounding correction
 
 - Durable state cannot self-upgrade a claim to observed; current P12 execution evidence is required.
+
+- Resolver documentation now explicitly aligns v1 terminology, v2 grounding rules, P12 ownership, output semantics, and P15→P16→P17 continuation behavior.

@@ -21,3 +21,8 @@ The resolver is read-only. It does not parse all repository prose automatically,
 - A file/line reference to durable state establishes that an assertion was recorded, not that its underlying implementation or result is freshly true.
 - Resolver v2 now caps `durable_state` claims at `likely`; only current P12 `execution_evidence` with citable provenance may retain `observed`.
 - This preserves P12 as execution-evidence authority and prevents durable prose from self-upgrading a claim.
+
+## Documentation alignment
+
+- Expanded the v2 contract with exact validation reasons, output semantics, P12 ownership, continuation placement, and the durable-state confidence cap.
+- The resolver regression corpus now checks the core document for these non-self-upgrade rules.
