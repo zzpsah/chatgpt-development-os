@@ -30,6 +30,22 @@ def main():
     check(s["steps"][0]["impact"] == "SECURITY_SENSITIVE", "security classification missing")
     check(s["steps"][0]["authorization_required"] is True, "security-sensitive plan must require independent gate")
 
+    gated = mod.compile_plan(
+        "SECURITY_REVIEW",
+        "check security",
+        "DEVOS",
+        [],
+        ["HIGH_IMPACT_REQUIRES_AUTHORIZATION_CHECK"],
+    )
+    check(gated["decision"] == "PLANNED", "authorization-check annotation must not become material ambiguity")
+    check(gated["ambiguity"] == [], "non-material gating annotation must not remain in ambiguity")
+    check(
+        gated["gating_annotations"] == ["HIGH_IMPACT_REQUIRES_AUTHORIZATION_CHECK"],
+        "high-impact annotation must be preserved as gating provenance",
+    )
+    check(gated["steps"][0]["impact"] == "SECURITY_SENSITIVE", "gated security request must remain security-sensitive")
+    check(gated["steps"][0]["authorization_required"] is True, "gated security request must still require authorization")
+
     t = mod.compile_plan("VALIDATION", "inspect repository", "DEVOS", [], [])
     check(t["steps"][0]["impact"] == "READ_ONLY", "read-only planning classification incorrect")
     check(bool(t["verification_requirements"]), "verification obligations must be explicit")
