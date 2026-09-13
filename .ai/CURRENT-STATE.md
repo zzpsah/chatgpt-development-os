@@ -7,6 +7,7 @@
 - P11 repository-first recovery/revalidation remains a durable invariant.
 - P9 through P17 are complete on `main`.
 - Production E2E Harness, Failure + Recovery Proof, Multi-Session / Fresh-AI Continuation Proof, and **Controlled Remote Mutation Proof are verified and closed**.
+- Foundation Bootstrap Hardening is now implemented at v1 contract/checker level and remains an active hardening area.
 - Active maturity gate: **Production-Readiness Evidence Matrix & Limitations**.
 
 ## Canonical governed path
@@ -14,6 +15,22 @@
 `Human request → P15 interpretation → P16 plan → P17 readiness → controller → bounded runtime → verification → persistence → recovery / continuation`
 
 Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, continuation packets, and simulated provider evidence never manufacture permission.
+
+## Foundation Bootstrap Hardening
+
+Normative contract: `core/devos-bootstrap-contract.md`.
+Bootstrap checker: `tools/devos-bootstrap.py`.
+Regression coverage: `tools/test-devos-bootstrap.py`.
+
+The bootstrap checker is deterministic and read-only. It validates the canonical repository identity and minimum required bootstrap context, including `AGENTS.md`, `.ai/manifest.yaml`, `.ai/CURRENT-STATE.md`, and `core/ai-bootstrap-protocol.md`.
+
+Bootstrap outcomes are `READY` or `HOLD`. A bootstrap PASS is structural evidence only; it does not grant authorization, prove feature correctness, or claim production readiness.
+
+Every bootstrap run explicitly reports:
+- `Execution authority: UNCHANGED`
+- `Mutation performed: NONE`
+
+Next foundation-hardening targets are broader health/doctor diagnostics, state/contract consistency checks, documentation-drift detection, migration/version handling, partial-installation detection, and fresh-AI onboarding proof.
 
 ## Multi-Session / Fresh-AI Continuation closure
 
@@ -94,5 +111,9 @@ No live high-impact mutation should be performed merely to fill a matrix cell. A
 4. `.ai/SESSIONS/` provenance.
 5. Generated indexes as navigation/evidence only.
 6. ChatGPT Memory/chat history as supplementary context only.
+
+## Handoff documentation
+
+The full scratch-to-current history, status matrix, foundation bootstrap work, limitations, recommended direction, invariants, and a fresh-AI verification prompt are documented in `docs/DEVOS-COMPLETE-STATUS.md`.
 
 Exact implementation remains authoritative in Git history.
