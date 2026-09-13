@@ -1,0 +1,37 @@
+name: Verify DevOS MCP Repository Create
+
+on:
+  push:
+    branches:
+      - feat/mcp-repository-create-adapter
+  pull_request:
+    paths:
+      - 'tools/devos-mcp-repository-create.py'
+      - 'tools/test-devos-mcp-repository-create.py'
+      - 'core/devos-mcp-app-repository-create.md'
+      - 'docs/MCP-APP-REPOSITORY-CREATE.md'
+      - '.github/workflows/verify-mcp-repository-create.yml'
+      - '.ai/SESSIONS/**'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify MCP/App repository.create boundary
+        run: python tools/test-devos-mcp-repository-create.py
+      - name: Verify underlying repository.create capability
+        run: python tools/test-devos-create-repository.py
+      - name: Verify universal onboarding handoff
+        run: python tools/test-devos-onboard.py
+      - name: Recheck P15/P16/P17 governance boundaries
+        run: |
+          python tools/test-human-language-interpreter.py
+          python tools/test-semantic-goal-to-plan.py
+          python tools/test-step-readiness-orchestrator.py
