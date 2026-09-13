@@ -4,6 +4,8 @@
 
 A new AI session should not need a long explanation of how to work with Development OS. A short human-readable stance code selects the intended operating posture; the repository remains responsible for project recovery and detailed rules.
 
+For an invocation from any compatible AI host, use the [Universal Activation Protocol](../core/devos-universal-activation-protocol.md). A stance can request DevOS behavior, but only repository discovery and bootstrap make it active for a project.
+
 ## Canonical invocation
 
 ```text

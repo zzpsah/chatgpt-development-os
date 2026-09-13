@@ -1,5 +1,12 @@
 # DevOS Decisions
 
+## Universal Activation Protocol v1
+- A DevOS stance in any compatible host is an activation request, not evidence that DevOS or a managed project is available.
+- `DEVOS-UNIVERSAL-ACTIVATION-v1` must discover a repository-local `AGENTS.md` and `.ai/manifest.yaml` before returning `READY_FOR_BOOTSTRAP`.
+- Missing repository evidence returns `DEVOS_NOT_AVAILABLE`; incomplete durable context returns `PROJECT_UNKNOWN`; invalid stance syntax returns `INVALID_INVOCATION`.
+- `DEVOS::GOD` grants no authorization, execution evidence, provider access, production authority, or mutation permission.
+- The protocol is host-neutral: ChatGPT, Codex, Claude, MCP/App, IDE, and future hosts may call it while repository-local state remains authoritative.
+
 ## Core documentation law
 - **What is not written was never done.**
 - Every material AI engineering action, decision, repair, experiment, verification result, evidence change, architecture change, roadmap change, or externally relevant outcome must leave a durable repository record.

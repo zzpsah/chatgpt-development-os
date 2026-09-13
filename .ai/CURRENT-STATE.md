@@ -14,7 +14,8 @@
 - PR #23 merge commit: `7c60c3a4a36982ba894e2f30ba9dd98500f98d02`.
 - PR #23 exact final source head: `954b094a3832c300d371426d682eac90156cbb04`.
 - PR #23 exact-head verification passed: Actionable Hold 16, Contracts 639, Trust-First 102, Full DevOS 561, Current-Source Evidence 31, MCP Repository Create 28.
-- No new numbered phase is active or implied by this closure state.
+- Universal Activation Protocol v1 is the active unnumbered bounded objective. It adds repository-backed, host-neutral handling for `DEVOS::<STANCE>` while preserving unchanged authority, authorization, execution, and mutation state.
+- No new numbered phase is active or implied by this objective.
 
 ## Core documentation law
 

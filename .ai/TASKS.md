@@ -1,8 +1,8 @@
 # DevOS Tasks
 
 ## Active
-- No numbered phase is active from the current consolidation state.
-- Continue with evidence hardening and the next repository-supported bounded objective only after inspecting current `main`, open PRs, CI, and durable project state.
+- Universal Activation Protocol v1 is the active bounded objective: make `DEVOS::<STANCE>` portable across compatible AI hosts through repository discovery and honest bootstrap readiness, without creating execution authority.
+- Continue with evidence hardening and the next repository-supported bounded objective after this protocol is verified and durably closed.
 - Do not create P18/P19 merely for bookkeeping.
 
 ## Completed — Actionable HOLD + Scoped Approval + Governed Continuation

@@ -113,6 +113,9 @@ jobs:
       - name: Test composable DevOS stance parser
         run: python tools/test-devos-stance-parser.py
 
+      - name: Test repository-backed universal DevOS activation
+        run: python tools/test-devos-universal-activation.py
+
       - name: Verify P12 Operational Intelligence
         run: python tools/verify-operational-intelligence.py
 

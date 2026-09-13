@@ -64,6 +64,10 @@ Safe continuation
 
 The repository carries project truth. Chat memory is supplementary context, never project authority.
 
+## Universal activation
+
+A compatible host may receive `DEVOS`, `DEVOS::CONTINUE`, or `DEVOS::GOD` in any chat. The [Universal Activation Protocol](../core/devos-universal-activation-protocol.md) turns that request into a repository-discovery check. It reports `READY_FOR_BOOTSTRAP` only after finding repository-local DevOS evidence; a host without that evidence returns an honest unavailable or unknown state and does not pretend that chat memory activated DevOS.
+
 ## Verified architecture history
 
 ```text
