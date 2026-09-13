@@ -1,0 +1,45 @@
+name: Verify DevOS Remote Resource Permission Governance
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - 'core/remote-resource-permission-governance.md'
+      - 'docs/REMOTE-RESOURCE-PERMISSIONS.md'
+      - 'tools/devos-remote-permission-check.py'
+      - 'tools/test-devos-remote-permission-check.py'
+      - '.github/workflows/verify-remote-permission-governance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Run remote permission governance regression
+        run: python tools/test-devos-remote-permission-check.py
+      - name: Verify normative permission markers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('core/remote-resource-permission-governance.md').read_text(encoding='utf-8')
+          for marker in [
+              'repository.create',
+              'repository.delete',
+              'branch.create',
+              'branch.update',
+              'branch.delete',
+              'FULL APPROVAL',
+              'FULL APPROVAL != BLANKET PERMISSION',
+              'UNCERTAIN MUTATION != AUTOMATIC RETRY',
+          ]:
+              assert marker in text, marker
+          print('PASS: remote resource permission governance markers')
+          PY
