@@ -26,3 +26,7 @@ The resolver is read-only. It does not parse all repository prose automatically,
 
 - Expanded the v2 contract with exact validation reasons, output semantics, P12 ownership, continuation placement, and the durable-state confidence cap.
 - The resolver regression corpus now checks the core document for these non-self-upgrade rules.
+
+## v1/v2 reader guidance
+
+- Added a top-of-document pointer: v1 preserves the original semantic/recovery contract; v2 is authoritative for executable claim handling and propagation.

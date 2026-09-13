@@ -1,5 +1,7 @@
 # AI State Resolver v1
 
+> **Current implementation note:** the v1 sections below preserve the original semantic/recovery contract. For executable claim records, grounding, confidence, validation, output, and P15/P16/P17 propagation, [v2 deterministic implementation](#v2-deterministic-implementation) is authoritative. If the sections differ, v2 governs.
+
 ## Purpose
 
 AI State Resolver is the semantic layer between deterministic repository evidence and development execution.
