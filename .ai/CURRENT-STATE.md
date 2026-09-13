@@ -114,6 +114,9 @@ No live high-impact mutation should be performed merely to fill a matrix cell. A
 
 ## Handoff documentation
 
+Stable AI discovery path: [`docs/handoff/README.md`](../docs/handoff/README.md).
+It links the comprehensive master handoff, dated evidence snapshot and local verification helper. The snapshot records main at `70c8e0e050660fd6b606150a1370d8fce51e373e`; later publication commits do not refresh that historical evidence. This documentation publication does not close the active production-readiness matrix gate or prove live runtime mutation.
+
 The full scratch-to-current history, status matrix, foundation bootstrap work, limitations, recommended direction, invariants, and a fresh-AI verification prompt are documented in `docs/DEVOS-COMPLETE-STATUS.md`.
 
 Exact implementation remains authoritative in Git history.

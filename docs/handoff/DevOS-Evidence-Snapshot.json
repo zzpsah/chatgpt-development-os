@@ -1,0 +1,3052 @@
+{
+  "snapshot_utc": "2026-09-13 12:58 UTC",
+  "repository": "https://github.com/zzpsah/chatgpt-development-os",
+  "head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+  "main_branch": {
+    "name": "main",
+    "sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+    "protected": false
+  },
+  "scope": "Historical evidence metadata, not a production-readiness validator or execution authorization.",
+  "pull_requests": [
+    {
+      "number": 14,
+      "title": "Controlled remote mutation proof with fresh readback",
+      "state": "closed",
+      "merged_at": "2026-09-13T12:37:10Z",
+      "merge_commit_sha": "ffbdd7a4849dd012604911accd1211f172bde53b",
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/pull/14",
+      "head_sha": "bf5da56950d32722ce78898854eb3aa660321c38",
+      "base_branch": "main"
+    },
+    {
+      "number": 13,
+      "title": "Multi-session fresh-AI continuation proof",
+      "state": "closed",
+      "merged_at": "2026-09-13T12:25:39Z",
+      "merge_commit_sha": "cd8524b11f923e5e29eeaf445869b6239954ed1f",
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/pull/13",
+      "head_sha": "99822037a9e24625f2e7c216300c4aabd94e134e",
+      "base_branch": "main"
+    },
+    {
+      "number": 12,
+      "title": "Failure + Recovery Proof: safe classification, HOLD, and resume",
+      "state": "closed",
+      "merged_at": "2026-09-13T12:16:29Z",
+      "merge_commit_sha": "83fd14e4cc696f3cd96778fe7d447db1216c3fc0",
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/pull/12",
+      "head_sha": "29c07deed803df430b2f7fd40bf302bb8deac160",
+      "base_branch": "main"
+    },
+    {
+      "number": 11,
+      "title": "Production E2E Harness: prove governed development path",
+      "state": "closed",
+      "merged_at": "2026-09-13T10:25:41Z",
+      "merge_commit_sha": "1d6031d3578b859a6afe1dca1032287de5beceba",
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/pull/11",
+      "head_sha": "4270440533925628a88daa17a6620aa51295319a",
+      "base_branch": "main"
+    },
+    {
+      "number": 10,
+      "title": "P17: Add step-bound readiness and authorization orchestration",
+      "state": "closed",
+      "merged_at": "2026-09-13T10:12:57Z",
+      "merge_commit_sha": "2f29ac1de367fb270c00d73b2ca44405ce09fc00",
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/pull/10",
+      "head_sha": "8011783962d6dddd33bcc50049c8aa4a8748cc52",
+      "base_branch": "main"
+    },
+    {
+      "number": 9,
+      "title": "P16: Add Semantic Goal-to-Plan Compiler",
+      "state": "closed",
+      "merged_at": "2026-09-13T10:01:48Z",
+      "merge_commit_sha": "460a212ebb7600619f396a455ac3e47e5a5c80fa",
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/pull/9",
+      "head_sha": "877833ef0f11d5a869284f9b86407c155125d96f",
+      "base_branch": "main"
+    },
+    {
+      "number": 8,
+      "title": "P15: Make Human Language Interpretation a top-level DevOS capability",
+      "state": "closed",
+      "merged_at": "2026-09-13T04:06:44Z",
+      "merge_commit_sha": "770c8b3583515e3c947562854be7a2d2fd34710d",
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/pull/8",
+      "head_sha": "0be462dac63501a31221fcd972e0de078657d110",
+      "base_branch": "main"
+    },
+    {
+      "number": 7,
+      "title": "Implement P14 adaptive verification and bounded self-healing",
+      "state": "closed",
+      "merged_at": "2026-09-12T19:59:01Z",
+      "merge_commit_sha": "b8a2996be1efd8642b1ef99230d20fc1ee80061c",
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/pull/7",
+      "head_sha": "2b113dc36be788f49a831225e0d6796221ce2841",
+      "base_branch": "main"
+    },
+    {
+      "number": 6,
+      "title": "Strengthen P13 with real external managed-project proof",
+      "state": "closed",
+      "merged_at": "2026-09-12T19:55:27Z",
+      "merge_commit_sha": "c6a392948ff23d1a25ceed3eebaed9e0f615e115",
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/pull/6",
+      "head_sha": "a8706965a70e28746846ced823973e74963aa872",
+      "base_branch": "main"
+    },
+    {
+      "number": 5,
+      "title": "Close P13 with real managed-project orchestration proof",
+      "state": "closed",
+      "merged_at": null,
+      "merge_commit_sha": null,
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/pull/5",
+      "head_sha": "8703aa4566301c1dd6af95a067e0b2f20c679c7b",
+      "base_branch": "main"
+    },
+    {
+      "number": 4,
+      "title": "Align registry with portable project memory rollout",
+      "state": "closed",
+      "merged_at": "2026-09-12T19:51:41Z",
+      "merge_commit_sha": "48f07d78906a5d06430f29e7e48319cec7dbf968",
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/pull/4",
+      "head_sha": "b06ddc3abe9352d8643a64ab032a9926c2b727b5",
+      "base_branch": "main"
+    },
+    {
+      "number": 3,
+      "title": "Harden canonical DevOS repository identity",
+      "state": "closed",
+      "merged_at": "2026-09-12T19:12:57Z",
+      "merge_commit_sha": "1cda9b05419fe07e3ff4b43176c079999d5165bc",
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/pull/3",
+      "head_sha": "908647a0d3c29678ca7c4f3497a6c5d347b963a2",
+      "base_branch": "main"
+    },
+    {
+      "number": 2,
+      "title": "Enforce DevOS documentation-at-change boundary",
+      "state": "open",
+      "merged_at": null,
+      "merge_commit_sha": null,
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/pull/2",
+      "head_sha": "4d61affb0387d3b90f84d728bb1bacaaa53dc6c0",
+      "base_branch": "main"
+    }
+  ],
+  "final_source_runs": {
+    "8": [
+      {
+        "name": "Verify Development OS Contracts",
+        "id": 34735399593,
+        "run_number": 433,
+        "run_attempt": 1,
+        "head_sha": "0be462dac63501a31221fcd972e0de078657d110",
+        "head_branch": "devos/human-language-v2",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34735399593",
+        "created_at": "2026-09-13T03:24:23Z",
+        "updated_at": "2026-09-13T03:24:40Z"
+      },
+      {
+        "name": "Verify Development OS",
+        "id": 34735399564,
+        "run_number": 377,
+        "run_attempt": 1,
+        "head_sha": "0be462dac63501a31221fcd972e0de078657d110",
+        "head_branch": "devos/human-language-v2",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34735399564",
+        "created_at": "2026-09-13T03:24:23Z",
+        "updated_at": "2026-09-13T03:24:44Z"
+      }
+    ],
+    "9": [
+      {
+        "name": "Verify P13 External Managed Project",
+        "id": 34750716234,
+        "run_number": 11,
+        "run_attempt": 1,
+        "head_sha": "877833ef0f11d5a869284f9b86407c155125d96f",
+        "head_branch": "devos/p16-goal-to-plan",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34750716234",
+        "created_at": "2026-09-13T10:00:14Z",
+        "updated_at": "2026-09-13T10:00:26Z"
+      },
+      {
+        "name": "Verify Development OS Contracts",
+        "id": 34750716230,
+        "run_number": 476,
+        "run_attempt": 1,
+        "head_sha": "877833ef0f11d5a869284f9b86407c155125d96f",
+        "head_branch": "devos/p16-goal-to-plan",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34750716230",
+        "created_at": "2026-09-13T10:00:14Z",
+        "updated_at": "2026-09-13T10:00:33Z"
+      },
+      {
+        "name": "Verify Development OS",
+        "id": 34750716222,
+        "run_number": 402,
+        "run_attempt": 1,
+        "head_sha": "877833ef0f11d5a869284f9b86407c155125d96f",
+        "head_branch": "devos/p16-goal-to-plan",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34750716222",
+        "created_at": "2026-09-13T10:00:14Z",
+        "updated_at": "2026-09-13T10:01:09Z"
+      }
+    ],
+    "10": [
+      {
+        "name": "Verify Development OS",
+        "id": 34751228172,
+        "run_number": 408,
+        "run_attempt": 1,
+        "head_sha": "8011783962d6dddd33bcc50049c8aa4a8748cc52",
+        "head_branch": "devos/p17-step-readiness",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34751228172",
+        "created_at": "2026-09-13T10:12:08Z",
+        "updated_at": "2026-09-13T10:12:25Z"
+      },
+      {
+        "name": "Verify P13 External Managed Project",
+        "id": 34751228164,
+        "run_number": 12,
+        "run_attempt": 1,
+        "head_sha": "8011783962d6dddd33bcc50049c8aa4a8748cc52",
+        "head_branch": "devos/p17-step-readiness",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34751228164",
+        "created_at": "2026-09-13T10:12:08Z",
+        "updated_at": "2026-09-13T10:12:18Z"
+      },
+      {
+        "name": "Verify Development OS Contracts",
+        "id": 34751228171,
+        "run_number": 483,
+        "run_attempt": 1,
+        "head_sha": "8011783962d6dddd33bcc50049c8aa4a8748cc52",
+        "head_branch": "devos/p17-step-readiness",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34751228171",
+        "created_at": "2026-09-13T10:12:08Z",
+        "updated_at": "2026-09-13T10:12:26Z"
+      }
+    ],
+    "11": [
+      {
+        "name": "Verify Development OS",
+        "id": 34751784082,
+        "run_number": 415,
+        "run_attempt": 1,
+        "head_sha": "4270440533925628a88daa17a6620aa51295319a",
+        "head_branch": "devos/production-e2e-harness",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34751784082",
+        "created_at": "2026-09-13T10:24:53Z",
+        "updated_at": "2026-09-13T10:25:09Z"
+      },
+      {
+        "name": "Verify P13 External Managed Project",
+        "id": 34751784049,
+        "run_number": 15,
+        "run_attempt": 1,
+        "head_sha": "4270440533925628a88daa17a6620aa51295319a",
+        "head_branch": "devos/production-e2e-harness",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34751784049",
+        "created_at": "2026-09-13T10:24:53Z",
+        "updated_at": "2026-09-13T10:25:03Z"
+      },
+      {
+        "name": "Verify Development OS Contracts",
+        "id": 34751784035,
+        "run_number": 490,
+        "run_attempt": 1,
+        "head_sha": "4270440533925628a88daa17a6620aa51295319a",
+        "head_branch": "devos/production-e2e-harness",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34751784035",
+        "created_at": "2026-09-13T10:24:53Z",
+        "updated_at": "2026-09-13T10:25:04Z"
+      }
+    ],
+    "12": [
+      {
+        "name": "Verify Development OS Contracts",
+        "id": 34756601970,
+        "run_number": 503,
+        "run_attempt": 1,
+        "head_sha": "29c07deed803df430b2f7fd40bf302bb8deac160",
+        "head_branch": "devos/failure-recovery-proof",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34756601970",
+        "created_at": "2026-09-13T12:15:35Z",
+        "updated_at": "2026-09-13T12:15:50Z"
+      },
+      {
+        "name": "Verify Development OS",
+        "id": 34756602046,
+        "run_number": 428,
+        "run_attempt": 1,
+        "head_sha": "29c07deed803df430b2f7fd40bf302bb8deac160",
+        "head_branch": "devos/failure-recovery-proof",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34756602046",
+        "created_at": "2026-09-13T12:15:35Z",
+        "updated_at": "2026-09-13T12:15:55Z"
+      },
+      {
+        "name": "Verify P13 External Managed Project",
+        "id": 34756601981,
+        "run_number": 24,
+        "run_attempt": 1,
+        "head_sha": "29c07deed803df430b2f7fd40bf302bb8deac160",
+        "head_branch": "devos/failure-recovery-proof",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34756601981",
+        "created_at": "2026-09-13T12:15:35Z",
+        "updated_at": "2026-09-13T12:15:45Z"
+      }
+    ],
+    "13": [
+      {
+        "name": "Verify Development OS",
+        "id": 34757017532,
+        "run_number": 443,
+        "run_attempt": 1,
+        "head_sha": "99822037a9e24625f2e7c216300c4aabd94e134e",
+        "head_branch": "devos/multi-session-fresh-ai",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34757017532",
+        "created_at": "2026-09-13T12:24:50Z",
+        "updated_at": "2026-09-13T12:25:07Z"
+      },
+      {
+        "name": "Verify Development OS Contracts",
+        "id": 34757017554,
+        "run_number": 518,
+        "run_attempt": 1,
+        "head_sha": "99822037a9e24625f2e7c216300c4aabd94e134e",
+        "head_branch": "devos/multi-session-fresh-ai",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34757017554",
+        "created_at": "2026-09-13T12:24:50Z",
+        "updated_at": "2026-09-13T12:25:04Z"
+      },
+      {
+        "name": "Verify P13 External Managed Project",
+        "id": 34757017535,
+        "run_number": 31,
+        "run_attempt": 1,
+        "head_sha": "99822037a9e24625f2e7c216300c4aabd94e134e",
+        "head_branch": "devos/multi-session-fresh-ai",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34757017535",
+        "created_at": "2026-09-13T12:24:50Z",
+        "updated_at": "2026-09-13T12:25:02Z"
+      }
+    ],
+    "14": [
+      {
+        "name": "Verify P13 External Managed Project",
+        "id": 34757546868,
+        "run_number": 37,
+        "run_attempt": 1,
+        "head_sha": "bf5da56950d32722ce78898854eb3aa660321c38",
+        "head_branch": "devos/controlled-remote-mutation-proof",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34757546868",
+        "created_at": "2026-09-13T12:36:21Z",
+        "updated_at": "2026-09-13T12:36:35Z"
+      },
+      {
+        "name": "Verify Development OS Contracts",
+        "id": 34757546919,
+        "run_number": 528,
+        "run_attempt": 1,
+        "head_sha": "bf5da56950d32722ce78898854eb3aa660321c38",
+        "head_branch": "devos/controlled-remote-mutation-proof",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34757546919",
+        "created_at": "2026-09-13T12:36:21Z",
+        "updated_at": "2026-09-13T12:36:38Z"
+      },
+      {
+        "name": "Verify Development OS",
+        "id": 34757546920,
+        "run_number": 453,
+        "run_attempt": 1,
+        "head_sha": "bf5da56950d32722ce78898854eb3aa660321c38",
+        "head_branch": "devos/controlled-remote-mutation-proof",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34757546920",
+        "created_at": "2026-09-13T12:36:21Z",
+        "updated_at": "2026-09-13T12:36:40Z"
+      }
+    ]
+  },
+  "latest_main_runs": [
+    {
+      "name": "Verify Development OS Contracts",
+      "id": 34758035019,
+      "run_number": 537,
+      "run_attempt": 1,
+      "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+      "head_branch": "main",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758035019",
+      "created_at": "2026-09-13T12:47:04Z",
+      "updated_at": "2026-09-13T12:47:19Z"
+    },
+    {
+      "name": "Verify Development OS",
+      "id": 34758034898,
+      "run_number": 462,
+      "run_attempt": 1,
+      "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+      "head_branch": "main",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898",
+      "created_at": "2026-09-13T12:47:04Z",
+      "updated_at": "2026-09-13T12:47:23Z"
+    }
+  ],
+  "inspected_jobs": {
+    "34758035019": [
+      {
+        "id": 103725735868,
+        "name": "verify",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758035019/job/103725735868",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Install parser dependency",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Human Language Execution Engine",
+            "number": 5,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Test contextual Human Language Interpreter v2",
+            "number": 6,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify P16 Semantic Goal-to-Plan Compiler",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify P17 Step Readiness and Authorization Orchestrator",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify P17 end-to-end plan readiness handoff",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Production E2E Harness",
+            "number": 10,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Failure and Recovery Proof",
+            "number": 11,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Multi-Session Fresh-AI Continuation",
+            "number": 12,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Multi-Session Two-Process Proof",
+            "number": 13,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Controlled Remote Mutation Proof",
+            "number": 14,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify AI State Resolver",
+            "number": 15,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Verification / Test Engine",
+            "number": 16,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Security Gate",
+            "number": 17,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Teaching Engine",
+            "number": 18,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Multi-AI Portability",
+            "number": 19,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Auto-Onboarding",
+            "number": 20,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Agent Orchestration",
+            "number": 21,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Autonomous Development Loop",
+            "number": 22,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify DevOS Stance Codes and DESI Style",
+            "number": 23,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Test composable DevOS stance parser",
+            "number": 24,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify P12 Operational Intelligence",
+            "number": 25,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify P12 fresh-repository determinism",
+            "number": 26,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify P12 controller/OI/runtime-handoff integration",
+            "number": 27,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify portable AI host profiles",
+            "number": 28,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify P13 autonomous orchestration",
+            "number": 29,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify P13 orchestration checkpoint resume",
+            "number": 30,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify P13 managed-project end-to-end proof",
+            "number": 31,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify P14 adaptive verification and bounded healing policy",
+            "number": 32,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify P14 deterministic heal execution and re-verification",
+            "number": 33,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 65,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 66,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 67,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "34758034898": [
+      {
+        "id": 103725735706,
+        "name": "Verify Auto-Onboarding v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735706",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify auto-onboarding contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735775,
+        "name": "Verify Executable Development Runtime v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735775",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Executable Development Runtime contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735781,
+        "name": "Verify Remote Mutation Controls v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735781",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Remote Mutation Controls contract and reference path",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735784,
+        "name": "Verify Teaching Engine v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735784",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Teaching Engine contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735812,
+        "name": "Verify Host Adapter Contract v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735812",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Host Adapter contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run reference host adapter integration checks",
+            "number": 5,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 10,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 11,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735819,
+        "name": "Verify DevOS Safe Context Reconciliation v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735819",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify safe reconciliation boundaries",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run executable reconciliation cases",
+            "number": 5,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 10,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 11,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735823,
+        "name": "Verify Repository-Only Fresh-AI Recovery v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735823",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Simulate fresh-AI repository-only recovery",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735825,
+        "name": "Verify Multi-AI Portability v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735825",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Multi-AI portability contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735828,
+        "name": "Verify Agent Orchestration v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735828",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Agent Orchestration contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735837,
+        "name": "Verify Autonomous Development Loop v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735837",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Autonomous Development Loop contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735851,
+        "name": "Verify DevOS Project Identity Discovery v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735851",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify project identity discovery contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735852,
+        "name": "Verify Security Gate v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735852",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Security Gate contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735866,
+        "name": "Verify AI State Resolver v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735866",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify resolver contract and integration",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735872,
+        "name": "Verify Human Language Execution Engine",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735872",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify human-language execution contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735882,
+        "name": "Verify DevOS Project Manifest v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735882",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify project manifest compatibility contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735886,
+        "name": "Verify Verification / Test Engine v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735886",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify verification engine contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735895,
+        "name": "Verify Durable Context Sync v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735895",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify durable context-sync contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735912,
+        "name": "Verify P9 Development Task Controller v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735912",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify P9 Development Task Controller contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735949,
+        "name": "Verify DevOS Stance Codes v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735949",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Install stance verifier dependency",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify stance-code entry point",
+            "number": 5,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Test composable DevOS stance parser",
+            "number": 6,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 11,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 12,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 13,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735976,
+        "name": "Verify Derived Context Self-Healing v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735976",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify bounded self-healing contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Exercise deterministic self-healing in isolated Git repository",
+            "number": 5,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 10,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 11,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735983,
+        "name": "Verify External Integration Adapter v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735983",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify External Integration Adapter contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run GitHub reference adapter integration checks",
+            "number": 5,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run external runtime bridge integration checks",
+            "number": 6,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run live GitHub provider integration check",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 13,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 14,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 15,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725735989,
+        "name": "Verify Cross-AI Bootstrap Handoff v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725735989",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify cross-AI handoff contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Generate vendor-neutral handoff packet",
+            "number": 5,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 10,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 11,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725736005,
+        "name": "Verify Repository-First Recovery Precedence v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725736005",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify recovery precedence contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Exercise recovery precedence scenarios",
+            "number": 5,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 10,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 11,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 103725736046,
+        "name": "Verify DevOS Context Freshness and Integrity v1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34758034898/job/103725736046",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify context integrity checker contract",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run context freshness and integrity check",
+            "number": 5,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "number": 10,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 11,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "34757546868": [
+      {
+        "id": 103724435033,
+        "name": "external-managed-project-proof",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "bf5da56950d32722ce78898854eb3aa660321c38",
+        "html_url": "https://github.com/zzpsah/chatgpt-development-os/actions/runs/34757546868/job/103724435033",
+        "steps": [
+          {
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout DevOS",
+            "number": 2,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout real DevOS-managed project",
+            "number": 3,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "number": 4,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify P13 against automation-suite",
+            "number": 5,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Production E2E Harness against automation-suite",
+            "number": 6,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Upload Production E2E evidence",
+            "number": 7,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Failure Recovery Proof against automation-suite",
+            "number": 8,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Upload Failure Recovery evidence",
+            "number": 9,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify Multi-Session Fresh-AI Continuation against automation-suite",
+            "number": 10,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Upload Multi-Session continuation evidence",
+            "number": 11,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "number": 20,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout real DevOS-managed project",
+            "number": 21,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout DevOS",
+            "number": 22,
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "number": 23,
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ]
+  },
+  "local_checks": [
+    {
+      "script": "devos-bootstrap.py",
+      "exit_code": 0,
+      "output": "DEVOS FOUNDATION BOOTSTRAP v1\nRepository root: <disposable local clone>\nCanonical repository: zzpsah/chatgpt-development-os\n--------------------------------\nPASS  required:AGENTS.md\nPASS  required:.ai/manifest.yaml\nPASS  required:.ai/CURRENT-STATE.md\nPASS  required:core/ai-bootstrap-protocol.md\nPASS  canonical-identity\nPASS  agents-bootstrap-link\nPASS  bootstrap-protocol\nPASS  current-state\n--------------------------------\nBOOTSTRAP STATUS: READY\nExecution authority: UNCHANGED\nMutation performed: NONE"
+    },
+    {
+      "script": "test-devos-bootstrap.py",
+      "exit_code": 0,
+      "output": "DevOS bootstrap tests: PASS"
+    },
+    {
+      "script": "test-human-language-interpreter.py",
+      "exit_code": 0,
+      "output": "human-language-interpreter v2 tests: PASS"
+    },
+    {
+      "script": "test-semantic-goal-to-plan.py",
+      "exit_code": 0,
+      "output": "PASS: P16 Semantic Goal-to-Plan Compiler regression corpus"
+    },
+    {
+      "script": "test-step-readiness-orchestrator.py",
+      "exit_code": 0,
+      "output": "PASS: P17 Step Readiness & Authorization Orchestrator regression corpus"
+    },
+    {
+      "script": "test-p17-end-to-end.py",
+      "exit_code": 0,
+      "output": "PASS: P15 -> P16 compiled plan -> P17 readiness -> controller -> runtime handoff"
+    },
+    {
+      "script": "test-production-e2e-harness.py",
+      "exit_code": 0,
+      "output": "PASS: Production E2E Harness regression corpus"
+    },
+    {
+      "script": "test-failure-recovery-proof.py",
+      "exit_code": 0,
+      "output": "PASS: Failure + Recovery Proof deterministic injection corpus"
+    },
+    {
+      "script": "test-multi-session-continuation.py",
+      "exit_code": 0,
+      "output": "PASS: multi-session / fresh-AI continuation regression corpus"
+    },
+    {
+      "script": "test-multi-session-two-process.py",
+      "exit_code": 0,
+      "output": "PASS: two-process repository-only continuation proof"
+    },
+    {
+      "script": "test-controlled-remote-mutation-proof.py",
+      "exit_code": 0,
+      "output": "PASS: controlled remote mutation proof regression corpus"
+    },
+    {
+      "script": "test-github-reference.py",
+      "exit_code": 0,
+      "output": "GitHub reference adapter integration checks passed."
+    },
+    {
+      "script": "test-external-runtime-bridge.py",
+      "exit_code": 0,
+      "output": "External runtime bridge integration checks passed."
+    },
+    {
+      "script": "test-adaptive-verification.py",
+      "exit_code": 0,
+      "output": "P14 adaptive verification/self-healing policy: PASS"
+    },
+    {
+      "script": "test-adaptive-self-heal.py",
+      "exit_code": 0,
+      "output": "P14 deterministic healing execution + fresh re-verification: PASS"
+    }
+  ],
+  "tracked_inventory": [
+    {
+      "path": ".ai/ARCHITECTURE.md",
+      "sha256": "44cb7e36b70aba2bff421db2b2ee2b857acdec46291c1bcb3970fc931ac6d208"
+    },
+    {
+      "path": ".ai/CURRENT-STATE.md",
+      "sha256": "965c4c84525f377c9097fee258fc557cf591891c008c770512f13dab81d23f47"
+    },
+    {
+      "path": ".ai/DECISIONS.md",
+      "sha256": "13a305687977ae9c76d9eb5df382d3a4bb8412faa6f16cde7167be213b68e05e"
+    },
+    {
+      "path": ".ai/P16-P17-AUDIT.md",
+      "sha256": "ee91e8b66550ec1c6a356d4e22c3211113923e364475d686d4a23174895a3574"
+    },
+    {
+      "path": ".ai/PROJECT.md",
+      "sha256": "75160daf09e1f3296ce59704ed681ce221417dc96fa1ca42bded8ec7ddc10794"
+    },
+    {
+      "path": ".ai/RUNTIME-HANDOFF.md",
+      "sha256": "9db67eff865ee5a633eee4b49105ec5039d4e6267ab271c2cd15684a8eb8db1b"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-11-chat-context-recovery.md",
+      "sha256": "457d35963e2d9b90de7dc3f5297736c8d2182f98f9647ce45acf432d89803813"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-11-p10-context-continuity.md",
+      "sha256": "ef2b0a31ea16aa218edb91ccb953908804bdfcaf7822c7de580e70e8c6d9142e"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-controlled-remote-mutation-proof.md",
+      "sha256": "f952634f76e417c50915ae312a6552482ba4f84457a54f5ad99e585da708f606"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-failure-recovery-proof.md",
+      "sha256": "2fcfac84965f5d5d2a205b6ffb246fd00c32d51f956ccd230573796c47bc6f6c"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-multi-session-fresh-ai.md",
+      "sha256": "3ab8aa0eb5310e397bd9b77c35fceb396bf65a4a01c27bd51e8050e339191768"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-p12-controller-integration.md",
+      "sha256": "ce6789a497f9d28dbc91b06f11fab57b676d010f957fa0cdcbfaa3af098cc3d2"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-p13-orchestration-first-slice.md",
+      "sha256": "548578a17bf985183ec4631c1ad309a1dbf569e4404861d6201f7820302a1a0b"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-p15-human-language-v2.md",
+      "sha256": "7183182e30a69ed329daecf4761ddb27aaa885fdc4e5d9320f38c4314de0c574"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-p16-closure.md",
+      "sha256": "96275622e943ca089c111f98da563c21b1b5ce93ed99c443c4e78e08254dcbea"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-p16-final-hardening.md",
+      "sha256": "6e20c74f87ed96039e224083f53a4ae0d8c5f45ae407609c9eee9b1779cb0144"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-p16-p17-gap-closure-appendix.md",
+      "sha256": "9584eacbf32d4a9aeee73ceaa1696606414f6d755f33d7a1ae94a57e160defde"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-p16-p17-gap-closure.md",
+      "sha256": "2d32f051b04532031e0dd5b6e4bac95a80e09ad343a98bae2dea0e3ff0cd4f71"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-p17-closure.md",
+      "sha256": "85126339ce2a785ba937fee807aad40d0f28d52646eceab84023cc469d8c51f0"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-p17-final-hardening.md",
+      "sha256": "a1ae4c3555f6735b5e7e87ec95833175cc07073fa3e5a7b6172fb403a9fe5334"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-portable-host-profiles.md",
+      "sha256": "2c4703777f8aed8fafb95e200122e40f08ae3489e50443dacac22f2d25decaee"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-production-e2e-closure.md",
+      "sha256": "0e24539299034b5d8bd74e1ea20de52d1c5690bc4b1e640c4859ee1f58947a0f"
+    },
+    {
+      "path": ".ai/SESSIONS/2026-09-13-production-e2e-harness.md",
+      "sha256": "a78ed31e170b25a11db8bad129ac54e62bfe166f09078b5b4aa76fa2148a8e13"
+    },
+    {
+      "path": ".ai/TASKS.md",
+      "sha256": "bd9c1deee4a995696b81b5b8143fe4bf92739295b2e47b63e175a802771aa247"
+    },
+    {
+      "path": ".ai/manifest.yaml",
+      "sha256": "e944bccb08e047aad2a878ace4dc64d155fe1e476bcc5077734d181060cbc41c"
+    },
+    {
+      "path": ".github/workflows/context-sync.yml",
+      "sha256": "77db7e9948879c9889382ee6d43ede41e62d36d1cf907f57c90912538e27b897"
+    },
+    {
+      "path": ".github/workflows/verify-devos-contracts.yml",
+      "sha256": "b97a99bca675fb2ef3fdc6ff5c794afc3d28353d0b1094ed2435d388395cfff2"
+    },
+    {
+      "path": ".github/workflows/verify-devos.yml",
+      "sha256": "b4feccce9f18c79ef3cdc7d2f0de60d77e67cde33f3ff82939a61dd90ddb536a"
+    },
+    {
+      "path": ".github/workflows/verify-p13-external-managed-project.yml",
+      "sha256": "350529b0205eda463cf5bbe684c6f31f9354a659ea40e5bf9db3b07a0e5ef29c"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "cac0352c070b86662c081841692dd52ecb3be2803ad3c12866c77d6a6ae90c57"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "ea528c1237c6800bb01bf888a0324587fe01605b35f8a85265d47735b74d05f4"
+    },
+    {
+      "path": "README.md",
+      "sha256": "104e5d43add676bc684bb505620ad036230f05d0f8404d6582249bc6c10fcafa"
+    },
+    {
+      "path": "adapters/adapter-contract.md",
+      "sha256": "0edde183b4469f43952ee41d18af5c86ca29790bc493baf7171133b825456d6f"
+    },
+    {
+      "path": "adapters/chatgpt.md",
+      "sha256": "04dd29dda18efa172e1ea273991a001399081fe2b451d6395f5e93aa037a5f44"
+    },
+    {
+      "path": "adapters/codex.md",
+      "sha256": "66dd8c30ca78ffaba1c635a757afdba7726f91d52f4799da2131eb281356cdc2"
+    },
+    {
+      "path": "adapters/github-integration.md",
+      "sha256": "78e4814027ec7614427d774377ef82291e2073c81cdb2ef65b30e99bda806497"
+    },
+    {
+      "path": "adapters/github-reference.py",
+      "sha256": "f561a628027500c8742327663d81445fd3efceeb3f9ce35c176c2916465f1ea1"
+    },
+    {
+      "path": "adapters/host-adapter.md",
+      "sha256": "f26977e7e5ea2cf1420164aae6c9d5aa8fcfd9ab2903f707a8d0fa5b596c716f"
+    },
+    {
+      "path": "adapters/host-profile.example.json",
+      "sha256": "65c8445e779653e0f24ca8afa61c3a6ffbe3e5454c7d9a02f0f3c08979953ba9"
+    },
+    {
+      "path": "adapters/reference-host.py",
+      "sha256": "858087e8055abdfbab0b4adf747b532adaa913bcf2ee9b1d5b954e58cd6f6051"
+    },
+    {
+      "path": "adapters/reference-verification.py",
+      "sha256": "7438c2313da36d8735ba982a0116228b1fd495013c41673909e2da90074a70e1"
+    },
+    {
+      "path": "agents/roles.md",
+      "sha256": "c93f7ecdee7a3c4925dc3c0012aa69d6be52f459d3986a0c4bac3442e77b9bf8"
+    },
+    {
+      "path": "automation/README.md",
+      "sha256": "b9e0b40e916d80e35bbad8fe1916d6f21a82fce43d8dda879f77bed11f8c51dd"
+    },
+    {
+      "path": "automation/config.example.yaml",
+      "sha256": "be97333e321bedd2ce5bf59216c051856a561ee4836ce6f696d1a5ca0d813193"
+    },
+    {
+      "path": "automation/detection-policy.md",
+      "sha256": "7747026e25fecbc834b416d89c6484bab20d10798da75c6efc528cd44ad209e5"
+    },
+    {
+      "path": "config/devos-stance-registry.yaml",
+      "sha256": "f4d63686047de91e13947a1eb337a59a2ec84cf88be5d60dc3dd699ff1b5b71f"
+    },
+    {
+      "path": "core/adaptive-verification-self-healing.md",
+      "sha256": "56793c0821599613102a4a845c554cae66fa33b7d7fd8ac9bddc9b1dc243fb29"
+    },
+    {
+      "path": "core/agent-orchestration.md",
+      "sha256": "07d63179d4c994cde6cb867579b7d3355e2b778c4c3590daebe5ae63641d719d"
+    },
+    {
+      "path": "core/ai-bootstrap-protocol.md",
+      "sha256": "908711be255029f3d9c0e0303d5850d4cd6d4ef1064087e3a0c0db02cf29a6bc"
+    },
+    {
+      "path": "core/ai-handoff-provenance.md",
+      "sha256": "b70d4e527525feab1aa1edbad4da5043bb5a29549cb63a5f36c0cbd38956fcf0"
+    },
+    {
+      "path": "core/ai-state-resolver.md",
+      "sha256": "32b7dc0d7f380e25a59d822cf68bc8836418a6d9a8cba368c68f671de97d6a0e"
+    },
+    {
+      "path": "core/autonomous-development-loop.md",
+      "sha256": "2ec67db838fe19ac0ce0b65222af61ddee25a7a34b692a456c621d2f24deb268"
+    },
+    {
+      "path": "core/autonomous-development-orchestration.md",
+      "sha256": "7e8c491c8e032fe83101c5e79018569ba22446fa2d344f90d1d5b6c9332869c5"
+    },
+    {
+      "path": "core/controlled-remote-mutation-proof.md",
+      "sha256": "fa0a13b1915ab9233663f6fe86636b5eb90d42c90dc4742d9e1ca9494ce731cf"
+    },
+    {
+      "path": "core/development-task-controller.md",
+      "sha256": "51008a7cf1e5717ee8c626a29a535a59adfcb454e68d734d48ba6085cc14be8f"
+    },
+    {
+      "path": "core/devos-base-operating-rule.md",
+      "sha256": "46263f3e2eccb695d43c44937d1f193c3f28f7d2490d9ad2cb61bfbe9a1c412d"
+    },
+    {
+      "path": "core/devos-bootstrap-contract.md",
+      "sha256": "0d9c90b6336222b0161c9f51d9ff36929e0802687c4bbebc0dc571409a7365b1"
+    },
+    {
+      "path": "core/devos-failure-resolution-engine.md",
+      "sha256": "8279d7afc8e58a3ee090e5f269161370a3628c4d116a33042ce0a129bf45895d"
+    },
+    {
+      "path": "core/devos-worker-lifecycle.md",
+      "sha256": "cef0d3a7bec676119a85d3ffc8c6c97a47697654847127bb55d28b069e090f1e"
+    },
+    {
+      "path": "core/execution-runtime.md",
+      "sha256": "fd7f6ee2f1fa3add929c38e07800a178d646147f242b1951ab180fb0d9f1cf25"
+    },
+    {
+      "path": "core/external-integration-adapter.md",
+      "sha256": "0fe678bddaafbb286b966beed7306718318d8c29c7d1761d8aaa18a9e4614f64"
+    },
+    {
+      "path": "core/failure-recovery-proof.md",
+      "sha256": "a8f9424a58c3ef4d9ec74f751ae91052689718d7e27af14b5056b7134bb82138"
+    },
+    {
+      "path": "core/host-adapter-contract.md",
+      "sha256": "e50cc37144b003c1813e2d32630cc705fd40bb4d40a00383537629900006e380"
+    },
+    {
+      "path": "core/human-language-execution-engine.md",
+      "sha256": "1a4182b2c22295606f861a58f074669caa74224dd60dc0c77fabe49effdd2b36"
+    },
+    {
+      "path": "core/human-language-routing.md",
+      "sha256": "a13f8847b25f8bfcaa66ff5d9db395e1a2b961d68b41e32440bff0abb7047db2"
+    },
+    {
+      "path": "core/learning-and-human-language.md",
+      "sha256": "a1a90ce0feb360dfc253a7a916653b0a8749efa4c373579315078326641babe1"
+    },
+    {
+      "path": "core/multi-session-continuation-proof.md",
+      "sha256": "6d0dd0ebf403baa79d4bb3b6f14ce29d9960d9994f4ff38c891f836606a2e196"
+    },
+    {
+      "path": "core/operating-principles.md",
+      "sha256": "7a18cf0fa980dd4dc7f48f3ac6521e7a5610c7887991a62cd4e7412387522b7a"
+    },
+    {
+      "path": "core/operational-intelligence.md",
+      "sha256": "316c619769a48683ac37eade956f100c3a46abcce54780998f2e6c7512b148eb"
+    },
+    {
+      "path": "core/production-e2e-harness.md",
+      "sha256": "d520f308650411145a13ab2feff19d13fff6a582980d66ffe1029d9ce1c61b50"
+    },
+    {
+      "path": "core/project-router.md",
+      "sha256": "0747cb24c73157d205b68295eb50a460a307ccd41df438dd3cade9fccdb1d2f4"
+    },
+    {
+      "path": "core/remote-mutation-controls.md",
+      "sha256": "11f1b073702fc81360eb2830d7bc469c993336de136154f75b15c2587f150a13"
+    },
+    {
+      "path": "core/runtime-adapter-bridge.md",
+      "sha256": "9cb4db24054b614b1a0a650f42609bd1774587154a2298466886a106499fe43f"
+    },
+    {
+      "path": "core/security-gate.md",
+      "sha256": "0d47b0e29738a73fcb5f21e387252decbe9d117c359e911b5b228e76708e867d"
+    },
+    {
+      "path": "core/semantic-goal-to-plan-compiler.md",
+      "sha256": "e3a0220afbf78fa9966b2700c6f003d7180d27ea773db3a702db83f1115849c4"
+    },
+    {
+      "path": "core/step-readiness-authorization-orchestrator.md",
+      "sha256": "1131d5ae5ad69e3aa45edd0d311dfc5a9050f44d3c3cffbbe7462e980eca17df"
+    },
+    {
+      "path": "core/teaching-engine.md",
+      "sha256": "cd6a1854a916f75151310a0a3eab14ec7f992a312bf6cc365b229be6cbeb3f63"
+    },
+    {
+      "path": "core/verification-adapter.md",
+      "sha256": "a905d41516660bca8c9592d43c7211658ed5d8a528194edc855a142497aa2f23"
+    },
+    {
+      "path": "core/verification-engine.md",
+      "sha256": "9a7470d9162ca8e66259216aeee4011c35cf9ae94acb8aec2aea7a58804929e6"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "sha256": "ad52b7a7608fad951b7a8819ecd85a8679d8dd64ab6c5a1df4e893b32b14d1eb"
+    },
+    {
+      "path": "docs/AUTO-ONBOARDING.md",
+      "sha256": "1e46b7b7db542a2b738cafd678302ff2211cf90eea258af2b87a47f830687b5a"
+    },
+    {
+      "path": "docs/CROSS-AI-HANDSHAKE.md",
+      "sha256": "33e6650ca5a0260c1f824595b415009bddaa6d7923b38682abbcc7d22c1c60d3"
+    },
+    {
+      "path": "docs/DEVOS-CHATGPT-DESI-STYLE.md",
+      "sha256": "655317ca28d144012b7d0954106d037cfee1e50efd2456778f6b412209ae6669"
+    },
+    {
+      "path": "docs/DEVOS-COMPLETE-STATUS.md",
+      "sha256": "cc4b5d502dfd17651f3855c69e9521507b7979478c817814dccdb92335caf33c"
+    },
+    {
+      "path": "docs/DEVOS-MATURITY-ROADMAP.md",
+      "sha256": "7061fc62b6f747b716c9e2e7a28ffe57f776d773d89846a97dbf177f495a22af"
+    },
+    {
+      "path": "docs/DEVOS-STANCE-CODES.md",
+      "sha256": "4d1d98f370ea20b583a3319462ad10bc1bc8a79b8850122d5120203a26a6aae4"
+    },
+    {
+      "path": "docs/HOST-PROFILES.md",
+      "sha256": "a79cac7e54efe97b9d2c555da73d1c7eb0cda9a10e04116f64aa22db3d53d5b5"
+    },
+    {
+      "path": "docs/MULTI-AI-PORTABILITY.md",
+      "sha256": "75190e4b88a153333278709a7cf9c3eafd88b48246d24e57fa647aacc931d602"
+    },
+    {
+      "path": "docs/NEW-AI-ONBOARDING.md",
+      "sha256": "3c121563d85469afbe50abcd5490348376453cc22667af72153843d5f0f84c01"
+    },
+    {
+      "path": "docs/P0-P15-FOUNDATION-VALUE-AUDIT.md",
+      "sha256": "b33267caecfd905d91326c0979b98d627d59624919fcbddeb1552ea1562b7951"
+    },
+    {
+      "path": "docs/P10-CONTEXT-CONTINUITY.md",
+      "sha256": "0daab99e89eb819befd07ab646df4e85b4b7c0ac24dbb822990bfe8f0a7a2e89"
+    },
+    {
+      "path": "docs/P11-FEDERATION-SELF-HEALING.md",
+      "sha256": "8b75e24b81c3fa3eae4205b7232b812d5df4f36aa5c81005086fa6ff0d8c9e76"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "1820584c6a2c84e9ff95522314fdb11905f9b731c799f54ded76b6a325ffd1ab"
+    },
+    {
+      "path": "docs/RUNTIME-HANDOFF-IMPLEMENTATION.md",
+      "sha256": "006a3980adc82513d35a1b4c9e15b3e3828afc3b5529363cb6cfae3455555067"
+    },
+    {
+      "path": "docs/SESSION-PERSISTENCE.md",
+      "sha256": "11b775cf5fdd0b12cfd07765accbdfb547434b8e9bf83cf3d227d63ea16ead9c"
+    },
+    {
+      "path": "docs/STATE-ENGINE.md",
+      "sha256": "4a22d37bde6eac275ec75b628e385cfc8afd9be944c279a662c157c967492385"
+    },
+    {
+      "path": "memory/decisions-template.md",
+      "sha256": "2aa4310ac10e765b162eed9ba238b0376c5610f646736c5b541cfff33230e479"
+    },
+    {
+      "path": "memory/project-context-template.md",
+      "sha256": "d460151ce5bc0c1630bc5a5f6e9ea356aa3127a2d021d3412e074ffdd6a82b37"
+    },
+    {
+      "path": "project-context-spec/README.md",
+      "sha256": "b33d3929e7804522b0f05afd77551db8405af32a1d169bf816457f51f021e967"
+    },
+    {
+      "path": "projects/registry.md",
+      "sha256": "5406d990f2f3c92616746bf99bdb55b1b13d382f6b06ec7ad350c5a2846df474"
+    },
+    {
+      "path": "rules/security.md",
+      "sha256": "6fceb1ad2ac788e54af04dfc4daa2bf93718ce8762e314544936106460d2e9ee"
+    },
+    {
+      "path": "templates/project/.ai/ARCHITECTURE.md",
+      "sha256": "c202f662167dc1dec45e5ca4213bd9bff3c2211229a32e99b2a44b0b38cb1b7b"
+    },
+    {
+      "path": "templates/project/.ai/CHANGELOG.md",
+      "sha256": "34473a259b8fa523f00caa223a85b0e83e7bd90c621b18f45da1ce0c3e30c2b9"
+    },
+    {
+      "path": "templates/project/.ai/CURRENT-STATE.md",
+      "sha256": "df3e335bb2a17a6b53b1ab0de492a44dcde07c9525c558ef1fd38abd4a00fe52"
+    },
+    {
+      "path": "templates/project/.ai/DECISIONS.md",
+      "sha256": "3520e9757af8211c5baae0c1ed97f5a831800aa70e34669460322a7e9935d035"
+    },
+    {
+      "path": "templates/project/.ai/PROJECT.md",
+      "sha256": "987f9604f38ec44f067e006d292faa025f86e89f0f0f4d0b717ac9f1cc489ea9"
+    },
+    {
+      "path": "templates/project/.ai/SESSIONS/session-template.md",
+      "sha256": "2c0ab6a14b7717830d4e9f453eb0639e52f491b954d1616c42563dbda52c8aad"
+    },
+    {
+      "path": "templates/project/.ai/STATE-INDEX.md",
+      "sha256": "4b223bd01fe02688daa684644a36fbb49d5ea09d54f898be088f38a1b4482f51"
+    },
+    {
+      "path": "templates/project/.ai/TASKS.md",
+      "sha256": "b393efec3be8b457da651933bc869990acfd1e6149a004040b5f52fa1483174f"
+    },
+    {
+      "path": "templates/project/.ai/manifest.yaml",
+      "sha256": "8cc5726d8e974dd7e056e9ca3c0ef70b125710d34c0eff8689d2329277ee25be"
+    },
+    {
+      "path": "templates/project/.github/workflows/context-sync.yml",
+      "sha256": "a41e6d0bf10b5ade645f8106cd265a04e9452335b4bf41dde9c6844bb0451d91"
+    },
+    {
+      "path": "templates/project/AGENTS.md",
+      "sha256": "417d463ed405547b63a39d2dd39dc52f5d43a62e9a7a8e196de9ea9fa0e17ad6"
+    },
+    {
+      "path": "tools/AUTOMATION.md",
+      "sha256": "19f1b7261ad8de69060e2f11d6bf61cc6126f99a26d706cffd03740f7b9fbbe8"
+    },
+    {
+      "path": "tools/adaptive-self-heal.py",
+      "sha256": "041bd44e3d81694148ad569306a603156f931f0ba5054184f6889eb2594e33b5"
+    },
+    {
+      "path": "tools/adaptive-verification.py",
+      "sha256": "075109c664ea0ea71407ecef2ca18d89fc660ea56d1f0b51fb1ee77f47a167a1"
+    },
+    {
+      "path": "tools/autonomous-orchestrator.py",
+      "sha256": "3a5d1bc494c96e4d535b36aee356ee2a67ff44f33cffdfd6cd4b165fa068a6fb"
+    },
+    {
+      "path": "tools/check-context-integrity.py",
+      "sha256": "691e5d68a5ef7dd7338c284e614e6fe140085d2fcc0c61f27fde35b0312cb39d"
+    },
+    {
+      "path": "tools/check-project.ps1",
+      "sha256": "1c0736f006f494f22f2bf522228f31d95bb9e78f9d21940b99de21f191d407bf"
+    },
+    {
+      "path": "tools/context-sync.py",
+      "sha256": "5f9bc23174be7c896313715b9c818a122d85dd9a24878218e1674690e6a69da8"
+    },
+    {
+      "path": "tools/controlled-remote-mutation-proof.py",
+      "sha256": "e8dacce9602a096d1eec4d7651a6d106f8377120f38bcbc9df15cc7136dc615e"
+    },
+    {
+      "path": "tools/development-task-controller.py",
+      "sha256": "d652aef61a1388fee5d9bca2e76e76a0aa876fc4d7c729df771e5d57f9271e64"
+    },
+    {
+      "path": "tools/devos-bootstrap.py",
+      "sha256": "3e9480ea934c1a2a4ca5547c24162c3eef5554cb293dfb7d28ca7779e2a329e9"
+    },
+    {
+      "path": "tools/devos-runtime-handoff.py",
+      "sha256": "21a59420efd36ca4facb123e3f739c6cfd3e05f1ab8cb42627f95a66da837abe"
+    },
+    {
+      "path": "tools/discover-project-identity.py",
+      "sha256": "ad215dbafcc421c6a37874c3f6f770c322ca6300377a6aa6ea8914cbf119a334"
+    },
+    {
+      "path": "tools/failure-recovery-proof.py",
+      "sha256": "62e7abdb07336717e5770d1e643867b1e4af60b7ccc63e628e7bd65460201b81"
+    },
+    {
+      "path": "tools/generate-ai-handoff.py",
+      "sha256": "c8978461bc5900b6eedda52109c9e8b31bf124730a736a52a80602b8d31b50c6"
+    },
+    {
+      "path": "tools/human-language-interpreter.py",
+      "sha256": "a0f12803b1dfca82d0f61959f071f94542017feb1c169c01d47cb6137f1f85c1"
+    },
+    {
+      "path": "tools/init-project.ps1",
+      "sha256": "d03c4d10396da58da018fa3db2935bfcc8b1939be47d4a3700b4b92db7fd925b"
+    },
+    {
+      "path": "tools/install-windows.ps1",
+      "sha256": "d501110b04a96a799dc5ff7cc8fdc8a35b67673319c17927b73ead44bf08e0fa"
+    },
+    {
+      "path": "tools/multi-session-continuation.py",
+      "sha256": "794ff5fbedbb0df6f96fe8b35062efc34701f41bf28e04b2b0ec2560b84660ba"
+    },
+    {
+      "path": "tools/onboard-project.ps1",
+      "sha256": "17c7cd9a20bd835a6507bcdcb20bdebf507f64ab614732a54247bae884e53372"
+    },
+    {
+      "path": "tools/operational-intelligence.py",
+      "sha256": "514a6fa22f777cf47137acc0456aa6b652377c5795215f27aa4393b7fb5aeeec"
+    },
+    {
+      "path": "tools/orchestration-checkpoint.py",
+      "sha256": "a911e44ce222ffa873bd02204779f8c1464229eee4c9dc782b0333b6672dcb59"
+    },
+    {
+      "path": "tools/parse-devos-stance.py",
+      "sha256": "6acb75094346d0b020b33048c4c496228a854cbeedc1cd6d4289541e87f2e1f4"
+    },
+    {
+      "path": "tools/production-e2e-harness.py",
+      "sha256": "cbe0ce6a42a633226355363b088be65996ffb0f7fbede29ac2804759a432c7b0"
+    },
+    {
+      "path": "tools/reconcile-derived-context.py",
+      "sha256": "50e07a1f48ec3c866fea3e4ba68d959e0f35d2b90165b6ece9030d890476d947"
+    },
+    {
+      "path": "tools/resolve-recovery-precedence.py",
+      "sha256": "05dcaa41e0f35425b2f715828cdf89ac47c1c8437a629f77578b65a7ccfc3aa6"
+    },
+    {
+      "path": "tools/runtime-adapter-bridge.py",
+      "sha256": "42adb39a429401b8a6bf9f5026409a23dfb47b041f90c0bad884ba902365abe4"
+    },
+    {
+      "path": "tools/self-heal-derived-context.py",
+      "sha256": "e1a5a8db06e5f2ea78ca83f51be17af4071f2d9eb2fe0ccb7fda838db62286a0"
+    },
+    {
+      "path": "tools/semantic-goal-to-plan.py",
+      "sha256": "61d80256349630c553de746f70d18f2b55a666eedcd101d45806ee579006c6ed"
+    },
+    {
+      "path": "tools/step-readiness-orchestrator.py",
+      "sha256": "53d18d33d1e67e001f66d1d69b7568706b8addef7c069adffa22eeba29b52f70"
+    },
+    {
+      "path": "tools/test-adaptive-self-heal.py",
+      "sha256": "bb9c86d34f8f314a31f67609b73b460f8fdfd08239bb7fb9e49b9690b5184ee1"
+    },
+    {
+      "path": "tools/test-adaptive-verification.py",
+      "sha256": "2d38587c9e43f66360f50241dbbb2d425db692f5f6a7a5936bdef7fa9f4bbbbb"
+    },
+    {
+      "path": "tools/test-autonomous-orchestrator.py",
+      "sha256": "34b107811c53e286c2307d6b9cb24888dcadf0c0bb29b812733697f4ca7f4dd0"
+    },
+    {
+      "path": "tools/test-context-reconciliation.py",
+      "sha256": "d0feae73af941f58814006ec05c109d08d8323543ba6e936d1557153b99ea5d2"
+    },
+    {
+      "path": "tools/test-controlled-remote-mutation-proof.py",
+      "sha256": "faf692a856b70ce16d0c3072d9b589bde9815802515b58781b01ec74d06d19c2"
+    },
+    {
+      "path": "tools/test-devos-bootstrap.py",
+      "sha256": "ac364c88df78e3ac1c7fc4badbb285013d0601774e9dca1d0776cf2aaf62eee0"
+    },
+    {
+      "path": "tools/test-devos-failure-resolution-engine.py",
+      "sha256": "218064222d1177425e2003da733123580851702763eb6b10f5b5501e0d4fcc65"
+    },
+    {
+      "path": "tools/test-devos-stance-parser.py",
+      "sha256": "4710ce283e3879db810ddf079c97371a434c61f57e292ae02bc817de0cfc3bac"
+    },
+    {
+      "path": "tools/test-devos-worker-lifecycle.py",
+      "sha256": "5f98c964af58e306a7e3173e74d75fb83ae2ca00ffd52cf207db192a8df3d018"
+    },
+    {
+      "path": "tools/test-external-runtime-bridge.py",
+      "sha256": "74dd3b1adff465dfc6df0ab3c44de6e29a028074c3074890abe0376432462b9e"
+    },
+    {
+      "path": "tools/test-failure-recovery-proof.py",
+      "sha256": "680ce8df259997726d6b5d84cac57b77c9f6be3f8f030c62ebe5abc28cc63a04"
+    },
+    {
+      "path": "tools/test-foundation-value-audit.py",
+      "sha256": "16736daf101f7e6e01341f8f26d85c37154e7b058546d33fabf8d663d2314920"
+    },
+    {
+      "path": "tools/test-fresh-ai-recovery.py",
+      "sha256": "aa0330c0501ed926aedf2b416c16963725f4a75608430c30cba2f991758059bb"
+    },
+    {
+      "path": "tools/test-github-live.py",
+      "sha256": "51102b742dce44ef3fcfb4e0e835811f6da99741ee6498e10fe63a1bfdf260df"
+    },
+    {
+      "path": "tools/test-github-reference.py",
+      "sha256": "69cbb97241dfce758a3b7ad1ac4b03cec2b21f8e0fc0d120eacf6332a80a7ae3"
+    },
+    {
+      "path": "tools/test-host-profile.py",
+      "sha256": "94ff3907aba340c069d43ee1b2770ee51580979c22493fecd230ea9b479d4aaa"
+    },
+    {
+      "path": "tools/test-human-language-interpreter.py",
+      "sha256": "2912f924359cf0ebf9a38fa8b2824e63ccf4ba467d35a4f8f6e2928367a934a7"
+    },
+    {
+      "path": "tools/test-multi-session-continuation.py",
+      "sha256": "a4122b0e60b89d48456b89bbecd13586d9c7a97933dde292410eb107bf549653"
+    },
+    {
+      "path": "tools/test-multi-session-two-process.py",
+      "sha256": "e111f8ecf577131f73d455c33a3b5ad064b4ebe1192c3ab2f926bc7331e9c4ab"
+    },
+    {
+      "path": "tools/test-operational-intelligence-recovery.py",
+      "sha256": "732894bfdb5331bb458abd8427771d4c525bc8b45585f8ea64da21f5f508ffc7"
+    },
+    {
+      "path": "tools/test-orchestration-checkpoint.py",
+      "sha256": "0617c1bb064b23af3127195ad5330e64aeb032679f04f05d8be9f5ea695781f8"
+    },
+    {
+      "path": "tools/test-p13-managed-project.py",
+      "sha256": "bda3a748960fa8b4bcf9d2dfe2cc1cbe91d6144837e2f901291a0d05d6746e44"
+    },
+    {
+      "path": "tools/test-p17-end-to-end.py",
+      "sha256": "8550c17175a7480ce7671cbc38dbc97dfe22db28d30beb2f6c7097bda0f76328"
+    },
+    {
+      "path": "tools/test-production-e2e-harness.py",
+      "sha256": "2ffc06b5dde0d0d567e33c149254138beaced5e242832b57de9e87baa5feb1ec"
+    },
+    {
+      "path": "tools/test-recovery-precedence.py",
+      "sha256": "765c31159c7cfa9af4e8903ed7490d05f445f3b98b120114df23e501f238d7f0"
+    },
+    {
+      "path": "tools/test-reference-host-adapter.py",
+      "sha256": "069ce08a9337a4923b5447f1a1efcf8786ab794e1904e2ebe4af28611a736cae"
+    },
+    {
+      "path": "tools/test-runtime-adapter-bridge.py",
+      "sha256": "469338be7b1f12a3c00234617c45541f8ecd86eb9ae338fb7b35a0c41ca4c02f"
+    },
+    {
+      "path": "tools/test-self-heal-derived-context.py",
+      "sha256": "4adf0a59a23895b5dc1596914148c9819faa3b28558079f31f564618455ccfb4"
+    },
+    {
+      "path": "tools/test-semantic-goal-to-plan.py",
+      "sha256": "823eca5d6ad8fd1646040079b81b46624d3a3c80357147800fd832910989b5fe"
+    },
+    {
+      "path": "tools/test-step-readiness-orchestrator.py",
+      "sha256": "c84c1652d2c4d073db088eb8c5f0a76d08e75b961194bf8d3f621fcc50ddc3bb"
+    },
+    {
+      "path": "tools/test-verification-adapter.py",
+      "sha256": "a6e413baf486f51f1464e02c6090cb8d14597a0a688c570b22d4414ef0d22a08"
+    },
+    {
+      "path": "tools/verify-agent-orchestration.py",
+      "sha256": "9eaf0824631912c611b7f2242360a4eb6a12f7bc5f423126eed1b8606730eacd"
+    },
+    {
+      "path": "tools/verify-ai-handoff.py",
+      "sha256": "2a97252605be1872c7e346d6ba572368e74415df11446cac23e2e97a206b318f"
+    },
+    {
+      "path": "tools/verify-auto-onboarding.py",
+      "sha256": "09933abcd92d75d6414e75f2ed4970cad94765b8e616d8d9c87952ad2f4d7d04"
+    },
+    {
+      "path": "tools/verify-autonomous-loop.py",
+      "sha256": "9df30ecb1028f7355f9f11e7659b4091003bb193c4b40c65604c30f7f9ce818e"
+    },
+    {
+      "path": "tools/verify-context-freshness.py",
+      "sha256": "fbe53915f0f14635993e4c27f9b2b3697159e98d29ebc9ad39af86d2ad40683d"
+    },
+    {
+      "path": "tools/verify-context-integrity.py",
+      "sha256": "8d49ef737a68f9f5758c7d5250665b6be99b945b35233b279b84510249944e79"
+    },
+    {
+      "path": "tools/verify-context-reconciliation.py",
+      "sha256": "af01eebda505d4ecd9b9a23e84b993afa2af23a1c7d7bb37814b4aadf76aaffd"
+    },
+    {
+      "path": "tools/verify-context-sync.py",
+      "sha256": "b4dbb0d5d1ac44976b7d32d96605c68d127a89b235bf7e1a0aaec655ea355ef6"
+    },
+    {
+      "path": "tools/verify-development-task-controller-integration.py",
+      "sha256": "708393bf4bdc2c7e21144e564d1ed75dc3b9ecbca6bba9402a8c7aac21ef0f6c"
+    },
+    {
+      "path": "tools/verify-development-task-controller.py",
+      "sha256": "964fd82db30b6b7a613a7926edb8e1537560ac2f1a37132295f203dfc2676e9d"
+    },
+    {
+      "path": "tools/verify-execution-runtime.py",
+      "sha256": "6b1afe8b7a503f49d95ee0f911a4d4e7ff6ced48fcdc796ec51fc6e65e37fc7e"
+    },
+    {
+      "path": "tools/verify-external-adapter.py",
+      "sha256": "aae3594eb46c9f0e268ccb8727f738045810a3d208cecf83976473d98bca4a3d"
+    },
+    {
+      "path": "tools/verify-failure-recovery-managed-project.py",
+      "sha256": "9696b1755226a915f2339b71f792c015c3559951b94c6cdb09892856b0d41b23"
+    },
+    {
+      "path": "tools/verify-host-adapter.py",
+      "sha256": "7624cd29d02b082d5de31acacac5a3a7b9e4d0026e59add601d49843bca3b5fd"
+    },
+    {
+      "path": "tools/verify-host-profile.py",
+      "sha256": "37c1e5d8238c0dbef19de729b548b358d3a404159a5c43c3f255d7dd5a6ed0ec"
+    },
+    {
+      "path": "tools/verify-human-language-engine.py",
+      "sha256": "ffbf4c6d37b7a41b7cc1af136ce0849c23f062aa8a05f0bd99ef566336d9e1e7"
+    },
+    {
+      "path": "tools/verify-managed-project-orchestration.py",
+      "sha256": "f1d90482af2208c9b61404e60a444147f78c245d790449a6e9d071b6281daef7"
+    },
+    {
+      "path": "tools/verify-multi-ai-portability.py",
+      "sha256": "002162465ed1501f4cd224166f99b7e600f58c297f9b770ed2ca1a5554ca4fcf"
+    },
+    {
+      "path": "tools/verify-multi-session-managed-project.py",
+      "sha256": "14ac80aa617f72c839c2e7981f202e79006f752a46c92a258699cdfaf77d2bf2"
+    },
+    {
+      "path": "tools/verify-operational-intelligence.py",
+      "sha256": "0c156b0e7552f1db27473bfc9eb727d9bc2fa040148eda419c42b4b1ce053c54"
+    },
+    {
+      "path": "tools/verify-production-e2e-managed-project.py",
+      "sha256": "a397f0aa09b6d12117d3c4abb35e36a4dfc9fdb9a3cf931c55de1d4234c914ea"
+    },
+    {
+      "path": "tools/verify-project-identity.py",
+      "sha256": "b926f3f58d82f0febc191461a51ff69d61119c9bca92f631c4a2e7aa04c79b8a"
+    },
+    {
+      "path": "tools/verify-project-manifest.py",
+      "sha256": "385f6eaf6232ba78290f9e48cfb14939d0ae6502e1511c9a791bbe6a3ed94cfc"
+    },
+    {
+      "path": "tools/verify-recovery-precedence.py",
+      "sha256": "0aacddbaac803094af44ae02a4ede654f082703511db3c279e1b8bacd1b145eb"
+    },
+    {
+      "path": "tools/verify-remote-mutation.py",
+      "sha256": "2beeaa4ab4baea92dfc69cce049cc48b105d12c734c3cb91cf285a57812f07d8"
+    },
+    {
+      "path": "tools/verify-security-gate.py",
+      "sha256": "d42940094685640974e4b47385b28c701b0f1a00c12ef1cfa90d6389ab0746f7"
+    },
+    {
+      "path": "tools/verify-self-heal-derived-context.py",
+      "sha256": "eca4dc42158774b9076a890acd0eaddf22f9ae2f100a6a3e332f86112ebb1efc"
+    },
+    {
+      "path": "tools/verify-stance-codes.py",
+      "sha256": "e47110090b746e61ad924b2636d9b0569d249379c757872677a3119352c1970c"
+    },
+    {
+      "path": "tools/verify-state-resolver.py",
+      "sha256": "ee4f5013e6e08e8ee6f444ac04e58702d768deb0109fa26a0884cd0c3004beff"
+    },
+    {
+      "path": "tools/verify-teaching-engine.py",
+      "sha256": "15edac2493c83bf752949c2af55a4a05d1a8f4dc1be9dd378fcd85d78cd40ae1"
+    },
+    {
+      "path": "tools/verify-verification-engine.py",
+      "sha256": "12c4bcdc7fe004131a06240881c874b3d1ab28df8edbcd66e72fc5e5d54e587a"
+    },
+    {
+      "path": "tools/watch-projects.ps1",
+      "sha256": "736237dad25a12789f58ebbf1ce459dcf94e575428f82bf7b5f0f3a5455afc15"
+    },
+    {
+      "path": "workflows/autonomous-loop.md",
+      "sha256": "357f9588ba3005cb36c999ac550c7f7f3b57d4d4c5fde3cb4b2fadbca1769f7e"
+    },
+    {
+      "path": "workflows/bug-fix.md",
+      "sha256": "0720eefd5cba702b15098b8e9f7cc83a762bbe85e0b8682367703c563300c72e"
+    },
+    {
+      "path": "workflows/development-task.md",
+      "sha256": "1d7e8c269d42ab78d1f252a8cb971b5e53488640be282f060906397272bc8694"
+    },
+    {
+      "path": "workflows/execution-runtime.md",
+      "sha256": "fdaac6b5bbca23da1b536e40fff4c00508b397c2111cf30e89eaec7219f7eb1b"
+    },
+    {
+      "path": "workflows/feature.md",
+      "sha256": "fb723539fb55fab6bc9efd259f673e3c5ef4ab61707f340949bb1a4011e6cfc6"
+    },
+    {
+      "path": "workflows/orchestration.md",
+      "sha256": "91078fbd788750a6b7e6c2c2315e9bcc0a201ab17ec5c574da9140155bcbf071"
+    },
+    {
+      "path": "workflows/resume.md",
+      "sha256": "24c7f1513fd0106f0131d3bfbb6d787348051841a300476de0df875b658b8e02"
+    },
+    {
+      "path": "workflows/review.md",
+      "sha256": "ede757b3eb0f624a066e3afc1d223d4bf6a59e14ae64d878ecc1dbf25f2470f1"
+    },
+    {
+      "path": "workflows/security.md",
+      "sha256": "3091adb56e409e01715af1bde7a6e726bf6b21f2511b6e41f105b9bbf62b7eb3"
+    },
+    {
+      "path": "workflows/verification.md",
+      "sha256": "92a6865b9059a654e859a3d9ffddb7cae1fcd472e9b0d32db5d02a3a50d1a3b7"
+    }
+  ]
+}

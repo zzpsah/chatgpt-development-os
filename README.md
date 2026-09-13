@@ -1,5 +1,9 @@
 # ChatGPT Development OS
 
+## AI handoff and independent verification
+
+For a new AI or a full project review, start at [docs/handoff/README.md](docs/handoff/README.md). It links the master history/status handoff, pinned evidence, limitations and verification checklist. Recover current `.ai` state and Git first; the handoff is a dated snapshot, not execution authority.
+
 A portable, human-language development operating system for working across projects, AI accounts, AI coding tools, and machines.
 
 ## Core idea

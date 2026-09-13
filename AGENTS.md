@@ -1,5 +1,9 @@
 # AGENTS.md — ChatGPT Development OS
 
+## Discoverable project handoff
+
+When a new AI needs DevOS history, an independent verification brief, or a roadmap review, read [docs/handoff/README.md](docs/handoff/README.md) after recovering current repository identity and `.ai` state. The index links the master handoff and dated supporting evidence. It supplements source/Git and current decisions; it never grants authorization or replaces fresh verification.
+
 ## Mission
 
 Act as a senior engineering partner. Understand the user's goal in natural language and select the appropriate workflow without requiring the user to know internal commands or agent names.
