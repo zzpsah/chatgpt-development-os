@@ -1,0 +1,519 @@
+{
+  "protocol": "DEVOS-READINESS-EVIDENCE-v1",
+  "repository": "zzpsah/chatgpt-development-os",
+  "authority": "UNCHANGED",
+  "authorization": "UNCHANGED",
+  "execution": "NONE",
+  "production_ready": false,
+  "snapshot_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+  "archive": "docs/handoff/DevOS-Evidence-Snapshot.json",
+  "archive_sha256": "2f99206def65eb3e4e256d9cc3fc9aef913acc1d19e8e75445e75de63a79019d",
+  "capabilities": [
+    {
+      "id": "bootstrap",
+      "summary": "Minimum identity/context bootstrap",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "tools/devos-bootstrap.py",
+        "core/devos-bootstrap-contract.md"
+      ],
+      "verification_levels": [
+        "deterministic"
+      ],
+      "evidence": [
+        {
+          "kind": "local_check",
+          "level": "deterministic",
+          "test": "tools/test-devos-bootstrap.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Read-only; execution authority unchanged.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Revalidate current repository and gates; do not replay saved authority.",
+      "allowed_claim": "Historical deterministic evidence only.",
+      "limitations": [
+        "Literal structural checks do not prove semantic state accuracy, Git identity or production readiness."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "state",
+      "summary": "Repository-first state resolution",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "core/ai-state-resolver.md",
+        "core/ai-bootstrap-protocol.md"
+      ],
+      "verification_levels": [
+        "deterministic"
+      ],
+      "evidence": [
+        {
+          "kind": "ci_run",
+          "level": "deterministic",
+          "test": "tools/verify-state-resolver.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "run_id": 34758034898,
+          "workflow": ".github/workflows/verify-devos.yml",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Current exact-step authorization where applicable; evidence creates no permission.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Revalidate current repository and gates; do not replay saved authority.",
+      "allowed_claim": "Historical deterministic evidence only.",
+      "limitations": [
+        "Contract checks do not establish the truth of arbitrary project prose."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "interpretation",
+      "summary": "P15 deterministic phrase/context interpretation",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "tools/human-language-interpreter.py"
+      ],
+      "verification_levels": [
+        "deterministic"
+      ],
+      "evidence": [
+        {
+          "kind": "local_check",
+          "level": "deterministic",
+          "test": "tools/test-human-language-interpreter.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Current exact-step authorization where applicable; evidence creates no permission.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Revalidate current repository and gates; do not replay saved authority.",
+      "allowed_claim": "Historical deterministic evidence only.",
+      "limitations": [
+        "Regex/ASCII normalization is not general multilingual reasoning."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "planning",
+      "summary": "P16 deterministic goal-to-plan compiler",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "tools/semantic-goal-to-plan.py"
+      ],
+      "verification_levels": [
+        "deterministic"
+      ],
+      "evidence": [
+        {
+          "kind": "local_check",
+          "level": "deterministic",
+          "test": "tools/test-semantic-goal-to-plan.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Current exact-step authorization where applicable; evidence creates no permission.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Revalidate current repository and gates; do not replay saved authority.",
+      "allowed_claim": "Historical deterministic evidence only.",
+      "limitations": [
+        "Planning never constitutes execution evidence."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "readiness",
+      "summary": "P17 exact-step eligibility",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "tools/step-readiness-orchestrator.py"
+      ],
+      "verification_levels": [
+        "deterministic",
+        "integrated"
+      ],
+      "evidence": [
+        {
+          "kind": "local_check",
+          "level": "deterministic",
+          "test": "tools/test-step-readiness-orchestrator.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "freshness": "historical"
+        },
+        {
+          "kind": "local_check",
+          "level": "integrated",
+          "test": "tools/test-p17-end-to-end.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Current exact-step authorization where applicable; evidence creates no permission.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Revalidate current repository and gates; do not replay saved authority.",
+      "allowed_claim": "Historical deterministic, integrated evidence only.",
+      "limitations": [
+        "READY is eligibility only; caller approval provenance requires host trust."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "controller",
+      "summary": "Controller and bounded P12/P13 orchestration",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "tools/development-task-controller.py",
+        "tools/autonomous-orchestrator.py"
+      ],
+      "verification_levels": [
+        "deterministic",
+        "real_read_only"
+      ],
+      "evidence": [
+        {
+          "kind": "ci_run",
+          "level": "deterministic",
+          "test": "tools/test-autonomous-orchestrator.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "run_id": 34758035019,
+          "workflow": ".github/workflows/verify-devos-contracts.yml",
+          "freshness": "historical"
+        },
+        {
+          "kind": "ci_run",
+          "level": "real_read_only",
+          "test": "tools/verify-managed-project-orchestration.py",
+          "source_head": "bf5da56950d32722ce78898854eb3aa660321c38",
+          "run_id": 34757546868,
+          "workflow": ".github/workflows/verify-p13-external-managed-project.yml",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Current exact-step authorization where applicable; evidence creates no permission.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Revalidate current repository and gates; do not replay saved authority.",
+      "allowed_claim": "Historical deterministic, real_read_only evidence only.",
+      "limitations": [
+        "Small reference scenarios do not prove sustained arbitrary workload reliability."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "runtime",
+      "summary": "Bounded host/runtime bridge",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "tools/runtime-adapter-bridge.py",
+        "adapters/reference-host.py"
+      ],
+      "verification_levels": [
+        "integrated"
+      ],
+      "evidence": [
+        {
+          "kind": "local_check",
+          "level": "integrated",
+          "test": "tools/test-production-e2e-harness.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Current exact-step authorization where applicable; evidence creates no permission.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Revalidate current repository and gates; do not replay saved authority.",
+      "allowed_claim": "Historical integrated evidence only.",
+      "limitations": [
+        "The controlled mutation supervisor is not mandatory on every direct bridge entry point."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "verification",
+      "summary": "Explicit argv verification and E2E composition",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "adapters/reference-verification.py",
+        "tools/production-e2e-harness.py"
+      ],
+      "verification_levels": [
+        "integrated",
+        "real_read_only"
+      ],
+      "evidence": [
+        {
+          "kind": "local_check",
+          "level": "integrated",
+          "test": "tools/test-production-e2e-harness.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "freshness": "historical"
+        },
+        {
+          "kind": "ci_run",
+          "level": "real_read_only",
+          "test": "tools/verify-production-e2e-managed-project.py",
+          "source_head": "bf5da56950d32722ce78898854eb3aa660321c38",
+          "run_id": 34757546868,
+          "workflow": ".github/workflows/verify-p13-external-managed-project.yml",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Current exact-step authorization where applicable; evidence creates no permission.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Revalidate current repository and gates; do not replay saved authority.",
+      "allowed_claim": "Historical integrated, real_read_only evidence only.",
+      "limitations": [
+        "Explicit argv avoids shell interpretation but does not sandbox a verifier executable."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "security",
+      "summary": "Security Gate contract and downstream checks",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "core/security-gate.md",
+        "tools/step-readiness-orchestrator.py"
+      ],
+      "verification_levels": [
+        "deterministic"
+      ],
+      "evidence": [
+        {
+          "kind": "ci_run",
+          "level": "deterministic",
+          "test": "tools/verify-security-gate.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "run_id": 34758034898,
+          "workflow": ".github/workflows/verify-devos.yml",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Current exact-step authorization where applicable; evidence creates no permission.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Revalidate current repository and gates; do not replay saved authority.",
+      "allowed_claim": "Historical deterministic evidence only.",
+      "limitations": [
+        "Validated gate markers are not a cryptographically authenticated approval service."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "persistence_recovery",
+      "summary": "Evidence persistence and bounded failure recovery",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "tools/failure-recovery-proof.py"
+      ],
+      "verification_levels": [
+        "integrated",
+        "real_read_only"
+      ],
+      "evidence": [
+        {
+          "kind": "local_check",
+          "level": "integrated",
+          "test": "tools/test-failure-recovery-proof.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "freshness": "historical"
+        },
+        {
+          "kind": "ci_run",
+          "level": "real_read_only",
+          "test": "tools/verify-failure-recovery-managed-project.py",
+          "source_head": "bf5da56950d32722ce78898854eb3aa660321c38",
+          "run_id": 34757546868,
+          "workflow": ".github/workflows/verify-p13-external-managed-project.yml",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Current exact-step authorization where applicable; evidence creates no permission.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Attempted mutation requires HOLD / MUTATION_REPLAY_FORBIDDEN; fresh gates for replay-safe recovery.",
+      "allowed_claim": "Historical integrated, real_read_only evidence only.",
+      "limitations": [
+        "Ephemeral evidence writes are not proof of disaster recovery or durable storage guarantees."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "continuation",
+      "summary": "Repository-only fresh-process continuation",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "tools/multi-session-continuation.py"
+      ],
+      "verification_levels": [
+        "deterministic",
+        "integrated",
+        "real_read_only"
+      ],
+      "evidence": [
+        {
+          "kind": "local_check",
+          "level": "deterministic",
+          "test": "tools/test-multi-session-continuation.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "freshness": "historical"
+        },
+        {
+          "kind": "local_check",
+          "level": "integrated",
+          "test": "tools/test-multi-session-two-process.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "freshness": "historical"
+        },
+        {
+          "kind": "ci_run",
+          "level": "real_read_only",
+          "test": "tools/verify-multi-session-managed-project.py",
+          "source_head": "bf5da56950d32722ce78898854eb3aa660321c38",
+          "run_id": 34757546868,
+          "workflow": ".github/workflows/verify-p13-external-managed-project.yml",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Current exact-step authorization where applicable; evidence creates no permission.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Same head: revalidate. Changed head: recompile. Never transfer old approvals or replay uncertain mutations.",
+      "allowed_claim": "Historical deterministic, integrated, real_read_only evidence only.",
+      "limitations": [
+        "A fresh Python process is not an independent trial of every AI vendor or multi-day work."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "self_healing",
+      "summary": "P14 bounded adaptive verification/healing",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "tools/adaptive-verification.py",
+        "tools/adaptive-self-heal.py"
+      ],
+      "verification_levels": [
+        "deterministic",
+        "integrated"
+      ],
+      "evidence": [
+        {
+          "kind": "local_check",
+          "level": "deterministic",
+          "test": "tools/test-adaptive-verification.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "freshness": "historical"
+        },
+        {
+          "kind": "local_check",
+          "level": "integrated",
+          "test": "tools/test-adaptive-self-heal.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Current exact-step authorization where applicable; evidence creates no permission.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Revalidate current repository and gates; do not replay saved authority.",
+      "allowed_claim": "Historical deterministic, integrated evidence only.",
+      "limitations": [
+        "Bounded reference repairs do not establish general production auto-repair."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "external_reads",
+      "summary": "Live GitHub repository and commit inspection",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "adapters/github-reference.py",
+        "tools/test-github-live.py"
+      ],
+      "verification_levels": [
+        "real_read_only"
+      ],
+      "evidence": [
+        {
+          "kind": "ci_run",
+          "level": "real_read_only",
+          "test": "tools/test-github-live.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "run_id": 34758034898,
+          "workflow": ".github/workflows/verify-devos.yml",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Current exact-step authorization where applicable; evidence creates no permission.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Revalidate current repository and gates; do not replay saved authority.",
+      "allowed_claim": "Historical real_read_only evidence only.",
+      "limitations": [
+        "The live test does not exercise GitHub file readback or a live mutation."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "remote_mutation",
+      "summary": "Controlled GitHub file mutation supervisor",
+      "implementation": "implemented",
+      "implementation_refs": [
+        "tools/controlled-remote-mutation-proof.py",
+        "adapters/github-reference.py"
+      ],
+      "verification_levels": [
+        "provider_simulated"
+      ],
+      "evidence": [
+        {
+          "kind": "local_check",
+          "level": "provider_simulated",
+          "test": "tools/test-controlled-remote-mutation-proof.py",
+          "source_head": "70c8e0e050660fd6b606150a1370d8fce51e373e",
+          "freshness": "historical"
+        }
+      ],
+      "authorization_boundary": "Exact target/path/operation and current step approval; credentials are not authorization.",
+      "security_boundary": "Exact-step Security Gate PASS required before mutation.",
+      "recovery_policy": "Fresh SHA precondition, at most one attempt, fresh readback; uncertain result HOLD and no blind replay.",
+      "allowed_claim": "Historical provider_simulated evidence only.",
+      "limitations": [
+        "No live DevOS runtime file mutation proof; direct-call integration and trusted gate origin remain limitations."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    },
+    {
+      "id": "high_impact",
+      "summary": "Branch/PR/workflow/deployment/database/secret/destructive runtime operations",
+      "implementation": "planned",
+      "implementation_refs": [
+        "core/remote-mutation-controls.md"
+      ],
+      "verification_levels": [],
+      "evidence": [],
+      "authorization_boundary": "Separate explicit exact high-impact authorization; not granted by this ledger.",
+      "security_boundary": "Applicable Security Gate remains independently required.",
+      "recovery_policy": "Operation-specific verified recovery contract needed before expansion.",
+      "allowed_claim": "No execution proof is claimed.",
+      "limitations": [
+        "No live/production capability claim. Ordinary development commits and PR merges are not runtime proof."
+      ],
+      "production_proven": false,
+      "live_mutation_proven": false
+    }
+  ]
+}

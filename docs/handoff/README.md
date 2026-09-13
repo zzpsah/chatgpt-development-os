@@ -10,6 +10,8 @@
 
 ## Snapshot and authority
 
+For the maintained capability ledger and its verifier, see [Production-readiness evidence](../PRODUCTION-READINESS-EVIDENCE.md). This is distinct from the dated handoff archive below. Check `.ai/CURRENT-STATE.md` for gate closure status.
+
 The current handoff documents main at `70c8e0e050660fd6b606150a1370d8fce51e373e` (2026-09-13). Subsequent publication commits are not included in that evidence snapshot. Always compare against current HEAD; historical successful CI must not be represented as verification of a later commit.
 
 Source + Git and explicit current requirements remain authoritative. This index, the handoff, generated metadata and previous approvals never grant execution permission. Live runtime remote mutation remains unproven by this snapshot. The Production-Readiness Evidence Matrix & Limitations gate remains active.

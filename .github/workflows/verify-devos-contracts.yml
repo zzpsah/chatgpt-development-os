@@ -25,6 +25,16 @@ jobs:
       - name: Install parser dependency
         run: python -m pip install pyyaml
 
+      - name: Verify readiness evidence and reject inflated claims
+        run: |
+          python tools/verify-readiness-evidence.py
+          python tools/test-readiness-evidence.py
+
+      - name: Verify foundation bootstrap
+        run: |
+          python tools/devos-bootstrap.py
+          python tools/test-devos-bootstrap.py
+
       - name: Verify Human Language Execution Engine
         run: python tools/verify-human-language-engine.py
 

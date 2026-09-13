@@ -83,6 +83,11 @@ Still unproven or unavailable unless separately explicitly authorized/bounded:
 
 ## Active maturity gate — Production-Readiness Evidence Matrix & Limitations
 
+Implementation is present at v1 on PR #16; closure requires reconciliation against current `main` plus fresh exact-final-head verification.
+See `config/readiness-evidence.json`, `tools/verify-readiness-evidence.py`, and `docs/PRODUCTION-READINESS-EVIDENCE.md`.
+The offline verifier covers 15 capability families and rejects unsupported evidence promotion. `VALID` never means production ready. Bootstrap checks participate in primary CI.
+Historical evidence remains pinned to its original source heads and is not silently repointed when the branch advances.
+
 Goal: produce an evidence-based readiness view rather than a blanket “production ready” label.
 
 The matrix must distinguish at least:
@@ -133,6 +138,8 @@ This is a **product-level acceptance property**, not merely a documentation stat
 An independent AI audit was performed from the supplied audit source pack and separately accessible public repository artifacts. The audit correctly identified the risk of relying on claims without executable source evidence and highlighted documentation/roadmap drift, including an open Issue #1 with a separate P0/P1/P2 taxonomy. It also initially classified P16/P17 as unknown because those source files were not accessible in its environment.
 
 The live repository subsequently confirmed that P16 and P17 contracts are present on `main`. Therefore, inability to fetch a file is treated as an **evidence-access limitation**, not proof that the implementation does not exist.
+
+PR #17 subsequently closed the audit-pack dependency gap with read-only `tools/devos-audit.py`, added cross-layer adversarial Security Gate coverage, and hardened P17 against semantic impact downgrades. PR #16 must preserve those Trust-First controls rather than duplicating them.
 
 The audit feedback remains valuable as a permanent hardening requirement: DevOS must make contradictory status records, stale README/version information, incomplete audit bundles, and unsupported completion claims detectable rather than relying on AI interpretation.
 
