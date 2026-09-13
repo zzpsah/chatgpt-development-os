@@ -1,5 +1,25 @@
 # Decisions
 
+## Foundation Health & State Consistency
+- Foundation Health is a bounded objective, not a new P18/P19 phase.
+- Authoritative flow: `Source / Git / Tests / CI → tools/devos-audit.py → readiness evidence ledger → tools/devos-health.py → tools/devos-doctor.py`.
+- `tools/devos-health.py` composes authoritative audit/evidence inputs; it does not become a competing truth source.
+- `tools/devos-doctor.py` is presentation-only and READ_ONLY.
+- Health/doctor always preserve `authority: UNCHANGED`, `authorization: UNCHANGED`, `execution: NONE`, and `mutation: NONE`.
+- Status vocabulary is `PASS`, `WARN`, `UNKNOWN`, `FAIL`, `BLOCKED`; the most severe observed state wins. `WARN` and `UNKNOWN` are never promoted to `PASS`.
+- Historical-source drift is a truthful `WARN`; it never rewrites the source/run head of historical evidence.
+- Missing audit-pack dependencies or unavailable Git provenance remain `UNKNOWN`; absence of proof is never inferred as success.
+- Canonical identity or exact expected-head mismatch is `BLOCKED`.
+- Unsupported capability/evidence promotion is `FAIL` through the existing readiness-evidence verifier.
+- Status prose may be diagnosed for contradictions but never overrules source/Git/test/ledger evidence.
+- No live/destructive/provider mutation is required or authorized by the health objective.
+
+## PR #16 readiness-evidence closure
+- PR #16 final source head `6c509d6f65b22666f121dfe86604faae72c08f8c` merged at `b8e31ae76201b32e4617ef6044b29ef285004f54` only after exact-head Trust-First 22, Contracts 559, Full DevOS 484, and External Managed Project 52 succeeded.
+- Post-merge `main` at `b8e31ae76201b32e4617ef6044b29ef285004f54` independently passed Trust-First 23, Contracts 560, and Full DevOS 485.
+- External Managed Project has no `push` trigger and therefore no fabricated post-merge run is recorded.
+- PR #16 closure does not promote `production_ready`, live mutation proof, or historical evidence freshness.
+
 ## Readiness evidence v1
 - Machine-readable inventory: `config/readiness-evidence.json`; offline verifier: `tools/verify-readiness-evidence.py`.
 - VALID means consistent historical evidence classification, not current runtime verification or production readiness.
@@ -7,9 +27,8 @@
 - Archived run/head/test references remain historical. No automatic claim refresh occurs when CI passes on a later head.
 - Current-source evolution does not rewrite historical evidence. Changed referenced paths are exposed as `historical_source_drift`; a new current-source claim requires separate new evidence.
 - Fabricated CI run IDs, source-head mismatches, stale evidence relabeled as fresh, malformed/duplicate capability records, missing limitations, and unsupported production/live-mutation promotion fail closed.
-- PR #16 is reconciled against PR #17 Trust-First `main`; the readiness ledger composes with `tools/devos-audit.py` and adversarial Security Gate checks rather than duplicating them.
+- The readiness ledger composes with `tools/devos-audit.py` and adversarial Security Gate checks rather than duplicating them.
 - Foundation bootstrap participates in Contracts and Full CI; diagnostics remain read-only.
-- Following matrix closure, prioritize Foundation Health & State Consistency with universal AI portability preserved.
 
 ## Durable project state authority
 - DevOS project-local `.ai` is the portable durable context layer.

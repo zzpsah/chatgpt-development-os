@@ -31,6 +31,13 @@ CHECKS: dict[str, dict[str, Any]] = {
             "core/ai-bootstrap-protocol.md",
         ],
     },
+    "interpretation": {
+        "entrypoint": "tools/test-human-language-interpreter.py",
+        "dependencies": [
+            "tools/test-human-language-interpreter.py",
+            "tools/human-language-interpreter.py",
+        ],
+    },
     "planning": {
         "entrypoint": "tools/test-semantic-goal-to-plan.py",
         "dependencies": [
@@ -44,6 +51,15 @@ CHECKS: dict[str, dict[str, Any]] = {
             "tools/test-step-readiness-orchestrator.py",
             "tools/step-readiness-orchestrator.py",
             "tools/semantic-goal-to-plan.py",
+        ],
+    },
+    "evidence_ledger": {
+        "entrypoint": "tools/test-readiness-evidence.py",
+        "dependencies": [
+            "tools/test-readiness-evidence.py",
+            "tools/verify-readiness-evidence.py",
+            "config/readiness-evidence.json",
+            "docs/handoff/DevOS-Evidence-Snapshot.json",
         ],
     },
     "security_gate": {
