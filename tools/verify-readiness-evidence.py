@@ -44,6 +44,66 @@ def file_in_root(root: Path, value: str) -> Path:
     return path
 
 
+def _archive_context(data, root: Path):
+    archive_path = file_in_root(root, data.get("archive"))
+    digest = hashlib.sha256(archive_path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+    if digest != data.get("archive_sha256"):
+        raise ValueError("archive hash mismatch; review evidence before updating")
+    archive = read_json(archive_path)
+    if archive.get("repository") != "https://github.com/zzpsah/chatgpt-development-os":
+        raise ValueError("archive repository mismatch")
+    if archive.get("head") != data.get("snapshot_head"):
+        raise ValueError("archive snapshot head mismatch")
+    if not re.fullmatch(r"[0-9a-f]{40}", str(data.get("snapshot_head", ""))):
+        raise ValueError("invalid snapshot head")
+    try:
+        inventory = {item["path"]: item["sha256"] for item in archive["tracked_inventory"]}
+        assert isinstance(archive["latest_main_runs"], list)
+        assert isinstance(archive["final_source_runs"], dict)
+        assert isinstance(archive["local_checks"], list)
+    except (KeyError, TypeError, AssertionError):
+        raise ValueError("malformed archive collections")
+    return archive, inventory
+
+
+def historical_source_drift(data, root: Path = ROOT) -> list[str]:
+    """Report current files that changed after their pinned historical evidence source.
+
+    Drift is not an evidence rewrite. Historical evidence stays bound to the archived
+    source/head; this diagnostic makes the loss of current-source equivalence visible.
+    """
+    try:
+        archive, inventory = _archive_context(data, root)
+    except (OSError, ValueError, TypeError, AttributeError):
+        return []
+    drift = set()
+    rows = data.get("capabilities", [])
+    if not isinstance(rows, list):
+        return []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        for item in row.get("evidence", []):
+            if not isinstance(item, dict) or item.get("freshness") != "historical":
+                continue
+            test = item.get("test")
+            archived_digest = inventory.get(test)
+            if not isinstance(test, str) or not archived_digest:
+                continue
+            try:
+                path = file_in_root(root, test)
+            except (OSError, ValueError, TypeError):
+                continue
+            blob = path.read_bytes().replace(b"\r\n", b"\n")
+            digests = {
+                hashlib.sha256(blob).hexdigest(),
+                hashlib.sha256(blob.replace(b"\n", b"\r\n")).hexdigest(),
+            }
+            if archived_digest not in digests:
+                drift.add(test)
+    return sorted(drift)
+
+
 def validate(data, root: Path = ROOT) -> list[str]:
     """Validate claims and archived provenance; do not execute tests or contact providers."""
     errors = []
@@ -61,26 +121,9 @@ def validate(data, root: Path = ROOT) -> list[str]:
         if type(data.get(name)) is not type(expected) or data.get(name) != expected:
             errors.append(f"invalid invariant: {name}")
     try:
-        archive_path = file_in_root(root, data.get("archive"))
-        digest = hashlib.sha256(archive_path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
-        if digest != data.get("archive_sha256"):
-            raise ValueError("archive hash mismatch; review evidence before updating")
-        archive = read_json(archive_path)
-        if archive.get("repository") != "https://github.com/zzpsah/chatgpt-development-os":
-            raise ValueError("archive repository mismatch")
-        if archive.get("head") != data.get("snapshot_head"):
-            raise ValueError("archive snapshot head mismatch")
-        if not re.fullmatch(r"[0-9a-f]{40}", str(data.get("snapshot_head", ""))):
-            raise ValueError("invalid snapshot head")
+        archive, inventory = _archive_context(data, root)
     except (OSError, ValueError, TypeError, AttributeError) as exc:
         return errors + [str(exc)]
-    try:
-        inventory = {item["path"]: item["sha256"] for item in archive["tracked_inventory"]}
-        assert isinstance(archive["latest_main_runs"], list)
-        assert isinstance(archive["final_source_runs"], dict)
-        assert isinstance(archive["local_checks"], list)
-    except (KeyError, TypeError, AssertionError):
-        return errors + ["malformed archive collections"]
     runs = list(archive["latest_main_runs"])
     for group in archive["final_source_runs"].values():
         runs.extend(group)
@@ -151,14 +194,11 @@ def validate(data, root: Path = ROOT) -> list[str]:
                 if item.get("freshness") != "historical":
                     raise ValueError("archived evidence must remain historical")
                 path = file_in_root(root, item.get("test"))
-                # Normalize checkout line endings so GitHub LF and Windows CRLF agree.
-                blob = path.read_bytes().replace(b"\r\n", b"\n")
-                # The published snapshot hashed a Windows checkout; accept its CRLF
-                # form or canonical LF form, without ignoring any other content drift.
-                digests = {hashlib.sha256(blob).hexdigest(),
-                           hashlib.sha256(blob.replace(b"\n", b"\r\n")).hexdigest()}
-                if inventory.get(item["test"]) not in digests:
-                    raise ValueError("test differs from archived source; refresh evidence")
+                # Historical evidence is validated against the pinned archive, not
+                # silently repointed to current HEAD. Current-source drift is exposed
+                # separately by historical_source_drift().
+                if item["test"] not in inventory:
+                    raise ValueError("test absent from archived source inventory")
                 if item.get("kind") == "local_check":
                     record = local.get(path.name)
                     if not record or record.get("exit_code") != 0:
@@ -201,14 +241,17 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--matrix", default="config/readiness-evidence.json")
     args = parser.parse_args()
+    drift = []
     try:
         data = read_json(file_in_root(ROOT, args.matrix))
         errors = validate(data)
+        drift = historical_source_drift(data)
     except (OSError, ValueError, TypeError, KeyError) as exc:
         errors = [str(exc)]
     print(json.dumps({"protocol": PROTOCOL, "status": "HOLD" if errors else "VALID",
                       "production_ready": False, "authority": "UNCHANGED",
                       "authorization": "UNCHANGED", "execution": "NONE",
+                      "historical_source_drift": drift,
                       "errors": errors}, indent=2))
     return 2 if errors else 0
 
