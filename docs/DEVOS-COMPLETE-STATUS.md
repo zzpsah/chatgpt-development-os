@@ -1,5 +1,7 @@
 # DevOS Complete Status & Handoff
 
+**Independent verification handoff:** [Stable AI handoff index](handoff/README.md). The linked master document provides pinned source/PR/CI evidence, early milestone naming conflicts and explicit proof limitations. Check current source/Git and `.ai` state before reusing snapshot conclusions.
+
 **Repository:** `zzpsah/chatgpt-development-os`  
 **Canonical alias:** `DEVOS`  
 **Purpose:** portable, repository-first Development OS for AI-assisted software engineering.
