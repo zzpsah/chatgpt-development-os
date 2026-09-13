@@ -1,54 +1,42 @@
 # DevOS Tasks
 
 ## Active
-- **Foundation Health & State Consistency** is the current bounded objective. No P18/P19 phase is created.
-- Preserve the architecture: `Source / Git / Tests / CI → devos-audit.py → readiness evidence ledger → machine-derived status → devos-doctor.py`.
-- Keep `devos-doctor.py` presentation-only and READ_ONLY; it must not grant authority, execute work, mutate state, rewrite evidence, refresh historical proof, or promote `WARN`/`UNKNOWN` to `PASS`.
-- Preserve P11 Federation & Self-Healing Context as the repository-first recovery/revalidation baseline.
-- Require conservative detection for canonical identity, bootstrap/dependency closure, malformed `.ai`, Git/source mismatch, historical-source drift, capability/evidence inconsistency, missing verification evidence, contradictory status documentation, Security Gate wiring, P15/P16/P17 check consistency, and unsupported evidence promotion.
-- Require the adversarial regression gate: `python tools/test-devos-audit.py && python tools/test-foundation-health.py`.
-- Fresh exact-final-head Trust-First, Contracts and Full DevOS CI is required after durable documentation is complete. External Managed Project is required only when its path-filtered workflow is applicable; never invent a non-triggered run.
-- Keep `production_ready = false` and all live-mutation proof false unless a reviewed future protocol plus separately authorized appropriate evidence genuinely proves otherwise.
-- Do not run live/destructive/production/provider mutation merely to fill a diagnostic or evidence cell.
+- **Cross-Host Recovery Friction & Onboarding Proof** is the current bounded objective. It is unnumbered; do not create P18/P19.
+- Build on existing repository-only recovery, Multi-AI portability, host profiles, auto-onboarding, and fresh-AI recovery checks instead of creating a parallel portability system.
+- Produce machine-readable, READ_ONLY recovery/friction evidence from repository state only.
+- Measure at minimum: canonical identity recovery, bootstrap completeness, current-state recovery, active-task recovery, decision/safety-boundary recovery, host-profile capability gaps, continuation entrypoint discovery, and unresolved/ambiguous inputs.
+- Treat missing or ambiguous recovery inputs as `UNKNOWN`/`BLOCKED`, never PASS.
+- A simulated host profile is not a real cross-vendor/account proof; do not promote simulated recovery into live-provider or independent-account evidence.
+- Preserve P11 repository-first recovery/revalidation and all existing authorization/Security Gate boundaries.
+- Keep `production_ready = false` and all live-mutation proof false unless separately authorized and genuinely proven.
+- Do not run live/destructive/production/provider mutation for this objective.
 
-## Foundation Health implementation evidence
-- Verified implementation head: `f7e0dd67561efedc27819bcd7b2fe2788565be2a`.
-- Trust-First Audit 24 / `34763165651`: success.
-- Contracts 561 / `34763165669`: success; Foundation Health regression step passed.
-- Full DevOS 486 / `34763165638`: success; dedicated Foundation Health job passed.
-- These runs precede durable documentation updates and are not final-head closure evidence.
+## Foundation Health & State Consistency — completed
+- Final source head: `77a8f6f8d8ce012d872b20343bded2e00c53ed7d`.
+- PR #18 merge commit: `657ae461c0d6df62ca428d8bdd0404bd241b5c84`.
+- Final PR verification: Trust-First 29 / `34763332363`, Contracts 566 / `34763332344`, Full DevOS 491 / `34763332347` — all success.
+- Fresh post-merge main verification: Trust-First 33 / `34764171968`, Contracts 570 / `34764171939`, Full DevOS 495 / `34764171923` — all success.
+- External Managed Project is not push-triggered for this merge; no run is fabricated.
+- `tools/test-step-readiness-orchestrator.py` remains historical-source drift in the readiness ledger and is intentionally surfaced as WARN rather than silently refreshed.
 
 ## Completed recently
 - Production E2E Harness — PR #11.
 - Failure + Recovery Proof — PR #12.
 - Multi-Session / Fresh-AI Continuation Proof — PR #13.
-- Controlled Remote Mutation Proof — PR #14 at `ffbdd7a4849dd012604911accd1211f172bde53b`.
-- Trust-First audit gap closure / adversarial Security Gate proof — PR #17, merged at `e13ce8df8c46ae95e26b3a8d02be374274eb2185`.
-- Production-Readiness Evidence Matrix & Limitations — PR #16 final head `6c509d6f65b22666f121dfe86604faae72c08f8c`, merged at `b8e31ae76201b32e4617ef6044b29ef285004f54`.
+- Controlled Remote Mutation Proof — PR #14.
+- Trust-First audit gap closure / adversarial Security Gate proof — PR #17.
+- Production-Readiness Evidence Matrix & Limitations — PR #16, merged at `b8e31ae76201b32e4617ef6044b29ef285004f54`.
+- Foundation Health & State Consistency — PR #18, merged at `657ae461c0d6df62ca428d8bdd0404bd241b5c84`.
 
-## PR #16 final verification
-- Trust-First Audit 22 / `34762214579`: success.
-- Contracts 559 / `34762214457`: success.
-- Full DevOS 484 / `34762214462`: success.
-- External Managed Project 52 / `34762214609`: success.
-
-## PR #16 post-merge main verification
-At merge commit `b8e31ae76201b32e4617ef6044b29ef285004f54`:
-- Trust-First Audit 23 / `34762783110`: success.
-- Contracts 560 / `34762783133`: success.
-- Full DevOS 485 / `34762783132`: success.
-- External Managed Project does not run on `main` push and therefore has no post-merge run for this commit.
-
-## Foundation Health acceptance targets
-- `tools/devos-audit.py` remains an authoritative read-only dependency/check audit and includes bootstrap, P15 interpretation, P16 planning, P17 readiness, evidence-ledger, Security Gate/adversarial, and controlled-mutation dependency closure.
-- `tools/devos-health.py` composes audit + ledger results into PASS/WARN/UNKNOWN/FAIL/BLOCKED without creating a new authority source.
-- `tools/devos-doctor.py` only renders machine-derived status for humans.
-- Historical source drift remains pinned and visible; it is never silently refreshed.
-- Stale expected HEAD blocks; unavailable Git provenance remains UNKNOWN rather than guessed.
-- Contradictory prose can warn, but prose never overrules source/Git/test/evidence truth.
-- Missing dependencies/evidence remain UNKNOWN or FAIL according to the governing contract, never PASS.
-- Unsupported production/live-provider promotion fails closed.
-- Exact final-head CI must pass before closure.
+## Cross-host recovery acceptance targets
+- Exact canonical repository identity must be recoverable from repository evidence alone.
+- Required bootstrap/state files must be dependency-closed and machine-checkable.
+- Current active work and durable decisions must be recoverable without chat/account memory.
+- The recovery report must name missing inputs and capability gaps rather than inferring success.
+- Host-profile comparison must not alter authority, authorization, Security Gate requirements, or replay rules.
+- Recovery/adoption friction should be represented by deterministic counts/fields that can be compared across hosts and future revisions.
+- Real cross-vendor/account proof remains a separate evidence level from deterministic profile simulation.
+- Every milestone ends with a runnable PASS/FAIL command and fresh exact-final-head CI before closure.
 
 ## Universal portability invariant
 `AI A + Account A → repository → AI B + Account B → correct recovery → safe continuation`
