@@ -16,7 +16,7 @@
 
 - Objective: support independently authorized GitHub accounts/installations through a GitHub App-oriented authentication boundary while keeping credentials separate from DevOS authorization.
 - Branch: `feat/github-identity-token-control-plane`.
-- Latest implementation commit before this durable-state write: `6b8aaa5805684321e93fee56063eb690d7301972`.
+- Current branch head: `ff28f9c164a2eb00629e6fef6ba01569d6368378`.
 - Added normative contract: `core/devos-github-identity-token-control-plane.md`.
 - Added side-effect-free primitives: `tools/devos-github-auth.py`.
 - Added deterministic authentication regression suite: `tools/test-devos-github-auth.py`.
@@ -28,8 +28,9 @@
 - Extended control-plane CI to verify the GitHub-hosted runtime contract.
 - Added deployment/runtime guide: `docs/DEVOS-GITHUB-HOSTED-RUNTIME.md`.
 - Added durable session provenance for the authentication/control-plane work.
-- Historical exact-head CI for source `113508a32eedcd1d42cb0def9438224fe03aeb1b` passed: GitHub Identity and Token Control Plane 1 / `34781566089`, Current-Source Evidence 44 / `34781566086`, Living Engineering Map 14 / `34781566044`, Trust-First Audit 128 / `34781566045`, Contracts 665 / `34781566015`, Full DevOS 587 / `34781566026`, MCP Repository Create 41 / `34781566048`.
-- Later capability-discovery hardening and GitHub-hosted runtime changes require fresh branch CI before final readiness is claimed.
+- The first fresh runtime-contract CI attempt exposed a repository-input validation bug for `owner/../repo`; the validator was hardened and the next exact-head control-plane run passed.
+- Fresh exact-head control-plane verification for `ff28f9c164a2eb00629e6fef6ba01569d6368378`: Verify DevOS GitHub Identity and Token Control Plane run `34783664764` / #20 — `success`; all three control-plane test steps passed, including the GitHub-hosted runtime auth contract.
+- Fresh companion verification currently observed: Development OS `34783664782` / #606 success; Current-Source Evidence `34783664841` / #63 success; Living Engineering Map `34783664783` / #33 success; MCP Repository Create `34783664828` / #60 success; Trust-First Audit `34783664787` / #147 success. Development OS Contracts `34783664781` / #684 was still in progress at the last observation.
 
 ## GitHub-hosted runtime model
 
@@ -46,7 +47,7 @@ The manual workflow is deliberately read-only: it authenticates, discovers the i
 
 ## Live activation boundary
 
-- The GitHub repository-side runtime implementation is present.
+- The GitHub repository-side runtime implementation is present and its contract is freshly CI-verified.
 - Live proof still requires a real GitHub App registered and installed on the target repository/account, Actions secrets configured, and the manual runtime workflow completing successfully against that installation.
 - Browser OAuth callback configuration is **not required for the GitHub-hosted Actions runtime**. A callback remains relevant only if a separate interactive web/OAuth client is introduced.
 - `production_ready=false` and `live_provider_proven=false` remain unchanged until fresh live evidence exists.
@@ -103,4 +104,4 @@ Historical evidence snapshots remain dated and do not auto-refresh when source a
 
 ## Next bounded direction
 
-Run fresh branch CI on the current head, then configure the external GitHub App + Actions secrets and execute the read-only runtime workflow against the intended repository. Do not claim live GitHub authentication or production readiness until that evidence exists. Do not create P18/P19 merely for bookkeeping.
+Complete remaining fresh companion CI, then configure the external GitHub App + Actions secrets and execute the manual read-only runtime workflow against the intended repository. Do not claim live GitHub authentication or production readiness until that live evidence exists. Do not create P18/P19 merely for bookkeeping.
