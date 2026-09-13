@@ -9,6 +9,7 @@
 - Production E2E Harness, Failure + Recovery Proof, Multi-Session / Fresh-AI Continuation Proof, and **Controlled Remote Mutation Proof are verified and closed**.
 - Foundation Bootstrap Hardening is now implemented at v1 contract/checker level and remains an active hardening area.
 - Active maturity gate: **Production-Readiness Evidence Matrix & Limitations**.
+- **Product vision invariant:** DevOS is an OS for AI-assisted software development across AI vendors, models, accounts, coding agents, machines, and Git providers; no single AI account, model, chat, or vendor-specific memory may be authoritative project state.
 
 ## Canonical governed path
 
@@ -82,9 +83,10 @@ Still unproven or unavailable unless separately explicitly authorized/bounded:
 
 ## Active maturity gate — Production-Readiness Evidence Matrix & Limitations
 
-Implementation is present at v1; final PR/head CI closure remains pending.
+Implementation is present at v1 on PR #16; closure requires reconciliation against current `main` plus fresh exact-final-head verification.
 See `config/readiness-evidence.json`, `tools/verify-readiness-evidence.py`, and `docs/PRODUCTION-READINESS-EVIDENCE.md`.
-The offline verifier covers 15 capability families and rejects unsupported evidence promotion. VALID never means production ready. Bootstrap checks are now included in primary CI.
+The offline verifier covers 15 capability families and rejects unsupported evidence promotion. `VALID` never means production ready. Bootstrap checks participate in primary CI.
+Historical evidence remains pinned to its original source heads and is not silently repointed when the branch advances.
 
 Goal: produce an evidence-based readiness view rather than a blanket “production ready” label.
 
@@ -107,6 +109,21 @@ It must map each major DevOS capability to:
 
 No live high-impact mutation should be performed merely to fill a matrix cell. A live-provider mutation proof, if desired later, requires separate explicit authorization for an exact target/path/operation.
 
+## Universal AI/account portability gate
+
+DevOS is intended to be **host-neutral**. A fresh AI should be able to enter a managed project without the previous AI's hidden memory and recover the same authoritative state from repository evidence.
+
+The portability gate therefore requires evidence that:
+
+- project semantics are stored in portable repository state;
+- host-specific capabilities are isolated behind adapters/capability profiles;
+- no ChatGPT/Claude/Gemini/Cursor/etc. account memory is required for authoritative recovery;
+- changing model/vendor/account does not change authorization rules;
+- a new AI can detect stale/conflicting state instead of silently trusting the previous session;
+- the same project can continue through different AI hosts when the required capabilities are available.
+
+This is a **product-level acceptance property**, not merely a documentation statement. Cross-host proof remains part of the hardening direction.
+
 ## Recovery precedence
 
 1. Current source tree + Git.
@@ -116,11 +133,21 @@ No live high-impact mutation should be performed merely to fill a matrix cell. A
 5. Generated indexes as navigation/evidence only.
 6. ChatGPT Memory/chat history as supplementary context only.
 
+## Independent audit feedback
+
+An independent AI audit was performed from the supplied audit source pack and separately accessible public repository artifacts. The audit correctly identified the risk of relying on claims without executable source evidence and highlighted documentation/roadmap drift, including an open Issue #1 with a separate P0/P1/P2 taxonomy. It also initially classified P16/P17 as unknown because those source files were not accessible in its environment.
+
+The live repository subsequently confirmed that P16 and P17 contracts are present on `main`. Therefore, inability to fetch a file is treated as an **evidence-access limitation**, not proof that the implementation does not exist.
+
+PR #17 subsequently closed the audit-pack dependency gap with read-only `tools/devos-audit.py`, added cross-layer adversarial Security Gate coverage, and hardened P17 against semantic impact downgrades. PR #16 must preserve those Trust-First controls rather than duplicating them.
+
+The audit feedback remains valuable as a permanent hardening requirement: DevOS must make contradictory status records, stale README/version information, incomplete audit bundles, and unsupported completion claims detectable rather than relying on AI interpretation.
+
 ## Handoff documentation
 
 Stable AI discovery path: [`docs/handoff/README.md`](../docs/handoff/README.md).
 It links the comprehensive master handoff, dated evidence snapshot and local verification helper. The snapshot records main at `70c8e0e050660fd6b606150a1370d8fce51e373e`; later publication commits do not refresh that historical evidence. This documentation publication does not close the active production-readiness matrix gate or prove live runtime mutation.
 
-The full scratch-to-current history, status matrix, foundation bootstrap work, limitations, recommended direction, invariants, and a fresh-AI verification prompt are documented in `docs/DEVOS-COMPLETE-STATUS.md`.
+The full scratch-to-current history, status matrix, foundation bootstrap work, independent audit feedback, universal AI portability direction, limitations, recommended direction, invariants, and a fresh-AI verification prompt are documented in `docs/DEVOS-COMPLETE-STATUS.md`.
 
 Exact implementation remains authoritative in Git history.

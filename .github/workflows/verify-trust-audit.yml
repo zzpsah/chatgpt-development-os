@@ -1,0 +1,33 @@
+name: Verify DevOS Trust-First Audit
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - audit/**
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  trust-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Verify audit-pack reproducibility
+        run: python tools/test-devos-audit.py
+
+      - name: Verify adversarial Security Gate boundaries
+        run: python tools/test-security-boundary-adversarial.py
+
+      - name: Run complete read-only Trust-First audit
+        run: python tools/devos-audit.py
