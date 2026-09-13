@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +24,7 @@ def _load(path: Path, name: str) -> Any:
     if spec is None or spec.loader is None:
         raise RuntimeError(f"unable to load {path.name}")
     module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -78,7 +80,6 @@ def main() -> int:
         result = {"status": "BLOCKED", "reason_codes": ["MALFORMED_CONTROLLER_BRIDGE_INPUT"], "reason": str(exc), "authority": "UNCHANGED", "execution": "NONE", "mutation": "NONE"}
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0 if result.get("status") in {"COMPLETE", "NEEDS_APPROVAL", "BLOCKED", "HOLD"} else 2
-
 
 if __name__ == "__main__":
     raise SystemExit(main())
