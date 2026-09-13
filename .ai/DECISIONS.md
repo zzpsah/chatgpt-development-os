@@ -8,6 +8,19 @@
 - `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture/navigation layer and must be updated when material architecture, capability, evidence-boundary, interpreter, portability, security/authorization, or future-goal semantics change.
 - Automation may synchronize machine-observable facts; semantic decisions require evidence-driven AI/engineering judgment.
 
+## GitHub Identity & Token Control Plane v1
+- GitHub App is the preferred long-term authentication mechanism for DevOS GitHub integration because it supports fine-grained permissions and short-lived installation tokens.
+- GitHub App user authorization and installation authorization are distinct authentication modes and must remain distinguishable in project bindings.
+- Authentication establishes provider identity/capability only; it never manufactures DevOS authorization.
+- Raw access tokens, refresh tokens, App private keys, OAuth client secrets, JWT signing material, and equivalent credentials never enter Git, `.ai`, MCP arguments, logs, evidence, or model output.
+- Only non-secret identity/capability metadata may enter durable DevOS state.
+- OAuth callbacks require cryptographically random state with constant-time comparison; state mismatch fails closed.
+- Token expiry/revocation requires reauthorization or token renewal; authentication failure never authorizes blind retry of a mutation.
+- Project-to-GitHub identity binding is explicit and isolated per project; credentials/provider bindings and approval scopes cannot cross projects.
+- GitHub provider capability must be discovered and recorded as non-secret metadata before capability-dependent execution is considered.
+- “Full access” means maximum access explicitly granted by GitHub to the authorized user/app installation within its actual repository/organization scope, further constrained by DevOS capability, P17, Security Gate, and exact authorization. It does not mean a master bypass token.
+- Checked-in authentication code is side-effect-free. Live OAuth exchange, token vault, GitHub App private key, and live-provider proof remain deployment/evidence boundaries.
+
 ## MCP/App Permission Control Plane
 - Remote provider/API write access is a technical capability, not DevOS authorization.
 - MCP/App host adapters must route remote mutation eligibility through the provider-independent DevOS permission control plane.
