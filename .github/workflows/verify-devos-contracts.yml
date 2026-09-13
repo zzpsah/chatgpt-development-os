@@ -52,6 +52,9 @@ jobs:
       - name: Verify Multi-Session Two-Process Proof
         run: python tools/test-multi-session-two-process.py
 
+      - name: Verify Controlled Remote Mutation Proof
+        run: python tools/test-controlled-remote-mutation-proof.py
+
       - name: Verify AI State Resolver
         run: python tools/verify-state-resolver.py
 
