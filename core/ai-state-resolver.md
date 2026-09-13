@@ -73,7 +73,7 @@ Never determine a next development action before the correct project is resolved
 
 Use these evidence levels:
 
-- **Observed** — directly verified from repository files, Git, tests, or durable project context.
+- **Observed** — in resolver v2, only a claim with current P12 execution evidence and citable provenance. A durable record is not sufficient by itself.
 - **Likely** — an evidence-supported interpretation that still needs confirmation.
 - **Unknown** — not established by available evidence.
 
@@ -215,7 +215,7 @@ Those belong to later Development OS milestones.
 
 ### Downstream propagation
 
-P16 may receive a resolver result as `state_resolution`. If it includes unresolved claim IDs, P16 returns `CLARIFY` and preserves the named uncertainty. A `PLANNED` envelope retains resolver provenance. P17 rejects a tampered `PLANNED` envelope that contains unresolved resolver claims. This does not change P17 authorization, Security Gate, capability, verification, or runtime gates.
+P16 may receive a resolver result as `state_resolution`. If it includes unresolved claim IDs, P16 returns `CLARIFY` and preserves the named uncertainty. A `PLANNED` envelope retains resolver provenance. P17 rejects a tampered `PLANNED` envelope that contains unresolved resolver claims. `likely` remains an explicit uncertainty signal; it does not automatically block every plan. This does not change P17 authorization, Security Gate, capability, verification, or runtime gates.
 
 ```text
 P11 recovery -> resolver v2 -> P16 plan -> P17 readiness -> controller
@@ -231,3 +231,29 @@ P11 recovery -> resolver v2 -> P16 plan -> P17 readiness -> controller
 - No authorization, completion marking, mutation, or execution.
 
 The reference continuation path (`tools/devos-continuation-path.py`) now calls resolver v2 when its caller supplies `state_claims`, `events`, or `changed_paths`. It returns the resolver result alongside P15/P16/P17 evidence. An unresolved supplied claim yields P16 `CLARIFY` and prevents P17/controller continuation.
+
+### Validation reasons and output
+
+The resolver only preserves or downgrades caller-supplied confidence. It never upgrades a claim. Its deterministic reasons include:
+
+- `CLAIM_ID_OR_STATEMENT_INVALID`
+- `STATE_CONFIDENCE_INVALID`
+- `GROUNDING_TYPE_INVALID`
+- `OBSERVED_CLAIM_GROUNDING_MISSING`
+- `DUPLICATE_CLAIM_ID`
+- `P12_EXECUTION_EVIDENCE_NOT_CURRENT`
+- `DURABLE_STATE_CANNOT_SELF_UPGRADE_TO_OBSERVED`
+- `REVALIDATION_BOUNDARY_REACHED`
+- `REVALIDATION_PATH_CHANGED`
+
+The result contains the protocol identifier, unchanged authority/authorization, `execution: NONE`, `mutation: NONE`, resolved claims, their reasons, a weakest-confidence summary, and unresolved claim IDs. `RESOLVED` means no claim is unknown; it does not mean a task is authorized, verified, or complete. `NEEDS_EVIDENCE` names unknown claims. `BLOCKED` means the `claims` input itself was invalid.
+
+### Relationship to P12 and the continuation path
+
+P12 owns execution-evidence provenance and freshness. Resolver v2 accepts a P12 reference and its freshness label but does not query Git, read the filesystem, run tests, or calculate P12 freshness itself. In the reference continuation path, callers may supply claims from durable records, session records, or prior evidence:
+
+```text
+User request -> P15 interpretation -> State Resolver v2 -> P16 plan -> P17 readiness -> controller
+```
+
+The resolver does not select a task or priority. It resolves claim confidence only. P16/controller choose the next bounded work under their existing constraints.

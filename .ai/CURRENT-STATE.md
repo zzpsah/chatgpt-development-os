@@ -124,6 +124,7 @@ Historical evidence snapshots remain dated and do not auto-refresh when source a
 ## Resolver grounding correction
 
 - Durable state cannot self-upgrade a claim to `observed`; only current P12 execution evidence with citable provenance may retain `observed`.
+- Resolver documentation now explicitly aligns v1 terminology, v2 grounding rules, P12 ownership, output semantics, and P15→P16→P17 continuation behavior.
 
 ## Next bounded direction
 
