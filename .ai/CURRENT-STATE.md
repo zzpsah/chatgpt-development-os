@@ -6,12 +6,13 @@
 - Source tree + Git are authoritative for implementation and exact project state; ChatGPT Memory/chat history are supplementary only.
 - P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P9 through P17 are complete on `main`.
-- Production E2E Harness, Failure + Recovery Proof, Multi-Session / Fresh-AI Continuation Proof, Controlled Remote Mutation Proof, Trust-First audit gap closure, Production-Readiness Evidence Matrix, Foundation Health & State Consistency, Cross-Host Recovery Friction & Onboarding Proof, and Recovery Friction → Foundation Health/Doctor Integration remain closed at their stated evidence levels.
-- Universal Project Onboarding + Repository Creation PR #19 is merged.
-- Host-neutral MCP/App `repository.create` adapter PR #22 is merged.
-- Post-merge `main` for the onboarding/MCP chain is `535d20ecf5528d0b118f220a98c4c519578b00cf` with Trust-First 68 / `34768878981`, Contracts 605 / `34768878980`, and Full DevOS 527 / `34768878994` successful.
-- **Active bounded objective: Current-Source Evidence Refresh Protocol, draft PR #24.**
-- No numbered phase is created for this objective.
+- Production E2E Harness, Failure + Recovery Proof, Multi-Session / Fresh-AI Continuation Proof, Controlled Remote Mutation Proof, Trust-First audit gap closure, Production-Readiness Evidence Matrix, Foundation Health & State Consistency, Cross-Host Recovery Friction & Onboarding Proof, Recovery Friction → Foundation Health/Doctor Integration, Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, and Current-Source Evidence Refresh are closed at their stated evidence levels.
+- Universal Project Onboarding + Repository Creation merged through PR #19.
+- Host-neutral MCP/App `repository.create` adapter merged through PR #22.
+- Current-Source Evidence Refresh merged through PR #24.
+- Current verified `main`: `a93f9f435ffab5f81ce070f07a0da694757ab6cb`.
+- Fresh post-merge verification at that head: Trust-First 72 / `34774013758`, Contracts 609 / `34774013791`, Full DevOS 531 / `34774013827` — success.
+- No new numbered phase is active or implied by this closure state.
 - Product invariant: DevOS is a Development OS for AI across vendors, models, accounts, coding agents, sessions, machines, and Git-provider adapters; no AI account/chat/model/vendor memory is authoritative project state.
 
 ## Canonical governed path
@@ -41,7 +42,7 @@ Repository creation remains a high-impact remote mutation. Provider credentials 
 
 No live repository creation, production mutation, destructive mutation, credential/secret mutation, permission mutation, or deployment mutation was performed for this evidence.
 
-## Active bounded objective — Current-Source Evidence Refresh Protocol
+## Current-Source Evidence Refresh — CLOSED
 
 Purpose: add fresh proof for exact current source without rewriting historical readiness evidence.
 
@@ -60,7 +61,7 @@ Implementation:
 - optional packet consumption in `tools/devos-health.py`
 - presentation in `tools/devos-doctor.py`
 
-Current protocol: `DEVOS-CURRENT-SOURCE-EVIDENCE-v1`.
+Protocol: `DEVOS-CURRENT-SOURCE-EVIDENCE-v1`.
 
 The packet binds:
 - exact Git `source_head`;
@@ -79,14 +80,21 @@ Historical `source_head`, run IDs, archive digest, and `freshness: historical` r
 
 Foundation Health validates an optional packet but never executes its test. Historical drift remains visible as WARN even when an exact current packet proves the drifted test at the current head. Doctor only renders the Health result.
 
-Implementation head before durable-state closure: `9a998248eb6d9bb7123f67fd767f6a91c1e97182`.
-Fresh implementation-head CI:
-- Current-Source Evidence 8 / `34773472433`: success.
-- Trust-First Audit 69 / `34773472435`: success.
-- Contracts 606 / `34773472413`: success.
-- Full DevOS 528 / `34773472487`: success.
+PR #24 final source head: `bc400112d0bbaced6ed699a6863bc8dcf91e47c8`.
+Final exact-head PR verification:
+- Current-Source Evidence 12 / `34773566913`: success.
+- Trust-First Audit 71 / `34773566958`: success.
+- Contracts 608 / `34773566914`: success.
+- Full DevOS 530 / `34773566926`: success.
+- MCP Repository Create 9 / `34773566919`: success where path-applicable.
 
-PR #24 remains DRAFT until the final documentation/state head receives a new exact-head CI cycle.
+PR #24 merge commit: `a93f9f435ffab5f81ce070f07a0da694757ab6cb`.
+Fresh post-merge `main` verification:
+- Trust-First Audit 72 / `34774013758`: success.
+- Contracts 609 / `34774013791`: success.
+- Full DevOS 531 / `34774013827`: success.
+
+The dedicated Current-Source Evidence workflow does not have a `main` push trigger, so no fabricated post-merge dedicated run is claimed.
 
 ## Production-readiness evidence boundary
 
