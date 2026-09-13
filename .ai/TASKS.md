@@ -1,14 +1,20 @@
 # DevOS Tasks
 
 ## Active
-- **Remote Resource Permission Control Plane integration** is the active unnumbered bounded objective.
-- It exists because DevOS is intended to operate as a long-lived agent across multiple repositories, and provider/API write access must not be treated as blanket authority.
+- No numbered phase is active from PR #27 closure.
+- Continue with consolidation, evidence hardening, and the next repository-supported bounded objective only after inspecting current `main`, open PRs, CI, and durable project state.
+- Do not create P18/P19 merely for bookkeeping.
+
+## Completed — MCP/App Permission Control Plane + Multi-Project Agent Isolation
+- PR #27 — `Integrate MCP/App remote permission control plane` — merged at `2bb8d978113b64ab88d6ba5f8e357fa595162c9c`.
+- Exact PR head verified before merge: `99a48fea51bd2d9d33860115c0212f7b25ca4ad8`.
+- Exact-head verification passed: Full DevOS 543, Contracts 621, Trust-First 84, MCP Permission Control Plane 3, Remote Resource Permission Governance 4, MCP Repository Create 13, Current-Source Evidence 16.
 - The control plane governs `repository.create`, `repository.delete`, `branch.create`, `branch.update`, `branch.force_update`, and `branch.delete` with exact project/repository/resource/workflow/impact/freshness scope.
-- The MCP/App host adapter must route remote mutation eligibility through this control plane before provider execution.
-- `continue` may reuse a valid scoped approval; a new repository/branch/capability/impact/freshness/security scope requires a new approval and actionable HOLD.
-- API tokens/credentials are provider capabilities only; they are never DevOS authorization and must remain outside `.ai/`, MCP arguments, logs, and model output.
-- This objective is unnumbered; do not create P18/P19 for bookkeeping.
-- No live/destructive/production provider mutation is required for closure; deterministic and integrated evidence must remain distinct from live-provider proof.
+- Provider/API write permission remains technical capability only; it is never DevOS authorization.
+- `FULL APPROVAL` remains scoped, not blanket permission.
+- `continue` may reuse an approval only when exact project/workflow/capability/target/impact/freshness/security scope remains valid.
+- Multi-project isolation keeps state, approval, and provider binding separated per project.
+- No live/destructive/production provider mutation was performed for PR #27.
 
 ## Current-Source Evidence Refresh Protocol — completed
 - Unnumbered bounded objective; merged through PR #24.
@@ -29,11 +35,12 @@
 - Recovery Friction → Foundation Health/Doctor Integration — PR #21.
 - Host-neutral MCP/App `repository.create` adapter — PR #22.
 - Current-Source Evidence Refresh — PR #24.
+- MCP/App Permission Control Plane + Multi-Project Agent Isolation — PR #27.
 
 ## Platform foundations retained in the durable task map
 - **P11 Federation & Self-Healing Context** remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - **P12 Operational Intelligence** remains the advisory/runtime-observability and durable recovery substrate used by later governed execution paths.
-- P11/P12 are historical completed foundations; the active work above must not be re-labeled as a new numbered phase.
+- P11/P12 are historical completed foundations; later unnumbered objectives must not be re-labeled as new numbered phases.
 
 ## Universal portability invariant
 `AI A + Account A → repository → AI B + Account B → correct state recovery → safe continuation`
