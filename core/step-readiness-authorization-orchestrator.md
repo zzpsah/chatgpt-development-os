@@ -45,23 +45,25 @@ execution: NONE
 
 ## Required invariants
 
-1. Only a P16 plan with `decision: PLANNED` can be evaluated for readiness.
-2. The evaluated step must exist in the compiled plan.
-3. A repository-head mismatch between compilation and execution time produces `STOP` with stale-plan evidence; the plan must be recompiled/revalidated rather than silently reused.
-4. Every declared dependency must be complete before the step can be `READY`.
-5. Missing capability is `BLOCKED`; a capability declaration is evidence input, not permission.
-6. Step-specific authorization is required only when the compiled step declares `authorization_required: true`, but approval must be bound to that exact step id. Approval for another step never leaks.
-7. Security-sensitive/high-impact/production-or-destructive steps require an explicit Security Gate result. `FAIL` blocks; missing/unknown gate evidence produces `NEEDS_EVIDENCE`.
-8. A non-empty applicable verification requirement must exist before a step can be `READY`.
-9. `READY` still means only eligible for the existing controller/runtime path; it does not mean executed or completed.
-10. P17 must preserve `authority: UNCHANGED`, `authorization: UNCHANGED`, and `execution: NONE` for every outcome.
+1. Only a P16 plan with `decision: PLANNED` and protocol `DEVOS-GOAL-PLAN-v1` can be evaluated for readiness.
+2. The compiled plan must be structurally valid before any readiness gate can pass: non-empty step list, unique non-empty step ids, non-empty objectives, valid dependency lists, allowed impact classes, and explicit boolean authorization flags.
+3. Every dependency reference must identify another step in the same compiled plan. Self-dependencies and unknown dependency ids are invalid.
+4. The evaluated step must exist in the validated compiled plan.
+5. A repository-head mismatch between compilation and execution time produces `STOP` with stale-plan evidence; the plan must be recompiled/revalidated rather than silently reused.
+6. Every declared dependency must be complete before the step can be `READY`. Completion evidence naming ids that do not exist in the plan is invalid and blocks readiness.
+7. Missing capability is `BLOCKED`; a capability declaration is evidence input, not permission.
+8. Step-specific authorization is required only when the compiled step declares `authorization_required: true`, but approval must be bound to that exact step id. Approval for another step never leaks.
+9. Security-sensitive/high-impact/production-or-destructive steps require an explicit Security Gate result. `FAIL` blocks; missing/unknown gate evidence produces `NEEDS_EVIDENCE`.
+10. A non-empty applicable verification requirement must exist before a step can be `READY`.
+11. `READY` still means only eligible for the existing controller/runtime path; it does not mean executed or completed.
+12. P17 must preserve `authority: UNCHANGED`, `authorization: UNCHANGED`, and `execution: NONE` for every outcome.
 
 ## Status semantics
 
 - `READY` — all P17 gates are satisfied for the exact current step/state; downstream controller/runtime gating is still required.
 - `NEEDS_EVIDENCE` — required fresh state/security/verification evidence is missing or unknown.
 - `NEEDS_APPROVAL` — the exact step requires authorization and no matching step-bound approval exists.
-- `BLOCKED` — capability missing, dependency unresolved, Security Gate failed, step/plan invalid, or another deterministic blocker exists.
+- `BLOCKED` — malformed plan structure, capability missing, dependency unresolved/invalid, Security Gate failed, step/plan invalid, or another deterministic blocker exists.
 - `STOP` — the compiled plan is stale because material repository state changed after compilation.
 
 ## Authorization binding
@@ -70,19 +72,20 @@ Authorization input is keyed by step id. Accepted authorization for an authoriza
 
 ## Freshness rule
 
-The compiler's repository head is treated as plan provenance. If current repository head differs, P17 does not attempt to infer whether the change is harmless. It returns `STOP` and requires revalidation/recompilation. This is intentionally conservative for v1.
+The compiler's repository head is treated as plan provenance. If current repository state differs, P17 conservatively stops the plan instead of trying to infer that the intervening changes are harmless. A new/revalidated plan is required.
 
-## Acceptance criteria
+## Evidence boundary
 
-P17 v1 is complete only when:
+Readiness inputs are evidence claims that must come from current repository/runtime/security/capability sources. P17 does not fabricate capability, authorization, Security Gate results, dependency completion, repository freshness, or verification applicability.
 
-1. an executable deterministic readiness evaluator exists;
-2. tests cover ready read-only work, dependency blocking, missing capability, step-bound approval, approval non-leakage, Security Gate missing/fail/pass, missing verification path, invalid/non-planned plan, and stale-plan stopping;
-3. Development Task Controller/runtime handoff integration refuses to consume non-`READY` P17 state;
-4. an end-to-end reference test demonstrates `P16 plan → P17 readiness → controller/runtime handoff boundary` without manufacturing authority or execution evidence;
-5. CI verifies the P17 corpus and end-to-end integration;
-6. fresh CI passes on the final implementation state.
+## Runtime handoff
+
+`tools/devos-runtime-handoff.py` exposes a P17-aware handoff path. It accepts only a controller `EXECUTION_CANDIDATE` paired with a `DEVOS-STEP-READINESS-v1` envelope whose status is `READY`, whose step id matches the controller task id, and whose repository head matches the controller repository head. This additional boundary does not remove the legacy P12 integration path and does not execute the work unit itself.
+
+## Verification requirement
+
+P17 closure requires deterministic regression tests for readiness outcomes, stale-plan detection, exact-step approval isolation, malformed compiled plans, invalid/fake dependency evidence, missing capability, Security Gate evidence, verification-path presence, and a reference end-to-end path from P15 human-language interpretation through P16 planning and P17 readiness into controller/runtime handoff.
 
 ## Safety invariant
 
-> **A plan step may be correct and still not be ready. Readiness must be recomputed from fresh evidence for that exact step and state.**
+> **A plan step becomes eligible only from fresh, step-bound evidence. Eligibility never manufactures permission or proves execution.**
