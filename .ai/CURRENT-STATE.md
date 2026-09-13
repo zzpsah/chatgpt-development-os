@@ -12,7 +12,7 @@
 
 ## Durable principles and boundaries
 
-### Documentation law
+### Core documentation law
 
 > **What is not written was never done.**
 
@@ -127,6 +127,6 @@ No private AI memory is authoritative project state.
 ## Next bounded direction
 
 - Continue AI State Resolver v2 hardening only from fresh repository evidence.
-- Close obsolete replacement PRs #33 and #34 because PR #32 is merged and is the authoritative integration history.
+- PRs #33 and #34 are closed obsolete replacement branches; PR #32 is the authoritative merged integration history.
 - Do not create P18/P19 merely for bookkeeping.
 - Resolver cross-claim semantic contradiction remains explicitly out of v2 scope unless promoted by a future bounded objective.
