@@ -8,6 +8,46 @@ DevOS is a living engineering system. Its implementation, architecture, evidence
 
 This contract defines how implementation changes become durable project knowledge and how the Human Language Interpreter can improve through controlled experiments without gaining authority from those experiments.
 
+## Core documentation law
+
+> **What is not written was never done.**
+
+This is a permanent DevOS engineering principle, not merely a documentation preference.
+
+A material action, decision, repair, experiment, verification result, evidence change, architecture change, roadmap change, or externally relevant engineering outcome is not considered complete until its durable record exists in the repository.
+
+The rule applies across AI models, accounts, sessions, machines, hosts, providers, and contributors. A later AI must be able to recover what happened from repository evidence without depending on the memory of the AI that performed the work.
+
+### Action-to-record rule
+
+For every material engineering action:
+
+```text
+OBSERVE
+  ↓
+ACT / CHANGE / DECIDE
+  ↓
+VERIFY WHAT ACTUALLY HAPPENED
+  ↓
+WRITE THE DURABLE RECORD
+  ↓
+PERSIST IN GIT
+```
+
+At minimum, the durable record must make recoverable:
+
+```text
+WHAT happened?
+WHY was it done?
+WHERE did it change?
+HOW was it verified?
+WHAT evidence proves it?
+WHAT remains unknown/unproven?
+WHAT should the next AI do?
+```
+
+A chat message, tool response, temporary terminal output, or private model memory is not a durable completion record by itself.
+
 ## Source-of-truth precedence
 
 ```text
@@ -30,6 +70,12 @@ IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE
 ```
 
 The durable state should normally include the smallest affected set of `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, `.ai/DECISIONS.md`, `.ai/SESSIONS/`, `.ai/CHANGELOG.md`, and affected architecture/contracts/docs.
+
+## Documentation is part of the engineering transaction
+
+Documentation is not a post-processing activity that may be skipped after “the real work” is done. For material changes, implementation and the affected durable record should be treated as one engineering transaction and, where practical, one atomic change boundary.
+
+A change must not be described as complete solely because source code exists or CI is green. CI verifies defined checks; the durable records explain the engineering meaning and continuity state.
 
 ## Automatic vs semantic documentation
 
@@ -79,6 +125,34 @@ flowchart TD
 Persistent P15 experiments should record experiment ID, source head, input/context, baseline and candidate interpretation, semantic delta, false-positive/false-negative hypotheses, security/authorization review, regression cases, observed result, and `ADOPT | REJECT | DEFER` decision.
 
 The interpreter must never infer from language that `continue`, urgency, prior approval, provider credentials, “full approval”, model identity, or a previous successful run automatically broadens authority.
+
+## Every-AI continuation and documentation loop
+
+A fresh AI is not merely allowed to read the master map; it is expected to maintain it when its work materially changes the system.
+
+```text
+Fresh AI bootstrap
+      ↓
+Recover current repository truth
+      ↓
+Read active objective + master map
+      ↓
+Perform bounded engineering work
+      ↓
+Verify actual outcome
+      ↓
+Document the action + evidence + limitations
+      ↓
+Update affected architecture / state / task / decision records
+      ↓
+Update master map when the change is material
+      ↓
+Run integrity + CI checks
+      ↓
+Leave a fresh recoverable state for the next AI
+```
+
+A future AI must treat an undocumented material action as **unfinished work**, not as silently completed history.
 
 ## Multi-project isolation
 
