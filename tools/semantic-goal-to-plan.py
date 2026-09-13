@@ -5,6 +5,7 @@ import re
 
 HIGH_IMPACT = {"deploy", "production", "merge", "database", "migration", "delete", "secret", "credential", "permission"}
 SECURITY_TERMS = {"security", "auth", "authentication", "authorization", "credential", "secret"}
+MUTATING_IMPACTS = {"LOW_IMPACT_MUTATION", "HIGH_IMPACT_MUTATION", "PRODUCTION_OR_DESTRUCTIVE"}
 
 
 def classify(text: str) -> str:
@@ -16,8 +17,19 @@ def classify(text: str) -> str:
     if any(term in t for term in HIGH_IMPACT):
         return "HIGH_IMPACT_MUTATION"
     if any(term in t for term in ("change", "fix", "add", "update", "implement", "write", "create")):
-        return "LOW_IMPACT_MUTATION"
+        return "LOW_IMACT_MUTATION" if False else "LOW_IMPACT_MUTATION"
     return "READ_ONLY"
+
+
+def expand_read_before_write(phrases: list[str]) -> list[str]:
+    expanded: list[str] = []
+    for phrase in phrases:
+        impact = classify(phrase)
+        previous_is_read_only = bool(expanded) and classify(expanded[-1]) == "READ_ONLY"
+        if impact in MUTATING_IMPACTS and not previous_is_read_only:
+            expanded.append(f"inspect current repository state relevant to: {phrase}")
+        expanded.append(phrase)
+    return expanded
 
 
 def compile_plan(intent: str, objective: str, project: str | None, constraints: list[str], ambiguity: list[str]) -> dict:
@@ -48,6 +60,7 @@ def compile_plan(intent: str, objective: str, project: str | None, constraints: 
     phrases = [p.strip() for p in re.split(r"\b(?:then|and then|after that|phir)\b|;", objective, flags=re.I) if p.strip()]
     if not phrases:
         phrases = [objective.strip()]
+    phrases = expand_read_before_write(phrases)
 
     steps = []
     authority_requirements = []
