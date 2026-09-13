@@ -44,6 +44,10 @@ class ReadinessEvidenceTests(unittest.TestCase):
         self.data['capabilities'].append(copy.deepcopy(self.data['capabilities'][0]))
         self.reject('duplicate capability')
 
+    def test_malformed_capability_record(self):
+        self.data['capabilities'][0] = []
+        self.reject('capability must be an object')
+
     def test_missing_limitations(self):
         self.data['capabilities'][0]['limitations'] = []
         self.reject('limitations')
@@ -123,17 +127,22 @@ class ReadinessEvidenceTests(unittest.TestCase):
         self.data['capabilities'][1]['evidence'][0]['workflow'] = '.github/workflows/context-sync.yml'
         self.reject('not covered')
 
-    def test_changed_test_cannot_reuse_evidence(self):
+    def test_changed_current_source_does_not_repoint_historical_evidence(self):
         original = mod.file_in_root
         with tempfile.TemporaryDirectory() as directory:
             changed = Path(directory) / 'test-devos-bootstrap.py'
-            changed.write_text('print("unverified replacement")\n',encoding='utf-8')
+            changed.write_text('print("new current implementation")\n',encoding='utf-8')
             def resolve(root, value):
                 if value == 'tools/test-devos-bootstrap.py':
                     return changed
                 return original(root, value)
             with patch.object(mod, 'file_in_root', side_effect=resolve):
-                self.reject('test differs from archived source')
+                self.assertEqual(mod.validate(self.data), [])
+                drift = mod.historical_source_drift(self.data)
+                self.assertIn('tools/test-devos-bootstrap.py', drift)
+                evidence = self.data['capabilities'][0]['evidence'][0]
+                self.assertEqual(evidence['source_head'], self.data['snapshot_head'])
+                self.assertEqual(evidence['freshness'], 'historical')
 
 
 if __name__ == '__main__':
