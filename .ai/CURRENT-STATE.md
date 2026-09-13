@@ -11,6 +11,12 @@
 - No new numbered phase is created or implied.
 - DevOS is intended to operate as a long-lived agent across multiple repositories without letting provider write access, API tokens, AI accounts, chats, or model memory become authority.
 
+## Canonical governed path
+
+`Human request → P15 interpretation → P16 plan → P17 readiness → controller → bounded runtime → verification → persistence → recovery / continuation`
+
+Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, continuation packets, and simulated provider evidence never manufacture permission.
+
 ## Active objective — MCP/App Permission Control Plane
 
 Purpose: connect the host-neutral MCP/App boundary to a provider-independent remote-resource permission control plane so remote operations are authorized per exact project, repository, resource, capability, workflow, impact, and freshness scope.
@@ -36,9 +42,12 @@ Implemented on working branch:
 - `tools/test-devos-governed-continuation.py`
 - `docs/DEVOS-MCP-PERMISSION-CONTROL-PLANE.md`
 - `.github/workflows/verify-mcp-permission-control-plane.yml`
-- expanded `.ai/TASKS.md`
+- `core/remote-resource-permission-governance.md`
+- `tools/devos-remote-permission-check.py`
+- `tools/test-devos-remote-permission-check.py`
+- multi-project isolation and permission-control documentation/checkpoint files
 
-The provider-neutral remote permission policy already defines exact capability separation and consequence disclosure in `core/remote-resource-permission-governance.md`.
+The provider-neutral remote permission policy defines exact capability separation and consequence disclosure. Provider/API write permission is technical capability only and is never DevOS authorization.
 
 ## Multi-project agent isolation
 
@@ -62,11 +71,9 @@ The provider permission set should be minimum necessary for the enabled adapter 
 
 ## Verification boundary
 
-The new control-plane work is currently **IMPLEMENTED but not yet independently VERIFIED to final-head CI**.
+The control-plane work is **implemented but pending final exact-head independent verification**.
 
 No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation has been performed for this objective.
-
-The dedicated CI gate is expected to prove deterministic policy and integration semantics only. Live-provider proof remains a separate, explicitly bounded sandbox exercise.
 
 ## Existing production-readiness boundary
 
@@ -82,3 +89,17 @@ The dedicated CI gate is expected to prove deterministic policy and integration 
 `AI A + Account A → repository → AI B + Account B → correct state recovery → safe continuation`
 
 No private AI memory is authoritative project state.
+
+## Recovery precedence
+
+1. Current source tree + Git.
+2. Explicit requirements/decisions.
+3. `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, and semantic `.ai` state.
+4. `.ai/SESSIONS/` provenance.
+5. Generated indexes as navigation/evidence only.
+6. ChatGPT Memory/chat history as supplementary context only.
+
+## Stable handoff
+
+Stable AI discovery path: `docs/handoff/README.md`.
+Historical evidence snapshots remain dated and do not auto-refresh when source advances. Exact implementation remains authoritative in Git history.
