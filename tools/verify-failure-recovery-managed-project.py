@@ -145,10 +145,25 @@ def main() -> None:
     # The recovery proof must not change repository identity/history or source.
     assert git(project, "rev-parse", "HEAD") == head
     assert normalize_remote(git(project, "remote", "get-url", "origin")) == args.expected_repository
+
+    expected_evidence = {
+        checkpoint_rel,
+        result_rel,
+        proof_rel,
+    }
+    for relative in expected_evidence:
+        path = project / relative
+        assert path.is_file(), f"missing expected evidence file: {relative}"
+        assert path.read_text(encoding="utf-8").strip(), f"empty evidence file: {relative}"
+
     status_after = set(git(project, "status", "--porcelain").splitlines())
     new_lines = status_after - status_before
-    assert new_lines, "expected local evidence files"
-    assert all(".ai/EVIDENCE/" in line for line in new_lines), new_lines
+    assert new_lines, "expected local evidence delta"
+    assert all(".ai/EVIDENCE" in line for line in new_lines), new_lines
+
+    # No tracked source/history mutation is permitted by this proof.
+    tracked_delta = git(project, "diff", "--name-only", "HEAD")
+    assert tracked_delta == "", tracked_delta
 
     print("PASS: Failure + Recovery Proof real managed-project recovery")
     print(f"FAILURE_CLASS={checkpoint['failure_class']}")
