@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -34,6 +36,11 @@ jobs:
         run: |
           python tools/devos-bootstrap.py
           python tools/test-devos-bootstrap.py
+
+      - name: Verify Foundation Health & State Consistency
+        run: |
+          python tools/test-devos-audit.py
+          python tools/test-foundation-health.py
 
       - name: Verify Human Language Execution Engine
         run: python tools/verify-human-language-engine.py
