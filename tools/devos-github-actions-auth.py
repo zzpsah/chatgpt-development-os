@@ -38,12 +38,13 @@ def b64url(data: bytes) -> str:
 
 
 def parse_repository(value: str) -> tuple[str, str]:
-    parts = value.strip().split("/", 1)
-    if len(parts) != 2 or not all(parts):
+    normalized = value.strip()
+    segments = normalized.split("/")
+    if len(segments) != 2 or not all(segments):
         raise ValueError("repository must be in owner/name form")
-    owner, repo = parts
-    if any(part in {".", ".."} for part in (owner, repo)):
+    if any(segment in {".", ".."} for segment in segments):
         raise ValueError("invalid repository path")
+    owner, repo = segments
     return owner, repo
 
 
@@ -106,7 +107,6 @@ def request_json(url: str, *, method: str, bearer: str, body: bytes | None = Non
         with urllib.request.urlopen(request, timeout=20) as response:
             data = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
-        # Do not surface authorization headers or token material from provider errors.
         try:
             provider = json.loads(exc.read().decode("utf-8"))
             message = provider.get("message", "GitHub API request failed")
