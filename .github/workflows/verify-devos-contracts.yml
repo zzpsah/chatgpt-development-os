@@ -28,6 +28,9 @@ jobs:
       - name: Verify Human Language Execution Engine
         run: python tools/verify-human-language-engine.py
 
+      - name: Verify Human Language Execution Engine v2 contract
+        run: python tools/verify-human-language-v2.py
+
       - name: Test Human Language Execution Engine v2 interpreter
         run: python tools/test-human-language-interpreter.py
 
