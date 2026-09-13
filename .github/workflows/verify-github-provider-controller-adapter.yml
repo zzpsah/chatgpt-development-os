@@ -7,6 +7,7 @@ on:
       - 'tools/test-devos-github-provider-adapter.py'
       - 'tools/devos-github-controller-bridge.py'
       - 'tools/test-devos-github-controller-bridge.py'
+      - 'tools/devos-github-actions-auth.py'
       - 'docs/DEVOS-GITHUB-CONTROLLER-ADAPTER.md'
       - 'core/remote-resource-permission-governance.md'
       - 'tools/devos-remote-permission-check.py'
@@ -41,7 +42,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - name: Live repository read through provider adapter
+      - name: Baseline App authentication using proven runtime helper
+        env:
+          DEVOS_GITHUB_APP_ID: ${{ secrets.DEVOS_GITHUB_APP_ID }}
+          DEVOS_GITHUB_APP_PRIVATE_KEY: ${{ secrets.DEVOS_GITHUB_APP_PRIVATE_KEY }}
+        run: >-
+          python tools/devos-github-actions-auth.py
+          --repository zzpsah/chatgpt-development-os
+      - name: Live repository read through governed provider adapter
         env:
           DEVOS_GITHUB_APP_ID: ${{ secrets.DEVOS_GITHUB_APP_ID }}
           DEVOS_GITHUB_APP_PRIVATE_KEY: ${{ secrets.DEVOS_GITHUB_APP_PRIVATE_KEY }}
