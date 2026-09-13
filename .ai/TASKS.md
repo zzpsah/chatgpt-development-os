@@ -1,15 +1,22 @@
 # DevOS Tasks
 
 ## Active
-- **Current-Source Evidence Refresh Protocol** is the current bounded objective. It is unnumbered; do not create P18/P19.
+- No new numbered phase or bounded implementation objective is active at this closure checkpoint.
 - **P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline for this and every later objective.**
-- Extend the existing readiness-evidence system; do not create a second evidence ledger or competing truth source.
-- Preserve all historical evidence rows, source heads, run IDs, archive digests, and `historical_source_drift` semantics unchanged.
-- Add a reviewed current-source evidence path that records exact source head/test/run provenance separately from historical evidence.
-- New current-source evidence must prove only the level actually observed; deterministic/integrated CI cannot become live-provider or production proof.
-- Health/Doctor may consume current-source evidence only through the authoritative readiness-evidence verifier; they must not manufacture freshness independently.
-- Evidence refresh never grants authority or authorization and never permits execution/mutation by itself.
-- No live/destructive/production/provider mutation is required or authorized for this objective.
+- The next DevOS objective must be selected from an observed gap in current repository/source/evidence state; do not invent P18/P19 for progress bookkeeping.
+- Existing safety, evidence, authorization, and historical-provenance invariants remain in force.
+
+## Current-Source Evidence Refresh Protocol — completed
+- Unnumbered bounded objective; merged through PR #24.
+- Final source head: `bc400112d0bbaced6ed699a6863bc8dcf91e47c8`.
+- Merge commit / verified `main`: `a93f9f435ffab5f81ce070f07a0da694757ab6cb`.
+- Final PR evidence: Current-Source Evidence 12 / `34773566913`, Trust-First 71 / `34773566958`, Contracts 608 / `34773566914`, Full DevOS 530 / `34773566926`, MCP Repository Create 9 / `34773566919` — success.
+- Fresh post-merge main: Trust-First 72 / `34774013758`, Contracts 609 / `34774013791`, Full DevOS 531 / `34774013827` — success.
+- Current-source packets bind exact Git HEAD, ledger-declared capability/test path, test SHA-256, observed exit code, and local/CI context.
+- Historical evidence rows, source heads, run IDs, archive digests, and `historical_source_drift` remain unchanged and visible.
+- Foundation Health may validate an optional packet but does not execute its test; Doctor only presents Health output.
+- `production_ready=false` and `live_provider_proven=false` remain conservative.
+- Dedicated Current-Source Evidence workflow has no `main` push trigger; no post-merge dedicated run is fabricated.
 
 ## Recovery Friction → Foundation Health/Doctor Integration — completed
 - Final source head: `869a95894dad5feaafcbc286ec1fb0027c8321df`.
@@ -36,16 +43,6 @@
 - Post-merge main: Trust-First 33 / `34764171968`, Contracts 570 / `34764171939`, Full DevOS 495 / `34764171923` — success.
 - `tools/test-step-readiness-orchestrator.py` remains the known historical-source drift and must not be silently refreshed.
 
-## Current-source evidence acceptance targets
-- Historical evidence remains byte/provenance stable; no old source head/run is rewritten.
-- New current-source evidence has an explicit protocol/schema and exact source head.
-- The verifier rejects stale/current-head mismatches and fabricated run/test mappings.
-- Current-source evidence distinguishes deterministic, integrated, real read-only, provider-simulated, live-provider, and production claims conservatively; v1 must not introduce unsupported higher proof levels.
-- Current evidence can resolve a current-source drift only for the exact test/capability/level it actually proves; historical provenance remains visible.
-- Missing current evidence remains UNKNOWN/WARN as appropriate, never PASS by implication.
-- Health/Doctor consume only verified ledger-derived current-evidence status.
-- Runnable PASS/FAIL regression command and fresh exact-final-head CI are mandatory before closure.
-
 ## Completed recently
 - Production E2E Harness — PR #11.
 - Failure + Recovery Proof — PR #12.
@@ -56,6 +53,9 @@
 - Foundation Health & State Consistency — PR #18.
 - Cross-Host Recovery Friction & Onboarding Proof — PR #20.
 - Recovery Friction → Foundation Health/Doctor Integration — PR #21.
+- Universal Project Onboarding + Repository Creation — PR #19.
+- Host-neutral MCP/App `repository.create` adapter — PR #22.
+- Current-Source Evidence Refresh — PR #24.
 
 ## Universal portability invariant
 `AI A + Account A → repository → AI B + Account B → correct recovery → safe continuation`
@@ -67,6 +67,7 @@ The repository, not any AI account/chat/model/vendor memory, carries authoritati
 - `READY != EXECUTION`
 - `INTERPRETATION != AUTHORIZATION`
 - `OLD APPROVAL != NEW APPROVAL`
+- `PROVIDER CREDENTIAL != DEVOS AUTHORIZATION`
 - `SIMULATED EVIDENCE != LIVE PROVIDER PROOF`
 - `CHAT MEMORY != SOURCE OF TRUTH`
 - `PROVIDER RESPONSE != COMPLETION PROOF`
