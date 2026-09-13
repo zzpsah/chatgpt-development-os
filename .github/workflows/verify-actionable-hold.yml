@@ -1,0 +1,41 @@
+name: Verify DevOS Actionable Hold
+
+on:
+  pull_request:
+    paths:
+      - 'core/actionable-hold-scoped-approval.md'
+      - 'tools/devos-actionable-hold.py'
+      - 'tools/test-devos-actionable-hold.py'
+      - 'docs/ACTIONABLE-HOLDS-AND-SCOPED-APPROVAL.md'
+      - '.github/workflows/verify-actionable-hold.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Run deterministic actionable-hold regression corpus
+        run: python tools/test-devos-actionable-hold.py
+      - name: Verify normative markers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          contract = Path('core/actionable-hold-scoped-approval.md').read_text(encoding='utf-8')
+          docs = Path('docs/ACTIONABLE-HOLDS-AND-SCOPED-APPROVAL.md').read_text(encoding='utf-8')
+          markers = [
+              'Continue means resume the currently valid bounded workflow',
+              'FULL APPROVAL = FULL WITHIN EXPLICIT SCOPE',
+              'CONTINUE != BLANKET AUTHORIZATION',
+              'EXACTLY',
+          ]
+          for marker in markers[:-1]:
+              assert marker in contract or marker in docs, marker
+          print('PASS: actionable-hold contract/documentation markers')
+          PY
