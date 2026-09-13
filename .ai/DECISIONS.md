@@ -14,7 +14,7 @@
 - Authentication establishes provider identity/capability only; it never manufactures DevOS authorization.
 - Raw access tokens, refresh tokens, App private keys, OAuth client secrets, JWT signing material, and equivalent credentials never enter Git, `.ai`, MCP arguments, logs, evidence, or model output.
 - Only non-secret identity/capability metadata may enter durable DevOS state.
-- OAuth callbacks require cryptographically random state with constant-time comparison; state mismatch fails closed.
+- OAuth callbacks, when an interactive web client exists, require cryptographically random state with constant-time comparison; state mismatch fails closed.
 - Token expiry/revocation requires reauthorization or token renewal; authentication failure never authorizes blind retry of a mutation.
 - Project-to-GitHub identity binding is explicit and isolated per project; credentials/provider bindings and approval scopes cannot cross projects.
 - GitHub provider capability must be discovered and recorded as non-secret metadata before capability-dependent execution is considered.
@@ -22,7 +22,17 @@
 - Capability discovery returns `AVAILABLE`, `UNAVAILABLE`, or `UNCONFIRMED`; `UNCONFIRMED` fails closed and never manufactures authorization.
 - Capability discovery evidence remains `authorization: UNCHANGED`, `execution: NONE`, `mutation: NONE`, and excludes credential material.
 - “Full access” means maximum access explicitly granted by GitHub to the authorized user/app installation within its actual repository/organization scope, further constrained by DevOS capability, P17, Security Gate, and exact authorization. It does not mean a master bypass token.
-- Checked-in authentication code is side-effect-free. Live OAuth exchange, token vault, GitHub App private key, and live-provider proof remain deployment/evidence boundaries.
+- Checked-in authentication code is side-effect-free. Live provider authentication is an external evidence boundary.
+
+## GitHub-hosted runtime authentication
+- When DevOS itself executes inside GitHub Actions, use GitHub App installation-token authentication as the primary live runtime path.
+- A browser OAuth callback is not required for the GitHub Actions runtime because the runner can authenticate directly with the App private key and App ID, resolve an installation for the target repository, and mint a short-lived installation token.
+- Store `DEVOS_GITHUB_APP_ID` and `DEVOS_GITHUB_APP_PRIVATE_KEY` only as GitHub Actions secrets; never commit them.
+- `tools/devos-github-actions-auth.py` performs JWT signing, installation resolution, token minting, and read-only repository verification only.
+- `.github/workflows/devos-github-app-runtime.yml` is a manual read-only live smoke workflow. It must not be treated as DevOS authorization or mutation permission.
+- The GitHub-hosted runtime deliberately does not create/update/delete/merge/deploy/change permissions. Mutation remains behind the existing remote permission control plane and P17/security gates.
+- Installation-token access proves provider authentication/capability only; it does not prove production readiness or authorize future mutations.
+- Interactive OAuth/callback support remains available as a separate adapter when DevOS later exposes a web application.
 
 ## MCP/App Permission Control Plane
 - Remote provider/API write access is a technical capability, not DevOS authorization.
