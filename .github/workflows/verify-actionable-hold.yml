@@ -6,7 +6,14 @@ on:
       - 'core/actionable-hold-scoped-approval.md'
       - 'tools/devos-actionable-hold.py'
       - 'tools/test-devos-actionable-hold.py'
+      - 'tools/devos-continuation-path.py'
+      - 'tools/test-actionable-hold-continuation-integration.py'
+      - 'tools/human-language-interpreter.py'
+      - 'tools/semantic-goal-to-plan.py'
+      - 'tools/step-readiness-orchestrator.py'
+      - 'tools/development-task-controller.py'
       - 'docs/ACTIONABLE-HOLDS-AND-SCOPED-APPROVAL.md'
+      - 'docs/ACTIONABLE-HOLD-IMPLEMENTATION-CHECKPOINT.md'
       - '.github/workflows/verify-actionable-hold.yml'
   workflow_dispatch:
 
@@ -23,6 +30,8 @@ jobs:
           python-version: '3.x'
       - name: Run deterministic actionable-hold regression corpus
         run: python tools/test-devos-actionable-hold.py
+      - name: Run real continuation-path integration regressions
+        run: python tools/test-actionable-hold-continuation-integration.py
       - name: Verify normative markers
         run: |
           python - <<'PY'
@@ -33,9 +42,8 @@ jobs:
               'Continue means resume the currently valid bounded workflow',
               'FULL APPROVAL = FULL WITHIN EXPLICIT SCOPE',
               'CONTINUE != BLANKET AUTHORIZATION',
-              'EXACTLY',
           ]
-          for marker in markers[:-1]:
+          for marker in markers:
               assert marker in contract or marker in docs, marker
           print('PASS: actionable-hold contract/documentation markers')
           PY
