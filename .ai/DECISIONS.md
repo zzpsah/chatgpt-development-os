@@ -47,14 +47,26 @@
 
 ## P16 milestone decision — Semantic Goal-to-Plan Compiler
 
-- P16 Semantic Goal-to-Plan Compiler v1 is the active maturity milestone.
-- P16 exists to bridge top-level semantic interpretation and the Development Task Controller with an explicit bounded plan graph rather than allowing downstream execution logic to reconstruct intent informally.
+- P16 Semantic Goal-to-Plan Compiler v1 bridges top-level semantic interpretation and the Development Task Controller with an explicit bounded plan graph rather than allowing downstream execution logic to reconstruct intent informally.
 - Canonical path becomes `Human input → Human Language Execution Engine → Project Router / State Resolver → Semantic Goal-to-Plan Compiler → Development Task Controller → bounded workflow/runtime → Verification + Security → durable state`.
 - The compiler preserves interpreted constraints, project identity, ambiguity, evidence provenance, dependencies, authority requirements, verification requirements, and stop/escalation conditions.
 - The compiler emits planning structure only. It returns `execution: NONE`, does not grant authority, and cannot convert a plan into permission.
 - High-impact, security-sensitive, production, destructive, deployment, merge, database, credential, and similar operations remain independently authorized and Security-Gate controlled.
 - Material ambiguity must produce `CLARIFY` or `BLOCKED` rather than a guessed plan step.
-- P16 closure requires an executable deterministic reference compiler, regression corpus, Development Task Controller integration, CI contract verification, and fresh passing CI evidence.
+- P16 adds automatic read-before-write ordering for mutating plans when no read-only precondition is already present.
+- P16 source implementation is complete on PR #9 final source head `981ac5f02ff3d64ac2caf3f49a9dbe008fbe8b6a`; milestone closure still requires fresh final-head CI success before merge.
+
+## P17 milestone decision — Step Readiness & Authorization Orchestrator
+
+- P17 is intentionally narrower than another generic autonomy layer. Its responsibility is to decide whether one exact compiled P16 plan step is currently eligible to proceed.
+- P17 canonical input is `compiled plan step + compilation repository head + current repository head + completed dependencies + capability + step-bound authorization + Security Gate evidence + verification path`.
+- P17 outcomes are `READY`, `NEEDS_EVIDENCE`, `NEEDS_APPROVAL`, `BLOCKED`, or `STOP`.
+- `READY` is not execution authority. Every P17 outcome preserves `authority: UNCHANGED`, `authorization: UNCHANGED`, and `execution: NONE`.
+- Authorization is bound to the exact plan step id. Approval for another step, earlier task, previous session, or lower-impact operation does not satisfy an authorization-required step.
+- A repository-head mismatch between planning time and execution-readiness time is treated conservatively as a stale plan and returns `STOP`; v1 does not infer that intervening changes are harmless.
+- Security-sensitive, high-impact, production, or destructive steps require explicit Security Gate evidence; a missing gate result is not silently treated as pass.
+- P17 is stacked on P16 while P16 final CI remains queued. P17 cannot be merged to `main` before P16 is cleanly verified and merged.
+- After P17, roadmap progression should become gap-driven: end-to-end maturity harness, real managed-project proof, and targeted hardening are preferred over adding phases only to increase milestone numbering.
 
 ## Future persistence rule
 
@@ -67,4 +79,4 @@
 
 - Static contract verification proves repository contracts are structurally present; it does not by itself prove semantic AI behavior or application correctness.
 - Milestone closure requires fresh applicable verification evidence.
-- Higher-impact execution remains separately authorized and verified even when language interpretation or planning confidence is HIGH.
+- Higher-impact execution remains separately authorized and verified even when language interpretation, planning, or readiness confidence is HIGH.
