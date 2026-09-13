@@ -14,15 +14,16 @@
 - Authentication establishes provider identity/capability only; it never manufactures DevOS authorization.
 - Raw access tokens, refresh tokens, App private keys, OAuth client secrets, JWT signing material, and equivalent credentials never enter Git, `.ai`, MCP arguments, logs, evidence, or model output.
 - Only non-secret identity/capability metadata may enter durable DevOS state.
-- OAuth callbacks, when an interactive web client exists, require cryptographically random state with constant-time comparison; state mismatch fails closed.
+- Interactive OAuth callbacks require cryptographically random pending state, constant-time comparison, bounded freshness, and one-time consumption; stale/reused/mismatched state fails closed.
 - Token expiry/revocation requires reauthorization or token renewal; authentication failure never authorizes blind retry of a mutation.
 - Project-to-GitHub identity binding is explicit and isolated per project; credentials/provider bindings and approval scopes cannot cross projects.
 - GitHub provider capability must be discovered and recorded as non-secret metadata before capability-dependent execution is considered.
 - Provider-permission to DevOS-capability mappings are adapter-supplied and versioned at the integration boundary; generic DevOS must not infer stale provider permission semantics.
+- Capability discovery is permission-level-aware and repository-scope-aware; `read` cannot satisfy required `write`, and an out-of-scope target cannot be `AVAILABLE`.
 - Capability discovery returns `AVAILABLE`, `UNAVAILABLE`, or `UNCONFIRMED`; `UNCONFIRMED` fails closed and never manufactures authorization.
 - Capability discovery evidence remains `authorization: UNCHANGED`, `execution: NONE`, `mutation: NONE`, and excludes credential material.
 - “Full access” means maximum access explicitly granted by GitHub to the authorized user/app installation within its actual repository/organization scope, further constrained by DevOS capability, P17, Security Gate, and exact authorization. It does not mean a master bypass token.
-- Checked-in authentication code is side-effect-free. Live provider authentication is an external evidence boundary.
+- Checked-in metadata evaluation is side-effect-free. Live provider authentication is a separate evidence boundary.
 
 ## GitHub-hosted runtime authentication
 - When DevOS itself executes inside GitHub Actions, use GitHub App installation-token authentication as the primary live runtime path.
@@ -76,3 +77,15 @@
 - P16 planning remains non-executing/non-authorizing.
 - P17 `READY` means eligibility only; authority/authorization/execution remain unchanged.
 - Higher-impact execution remains separately authorized and Security-Gate controlled.
+
+## AI State Resolver v2
+- The original P0 resolver contract is retained. v2 adds a deterministic, read-only implementation with claim-specific grounding and boundary-triggered revalidation.
+- `observed` requires a cited grounding reference; uncited observed claims and duplicate claim IDs resolve to `unknown`.
+- P12 remains the sole normalizer/freshness owner of execution evidence. The resolver only references P12 evidence IDs.
+- Unresolved resolver claims force P16 `CLARIFY`; P17 rejects a tampered planned envelope that still carries unresolved claim IDs.
+- State confidence is never authorization, completion, execution, or mutation authority.
+
+## Plain Project Context and Recovery Guide v1
+- First-contact material is ordinary repository context, not authority over a host's rules.
+- Refusal of unavailable or consequential work is compatible behavior; the guide requires honest context recovery.
+- The core bootstrap and base operating rule require the guide; embedded bypass instructions are documentation anomalies.

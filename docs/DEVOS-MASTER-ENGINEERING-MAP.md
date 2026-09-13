@@ -78,7 +78,7 @@ P16 Semantic Goal-to-Plan Compiler
 P17 Step Readiness & Authorization Orchestrator
 ```
 
-Later unnumbered hardening/extension work includes Production E2E, Failure + Recovery, Multi-Session/Fresh-AI Continuation, Controlled Remote Mutation, Production-Readiness Evidence, Trust-First Audit, Foundation Health/Doctor, Universal Onboarding + Repository Creation, Recovery Friction/Health, MCP/App repository.create, Current-Source Evidence, MCP/App Permission Control Plane + Multi-Project Isolation, and Actionable HOLD + Scoped Approval + governed continuation.
+Later unnumbered hardening/extension work includes Production E2E, Failure + Recovery, Multi-Session/Fresh-AI Continuation, Controlled Remote Mutation, Production-Readiness Evidence, Trust-First Audit, Foundation Health/Doctor, Universal Onboarding + Repository Creation, Recovery Friction/Health, MCP/App repository.create, Current-Source Evidence, MCP/App Permission Control Plane + Multi-Project Isolation, Actionable HOLD + Scoped Approval + governed continuation, AI State Resolver v2, Plain Project Context/Recovery, and GitHub Identity & Token Control Plane v1.
 
 These labels are architecture history, not an instruction to invent endless numbered phases.
 
@@ -87,7 +87,8 @@ These labels are architecture history, not an instruction to invent endless numb
 ```mermaid
 flowchart TD
     U[Human request<br/>English / Hinglish / shorthand] --> P15[P15 interpretation]
-    P15 --> S[Project + repository state]
+    P15 --> SR[AI State Resolver<br/>claim grounding]
+    SR --> S[Project + repository state]
     S --> P16[P16 bounded plan]
     P16 --> P17[P17 readiness + authorization]
     P17 --> AH[Actionable HOLD / Scoped Approval]
@@ -96,21 +97,21 @@ flowchart TD
     RT --> V[Verification + Security Gate]
     V --> D[Durable evidence + state]
     D --> R[Recovery / continuation]
-    R --> S
+    R --> SR
     RT --> RP[Remote Permission Control Plane]
     RP --> PA[Provider / MCP / App adapter]
     PA --> FR[Fresh readback]
     FR --> V
 ```
 
-This is a governed loop. Continuation always re-enters current repository state and current gates. Old plans, approvals, checkpoints, or successful runs never silently manufacture permission.
+This is a governed loop. Continuation always re-enters current repository state and current gates. Old plans, approvals, checkpoints, or successful runs never silently manufacture permission. Unresolved state claims force clarification/HOLD rather than being promoted into readiness.
 
 ## Semantic architecture
 
 ```mermaid
 flowchart LR
     N[Human language<br/>intent + constraints] --> I[P15 interpretation]
-    I --> G[Goal]
+    I --> G[Grounded current claims]
     G --> P[P16 plan]
     P --> R[P17 readiness]
     R --> A[Exact authorization]
@@ -138,7 +139,7 @@ flowchart LR
     CORE --> CI[CI + verification]
 ```
 
-A compatible AI should recover source/Git + `.ai`, inspect current HEAD, interpret the request, compile bounded plans, obtain current readiness/authorization, execute only through supported runtime/adapters, verify actual outcomes, persist evidence, and continue from a fresh session without the previous chat.
+A compatible AI should recover source/Git + `.ai`, inspect current HEAD, ground relevant claims, interpret the request, compile bounded plans, obtain current readiness/authorization, execute only through supported runtime/adapters, verify actual outcomes, persist evidence, and continue from a fresh session without the previous chat.
 
 ## Future automated engineering flow
 
@@ -147,7 +148,7 @@ Human objective
   ↓
 Bootstrap + identity
   ↓
-Repository-first recovery
+Repository-first recovery + claim resolution
   ↓
 P15 interpretation
   ↓
@@ -233,13 +234,23 @@ AI/engineering judgment is required for semantic architecture, decisions, requir
 
 The master map is a living navigation/design layer, not a competing source of truth. Source code, contracts, tests, Git history, evidence records, and explicit decisions remain authoritative underneath it.
 
+## AI State Resolver v2
+
+The resolver is a deterministic, read-only claim-grounding layer used during recovery/continuation. Observed claims require cited grounding; duplicate IDs or ungrounded observed claims resolve to unknown. P12 remains the owner of execution-evidence normalization/freshness. Resolver uncertainty propagates into P16 as `CLARIFY`, and P17 fails closed if unresolved claim IDs survive in a planned envelope.
+
+State confidence is never authorization, execution, completion, or mutation authority.
+
+## Plain first-contact portability
+
+`DEVOS-PROJECT-CONTEXT.md` provides host-neutral first-contact context for a fresh AI chat. It is optional/revocable, preserves host policies, requires honest unavailable-context reporting, and flags embedded bypass instructions as anomalies. It is repository context, not authority over a host or user.
+
 ## GitHub Identity & Token Control Plane
 
 GitHub account connectivity is treated as a provider authentication boundary, not an authority shortcut.
 
 ```mermaid
 flowchart LR
-    U[User] --> GA[GitHub App authorization / installation]
+    U[User / configured App] --> GA[GitHub App authorization / installation]
     GA --> AT[Short-lived user / installation token]
     AT --> VA[External secret-vault boundary]
     VA --> CAP[Non-secret capability discovery]
@@ -251,13 +262,15 @@ flowchart LR
     READ --> E[Durable non-secret evidence]
 ```
 
-The preferred production model is a GitHub App with fine-grained permissions. Authentication supplies technical provider capability; it never creates DevOS authorization. Installation access tokens are treated as renewable ephemeral credentials, and user access tokens are treated as renewable credentials where configured for expiration.
+The preferred production model is a GitHub App with fine-grained permissions. Authentication supplies technical provider capability; it never creates DevOS authorization. Provider permissions are evaluated with minimum levels and target repository scope. `read` never satisfies a required `write`; missing mapping/scope remains fail-closed.
+
+Interactive OAuth state is cryptographically random, freshness-bounded, and one-time. The deployment stores pending/consumed transaction state outside Git. The GitHub-hosted Actions runtime uses App installation-token authentication and therefore does not require a browser callback.
 
 Project isolation binds the GitHub identity context to the project. Raw access tokens, refresh tokens, App private keys, OAuth client secrets, JWT signing material, and equivalent secrets remain outside Git and durable repository state.
 
 “Full GitHub access” means the maximum capability explicitly granted by GitHub to the authorized user/app installation within its actual account, organization, and repository scope, further constrained by DevOS capability authorization, P17, Security Gate, impact ceiling, freshness, and exact operation scope. It never means a master bypass credential.
 
-Implementation contract: `core/devos-github-identity-token-control-plane.md`; deterministic reference implementation: `tools/devos-github-auth.py`; guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`.
+Implementation contract: `core/devos-github-identity-token-control-plane.md`; authentication primitives: `tools/devos-github-auth.py`; capability bridge: `tools/devos-github-capability-discovery.py`; hosted runtime: `tools/devos-github-actions-auth.py`; guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`.
 
 ## Future goals
 
@@ -282,21 +295,22 @@ More autonomy means better planning, recovery, verification, documentation, and 
 
 ```text
 1. Read AGENTS.md.
-2. Read .ai/manifest.yaml.
-3. Read .ai/CURRENT-STATE.md.
-4. Read .ai/TASKS.md.
-5. Read .ai/DECISIONS.md.
-6. Read this master engineering map.
-7. Inspect Git HEAD and working tree.
-8. Inspect applicable CI / evidence.
-9. Resolve conflicts using repository-first precedence.
-10. Identify the active bounded objective.
-11. Rebuild the current plan; do not trust stale chat instructions.
-12. Work only through governed gates.
-13. Verify what actually happened.
-14. Document every material action and limitation.
-15. Persist durable state and provenance.
-16. Update the master map when material architecture/future direction changed.
+2. Read DEVOS-PROJECT-CONTEXT.md when present.
+3. Read .ai/manifest.yaml.
+4. Read .ai/CURRENT-STATE.md.
+5. Read .ai/TASKS.md.
+6. Read .ai/DECISIONS.md.
+7. Read this master engineering map.
+8. Inspect Git HEAD and working tree.
+9. Resolve relevant state claims and inspect applicable CI/evidence.
+10. Resolve conflicts using repository-first precedence.
+11. Identify the active bounded objective.
+12. Rebuild the current plan; do not trust stale chat instructions.
+13. Work only through governed gates.
+14. Verify what actually happened.
+15. Document every material action and limitation.
+16. Persist durable state and provenance.
+17. Update the master map when material architecture/future direction changed.
 ```
 
 ## Maintenance links
@@ -304,6 +318,7 @@ More autonomy means better planning, recovery, verification, documentation, and 
 - Normative living-state contract: `core/devos-living-state-and-evolution.md`
 - P15 experiment ledger: `docs/DEVOS-INTERPRETER-EXPERIMENT-LEDGER.md`
 - Fresh-AI discovery: `docs/handoff/README.md`
+- Plain first-contact guide: `DEVOS-PROJECT-CONTEXT.md`
 - GitHub identity/token guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`
 - Current source/project truth: `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, `.ai/DECISIONS.md`, Git/source/tests/CI
 
@@ -312,6 +327,7 @@ More autonomy means better planning, recovery, verification, documentation, and 
 ```text
 Vendor-neutral engineering OS
 + portable project memory
++ grounded state recovery
 + human-language semantic interface
 + bounded planning
 + exact readiness / authorization
