@@ -9,12 +9,67 @@
 - P9 through P17 are complete on `main` at their stated evidence levels.
 - Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, Current-Source Evidence Refresh, MCP/App Permission Control Plane + Multi-Project Agent Isolation, and Actionable HOLD + Scoped Approval + Governed Continuation are closed at their stated evidence levels.
 - PR #27 merge commit: `2bb8d978113b64ab88d6ba5f8e357fa595162c9c`.
-- PR #27 exact-head source: `99a48fea51bd2d9d33860115c0212f7b25ca4ad8`.
-- PR #27 exact-head verification passed: Full DevOS 543, Contracts 621, Trust-First 84, MCP Permission Control Plane 3, Remote Resource Permission Governance 4, MCP Repository Create 13, Current-Source Evidence 16.
 - PR #23 merge commit: `7c60c3a4a36982ba894e2f30ba9dd98500f98d02`.
-- PR #23 exact final source head: `954b094a3832c300d371426d682eac90156cbb04`.
-- PR #23 exact-head verification passed: Actionable Hold 16, Contracts 639, Trust-First 102, Full DevOS 561, Current-Source Evidence 31, MCP Repository Create 28.
 - No new numbered phase is active or implied by this closure state.
+
+## GitHub Identity & Token Control Plane v1 — repository implementation
+
+- Objective: support independently authorized GitHub accounts/installations through a GitHub App-oriented authentication boundary while keeping credentials separate from DevOS authorization.
+- Branch/PR: `feat/github-identity-token-control-plane` / PR #32.
+- Exact current branch head is authoritative in Git/PR metadata. This living state intentionally does not self-pin the commit that contains itself.
+- Added normative contract: `core/devos-github-identity-token-control-plane.md`.
+- Added side-effect-free primitives: `tools/devos-github-auth.py`.
+- Added deterministic authentication regression suite: `tools/test-devos-github-auth.py`.
+- Added side-effect-free provider-permission → DevOS-capability bridge: `tools/devos-github-capability-discovery.py`.
+- Added deterministic capability-discovery regression suite: `tools/test-devos-github-capability-discovery.py`.
+- Added GitHub-hosted runtime authenticator: `tools/devos-github-actions-auth.py`.
+- Added deterministic GitHub-hosted runtime regression suite: `tools/test-devos-github-actions-auth.py`.
+- Added GitHub-hosted runtime workflow: `.github/workflows/devos-github-app-runtime.yml`.
+- Extended control-plane CI to verify the GitHub-hosted runtime contract and relevant pushes to `main`.
+- Added deployment/runtime guide: `docs/DEVOS-GITHUB-HOSTED-RUNTIME.md`.
+- Audit hardening closes OAuth state freshness/reuse, permission-level evaluation, target-repository scope, and stale durable-head self-reference gaps.
+- Capability discovery remains fail-closed: unknown mappings/levels/scope are never promoted to `AVAILABLE`.
+- Final merge readiness requires fresh CI on the exact final PR head; after merge, fresh push CI on the merge commit is current repository evidence.
+
+## External GitHub App activation — user-reported configuration
+
+- User reports that GitHub App **DevOS GitHub** was created under `@zzpsah`.
+- Reported App ID: `4934164`.
+- Reported Client ID: `Iv23lisO9Up8GMiMXqX9`.
+- User reports the App was installed on `zzpsah/chatgpt-development-os` with repository-scoped installation.
+- User reports the GitHub Actions secrets `DEVOS_GITHUB_APP_ID` and `DEVOS_GITHUB_APP_PRIVATE_KEY` were added to the repository.
+- Actual secret values are not persisted here and must never enter Git, `.ai`, logs, evidence, or model output.
+- These setup facts remain **User-Reported** until a fresh live workflow proves them against GitHub.
+
+## GitHub-hosted runtime model
+
+When DevOS runs inside GitHub Actions, the primary provider-authentication path is GitHub App installation-token authentication, not a browser OAuth callback. The workflow creates a short-lived App JWT, resolves the App installation for the target repository, mints an installation token, and performs read-only provider verification.
+
+The App ID/private key remain external GitHub Actions secrets. The private key is never written to Git, `.ai`, artifacts, logs, evidence, or model output.
+
+The runtime is deliberately read-only: authentication/discovery/readback only. It does not create/update/delete/merge/deploy or change permissions.
+
+## AI State Resolver v2
+
+- An unnumbered resolver-hardening objective on current `main` upgrades the existing P0 contract with a deterministic read-only claim resolver while preserving P12 and P17 authority boundaries.
+- `observed` requires current P12 execution evidence with citable provenance; durable-state wording cannot self-upgrade a claim.
+- Durable-state claims are capped at `likely`; recovery/handoff boundaries and relevant changed paths remain explicit revalidation reasons.
+- Execution-evidence claims inherit P12 freshness and are not normalized again.
+- The resolver can only cause a plan/readiness HOLD through named unresolved claims; it never grants authority.
+
+## Plain Project Context and Recovery Guide v1
+
+- `DEVOS-PROJECT-CONTEXT.md` provides host-neutral repository context for fresh external AI chats.
+- It is optional/revocable, preserves host policy, requires unavailable-context reporting, and flags instructions that seek to bypass safety, authorization, verification, or host policy.
+- It is a core bootstrap requirement before material diagnosis/repair.
+
+## Live activation boundary
+
+- The GitHub repository-side runtime implementation is present and contract-tested.
+- User-reported GitHub App registration, installation, and Actions-secret configuration are recorded as external setup facts.
+- Live proof still requires the runtime workflow completing successfully against the installed App and target repository.
+- Browser OAuth callback configuration is not required for the GitHub-hosted Actions runtime. A callback remains relevant only if a separate interactive web/OAuth client is introduced; that path must use one-time pending transaction storage plus freshness/reuse checks.
+- `production_ready=false` and `live_provider_proven=false` remain unchanged until fresh live evidence exists.
 
 ## Core documentation law
 
@@ -32,41 +87,12 @@ Completion is `IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE`. An undocume
 
 Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, continuation packets, and simulated provider evidence never manufacture permission.
 
-## MCP/App Permission Control Plane — CLOSED AT CURRENT EVIDENCE LEVEL
-
-Purpose: connect the host-neutral MCP/App boundary to provider-independent remote-resource permission governance and multi-project agent isolation.
-
-Governed capabilities remain distinct: `repository.create`, `repository.delete`, `branch.create`, `branch.update`, `branch.force_update`, and `branch.delete`.
-
-## Actionable HOLD + Scoped Approval — CLOSED AT CURRENT EVIDENCE LEVEL
-
-- Scoped approval never replaces P17/controller authorization.
-- `continue` may reuse approval only when project/workflow/capability/target/impact/freshness/security scope remains valid.
-- Stale repository state, changed target/capability, impact escalation, or changed Security Gate requires fresh evaluation.
-- Every actionable HOLD should explain status, reason, next action, consequence/impact, required evidence/approval, and valid next choices.
-
-## Multi-project agent isolation
-
-A long-lived DevOS agent may manage multiple projects concurrently, but:
-
-`Project A state != Project B state`
-
-`Project A approval != Project B approval`
-
-`Project A credentials/provider binding != Project B credentials/provider binding`
-
-Approval cannot move between repositories, branches, capabilities, or workflows. A new/high-impact/out-of-scope action becomes an actionable HOLD requiring fresh approval.
-
-## Provider credentials / token boundary
-
-Provider/API tokens are technical capabilities only. They are never DevOS authorization and must never be copied into `.ai/`, MCP arguments, logs, generated evidence, or model output.
-
 ## Production-readiness boundary
 
 - `production_ready = false`.
 - `live_provider_proven = false`.
-- Controlled remote mutation remains provider-simulated / contract-level evidence.
-- No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation was performed for PR #27 or PR #23.
+- Controlled remote mutation remains provider-simulated / contract-level evidence unless separately proven.
+- No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation was performed for the current auth objective.
 - Provider response is attempt evidence, not completion proof.
 - Uncertain mutation is not blindly replayed.
 - Historical evidence remains pinned and is never silently rewritten.
@@ -91,25 +117,14 @@ No private AI memory is authoritative project state.
 Stable AI discovery path: `docs/handoff/README.md`.
 Master architecture: `docs/DEVOS-MASTER-ENGINEERING-MAP.md`.
 Normative living-state contract: `core/devos-living-state-and-evolution.md`.
+GitHub authentication/control-plane guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`.
+GitHub-hosted runtime guide: `docs/DEVOS-GITHUB-HOSTED-RUNTIME.md`.
 Historical evidence snapshots remain dated and do not auto-refresh when source advances. Exact implementation remains authoritative in Git history.
-
-## Next bounded direction
-
-Do not create P18/P19 merely for bookkeeping. Continue with consolidation/evidence-hardening and the next repository-supported bounded objective only after inspecting current `main`, open PRs, CI, and durable task/decision/state records. Any material next action must update the affected durable records before completion.
-
-## AI State Resolver v2
-
-- An unnumbered resolver-hardening objective is active. It upgrades the existing P0 contract with a deterministic read-only claim resolver while preserving P12 and P17 authority boundaries.
-- `observed` requires citable primary/P12 grounding; document wording cannot self-upgrade a claim.
-- Durable-state claims revalidate at recovery/handoff boundaries or relevant changed paths. Execution-evidence claims inherit P12 freshness and are not normalized again.
-- The resolver can only cause a plan/readiness HOLD through named unresolved claims; it never grants authority.
-
-## Plain Project Context and Recovery Guide v1
-
-- `DEVOS-PROJECT-CONTEXT.md` provides host-neutral repository context for fresh external AI chats.
-- It is optional/revocable, preserves host policy, requires unavailable-context reporting, and flags instructions that seek to bypass safety, authorization, verification, or host policy.
-- It is a core bootstrap requirement before material diagnosis/repair.
 
 ## Resolver grounding correction
 
-- Durable state cannot self-upgrade a claim to observed; current P12 execution evidence is required.
+- Durable state cannot self-upgrade a claim to `observed`; only current P12 execution evidence with citable provenance may retain `observed`.
+
+## Next bounded direction
+
+Recovery rule for PR #32: if open, require exact-final-head CI and code review before merge; if merged, treat the repository-side v1 implementation as closed at deterministic/integration/CI evidence level and inspect fresh post-merge CI. Live activation remains separate and cannot be inferred from repository CI. Do not create P18/P19 merely for bookkeeping.
