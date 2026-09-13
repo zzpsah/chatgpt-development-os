@@ -70,7 +70,7 @@ A mutation adapter must not bypass the Security Gate by treating provider creden
 
 ## Evidence
 
-A provider mutation response is evidence that an attempt was accepted/processed; it is not sufficient by itself for DevOS to claim verified completion.
+A provider mutation response is actual provider evidence that an attempt was accepted/processed; it is not sufficient by itself for DevOS to claim verified completion.
 
 Mutation-attempt evidence may include:
 
