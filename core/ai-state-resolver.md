@@ -189,3 +189,43 @@ Not included yet:
 - Automatic onboarding of arbitrary repositories.
 
 Those belong to later Development OS milestones.
+
+## v2 deterministic implementation
+
+`tools/ai-state-resolver.py` implements a read-only, deterministic resolver. It accepts claim records plus recovery/handoff events and changed paths; it returns `DEVOS-AI-STATE-RESOLUTION-v2`. It neither reads a provider nor writes repository state.
+
+### Claim record
+
+```yaml
+- id: stable-claim-id
+  statement: plain-language claim
+  state_confidence: observed | likely | unknown
+  grounding:
+    type: execution_evidence | durable_state | none
+    ref: P12-evidence-id or file-path-plus-line
+  revalidated_at: ISO-8601 timestamp or null
+  revalidate_on: [RECOVERY_BOUNDARY, HANDOFF_BOUNDARY, path-glob]
+```
+
+`observed` requires a non-empty grounding reference. An uncited observed claim is malformed and resolves to `unknown`. Duplicate claim identifiers also resolve to `unknown`; conflicts must be surfaced, never silently selected.
+
+`execution_evidence` belongs to P12. The resolver accepts it only by reference and uses P12 freshness: an observed claim based on non-current P12 evidence decays to `likely`. It never re-normalizes the evidence.
+
+`durable_state` is broader semantic project context. An observed durable-state claim decays to `likely` at a configured recovery/handoff boundary or when a configured path glob has changed. The default revalidation boundaries are recovery and handoff.
+
+### Downstream propagation
+
+P16 may receive a resolver result as `state_resolution`. If it includes unresolved claim IDs, P16 returns `CLARIFY` and preserves the named uncertainty. A `PLANNED` envelope retains resolver provenance. P17 rejects a tampered `PLANNED` envelope that contains unresolved resolver claims. This does not change P17 authorization, Security Gate, capability, verification, or runtime gates.
+
+```text
+P11 recovery -> resolver v2 -> P16 plan -> P17 readiness -> controller
+                     |             |            |
+                claims only    no execution  no authorization
+```
+
+## v2 non-goals
+
+- No automatic parsing of prose `.ai` files into claims.
+- No semantic truth claim from a document merely asserting success.
+- No P12 evidence re-normalization.
+- No authorization, completion marking, mutation, or execution.

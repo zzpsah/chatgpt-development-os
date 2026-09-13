@@ -97,6 +97,16 @@ def _validated_steps(plan: dict[str, Any]) -> tuple[dict[str, dict[str, Any]] | 
     if any(str(item).strip() for item in ambiguity):
         return None, "PLANNED_PLAN_HAS_AMBIGUITY"
 
+    state_resolution = plan.get("state_resolution")
+    if state_resolution is not None:
+        if not isinstance(state_resolution, dict) or state_resolution.get("protocol") != "DEVOS-AI-STATE-RESOLUTION-v2":
+            return None, "PLAN_STATE_RESOLUTION_INVALID"
+        unresolved = state_resolution.get("unresolved_claim_ids", [])
+        if not isinstance(unresolved, list):
+            return None, "PLAN_STATE_RESOLUTION_UNRESOLVED_INVALID"
+        if unresolved:
+            return None, "PLAN_STATE_CLAIMS_UNRESOLVED=" + ",".join(sorted(str(item) for item in unresolved))
+
     constraints = plan.get("constraints", [])
     if not isinstance(constraints, list) or any(not isinstance(item, str) for item in constraints):
         return None, "PLAN_CONSTRAINTS_INVALID"

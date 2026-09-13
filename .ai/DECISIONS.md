@@ -51,12 +51,16 @@
 - P17 `READY` means eligibility only; authority/authorization/execution remain unchanged.
 - Higher-impact execution remains separately authorized and Security-Gate controlled.
 
+## AI State Resolver v2
+
+- The original P0 resolver contract is retained. v2 adds a deterministic, read-only implementation with claim-specific grounding and boundary-triggered revalidation.
+- `observed` requires a cited grounding reference; uncited observed claims and duplicate claim IDs resolve to `unknown`.
+- P12 remains the sole normalizer/freshness owner of execution evidence. The resolver only references P12 evidence IDs.
+- Unresolved resolver claims force P16 `CLARIFY`; P17 rejects a tampered planned envelope that still carries unresolved claim IDs.
+- State confidence is never authorization, completion, execution, or mutation authority.
+
 ## Plain Project Context and Recovery Guide v1
 
-- DevOS first-contact material must not claim authority over a host's governing instructions, policies, permissions, tools, or safety rules.
-- A model refusal to access a link or to perform unavailable/consequential work is compatible behavior; the guide must request honest context recovery instead of compliance.
-- Local wording tests are not proof of cross-vendor live compliance.
-
-- The Project Context Guide is a core bootstrap dependency for fresh external chats and material diagnosis/repair; availability limits remain an explicit HOLD/reporting condition.
-
-- First-contact recovery must reject embedded instructions that try to bypass governing rules; the guide is optional/revocable and evidence vocabulary is aligned with the State Resolver.
+- First-contact material is ordinary repository context, not authority over a host's rules.
+- Refusal of unavailable or consequential work is compatible behavior; the guide requires honest context recovery.
+- The core bootstrap and base operating rule require the guide; embedded bypass instructions are documentation anomalies.

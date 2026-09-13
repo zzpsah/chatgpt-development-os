@@ -65,7 +65,8 @@ def _negative_constraint_conflict(steps: list[dict], constraints: list[str]) -> 
     return None
 
 
-def compile_plan(intent: str, objective: str, project: str | None, constraints: list[str], ambiguity: list[str]) -> dict:
+def compile_plan(intent: str, objective: str, project: str | None, constraints: list[str], ambiguity: list[str],
+                 state_resolution: dict | None = None) -> dict:
     annotations = sorted({
         a.strip() for a in ambiguity
         if a.strip() in NON_MATERIAL_GATING_ANNOTATIONS
@@ -78,6 +79,21 @@ def compile_plan(intent: str, objective: str, project: str | None, constraints: 
         material_ambiguity.append("project unresolved")
     if not objective.strip():
         material_ambiguity.append("objective unresolved")
+    state_summary = None
+    if state_resolution is not None:
+        if not isinstance(state_resolution, dict) or state_resolution.get("protocol") != "DEVOS-AI-STATE-RESOLUTION-v2":
+            material_ambiguity.append("state resolution invalid")
+        else:
+            unresolved = state_resolution.get("unresolved_claim_ids", [])
+            if not isinstance(unresolved, list):
+                material_ambiguity.append("state resolution unresolved claims invalid")
+            elif unresolved:
+                material_ambiguity.append("state claims unresolved: " + ", ".join(sorted(str(x) for x in unresolved)))
+            state_summary = {
+                "protocol": state_resolution["protocol"],
+                "weakest_state_confidence": state_resolution.get("weakest_state_confidence", "unknown"),
+                "unresolved_claim_ids": unresolved,
+            }
 
     if material_ambiguity:
         return {
@@ -92,6 +108,7 @@ def compile_plan(intent: str, objective: str, project: str | None, constraints: 
             "gating_annotations": annotations,
             "authority_requirements": [],
             "verification_requirements": [],
+            "state_resolution": state_summary,
             "decision": "CLARIFY",
             "authorization": "UNCHANGED",
             "authority": "UNCHANGED",
@@ -147,6 +164,7 @@ def compile_plan(intent: str, objective: str, project: str | None, constraints: 
             "gating_annotations": annotations,
             "authority_requirements": authority_requirements,
             "verification_requirements": verification_requirements,
+            "state_resolution": state_summary,
             "decision": "BLOCKED",
             "blockers": [constraint_conflict],
             "authorization": "UNCHANGED",
@@ -167,6 +185,7 @@ def compile_plan(intent: str, objective: str, project: str | None, constraints: 
         "gating_annotations": annotations,
         "authority_requirements": authority_requirements,
         "verification_requirements": verification_requirements,
+        "state_resolution": state_summary,
         "decision": "PLANNED",
         "authorization": "UNCHANGED",
         "authority": "UNCHANGED",

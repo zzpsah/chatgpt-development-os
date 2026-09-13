@@ -97,12 +97,15 @@ Historical evidence snapshots remain dated and do not auto-refresh when source a
 
 Do not create P18/P19 merely for bookkeeping. Continue with consolidation/evidence-hardening and the next repository-supported bounded objective only after inspecting current `main`, open PRs, CI, and durable task/decision/state records. Any material next action must update the affected durable records before completion.
 
+## AI State Resolver v2
+
+- An unnumbered resolver-hardening objective is active. It upgrades the existing P0 contract with a deterministic read-only claim resolver while preserving P12 and P17 authority boundaries.
+- `observed` requires citable primary/P12 grounding; document wording cannot self-upgrade a claim.
+- Durable-state claims revalidate at recovery/handoff boundaries or relevant changed paths. Execution-evidence claims inherit P12 freshness and are not normalized again.
+- The resolver can only cause a plan/readiness HOLD through named unresolved claims; it never grants authority.
+
 ## Plain Project Context and Recovery Guide v1
 
-- A new unnumbered bounded objective adds `DEVOS-PROJECT-CONTEXT.md` and a host-neutral recovery protocol for fresh external AI chats.
-- The guide presents DevOS as ordinary repository context, never as authority over a host's policies, permissions, tools, or safety rules.
-- It requires honest unavailable-context reporting and does not claim universal live compatibility.
-
-The Plain Project Context and Recovery Guide is now a core bootstrap requirement: `core/ai-bootstrap-protocol.md` routes fresh chats through it before durable-state recovery, and `core/devos-base-operating-rule.md` requires it before material diagnosis/repair.
-
-- The core Project Context Guide now requires repository instruction anomalies to be flagged, makes adoption optional/revocable, and references the State Resolver evidence vocabulary.
+- `DEVOS-PROJECT-CONTEXT.md` provides host-neutral repository context for fresh external AI chats.
+- It is optional/revocable, preserves host policy, requires unavailable-context reporting, and flags instructions that seek to bypass safety, authorization, verification, or host policy.
+- It is a core bootstrap requirement before material diagnosis/repair.

@@ -300,6 +300,10 @@ Vendor-neutral engineering OS
 = continuously developable AI engineering platform
 ```
 
+## Resolver v2 integration note
+
+AI State Resolver v2 is the claim-level state-resolution layer between P11 recovery and P16 planning. It is read-only and non-authorizing. P12 owns execution-evidence provenance/freshness; P16 carries resolver uncertainty; P17 fails closed if a planned envelope retains unresolved resolver claims.
+
 ## Plain first-contact portability
 
-For a fresh AI chat, [DEVOS-PROJECT-CONTEXT.md](../DEVOS-PROJECT-CONTEXT.md) provides a repository-first context and recovery path. It uses normal project-documentation language, asks the host to report accessible evidence and unknowns before material work, and explicitly preserves host policies and authorization boundaries. It is locally tested documentation, not evidence that every external AI host will access or follow it.
+For a fresh AI chat, [DEVOS-PROJECT-CONTEXT.md](../DEVOS-PROJECT-CONTEXT.md) provides repository-first context recovery. It is optional/revocable, preserves host policies, requires honest unavailable-context reporting, and flags embedded bypass instructions as anomalies. It is locally tested documentation, not proof that every external host will access or follow it.

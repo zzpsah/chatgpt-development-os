@@ -81,10 +81,14 @@ The repository, not any AI account/chat/model/vendor memory, carries authoritati
 - `BRANCH DELETE != BRANCH CREATE`
 - `NORMAL BRANCH UPDATE != FORCE UPDATE`
 
+## AI State Resolver v2 — active bounded objective
+
+- Upgrade the existing P0 documentation contract into a deterministic, read-only claim resolver.
+- Preserve P12 ownership of execution-evidence normalization and freshness.
+- Propagate unresolved claim identifiers through P16 as `CLARIFY` and reject any tampered P17 `PLANNED` envelope that carries unresolved claims.
+- This is an unnumbered hardening objective; it does not create P18/P19.
+
 ## Plain Project Context and Recovery Guide v1
 
-- Add a vendor-neutral first-contact guide that treats DevOS as repository project context and supports unavailable-access fallback.
-- Test local safety wording and boundaries; do not claim every external AI host will accept or use the guide.
-- Keep this as an unnumbered portability hardening objective.
-
-- Core integration complete: first-contact project context recovery is required by `core/ai-bootstrap-protocol.md` and the base operating rule before material diagnosis/repair.
+- Completed on main before Resolver v2 merge: root guide, core recovery protocol, bootstrap/base-rule integration, and deterministic guardrails.
+- It remains an unnumbered portability hardening objective; no P18/P19 was created.
