@@ -1,6 +1,6 @@
-# AI State Resolver v1
+# AI State Resolver — v2 Current Contract
 
-> **Current implementation note:** the v1 sections below preserve the original semantic/recovery contract. For executable claim records, grounding, confidence, validation, output, and P15/P16/P17 propagation, [v2 deterministic implementation](#v2-deterministic-implementation) is authoritative. If the sections differ, v2 governs.
+> **Reading order:** [v2 deterministic implementation](#v2-deterministic-implementation) is the current executable contract for claim records, grounding, confidence, validation, output, and P15/P16/P17 propagation. The earlier v1 semantic/recovery sections are retained as historical context. If the sections differ, v2 governs.
 
 ## Purpose
 
@@ -231,6 +231,7 @@ P11 recovery -> resolver v2 -> P16 plan -> P17 readiness -> controller
 - No semantic truth claim from a document merely asserting success.
 - No P12 evidence re-normalization.
 - No authorization, completion marking, mutation, or execution.
+- No cross-claim semantic contradiction resolution. v2 detects duplicate identifiers only; a future bounded objective must define a stable fact identity and contradiction policy before it attempts to reconcile different claims about the same fact.
 
 The reference continuation path (`tools/devos-continuation-path.py`) now calls resolver v2 when its caller supplies `state_claims`, `events`, or `changed_paths`. It returns the resolver result alongside P15/P16/P17 evidence. An unresolved supplied claim yields P16 `CLARIFY` and prevents P17/controller continuation.
 

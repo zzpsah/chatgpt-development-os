@@ -51,11 +51,12 @@ def main():
     assert unknown["status"] == "NEEDS_EVIDENCE" and unknown["unresolved_claim_ids"] == ["C1"], unknown
     document = DOCUMENT.read_text(encoding="utf-8")
     for marker in (
-        "For executable claim records, grounding, confidence, validation, output, and P15/P16/P17 propagation",
+        "v2 deterministic implementation](#v2-deterministic-implementation) is the current executable contract",
         "only a claim with current P12 execution evidence",
         "DURABLE_STATE_CANNOT_SELF_UPGRADE_TO_OBSERVED",
         "only preserves or downgrades caller-supplied confidence",
         "`likely` remains an explicit uncertainty signal",
+        "No cross-claim semantic contradiction resolution.",
     ):
         assert marker in document, marker
     print("PASS: AI State Resolver v2 rejects uncited/conflicting claims and decays at revalidation boundaries")

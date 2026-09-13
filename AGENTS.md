@@ -40,9 +40,9 @@ A chat message, private AI memory, temporary tool output, or undocumented local 
 IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE
 ```
 
-## DevOS stance-code entry point
+## Optional stance-code shorthand
 
-DevOS supports a compact, vendor-neutral operating-stance code so a new AI chat can establish the intended posture without a long explanation.
+After a session has recovered repository context, DevOS supports compact operating-stance codes as optional shorthand. They are not the default entry for a fresh session and never replace the plain Project Context Guide or repository recovery.
 
 Canonical forms:
 
@@ -92,12 +92,13 @@ When a user says `DEVOS` or `Development OS`, resolve that name through reposito
 
 When an AI enters this repository, it should treat DevOS as the governing development framework for the work and bootstrap itself from repository context before making material technical conclusions.
 
-The first-contact sequence is:
+For every fresh session, the first-contact sequence is:
 
+0. Read `DEVOS-PROJECT-CONTEXT.md` as the default plain-language entry and follow its unavailable-context boundary.
 1. Read this `AGENTS.md`.
-2. Read `docs/DEVOS-STANCE-CODES.md` when a stance code is supplied or inferred.
-3. Read `docs/DEVOS-CHATGPT-DESI-STYLE.md` when `DESI` is supplied or the user is clearly using the established engineering-mate style.
-4. Read `core/ai-bootstrap-protocol.md`.
+2. Read `core/ai-bootstrap-protocol.md`.
+3. If the user explicitly supplies a stance code, read `docs/DEVOS-STANCE-CODES.md`; otherwise use ordinary language and the recovered project context.
+4. Read `docs/DEVOS-CHATGPT-DESI-STYLE.md` only when `DESI` is explicitly supplied or the user clearly uses the established engineering-mate style.
 5. Read `core/human-language-routing.md` and `core/learning-and-human-language.md` for language interpretation and conversational behavior.
 6. If working on a managed project, locate and read that project's `AGENTS.md` and `.ai/` context.
 7. Read the relevant state, architecture, decisions, tasks, and recent change/session records.

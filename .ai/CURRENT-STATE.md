@@ -129,3 +129,5 @@ Historical evidence snapshots remain dated and do not auto-refresh when source a
 ## Next bounded direction
 
 Recovery rule for PR #32: if open, require exact-final-head CI and code review before merge; if merged, treat the repository-side v1 implementation as closed at deterministic/integration/CI evidence level and inspect fresh post-merge CI. Live activation remains separate and cannot be inferred from repository CI. Do not create P18/P19 merely for bookkeeping.
+
+- Fresh-session bootstrap now defaults to the plain Project Context Guide; stance codes are optional after orientation. Resolver cross-claim semantic contradiction remains explicitly out of v2 scope.
