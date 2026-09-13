@@ -1,5 +1,19 @@
 # Decisions
 
+## Current-Source Evidence Refresh — closure
+- This was a bounded, unnumbered objective; no P18/P19 phase was created.
+- The protocol adds fresh exact-current-source proof without rewriting historical readiness evidence.
+- Current evidence is ephemeral and additive; historical `source_head`, run IDs, archive digests, and `freshness: historical` remain pinned.
+- A valid packet binds exact Git HEAD, ledger-declared capability/level/test path, current test SHA-256, observed exit code, and local/CI context.
+- Foundation Health may validate optional current-source evidence but never executes its test or manufactures freshness; Doctor remains presentation-only.
+- Historical source drift remains visible as WARN even when a valid packet proves the current version of the exact drifted test.
+- `CURRENT_EVIDENCE_ADDS_PROOF_BUT_NEVER_REWRITES_HISTORICAL_PROVENANCE` is the governing rule.
+- Final source head `bc400112d0bbaced6ed699a6863bc8dcf91e47c8` merged through PR #24 at `a93f9f435ffab5f81ce070f07a0da694757ab6cb`.
+- Final exact-head PR verification: Current-Source Evidence 12 / `34773566913`, Trust-First 71 / `34773566958`, Contracts 608 / `34773566914`, Full DevOS 530 / `34773566926`, MCP Repository Create 9 / `34773566919` — success.
+- Fresh post-merge `main`: Trust-First 72 / `34774013758`, Contracts 609 / `34774013791`, Full DevOS 531 / `34774013827` — success.
+- The dedicated Current-Source Evidence workflow has no `main` push trigger, so no post-merge dedicated run is claimed.
+- `production_ready=false` and `live_provider_proven=false` remain unchanged; this closure grants no authority, authorization, execution, or mutation permission.
+
 ## Cross-Host Recovery Friction & Onboarding Proof
 - This is a bounded, unnumbered objective; no P18/P19 phase is created.
 - The gap is not another portability contract. Existing Multi-AI portability, host-profile, auto-onboarding, fresh-AI recovery, continuation, and P11 repository-first contracts already exist.
