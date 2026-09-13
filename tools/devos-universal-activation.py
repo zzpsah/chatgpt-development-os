@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Resolve a DevOS stance invocation into an evidence-backed bootstrap request.
+"""Resolve a DevOS label into an evidence-backed project-workflow request.
 
 This reference tool is intentionally read-only. A host may use it after a user
-writes ``DEVOS`` or ``DEVOS::<STANCE>`` to decide whether DevOS can actually be
-loaded from a repository available to that host. It never treats chat memory,
-a provider credential, or the stance itself as repository or execution proof.
+writes ``DEVOS`` or ``DEVOS::<STANCE>`` to decide whether repository project
+context is available. It never treats chat memory, a provider credential, or
+the label itself as repository or execution proof. It does not alter host policy.
 """
 from __future__ import annotations
 
@@ -40,6 +40,7 @@ def _base(status: str, invocation: str) -> dict[str, Any]:
         "status": status,
         "invocation": invocation,
         "authority": "UNCHANGED",
+        "host_policy": "UNCHANGED",
         "authorization": "UNCHANGED",
         "execution": "NONE",
         "mutation": "NONE",
@@ -129,13 +130,13 @@ def activate(payload: dict[str, Any]) -> dict[str, Any]:
             "Inspect current source tree, Git state, tests, configuration, and applicable CI evidence.",
             "Only then interpret, plan, assess readiness, and continue through the governed workflow.",
         ],
-        "authority_boundary": "The stance permits only the routine authority already granted by the user and project policy. It does not grant approval or execution.",
+        "authority_boundary": "The label is a user workflow preference subject to host policy, user authorization, and project rules. It does not override policies or grant approval, access, or execution.",
     })
     return result
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Read-only DevOS universal activation resolver")
+    parser = argparse.ArgumentParser(description="Read-only DevOS project workflow discovery resolver")
     parser.add_argument("--input", help="JSON payload; stdin is used when omitted")
     args = parser.parse_args()
     raw = args.input if args.input is not None else __import__("sys").stdin.read()

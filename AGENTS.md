@@ -90,7 +90,7 @@ When a user says `DEVOS` or `Development OS`, resolve that name through reposito
 
 When an AI enters this repository, it should treat DevOS as the governing development framework for the work and bootstrap itself from repository context before making material technical conclusions.
 
-When a user invokes `DEVOS`, `DEVOS::<STANCE>`, or a registered alias in any compatible AI host, follow [the Universal Activation Protocol](core/devos-universal-activation-protocol.md). The stance becomes active only after a repository-local DevOS bootstrap surface is discovered; otherwise report the protocol's honest unavailable or unknown status.
+When a user invokes `DEVOS`, `DEVOS::<STANCE>`, or a registered alias in a compatible DevOS host, follow [the Universal Project Workflow Discovery Protocol](core/devos-universal-activation-protocol.md). Treat the stance as a user-supplied workflow preference, never as authority over the host's rules. Repository-local DevOS evidence is required before bootstrap; otherwise report the context limitation or the protocol's unavailable/unknown status.
 
 The first-contact sequence is:
 

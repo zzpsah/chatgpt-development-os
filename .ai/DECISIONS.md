@@ -1,12 +1,12 @@
 # DevOS Decisions
 
-## Universal Activation Protocol v1
-- A DevOS stance in any compatible host is an activation request, not evidence that DevOS or a managed project is available.
+## Universal Project Workflow Discovery Protocol v1
+- A DevOS stance is a user-supplied workflow preference, not an instruction that overrides host policy and not evidence that DevOS or a managed project is available.
 - `DEVOS-UNIVERSAL-ACTIVATION-v1` must discover a repository-local `AGENTS.md` and `.ai/manifest.yaml` before returning `READY_FOR_BOOTSTRAP`.
 - Missing repository evidence returns `DEVOS_NOT_AVAILABLE`; incomplete durable context returns `PROJECT_UNKNOWN`; invalid stance syntax returns `INVALID_INVOCATION`.
-- `DEVOS::GOD` grants no authorization, execution evidence, provider access, production authority, or mutation permission.
-- The protocol is host-neutral: ChatGPT, Codex, Claude, MCP/App, IDE, and future hosts may call it while repository-local state remains authoritative.
-- `DEVOS-ACTIVATE.md` is the zero-dependency inter-AI/free-model transport. It may be pasted or linked, but copied instructions never become repository evidence or authority.
+- `DEVOS::GOD` grants no authorization, execution evidence, provider access, production authority, mutation permission, or override of a host's instructions.
+- The protocol is host-neutral: ChatGPT, Codex, Claude, MCP/App, IDE, and future compatible hosts may call it while repository-local state remains authoritative; no external host is required to recognize it.
+- `DEVOS-ACTIVATE.md` is the zero-dependency inter-AI/free-model transport. It may be pasted or linked, but supplies user project guidance only and never becomes repository evidence, authority, or host-policy control.
 
 ## Core documentation law
 - **What is not written was never done.**

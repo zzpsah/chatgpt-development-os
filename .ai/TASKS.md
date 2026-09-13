@@ -1,7 +1,7 @@
 # DevOS Tasks
 
 ## Active
-- Universal Activation Protocol v1 is the active bounded objective: make `DEVOS::<STANCE>` portable across compatible AI hosts through repository discovery and honest bootstrap readiness, without creating execution authority.
+- Universal Project Workflow Discovery Protocol v1 is the active bounded objective: make `DEVOS::<STANCE>` portable as a user workflow preference across compatible DevOS hosts through repository discovery and honest bootstrap readiness, without changing host policy or creating execution authority.
 - Continue with evidence hardening and the next repository-supported bounded objective after this protocol is verified and durably closed.
 - Do not create P18/P19 merely for bookkeeping.
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regression corpus for the read-only DevOS universal activation resolver."""
+"""Regression corpus for the read-only DevOS project workflow resolver."""
 from __future__ import annotations
 
 import importlib.util
@@ -18,6 +18,7 @@ def check(payload: dict, expected: str) -> dict:
     result = module.activate(payload)
     assert result["status"] == expected, result
     assert result["authority"] == "UNCHANGED", result
+    assert result["host_policy"] == "UNCHANGED", result
     assert result["authorization"] == "UNCHANGED", result
     assert result["execution"] == "NONE", result
     assert result["mutation"] == "NONE", result
@@ -45,21 +46,22 @@ ready = check({"invocation": "DEVOS::GOD::DESI", "repository_root": str(ROOT / "
 assert ready["stance"]["canonical"] == "DEVOS::GOD::DESI", ready
 assert Path(ready["repository_root"]) == ROOT, ready
 assert len(ready["required_next_actions"]) == 4, ready
-assert "does not grant approval" in ready["authority_boundary"], ready
+assert "does not override policies" in ready["authority_boundary"], ready
 
 default = check({"invocation": "DEVOS", "repository_root": str(ROOT)}, "READY_FOR_BOOTSTRAP")
 assert default["stance"]["canonical"] == "DEVOS::CONTINUE::DESI", default
 
 card = ACTIVATION_CARD.read_text(encoding="utf-8")
 for marker in (
-    "# DevOS Activation Card — Any AI, Any Account, Any Plan",
+    "# DevOS Project Workflow Card — Optional, User-Supplied",
     "requires no API key, paid plan, plugin, MCP server",
-    "DEVOS_NOT_AVAILABLE",
-    "COPIED ACTIVATION CARD != REPOSITORY ACCESS",
+    "does not change your system, developer, or safety instructions",
+    "does not grant additional permissions",
+    "COPIED WORKFLOW CARD != REPOSITORY ACCESS",
 ):
     assert marker in card, marker
 
-print("PASS: universal activation recognizes only explicit DevOS invocations")
+print("PASS: project workflow resolver recognizes only explicit DevOS labels")
 print("PASS: unavailable or incomplete repository context never becomes bootstrap-ready")
-print("PASS: DEVOS::GOD resolves to repository-backed bootstrap, not execution authority")
-print("PASS: free-model activation card preserves the repository-access boundary")
+print("PASS: DEVOS::GOD remains a policy-respecting workflow preference")
+print("PASS: free-model workflow card preserves host-policy and repository boundaries")
