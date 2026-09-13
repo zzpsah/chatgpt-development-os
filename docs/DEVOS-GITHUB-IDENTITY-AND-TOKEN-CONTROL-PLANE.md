@@ -8,7 +8,9 @@ Connect GitHub account authorization to the existing DevOS provider capability a
 
 - Normative GitHub identity/token contract: `core/devos-github-identity-token-control-plane.md`
 - Side-effect-free authentication primitives: `tools/devos-github-auth.py`
-- Deterministic regression suite: `tools/test-devos-github-auth.py`
+- Deterministic authentication regression suite: `tools/test-devos-github-auth.py`
+- Side-effect-free capability discovery/evaluation bridge: `tools/devos-github-capability-discovery.py`
+- Deterministic capability discovery regression suite: `tools/test-devos-github-capability-discovery.py`
 - Dedicated verification workflow: `.github/workflows/verify-github-auth-control-plane.yml`
 - Durable `.ai` state/decision/session updates
 - Master architecture update documenting the new identity/token boundary
@@ -23,6 +25,38 @@ Useful official documentation:
 - https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-an-installation-access-token-for-a-github-app
 - https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app
 - https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation
+
+## Capability discovery bridge
+
+Authentication metadata is not itself a DevOS capability. The discovery bridge consumes provider-reported, non-secret permissions and evaluates them against an adapter-supplied mapping for individual DevOS capabilities.
+
+```text
+GitHub identity
+      ↓
+non-secret provider permission metadata
+      ↓
+capability discovery bridge
+      ↓
+AVAILABLE | UNAVAILABLE | UNCONFIRMED
+      ↓
+Remote Permission Control Plane
+      ↓
+P17 exact-step readiness
+```
+
+The mapping is intentionally supplied by the provider adapter rather than hard-coded into generic DevOS logic. This prevents stale provider permission assumptions from becoming authorization.
+
+The discovery bridge is side-effect-free and emits:
+
+- provider identity;
+- provider permission names/levels;
+- capability status/reason;
+- `authorization: UNCHANGED`;
+- `execution: NONE`;
+- `mutation: NONE`;
+- `credential_material: NOT_INCLUDED`.
+
+`UNCONFIRMED` means the adapter mapping or evidence is insufficient. It must not be upgraded to authorization by inference.
 
 ## Production activation boundary
 
