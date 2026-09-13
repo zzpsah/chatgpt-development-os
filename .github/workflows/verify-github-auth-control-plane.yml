@@ -1,0 +1,29 @@
+name: Verify DevOS GitHub Identity and Token Control Plane
+
+on:
+  pull_request:
+    paths:
+      - 'core/devos-github-identity-token-control-plane.md'
+      - 'tools/devos-github-auth.py'
+      - 'tools/test-devos-github-auth.py'
+      - 'docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md'
+      - '.github/workflows/verify-github-auth-control-plane.yml'
+      - '.ai/CURRENT-STATE.md'
+      - '.ai/TASKS.md'
+      - '.ai/DECISIONS.md'
+      - 'docs/DEVOS-MASTER-ENGINEERING-MAP.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify GitHub auth control plane
+        run: python tools/test-devos-github-auth.py
