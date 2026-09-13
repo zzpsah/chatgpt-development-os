@@ -8,7 +8,7 @@ When DevOS cannot proceed safely, it should not leave the user guessing what to 
 
 ## Actionable HOLD response
 
-For a blocked or paused human-originated operation, DevOS should communicate:
+For a blocked or paused human-originated operation, DevOS communicates:
 
 ```text
 STATUS
@@ -21,91 +21,75 @@ OPTIONS
 EXAMPLE WORDING
 ```
 
-Example:
-
-```text
-STATUS: NEEDS_APPROVAL
-NEXT: Merge PR #19 into main
-WHAT WILL HAPPEN: The verified PR will be merged and post-merge CI will run.
-IMPACT: HIGH — remote branch mutation
-APPROVAL NEEDED: PR #19 → main in the current repository state
-
-Choose:
-1. "merge it"
-2. "run the checks first"
-3. "show me the plan"
-4. "hold"
-```
-
 The examples are natural-language guidance, not a hidden command language requirement.
 
 ## Scoped full approval
 
 A user may provide explicit approval for a whole bounded workflow rather than approving every internal step individually.
 
-Example:
+DevOS records approval scope containing project/repository, workflow, capabilities, targets, impact ceiling, repository freshness anchor where applicable, Security Gate state where applicable, and approval identifier/provenance.
+
+`FULL APPROVAL` means full approval within that explicit scope, never unrestricted permission.
+
+## Real continuation flow
+
+The integrated path is:
 
 ```text
-Full approval: complete the approved PR #19 merge workflow and all required verification.
+human "continue"
+  -> P15 human-language interpretation
+  -> existing active project/workflow objective
+  -> P16 semantic plan
+  -> validate scoped approval against exact next capability/target/impact/HEAD/Security Gate
+  -> P17 step readiness
+  -> development-task controller
 ```
 
-DevOS records an approval scope containing:
+Implementation: `tools/devos-continuation-path.py`.
 
-- project/repository;
-- workflow;
-- capabilities;
-- targets;
-- impact ceiling;
-- repository freshness anchor where applicable;
-- Security Gate state where applicable;
-- approval identifier/provenance.
+Regression: `tools/test-actionable-hold-continuation-integration.py`.
 
-Then:
+The scoped-approval layer does not replace P17. Only after approval reuse is proven valid does it supply step-bound `ALREADY_GRANTED` authorization evidence to the existing P17 evaluator. P17 still independently checks plan validity, exact repository freshness, dependencies, capability, authorization, Security Gate, and verification path.
 
-```text
-continue
-→ recover workflow
-→ validate current approval scope
-→ execute covered internal step
-```
-
-No repetitive approval prompt is needed while the next internal step remains inside the same valid scope.
-
-## When approval is requested again
-
-Fresh approval is required when:
-
-- target repository/branch/path changes;
-- capability changes;
-- impact tier increases;
-- production/destructive scope appears;
-- the repository freshness anchor changes;
-- the Security Gate condition changes;
-- material workflow scope changes;
-- approval provenance cannot be recovered;
-- a new capability not listed in the original approval is required.
-
-Example:
-
-```text
-Existing approval: PR #19 merge
-Next action: delete remote branch
-→ NEEDS_APPROVAL
-```
+The development controller still decides whether the step is an `EXECUTION_CANDIDATE`. The continuation integration itself never executes or mutates state.
 
 ## Continuation semantics
 
-`continue` is not blanket authorization.
+```text
+continue + valid scoped approval + fresh P17/controller gates = continue
+continue + missing approval = actionable HOLD
+continue + stale HEAD = actionable HOLD
+continue + changed target/capability = actionable HOLD
+continue + higher impact = actionable HOLD
+continue + changed Security Gate state = actionable HOLD / fresh evaluation
+```
 
-It means:
+No repetitive approval prompt is needed while the exact next internal step remains inside the same valid scope.
 
-> Resume the currently valid bounded workflow using existing valid authorization when the next step is covered by that authorization.
+## When approval is requested again
 
-Therefore:
+Fresh approval is required when target/repository/branch/path changes, capability changes, impact increases, production/destructive scope appears, repository freshness changes, Security Gate state changes, material workflow scope changes, approval provenance cannot be recovered, or any new capability lies outside the recorded approval.
+
+## HOLD fields
+
+An actionable HOLD produced by the integrated continuation path carries:
+
+- `status`;
+- `reason`;
+- `next_action`;
+- `consequence` / `impact`;
+- `required_approval_or_evidence`;
+- `options`;
+- `natural_language_examples`;
+- validation reasons sufficient to explain which scope/freshness/security condition failed.
+
+Example wording may include:
 
 ```text
-continue + valid scoped approval = continue
-continue + new/out-of-scope operation = actionable HOLD
+"approve pr.merge on PR#23->main"
+"show me the updated plan"
+"run the checks first"
+"hold"
 ```
 
 ## Freshness semantics
@@ -117,42 +101,24 @@ approved HEAD = A
 current HEAD  = B
 ```
 
-DevOS must not silently continue with the old approval. It should hold, explain that the state changed, and offer:
-
-- inspect changes;
-- re-plan/reconcile;
-- re-approve the updated workflow;
-- hold.
+DevOS must not silently continue with the old approval. It holds and requires inspection/re-plan/re-approval as appropriate.
 
 ## Universal AI/account portability
 
 Approval scope must be recoverable as project/provider/workflow evidence rather than existing only in one AI account's private conversation.
 
-The goal remains:
-
 ```text
 AI A + Account A
-  ↓
-scoped approval + repository state
-  ↓
-AI B + Account B
-  ↓
-recover approval scope
-  ↓
-continue only if scope is still valid
+  -> scoped approval + repository state
+  -> repository
+  -> AI B + Account B
+  -> recover approval scope
+  -> continue only if scope is still valid
 ```
 
 ## Security boundary
 
-A provider credential does not replace DevOS approval.
-
-A plan does not replace approval.
-
-P17 READY does not replace approval.
-
-A prior approval for another repository or operation does not replace exact approval.
-
-`FULL APPROVAL` never means unrestricted access.
+A provider credential does not replace DevOS approval. A plan does not replace approval. P17 READY does not replace approval. A prior approval for another repository, target, or capability does not replace exact approval.
 
 ## Safety invariants
 
@@ -161,20 +127,22 @@ A prior approval for another repository or operation does not replace exact appr
 - `INTERPRETATION != AUTHORIZATION`
 - `CONTINUE != BLANKET AUTHORIZATION`
 - `FULL APPROVAL = FULL WITHIN EXPLICIT SCOPE`
-- `OLD APPROVAL != NEW APPROVAL` when scope/freshness changes
+- `OLD APPROVAL != NEW APPROVAL` when scope/freshness/security changes
 - `CHAT MEMORY != SOURCE OF TRUTH`
 - `PROVIDER CREDENTIAL != DEVOS AUTHORIZATION`
 - `PROVIDER RESPONSE != COMPLETION PROOF`
 - `RECOVERY != AUTOMATIC MUTATION REPLAY`
 
-## Implementation status
+## Verification
 
-Reference semantics are implemented in:
+Reference regression:
 
-`tools/devos-actionable-hold.py`
+`python tools/test-devos-actionable-hold.py`
 
-Regression corpus:
+Integrated real-path regression:
 
-`tools/test-devos-actionable-hold.py`
+`python tools/test-actionable-hold-continuation-integration.py`
 
-The reference engine is side-effect free: it evaluates approval reuse and produces structured actionable-hold data; it does not execute repository/provider mutations.
+CI gate: `.github/workflows/verify-actionable-hold.yml`.
+
+No live/destructive/provider mutation is required by either regression.
