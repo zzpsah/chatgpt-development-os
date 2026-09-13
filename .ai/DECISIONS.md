@@ -5,7 +5,10 @@
 - VALID means consistent historical evidence classification, not current runtime verification or production readiness.
 - All live-mutation and production claims remain false in v1; a reviewed future protocol and separately authorized evidence are required to expand them.
 - Archived run/head/test references remain historical. No automatic claim refresh occurs when CI passes on a later head.
-- Foundation bootstrap now participates in Contracts and Full CI; diagnostics remain read-only.
+- Current-source evolution does not rewrite historical evidence. Changed referenced paths are exposed as `historical_source_drift`; a new current-source claim requires separate new evidence.
+- Fabricated CI run IDs, source-head mismatches, stale evidence relabeled as fresh, malformed/duplicate capability records, missing limitations, and unsupported production/live-mutation promotion fail closed.
+- PR #16 is reconciled against PR #17 Trust-First `main`; the readiness ledger composes with `tools/devos-audit.py` and adversarial Security Gate checks rather than duplicating them.
+- Foundation bootstrap participates in Contracts and Full CI; diagnostics remain read-only.
 - Following matrix closure, prioritize Foundation Health & State Consistency with universal AI portability preserved.
 
 ## Durable project state authority
@@ -13,6 +16,7 @@
 - Source tree + Git are authoritative for implementation state and exact changes.
 - AI account memory/chat history are supplementary and not project authority.
 - `STATE-INDEX.md` is evidence/navigation, not semantic authority.
+- Universal acceptance invariant: `AI A + Account A → repository → AI B + Account B → correct recovery → safe continuation`.
 
 ## Canonical repository identity
 - Canonical repository: `zzpsah/chatgpt-development-os`.
@@ -27,6 +31,7 @@
 - P15 Human Language Interpretation is the top-level semantic entry capability and never grants authority.
 - P16 planning remains non-executing/non-authorizing.
 - P17 `READY` means eligibility only; authority/authorization/execution remain unchanged.
+- P17 revalidates compiled-step semantic impact against the P16 classifier; a downgraded destructive/security-sensitive impact is blocked.
 
 ## Production E2E / recovery / continuation closures
 - Production E2E Harness closed through PR #11.
@@ -62,9 +67,10 @@
 ## Production-readiness decision
 - Production readiness is an evidence claim, not a phase label.
 - Provider-simulated controlled mutation proof may strengthen the evidence matrix but does not by itself prove live-provider or production mutation safety.
-- The eventual readiness matrix must distinguish deterministic/component proof, provider-simulated proof, real read-only managed-project proof, live-provider mutation proof, and unproven capabilities.
+- The readiness matrix distinguishes deterministic/component proof, integrated proof, real read-only managed-project proof, provider-simulated proof, live-provider proof, and unproven capabilities.
+- Current v1 deliberately cannot express `LIVE_PROVIDER_VERIFIED` or `PRODUCTION_VERIFIED` as successful proof levels.
 
 ## Verification boundary
 - Earlier successful runs are historical evidence only for a new head.
-- PR #14 closes only after fresh applicable Contracts, Full DevOS and External Managed Project success on the exact final semantic-state head.
+- Fresh CI on a later PR head proves that later implementation/checker behavior only; it does not silently refresh historical ledger rows.
 - Higher-impact execution remains separately authorized and Security-Gate controlled.
