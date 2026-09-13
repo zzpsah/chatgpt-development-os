@@ -1,0 +1,152 @@
+name: Live DevOS Controller Bridge Mutation Test
+
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  live-controller-mutation:
+    name: Governed controller bridge create-update-delete
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout test branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Execute governed controller bridge mutation sequence
+        env:
+          DEVOS_GITHUB_APP_ID: ${{ secrets.DEVOS_GITHUB_APP_ID }}
+          DEVOS_GITHUB_APP_PRIVATE_KEY: ${{ secrets.DEVOS_GITHUB_APP_PRIVATE_KEY }}
+        run: |
+          python - <<'PY'
+          import importlib.util
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          root = Path.cwd()
+          module_path = root / 'tools' / 'devos-github-controller-bridge.py'
+          spec = importlib.util.spec_from_file_location('devos_controller_bridge_live', module_path)
+          bridge = importlib.util.module_from_spec(spec)
+          sys.modules[spec.name] = bridge
+          assert spec and spec.loader
+          spec.loader.exec_module(bridge)
+
+          OWNER = 'zzpsah'
+          REPO = 'chatgpt-development-os'
+          BRANCH = 'live-test/controller-bridge-mutation-20260914'
+          RESOURCE = 'artifacts/live-test/controller-bridge-20260914.txt'
+          PROJECT = 'chatgpt-development-os'
+          WORKFLOW = 'devos-live-controller-bridge-mutation-v1'
+          TEST_HEAD = 'LIVE-TEST-CONTROLLER-BRIDGE-HEAD'
+
+          def execute(action, content=None, expected_sha=None, impact='LOW', auth_impact='LOW'):
+              task_id = f'LIVE-{action.upper().replace(".", "-")}-20260914'
+              operation = {
+                  'provider': 'github',
+                  'owner': OWNER,
+                  'repository': REPO,
+                  'resource': RESOURCE,
+                  'capability': action,
+                  'impact': impact,
+                  'action': action,
+                  'inputs': {
+                      'branch': BRANCH,
+                      'message': f'DevOS live controller bridge test: {action}',
+                  },
+              }
+              if content is not None:
+                  operation['inputs']['content'] = content
+              if expected_sha is not None:
+                  operation['inputs']['expected_sha'] = expected_sha
+
+              controller = {
+                  'protocol_version': 'P16-CONTROLLER-v1',
+                  'decision': 'EXECUTION_CANDIDATE',
+                  'authority': 'UNCHANGED',
+                  'execution': 'NONE',
+                  'authorization': 'UNCHANGED',
+                  'task_id': task_id,
+                  'objective': f'Live governed GitHub adapter {action}',
+                  'project': PROJECT,
+                  'workflow': WORKFLOW,
+                  'repository_head': TEST_HEAD,
+                  'gates': {
+                      'scope': True,
+                      'repository_revalidated': True,
+                      'readiness': True,
+                      'capability': True,
+                      'authorization': True,
+                      'security': True,
+                      'verification_path': True,
+                  },
+                  'compiled_step': {
+                      'id': task_id,
+                      'objective': f'Live governed GitHub adapter {action}',
+                      'impact': impact,
+                      'verification': 'FRESH_PROVIDER_READBACK',
+                      'provider_operation': operation,
+                  },
+              }
+              readiness = {
+                  'protocol': 'DEVOS-STEP-READINESS-v1',
+                  'plan_protocol': 'DEVOS-GOAL-PLAN-v1',
+                  'status': 'READY',
+                  'authority': 'UNCHANGED',
+                  'authorization': 'UNCHANGED',
+                  'execution': 'NONE',
+                  'gates': {
+                      'scope': True,
+                      'authorization': True,
+                      'security': True,
+                      'capability': True,
+                      'verification': True,
+                  },
+                  'step_id': task_id,
+                  'repository_head': TEST_HEAD,
+                  'step': {
+                      'id': task_id,
+                      'objective': f'Live governed GitHub adapter {action}',
+                      'impact': impact,
+                      'verification': 'FRESH_PROVIDER_READBACK',
+                  },
+              }
+              authorization = {
+                  'provider': 'github',
+                  'owner': OWNER,
+                  'repository': REPO,
+                  'resource': RESOURCE,
+                  'capability': action,
+                  'workflow': WORKFLOW,
+                  'project': PROJECT,
+                  'impact_ceiling': auth_impact,
+                  'freshness': TEST_HEAD,
+                  'authorization_id': f'LIVE-CTRL-{action.upper().replace(".", "-")}-20260914',
+              }
+
+              result = bridge.execute(controller, readiness, authorization)
+              print(json.dumps({'action': action, 'result': result}, indent=2, sort_keys=True))
+              if result.get('status') != 'COMPLETE' or result.get('mutation') != 'COMPLETE' or result.get('evidence') != 'FRESH_PROVIDER_READBACK':
+                  raise SystemExit(f'{action} failed: {result}')
+              return result
+
+          created = execute('file.create', 'DevOS controller bridge live test v1\n')
+          create_sha = created['readback']['sha']
+          updated = execute('file.update', 'DevOS controller bridge live test v1\nUPDATED\n', create_sha)
+          update_sha = updated['readback']['sha']
+          deleted = execute('file.delete', expected_sha=update_sha, impact='HIGH', auth_impact='HIGH')
+          if deleted['readback']['status'] != 'ABSENT':
+              raise SystemExit(f'delete readback did not prove absence: {deleted}')
+
+          print('LIVE_DEVOS_CONTROLLER_BRIDGE_MUTATION_TEST: PASS')
+          PY
