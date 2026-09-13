@@ -14,6 +14,12 @@
 - P0–P15 are dependency-bearing foundations; age alone is not a reason for deletion.
 - Capability ledger: `docs/P0-P15-FOUNDATION-VALUE-AUDIT.md`.
 
+## P9–P11 continuity decisions
+- **P9 Development Task Controller v1** is complete and remains the governed controller boundary for bounded execution candidacy.
+- **P10 Context Continuity & Recovery v1** is complete and established durable repository-local continuity independent of chat memory.
+- **P11 Federation & Self-Healing Context v1** is complete and remains the repository-first recovery, revalidation and cross-AI continuity baseline for all later maturity work.
+- Later milestones may extend these capabilities but must not silently erase their durable decision history or recovery guarantees.
+
 ## P15 decision — Human Language Interpretation
 - P15 is the top-level semantic entry capability for ordinary human-originated DevOS work.
 - Interpretation never grants authority.
@@ -38,6 +44,8 @@
 - The first active gate is a Production E2E Harness proving: `human request → interpretation → plan → readiness → controller → bounded runtime → verification → persistence → recovery`.
 - The harness must compose existing DevOS contracts rather than create a parallel execution path.
 - Component-level green CI is necessary but insufficient; closure requires whole-path evidence plus a realistic managed-project proof.
+- Runtime semantic impact must constrain the permitted runtime operation: READ_ONLY may not mutate; mutations require exact-step authorization; GitHub remote mutation additionally requires Security Gate PASS.
+- Eligibility authorization and runtime-operation authorization remain distinct so an approved review does not incorrectly convert a read capability into a mutation-authorized operation.
 - Failure injection must demonstrate safe non-progress or recovery for stale plans, dependency/capability failures, authorization mismatch, Security Gate failure, verification failure, persistence corruption, and provider/connection failure.
 
 ## Future persistence rule
