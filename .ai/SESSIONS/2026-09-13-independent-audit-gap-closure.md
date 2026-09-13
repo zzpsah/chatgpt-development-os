@@ -10,7 +10,7 @@ Baseline inspected before changes: `main` at `e4678efd36f651f3246de6b0853776c211
 An active concurrent PR was observed before changes:
 - PR #16 `feat/readiness-evidence-matrix`
 - purpose: machine-readable production-readiness/evidence ledger and conservative claim validation
-- head initially observed: `27c573f06ff540290588dcc0612468924ccd82a5`
+- head observed: `27c573f06ff540290588dcc0612468924ccd82a5`
 - changed paths overlap `.ai` status files and existing CI workflows, so this branch intentionally does not edit those overlapping files.
 
 ## Evidence-gap reconstruction
@@ -115,6 +115,42 @@ Added `tools/test-devos-audit.py` proving:
 
 The command itself never writes a ZIP or mutates the audited repository. Packaging can consume the printed manifest separately.
 
+## CI-discovered audit defect and repair
+
+PR #17 was opened at initial documented head `c52e7debd096f5c0a80347bdec528919f16325bc`.
+
+The first `Verify DevOS Trust-First Audit` run failed in `tools/test-devos-audit.py::test_wrong_identity_blocks_instead_of_guessing`.
+
+Observed root cause:
+- `inspect_identity()` searched for `zzpsah/chatgpt-development-os` anywhere in `.ai/manifest.yaml`;
+- after the test changed the `canonical_repository:` field, another textual occurrence could still satisfy the substring check;
+- audit incorrectly returned PASS for a tampered identity.
+
+The regression was not weakened. Commit `715e3386afcff1aec03590e241d2ff552972aaac` changed identity validation to require the exact field `canonical_repository: zzpsah/chatgpt-development-os` plus the AGENTS bootstrap reference.
+
+Fresh verification on repair head `715e3386afcff1aec03590e241d2ff552972aaac`:
+- Trust-First Audit 5 / run `34760060214`: SUCCESS;
+- Contracts 545 / run `34760060178`: SUCCESS;
+- Full DevOS 470 / run `34760060168`: SUCCESS;
+- External Managed Project 40 / run `34760060187`: SUCCESS.
+
+This evidence applies to that repair head only. Later documentation reconciliation changes require another fresh final-head verification cycle.
+
+## Documentation truth reconciliation
+
+Independent review also confirmed current-main documentation drift:
+- `docs/DEVOS-MATURITY-ROADMAP.md` still described Failure + Recovery as the active maturity gate even though later gates had closed;
+- `core/step-readiness-authorization-orchestrator.md` still described P17 as an `active implementation contract` even though P17 is a verified foundation.
+
+This branch reconciles those non-overlapping files without erasing historical closure evidence:
+- roadmap now records verified P16/P17, Production E2E, Failure + Recovery, Multi-Session, and provider-simulated Controlled Remote Mutation closures, then describes current Trust-First work and explicit unproven boundaries;
+- P17 contract now states verified-foundation status and adds semantic impact revalidation as a required invariant/regression.
+
+Still intentionally not rewritten here:
+- README's historical `ChatGPT Development OS` title; it is a naming/documentation issue, not execution proof;
+- GitHub Issue #1's older P0/P1/P2 roadmap. It remains historical evidence and should be reconciled explicitly rather than silently deleted or rewritten;
+- `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, `.ai/DECISIONS.md`, and existing main CI workflow files currently touched by concurrent PR #16.
+
 ## CI isolation
 
 Added new non-overlapping workflow `.github/workflows/verify-trust-audit.yml` instead of editing the workflow files currently modified by PR #16.
@@ -138,6 +174,10 @@ No live provider mutation is performed by these tests.
 - `PROVIDER RESPONSE != COMPLETION PROOF`
 - `RECOVERY != AUTOMATIC MUTATION REPLAY`
 
-## Pending verification
+## Pending final verification / coordination
 
-Open a bounded PR from `audit/trust-first-gap-closure`, run the new workflow and existing repository CI, repair only evidence-backed failures, and do not merge over concurrent PR #16 without rechecking current `main` and overlap.
+1. Take fresh exact-final-head Trust-First + Contracts + Full DevOS + External CI after documentation reconciliation.
+2. Recheck current `main` and PR #16 immediately before any merge.
+3. If PR #16/main moved into overlapping files, stop/reconcile rather than overwrite.
+4. Merge PR #17 only if final-head checks are green and it remains cleanly mergeable.
+5. Do not perform live-provider/high-impact mutation merely to fill an evidence cell.
