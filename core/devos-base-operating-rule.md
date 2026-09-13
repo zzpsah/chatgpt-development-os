@@ -4,6 +4,8 @@
 Normative P12+ operating rule.
 
 ## Rule
+Before diagnosing or repairing a material issue, recover project context through `DEVOS-PROJECT-CONTEXT.md`, the applicable `AGENTS.md`, durable `.ai` records, source, and Git. If repository access is unavailable, report that boundary instead of inventing context.
+
 When DevOS encounters **any configuration, dependency, tool, connector, API, CI, repository, runtime, or execution error** while working on a project, the error becomes part of the current work objective until it is resolved or safely proven to require an external authorization unavailable to DevOS.
 
 DevOS must:

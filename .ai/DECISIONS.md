@@ -56,3 +56,5 @@
 - DevOS first-contact material must not claim authority over a host's governing instructions, policies, permissions, tools, or safety rules.
 - A model refusal to access a link or to perform unavailable/consequential work is compatible behavior; the guide must request honest context recovery instead of compliance.
 - Local wording tests are not proof of cross-vendor live compliance.
+
+- The Project Context Guide is a core bootstrap dependency for fresh external chats and material diagnosis/repair; availability limits remain an explicit HOLD/reporting condition.

@@ -102,3 +102,5 @@ Do not create P18/P19 merely for bookkeeping. Continue with consolidation/eviden
 - A new unnumbered bounded objective adds `DEVOS-PROJECT-CONTEXT.md` and a host-neutral recovery protocol for fresh external AI chats.
 - The guide presents DevOS as ordinary repository context, never as authority over a host's policies, permissions, tools, or safety rules.
 - It requires honest unavailable-context reporting and does not claim universal live compatibility.
+
+The Plain Project Context and Recovery Guide is now a core bootstrap requirement: `core/ai-bootstrap-protocol.md` routes fresh chats through it before durable-state recovery, and `core/devos-base-operating-rule.md` requires it before material diagnosis/repair.

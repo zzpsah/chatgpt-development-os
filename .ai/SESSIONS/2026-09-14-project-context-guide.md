@@ -13,3 +13,8 @@ Provide a normal repository-documentation path for a fresh AI chat without prese
 ## Boundary
 
 The guide can make DevOS easier to understand for a willing host. It cannot force access, change host policy, grant permission, or prove live compatibility across every AI provider.
+
+## Core integration
+
+- Added the Project Context Guide to `core/ai-bootstrap-protocol.md` as the first-contact path and to the base operating rule as a precondition for material diagnosis/repair.
+- This adds recovery discipline only; it does not alter host-policy, authorization, execution, or mutation boundaries.

@@ -5,6 +5,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 GUIDE = (ROOT / "DEVOS-PROJECT-CONTEXT.md").read_text(encoding="utf-8")
 PROTOCOL = (ROOT / "core" / "devos-project-context-recovery-protocol.md").read_text(encoding="utf-8")
+BOOTSTRAP = (ROOT / "core" / "ai-bootstrap-protocol.md").read_text(encoding="utf-8")
+OPERATING_RULE = (ROOT / "core" / "devos-base-operating-rule.md").read_text(encoding="utf-8")
 
 for marker in (
     "ordinary repository documentation supplied by the user",
@@ -27,5 +29,10 @@ for marker in (
 ):
     assert marker in PROTOCOL, marker
 
+assert "core-approved first-contact guide" in BOOTSTRAP
+assert "Read `DEVOS-PROJECT-CONTEXT.md` when this is a fresh chat or external host." in BOOTSTRAP
+assert "recover project context through `DEVOS-PROJECT-CONTEXT.md`" in OPERATING_RULE
+
 print("PASS: first-contact guide is plain repository context, not host control")
 print("PASS: unavailable context, authorization boundaries, and live-compatibility limits are explicit")
+print("PASS: core bootstrap and operating rule require first-contact context recovery")

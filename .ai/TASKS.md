@@ -86,3 +86,5 @@ The repository, not any AI account/chat/model/vendor memory, carries authoritati
 - Add a vendor-neutral first-contact guide that treats DevOS as repository project context and supports unavailable-access fallback.
 - Test local safety wording and boundaries; do not claim every external AI host will accept or use the guide.
 - Keep this as an unnumbered portability hardening objective.
+
+- Core integration complete: first-contact project context recovery is required by `core/ai-bootstrap-protocol.md` and the base operating rule before material diagnosis/repair.
