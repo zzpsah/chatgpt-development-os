@@ -86,7 +86,6 @@ def main() -> None:
     origin = normalize_remote(git(project, "remote", "get-url", "origin"))
     assert origin == args.expected_repository, (origin, args.expected_repository)
     head = git(project, "rev-parse", "HEAD")
-    status_before = set(git(project, "status", "--porcelain").splitlines())
 
     failed_payload = payload(project, args.expected_repository, head, "MISSING")
     failed = recovery.harness.run(failed_payload)
@@ -142,7 +141,7 @@ def main() -> None:
     )
     assert proof_write["status"] == "SUCCESS", proof_write
 
-    # The recovery proof must not change repository identity/history or source.
+    # The recovery proof must not change repository identity/history or tracked source.
     assert git(project, "rev-parse", "HEAD") == head
     assert normalize_remote(git(project, "remote", "get-url", "origin")) == args.expected_repository
 
@@ -156,12 +155,15 @@ def main() -> None:
         assert path.is_file(), f"missing expected evidence file: {relative}"
         assert path.read_text(encoding="utf-8").strip(), f"empty evidence file: {relative}"
 
+    # Git may collapse multiple untracked files under .ai/EVIDENCE into one
+    # directory-level porcelain entry, especially because the Production E2E
+    # proof runs earlier in the same checkout. Validate the actual files above,
+    # then require every working-tree delta to remain inside the bounded evidence
+    # directory instead of requiring a new status line for each file.
     status_after = set(git(project, "status", "--porcelain").splitlines())
-    new_lines = status_after - status_before
-    assert new_lines, "expected local evidence delta"
-    assert all(".ai/EVIDENCE" in line for line in new_lines), new_lines
+    assert status_after, "expected bounded local evidence status"
+    assert all(".ai/EVIDENCE" in line for line in status_after), status_after
 
-    # No tracked source/history mutation is permitted by this proof.
     tracked_delta = git(project, "diff", "--name-only", "HEAD")
     assert tracked_delta == "", tracked_delta
 
