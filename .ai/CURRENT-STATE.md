@@ -3,131 +3,130 @@
 ## Snapshot
 
 - Repository: `zzpsah/chatgpt-development-os`.
-- Source tree + Git are authoritative for implementation and exact project state; ChatGPT Memory/chat history are supplementary only.
+- Source tree + Git/PR metadata are authoritative for exact implementation/integration state; ChatGPT Memory/chat history are supplementary only.
+- P9 through P17 are complete on `main` at their stated evidence levels.
 - P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P12 Operational Intelligence remains the advisory/runtime-observability and durable recovery substrate used by later governed execution paths.
-- P9 through P17 are complete on `main` at their stated evidence levels.
-- Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, Current-Source Evidence Refresh, MCP/App Permission Control Plane + Multi-Project Agent Isolation, and Actionable HOLD + Scoped Approval + Governed Continuation are closed at their stated evidence levels.
-- PR #27 merge commit: `2bb8d978113b64ab88d6ba5f8e357fa595162c9c`.
-- PR #23 merge commit: `7c60c3a4a36982ba894e2f30ba9dd98500f98d02`.
-- No new numbered phase is active or implied by this closure state.
+- Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, Current-Source Evidence Refresh, MCP/App Permission Control Plane + Multi-Project Agent Isolation, Actionable HOLD + Scoped Approval + Governed Continuation, and GitHub Identity & Token Control Plane v1 are closed at their stated evidence levels.
+- No new numbered phase is active or implied by the current closure state.
 
-## GitHub Identity & Token Control Plane v1 — repository implementation
+## Durable principles and boundaries
 
-- Objective: support independently authorized GitHub accounts/installations through a GitHub App-oriented authentication boundary while keeping credentials separate from DevOS authorization.
-- Branch/PR: `feat/github-identity-token-control-plane` / PR #32.
-- Exact current branch head is authoritative in Git/PR metadata. This living state intentionally does not self-pin the commit that contains itself.
-- Added normative contract: `core/devos-github-identity-token-control-plane.md`.
-- Added side-effect-free primitives: `tools/devos-github-auth.py`.
-- Added deterministic authentication regression suite: `tools/test-devos-github-auth.py`.
-- Added side-effect-free provider-permission → DevOS-capability bridge: `tools/devos-github-capability-discovery.py`.
-- Added deterministic capability-discovery regression suite: `tools/test-devos-github-capability-discovery.py`.
-- Added GitHub-hosted runtime authenticator: `tools/devos-github-actions-auth.py`.
-- Added deterministic GitHub-hosted runtime regression suite: `tools/test-devos-github-actions-auth.py`.
-- Added GitHub-hosted runtime workflow: `.github/workflows/devos-github-app-runtime.yml`.
-- Extended control-plane CI to verify the GitHub-hosted runtime contract and relevant pushes to `main`.
-- Added deployment/runtime guide: `docs/DEVOS-GITHUB-HOSTED-RUNTIME.md`.
-- Audit hardening closes OAuth state freshness/reuse, permission-level evaluation, target-repository scope, and stale durable-head self-reference gaps.
-- Capability discovery remains fail-closed: unknown mappings/levels/scope are never promoted to `AVAILABLE`.
-- Final merge readiness requires fresh CI on the exact final PR head; after merge, fresh push CI on the merge commit is current repository evidence.
-
-## External GitHub App activation — user-reported configuration
-
-- User reports that GitHub App **DevOS GitHub** was created under `@zzpsah`.
-- Reported App ID: `4934164`.
-- Reported Client ID: `Iv23lisO9Up8GMiMXqX9`.
-- User reports the App was installed on `zzpsah/chatgpt-development-os` with repository-scoped installation.
-- User reports the GitHub Actions secrets `DEVOS_GITHUB_APP_ID` and `DEVOS_GITHUB_APP_PRIVATE_KEY` were added to the repository.
-- Actual secret values are not persisted here and must never enter Git, `.ai`, logs, evidence, or model output.
-- These setup facts remain **User-Reported** until a fresh live workflow proves them against GitHub.
-
-## GitHub-hosted runtime model
-
-When DevOS runs inside GitHub Actions, the primary provider-authentication path is GitHub App installation-token authentication, not a browser OAuth callback. The workflow creates a short-lived App JWT, resolves the App installation for the target repository, mints an installation token, and performs read-only provider verification.
-
-The App ID/private key remain external GitHub Actions secrets. The private key is never written to Git, `.ai`, artifacts, logs, evidence, or model output.
-
-The runtime is deliberately read-only: authentication/discovery/readback only. It does not create/update/delete/merge/deploy or change permissions.
-
-## AI State Resolver v2
-
-- An unnumbered resolver-hardening objective on current `main` upgrades the existing P0 contract with a deterministic read-only claim resolver while preserving P12 and P17 authority boundaries.
-- `observed` requires current P12 execution evidence with citable provenance; durable-state wording cannot self-upgrade a claim.
-- Durable-state claims are capped at `likely`; recovery/handoff boundaries and relevant changed paths remain explicit revalidation reasons.
-- Execution-evidence claims inherit P12 freshness and are not normalized again.
-- The resolver can only cause a plan/readiness HOLD through named unresolved claims; it never grants authority.
-
-## Plain Project Context and Recovery Guide v1
-
-- `DEVOS-PROJECT-CONTEXT.md` provides host-neutral repository context for fresh external AI chats.
-- It is optional/revocable, preserves host policy, requires unavailable-context reporting, and flags instructions that seek to bypass safety, authorization, verification, or host policy.
-- It is a core bootstrap requirement before material diagnosis/repair.
-
-## Live activation boundary
-
-- The GitHub repository-side runtime implementation is present and contract-tested.
-- User-reported GitHub App registration, installation, and Actions-secret configuration are recorded as external setup facts.
-- Live proof still requires the runtime workflow completing successfully against the installed App and target repository.
-- Browser OAuth callback configuration is not required for the GitHub-hosted Actions runtime. A callback remains relevant only if a separate interactive web/OAuth client is introduced; that path must use one-time pending transaction storage plus freshness/reuse checks.
-- `production_ready=false` and `live_provider_proven=false` remain unchanged until fresh live evidence exists.
-
-## Core documentation law
+### Core documentation law
 
 > **What is not written was never done.**
 
-For every material AI engineering action, decision, repair, experiment, verification result, evidence change, architecture change, roadmap change, or externally relevant outcome:
+Material engineering actions, decisions, repairs, experiments, verification results, evidence changes, architecture changes, roadmap changes, and externally relevant outcomes must follow:
 
 `OBSERVE → ACT / CHANGE / DECIDE → VERIFY → DOCUMENT → PERSIST IN GIT`
 
-Completion is `IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE`. An undocumented material action is unfinished work.
+Completion requires `IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE`.
 
-## Canonical governed path
+### Canonical governed path
 
 `Human request → P15 interpretation → P16 plan → P17 readiness → Actionable HOLD / Scoped Approval → controller → bounded runtime → verification → persistence → recovery / continuation`
 
-Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, continuation packets, and simulated provider evidence never manufacture permission.
+Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, continuation packets, documentation, CI, and simulated provider evidence never manufacture permission.
 
-## Production-readiness boundary
+### Production-readiness boundary
 
 - `production_ready = false`.
-- `live_provider_proven = false`.
-- Controlled remote mutation remains provider-simulated / contract-level evidence unless separately proven.
-- No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation was performed for the current auth objective.
+- Live **read-only GitHub provider authentication** is proven for the DevOS GitHub App runtime.
+- Live provider **mutation** is not proven or authorized by that authentication evidence.
+- Controlled remote mutation remains provider-simulated / contract-level evidence unless separately proven through the governed mutation path with fresh readback.
+- No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation was performed for the GitHub auth objective.
 - Provider response is attempt evidence, not completion proof.
 - Uncertain mutation is not blindly replayed.
 - Historical evidence remains pinned and is never silently rewritten.
 
-## Universal portability invariant
+## Active bounded work
+
+### AI State Resolver v2
+
+- Unnumbered resolver-hardening objective on current `main`.
+- Upgrades the existing P0 contract with a deterministic read-only claim resolver while preserving P12 and P17 authority boundaries.
+- `observed` requires current P12 execution evidence with citable provenance; durable-state wording cannot self-upgrade a claim.
+- Durable-state claims are capped at `likely`; recovery/handoff boundaries and relevant changed paths remain explicit revalidation reasons.
+- Execution-evidence claims inherit P12 freshness and are not normalized again.
+- Unresolved claims propagate to P16 as `CLARIFY`; P17 rejects a tampered `PLANNED` envelope that still carries unresolved claim IDs.
+- Resolver confidence never grants authorization, execution, mutation, or completion.
+
+## Current verified capability state
+
+### GitHub Identity & Token Control Plane v1 — merged
+
+- PR #32 — `Implement GitHub identity and token control plane v1` — merged at `2f1740930116ab520d40d35aaa6dfcb1786a5595`.
+- Final merged source head: `216999bef827c9efbe78a026d06486a4765e9602`.
+- Added normative contract: `core/devos-github-identity-token-control-plane.md`.
+- Added `tools/devos-github-auth.py` with one-time/fresh OAuth state validation, identity binding, expiry handling, and secret fingerprinting.
+- Added `tools/devos-github-capability-discovery.py` with fail-closed, permission-level-aware, repository-scope-aware capability evaluation.
+- Added `tools/devos-github-actions-auth.py` plus deterministic hosted-runtime regression coverage.
+- Added `.github/workflows/devos-github-app-runtime.yml` and dedicated control-plane verification CI.
+- Audit hardening closed stale/reused OAuth state, permission-level, target-repository scope, and stale durable-head self-reference gaps.
+- Capability discovery returns no `AVAILABLE` result from unknown mappings, insufficient permission level, or out-of-scope targets.
+
+### Live GitHub App runtime evidence
+
+- DevOS GitHub App Runtime Auth run `34785659043` succeeded against `zzpsah/chatgpt-development-os` on the verified auth implementation tree.
+- The runtime authenticated via a GitHub App installation token, resolved the repository installation, and performed read-only repository verification.
+- Reported evidence included `status: PASS`, `credential_material: NOT_INCLUDED`, `execution: NONE`, and `mutation: NONE`.
+- The inspected workflow log masked secret values and did not expose the App private key or installation token.
+- This proves live provider authentication/capability for the read-only runtime only; it does not authorize or prove provider mutation or production readiness.
+
+### Plain Project Context and Recovery Guide v1
+
+- `DEVOS-PROJECT-CONTEXT.md` is the plain, host-neutral first-contact recovery context for fresh external AI chats.
+- It is optional/revocable, preserves host policy, requires unavailable-context reporting, and flags instructions that seek to bypass safety, authorization, verification, or host policy.
+- Fresh-session bootstrap defaults to the plain Project Context Guide; stance codes are optional after orientation.
+
+## External GitHub App configuration record
+
+- GitHub App **DevOS GitHub** is recorded under `@zzpsah`.
+- Recorded App ID: `4934164`.
+- Recorded Client ID: `Iv23lisO9Up8GMiMXqX9`.
+- The App is recorded as installed on `zzpsah/chatgpt-development-os` with repository-scoped installation.
+- Repository Actions secrets `DEVOS_GITHUB_APP_ID` and `DEVOS_GITHUB_APP_PRIVATE_KEY` are configured externally; actual secret values are not persisted in Git, `.ai`, logs, evidence, or model output.
+- The live runtime evidence above upgrades the prior setup facts from user-reported-only status to observed read-only authentication evidence for the target repository.
+
+## Completed milestone evidence
+
+- PR #27 merge commit: `2bb8d978113b64ab88d6ba5f8e357fa595162c9c` — MCP/App Permission Control Plane + Multi-Project Agent Isolation.
+- PR #23 merge commit: `7c60c3a4a36982ba894e2f30ba9dd98500f98d02` — Actionable HOLD + Scoped Approval + Governed Continuation.
+- PR #24 merge commit / verified `main`: `a93f9f435ffab5f81ce070f07a0da694757ab6cb` — Current-Source Evidence Refresh.
+- PR #32 merge commit: `2f1740930116ab520d40d35aaa6dfcb1786a5595` — GitHub Identity & Token Control Plane v1.
+
+Historical exact-head CI remains pinned in task/session records and must not be rewritten merely because later source advances.
+
+## Recovery and navigation
+
+### Universal portability invariant
 
 `AI A + Account A → repository → AI B + Account B → correct state recovery → safe continuation`
 
 No private AI memory is authoritative project state.
 
-## Recovery precedence
+### Recovery precedence
 
-1. Current source tree + Git.
+1. Current source tree + Git/PR metadata.
 2. Explicit requirements/decisions.
 3. `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, and semantic `.ai` state.
 4. `.ai/SESSIONS/` provenance.
 5. Generated indexes as navigation/evidence only.
 6. ChatGPT Memory/chat history as supplementary context only.
 
-## Stable handoff
+### Stable handoff
 
-Stable AI discovery path: `docs/handoff/README.md`.
-Master architecture: `docs/DEVOS-MASTER-ENGINEERING-MAP.md`.
-Normative living-state contract: `core/devos-living-state-and-evolution.md`.
-GitHub authentication/control-plane guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`.
-GitHub-hosted runtime guide: `docs/DEVOS-GITHUB-HOSTED-RUNTIME.md`.
-Historical evidence snapshots remain dated and do not auto-refresh when source advances. Exact implementation remains authoritative in Git history.
-
-## Resolver grounding correction
-
-- Durable state cannot self-upgrade a claim to `observed`; only current P12 execution evidence with citable provenance may retain `observed`.
-- Resolver documentation now explicitly aligns v1 terminology, v2 grounding rules, P12 ownership, output semantics, and P15→P16→P17 continuation behavior.
+- Plain project context: `DEVOS-PROJECT-CONTEXT.md`.
+- Stable AI discovery path: `docs/handoff/README.md`.
+- Master architecture: `docs/DEVOS-MASTER-ENGINEERING-MAP.md`.
+- Normative living-state contract: `core/devos-living-state-and-evolution.md`.
+- GitHub authentication/control-plane guide: `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`.
+- GitHub-hosted runtime guide: `docs/DEVOS-GITHUB-HOSTED-RUNTIME.md`.
+- Historical evidence snapshots remain dated and do not auto-refresh when source advances.
 
 ## Next bounded direction
 
-Recovery rule for PR #32: if open, require exact-final-head CI and code review before merge; if merged, treat the repository-side v1 implementation as closed at deterministic/integration/CI evidence level and inspect fresh post-merge CI. Live activation remains separate and cannot be inferred from repository CI. Do not create P18/P19 merely for bookkeeping.
-
-- Fresh-session bootstrap now defaults to the plain Project Context Guide; stance codes are optional after orientation. Resolver cross-claim semantic contradiction remains explicitly out of v2 scope.
+- Continue AI State Resolver v2 hardening only from fresh repository evidence.
+- PRs #33 and #34 are closed obsolete replacement branches; PR #32 is the authoritative merged integration history.
+- Do not create P18/P19 merely for bookkeeping.
+- Resolver cross-claim semantic contradiction remains explicitly out of v2 scope unless promoted by a future bounded objective.
