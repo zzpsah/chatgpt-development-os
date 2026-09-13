@@ -10,8 +10,8 @@
 - Universal Project Onboarding + Repository Creation merged through PR #19.
 - Host-neutral MCP/App `repository.create` adapter merged through PR #22.
 - Current-Source Evidence Refresh merged through PR #24.
-- Current verified `main`: `a93f9f435ffab5f81ce070f07a0da694757ab6cb`.
-- Fresh post-merge verification at that head: Trust-First 72 / `34774013758`, Contracts 609 / `34774013791`, Full DevOS 531 / `34774013827` — success.
+- PR #24 merge checkpoint: `a93f9f435ffab5f81ce070f07a0da694757ab6cb`.
+- Fresh post-merge verification at that checkpoint: Trust-First 72 / `34774013758`, Contracts 609 / `34774013791`, Full DevOS 531 / `34774013827` — success.
 - No new numbered phase is active or implied by this closure state.
 - Product invariant: DevOS is a Development OS for AI across vendors, models, accounts, coding agents, sessions, machines, and Git-provider adapters; no AI account/chat/model/vendor memory is authoritative project state.
 
