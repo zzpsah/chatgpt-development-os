@@ -1,0 +1,47 @@
+name: Verify DevOS MCP Permission Control Plane
+
+on:
+  pull_request:
+    paths:
+      - 'tools/devos-remote-permission-check.py'
+      - 'tools/devos-mcp-governed-gateway.py'
+      - 'tools/devos-governed-continuation.py'
+      - 'tools/test-devos-governed-continuation.py'
+      - 'tools/test-devos-mcp-governed-gateway.py'
+      - 'core/remote-resource-permission-governance.md'
+      - 'docs/DEVOS-MCP-PERMISSION-CONTROL-PLANE.md'
+      - '.github/workflows/verify-mcp-permission-control-plane.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify remote permission policy regression
+        run: python tools/test-devos-remote-permission-check.py
+      - name: Verify governed continuation integration
+        run: python tools/test-devos-governed-continuation.py
+      - name: Verify MCP governed gateway integration
+        run: python tools/test-devos-mcp-governed-gateway.py
+      - name: Verify normative control-plane documentation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          contract = Path('core/remote-resource-permission-governance.md').read_text(encoding='utf-8')
+          docs = Path('docs/DEVOS-MCP-PERMISSION-CONTROL-PLANE.md').read_text(encoding='utf-8')
+          for marker in [
+              'repository.create', 'repository.delete', 'branch.create',
+              'branch.update', 'branch.force_update', 'branch.delete',
+              'FULL APPROVAL', 'CHAT MEMORY != SOURCE OF TRUTH',
+              'PROVIDER CREDENTIAL != DEVOS AUTHORIZATION',
+          ]:
+              assert marker in contract or marker in docs, marker
+          print('PASS: MCP/App permission control plane markers')
+          PY
