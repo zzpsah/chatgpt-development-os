@@ -3,97 +3,91 @@
 ## Snapshot
 
 - Repository: `zzpsah/chatgpt-development-os`.
+- Branch authority: `main` plus current source/Git evidence.
 - Source tree + Git remain authoritative for implementation state.
-- **ChatGPT Memory and chat history are supplementary only and must never be required to recover authoritative project state.** A fresh AI must be able to recover from repository-local source/Git/`.ai` evidence.
-- P11 Federation & Self-Healing Context remains part of the durable recovery baseline; repository-first recovery, repository revalidation, and cross-AI continuity remain active invariants for all later milestones.
-- `main` is verified/merged through P15 and currently also contains `.ai/P16-P17-AUDIT.md` from commit `f338270429d31df5691f6a02234a1a35553f57af`.
-- Working milestone: P16 Semantic Goal-to-Plan Compiler v1 on branch `devos/p16-goal-to-plan` / PR #9.
-- P16 implementation is materially complete in source but **not closed or merged** until the repaired final head receives fresh passing applicable verification.
-- P17 remains stacked separately and must not merge ahead of P16.
+- **ChatGPT Memory and chat history are supplementary only and must never be required to recover authoritative project state.** Fresh-AI recovery must work from repository-local source/Git/`.ai` evidence.
+- **P11 Federation & Self-Healing Context remains part of the durable recovery baseline.** Repository-first recovery, repository revalidation, and cross-AI continuity remain active invariants for all later milestones.
+- P9 Development Task Controller v1: complete.
+- P10 Context Continuity & Recovery v1: complete.
+- P11 Federation & Self-Healing Context v1: complete.
+- P12 Operational Intelligence: complete.
+- P13 Autonomous Development Orchestration: complete.
+- P14 Adaptive Verification & Self-Healing v1: complete.
+- P15 Human Language Interpretation v2: complete and merged through PR #8.
+- **P16 Semantic Goal-to-Plan Compiler v1: complete and merged through PR #9.**
+- P17 Step Readiness & Authorization Orchestrator v1: active on `devos/p17-step-readiness` / PR #10 and must be revalidated against this closed P16 `main` state before merge.
 
-## P16 implemented architecture
-
-Canonical path:
+## Canonical pipeline
 
 `Human input → P15 Human Language Execution Engine → Project Router / State Resolver → P16 Semantic Goal-to-Plan Compiler → Development Task Controller → Operational Intelligence / bounded orchestration → authorization + Security Gate → runtime → verification → durable state`
 
-P16 provides `DEVOS-GOAL-PLAN-v1` and preserves:
+P17 is being inserted as the step-readiness eligibility boundary between P16 planning and the compiled-plan controller/runtime path:
 
-- project/objective;
-- explicit constraints and ambiguity;
-- bounded step identities and dependencies;
-- impact/authority classification;
-- expected evidence;
-- verification obligations;
-- stop/escalation conditions;
-- `authority: UNCHANGED`, `authorization: UNCHANGED`, `execution: NONE`.
+`P16 compiled plan → P17 exact-step readiness → P16 compiled-plan Development Task Controller → runtime handoff`
 
-## Compiler hardening completed
+Interpretation, planning, readiness, intelligence, and orchestration never manufacture permission or execution evidence.
 
-`tools/semantic-goal-to-plan.py` now:
+## P16 closure
 
-- inserts read-before-write evidence steps for mutation plans;
-- keeps generated inspection steps genuinely `READ_ONLY` even when their subject contains words such as `update`, `deploy`, or `database`;
-- keeps security/secret/credential inspection security-sensitive;
-- treats `inspect database` as read-only rather than a database mutation;
+P16 merged to `main` through PR #9 on merge commit:
+
+`460a212ebb7600619f396a455ac3e47e5a5c80fa`
+
+Verified final source head:
+
+`877833ef0f11d5a869284f9b86407c155125d96f`
+
+Fresh final-head verification:
+
+- `Verify Development OS Contracts` — run 476 / id `34750716230`: **success**.
+- `Verify Development OS` — run 402 / id `34750716222`: **success**.
+- `Verify P13 External Managed Project` — run 11 / id `34750716234`: **success**.
+
+CI-driven recovery-document repairs before closure preserved rather than weakened the repository-only recovery contract:
+
+- `ce48196…` exposed a missing explicit ChatGPT Memory/chat-history non-authority boundary.
+- `9445546…` restored that boundary; the next run exposed missing explicit P11 continuity in `CURRENT-STATE.md`.
+- `877833ef…` restored P11 continuity and passed all applicable final-head verification.
+
+## P16 implemented behavior
+
+P16 provides `DEVOS-GOAL-PLAN-v1` and preserves project/objective, constraints, ambiguity, bounded step identities/dependencies, impact/authority classification, expected evidence, verification obligations, and stop/escalation conditions while returning `authority: UNCHANGED`, `authorization: UNCHANGED`, `execution: NONE`.
+
+The reference compiler:
+
+- inserts read-before-write evidence steps for mutations;
+- keeps generated inspection genuinely read-only even when its subject contains update/deploy/database terms;
+- keeps security/secret/credential inspection gated;
+- treats `inspect database` as read-only;
 - preserves high-impact classification on the actual mutation;
-- enforces explicit negative constraints including deploy/production/merge/database/migration/delete/secret/credential/permission prohibitions.
+- enforces negative constraints for deploy/production/merge/database/migration/delete/secret/credential/permission.
 
-Regression coverage in `tools/test-semantic-goal-to-plan.py` includes high-impact read-before-write and generic negative-constraint cases.
+The Development Task Controller directly consumes validated P16 compiled plans while preserving the legacy P12 inventory path. It validates plan/step integrity, dependency and completion-evidence closure, constraints, expected evidence, verification, stop/escalation metadata, authorization consistency, repository state, capability, authorization, Security Gate, and verification applicability. Planning metadata is explicitly not execution evidence.
 
-## Executable controller integration completed
+## Active P17 work
 
-`tools/development-task-controller.py` supports both the legacy P12 task-inventory path and direct P16 compiled-plan consumption.
+P17 source hardening is implemented on PR #10 and includes strict plan/readiness integrity, stale-plan STOP, exact-step approval isolation, explicit Security Gate evidence, dependency-cycle/closure checks, forged-completion rejection, and an exact P17-aware runtime handoff.
 
-For the P16 path it validates:
+Before P17 can merge:
 
-- exact protocol + `PLANNED` state;
-- unchanged authority/authorization and no claimed execution;
-- resolved project/objective and no material ambiguity;
-- valid constraints;
-- unique step ids/objectives/dependencies;
-- allowed impact class + consistent authorization metadata;
-- expected evidence, verification, and stop/escalation metadata;
-- dependency references;
-- explicit negative-constraint conflicts;
-- completed-step identity and dependency closure.
+1. retarget/revalidate PR #10 against this P16-closed `main`;
+2. synchronize any P16 closure-state changes without regressing P17's newer active-state documentation;
+3. require fresh applicable passing verification on the final P17 head;
+4. merge only after the final head is green.
 
-The controller materializes only compiled steps into the downstream task graph, preserves plan and selected-step semantic metadata, marks planning metadata `execution_evidence: false`, and independently rechecks scope, repository state, capability, authorization, Security Gate, and verification applicability.
+## Recovery precedence
 
-High-impact/security/production-destructive steps require `authorization: ALREADY_GRANTED` and `security_gate: PASS` before becoming an `EXECUTION_CANDIDATE`. The controller still returns `execution: NONE`.
+1. Current source tree + Git.
+2. Explicit requirements/decisions.
+3. `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, and other semantic `.ai` state.
+4. `.ai/SESSIONS/` provenance records.
+5. Generated indexes as navigation/evidence only.
+6. ChatGPT Memory/chat history as supplementary context only.
 
-`tools/verify-development-task-controller-integration.py` covers legacy compatibility, direct compiled-plan consumption, dependency progression, CLARIFY rejection, ambiguity/integrity rejection, impossible completion evidence, constraint tampering, and high-impact authorization/security gating.
+## Detailed provenance
 
-## Durable architecture
+P16 final hardening and closure are recorded in:
+- `.ai/SESSIONS/2026-09-13-p16-final-hardening.md`
+- `.ai/SESSIONS/2026-09-13-p16-closure.md`
 
-`.ai/ARCHITECTURE.md` explicitly places P16 between Project/State Resolution and the Development Task Controller and documents the executable compiled-plan boundary.
-
-## Fresh verification evidence and repair
-
-GitHub Actions runner assignment resumed for P16 head `ce48196aa116eb2b843259ad562a3c27dad3a59f`.
-
-Observed runs for that head:
-
-- `Verify Development OS Contracts`, run 473 / id `34750507062`: **success**.
-- `Verify P13 External Managed Project`, run 9 / id `34750507096`: **success**.
-- `Verify Development OS`, run 400 / id `34750507050`: **failure**.
-
-The full-workflow failure was isolated to job `Verify Repository-Only Fresh-AI Recovery v1`, step `Simulate fresh-AI repository-only recovery`. The first exact assertion exposed by CI was the missing account-memory boundary. Commit `9445546dee68f3220acf22bca0a4f9c8db6a048e` restored the ChatGPT Memory/chat-history invariant.
-
-Fresh run 401 on that repaired head then advanced the same recovery test to its next invariant: `P11` must remain explicitly discoverable in both `CURRENT-STATE.md` and `TASKS.md`. `TASKS.md` already preserved P11; this file restores the P11 continuity marker without weakening the recovery test.
-
-These are durable-context documentation regressions, not runtime/compiler/controller failures. Because this repair advances the P16 head again, the new final head still requires fresh applicable verification before closure.
-
-Historical queue evidence (many queued runs, zero in-progress jobs, `runner_id: 0`) remains part of the session record, but runner assignment is no longer assumed to be blocked now that new runs have executed.
-
-## Merge rule
-
-P16 remains open and unmerged until the repaired final head receives fresh applicable passing verification. Do not use the unprotected `main` branch as a reason to bypass the project-level verification invariant.
-
-## Next exact action
-
-1. Observe fresh workflows for this repaired final P16 head.
-2. If any fail, inspect exact jobs/logs and repair only the demonstrated defect.
-3. If all applicable final-head verification passes, merge PR #9 with the verified expected head SHA.
-4. Persist P16 closure on `main`.
-5. Revalidate/retarget P17 against resulting `main` and require fresh P17 verification before merge.
+Exact implementation remains authoritative in Git history.

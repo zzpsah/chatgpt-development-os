@@ -1,23 +1,21 @@
 # DevOS Tasks
 
 ## Active
-- P16 Semantic Goal-to-Plan Compiler v1 is implementation-complete in source and awaiting fresh final-head verification before merge/closure.
-- Preserve P16 as non-executing/non-authorizing: compiler output remains planning structure only.
-- Keep the Development Task Controller compiled-plan path backward-compatible with the legacy P12 task inventory while enforcing stronger P16 integrity/authorization/security invariants.
+- P17 Step Readiness & Authorization Orchestrator v1 is the active maturity milestone on PR #10 / branch `devos/p17-step-readiness`.
+- Revalidate/retarget P17 against P16-closed `main`.
+- Preserve exact-step readiness, repository freshness, dependency closure, capability evidence, step-bound authorization, Security Gate evidence, and verification-path requirements.
+- Keep P17 non-executing/non-authorizing; `READY` is eligibility only.
+- Require a direct verified path: `P15 human request → P16 compiled plan → P17 readiness → P16 compiled-plan controller → P17-aware runtime handoff`.
 
 ## Pending verification
-- Fresh GitHub Actions for the final P16 head are required before PR #9 may merge.
-- Existing earlier P16 runs were observed queued without runner assignment and are not valid closure evidence for newer heads.
-- If final-head CI fails, inspect exact jobs/logs and repair only the demonstrated defect.
+- Fresh applicable CI must pass on the final P17 head after retarget/revalidation against current `main`.
+- Do not reuse pre-retarget P17 runs as final closure evidence.
 
-## Planned after P16
-- Merge P16 only after fresh passing final-head verification.
-- Persist P16 closure on `main`.
-- Revalidate/retarget P17 against resulting `main`, require fresh P17 verification, then merge P17 only if green.
-- After P17, prioritize real end-to-end managed-project maturity proof and gap-driven hardening rather than adding milestone numbers for their own sake.
-
-## External blocker
-- GitHub Actions runner assignment is currently stalled repository-wide: many runs are queued and zero were observed in progress. This is infrastructure state, not evidence of implementation success or failure.
+## Planned after P17
+- Run a real managed-project end-to-end maturity proof from natural human language through durable verified outcome.
+- Use observed failures/gaps to drive subsequent hardening instead of adding milestone numbers for their own sake.
+- Continue multilingual/contextual language regression evolution without weakening project isolation, constraints, authorization, evidence, Security Gate, or verification boundaries.
+- Normalize P0–P8 historical documentation where useful without rewriting Git history.
 
 ## Completed recently
 - P9 Development Task Controller v1.
@@ -27,14 +25,13 @@
 - P13 Autonomous Development Orchestration.
 - P14 Adaptive Verification & Self-Healing v1.
 - P15 Human Language Interpretation v2 merged through PR #8.
+- **P16 Semantic Goal-to-Plan Compiler v1 merged through PR #9 on merge commit `460a212ebb7600619f396a455ac3e47e5a5c80fa`.**
 
-## P16 implementation completed in this hardening pass
-- deterministic `DEVOS-GOAL-PLAN-v1` compiler;
-- automatic read-before-write with generated inspection genuinely read-only;
-- high-impact/security classification and generalized negative-constraint preservation;
-- direct executable compiled-plan consumption in the Development Task Controller;
-- plan/step structural integrity validation and semantic-boundary preservation;
-- dependency/completion-evidence validation;
-- independent capability/authorization/Security Gate/verification checks;
-- canonical `.ai/ARCHITECTURE.md` placement;
-- regression coverage for compiled-plan controller integration and tamper cases.
+## P16 final verification evidence
+- Final source head: `877833ef0f11d5a869284f9b86407c155125d96f`.
+- Contracts run 476 / `34750716230`: success.
+- Full DevOS run 402 / `34750716222`: success.
+- P13 External Managed Project run 11 / `34750716234`: success.
+
+## P16 closure invariant
+P16 remains planning-only. Compiler output, plan classification, Operational Intelligence ranking, prior success, or language confidence never grants authority or proves execution. The controller independently revalidates repository state, capability, authorization, Security Gate, and verification conditions before runtime candidacy.
