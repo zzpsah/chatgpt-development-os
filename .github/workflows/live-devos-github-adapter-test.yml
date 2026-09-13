@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - live-test/devos-github-adapter-20260914
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/live-devos-github-adapter-test.yml'
 
 permissions:
   contents: read
