@@ -18,6 +18,9 @@
 - Token expiry/revocation requires reauthorization or token renewal; authentication failure never authorizes blind retry of a mutation.
 - Project-to-GitHub identity binding is explicit and isolated per project; credentials/provider bindings and approval scopes cannot cross projects.
 - GitHub provider capability must be discovered and recorded as non-secret metadata before capability-dependent execution is considered.
+- Provider-permission to DevOS-capability mappings are adapter-supplied and versioned at the integration boundary; generic DevOS must not infer stale provider permission semantics.
+- Capability discovery returns `AVAILABLE`, `UNAVAILABLE`, or `UNCONFIRMED`; `UNCONFIRMED` fails closed and never manufactures authorization.
+- Capability discovery evidence remains `authorization: UNCHANGED`, `execution: NONE`, `mutation: NONE`, and excludes credential material.
 - “Full access” means maximum access explicitly granted by GitHub to the authorized user/app installation within its actual repository/organization scope, further constrained by DevOS capability, P17, Security Gate, and exact authorization. It does not mean a master bypass token.
 - Checked-in authentication code is side-effect-free. Live OAuth exchange, token vault, GitHub App private key, and live-provider proof remain deployment/evidence boundaries.
 
