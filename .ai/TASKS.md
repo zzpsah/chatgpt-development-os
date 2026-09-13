@@ -1,15 +1,19 @@
 # DevOS Tasks
 
 ## Active
-- No unfinished P15 implementation work. Select the next maturity milestone only from verified repository evidence and explicit project intent.
+- P16 Semantic Goal-to-Plan Compiler v1.
+- Implement an executable reference compiler that converts interpreted objectives plus durable project state into bounded dependency-aware plan steps with explicit constraints, authority classes, evidence expectations, verification obligations, and stop/escalation conditions.
+- Integrate P16 between Human Language Execution Engine / Project Router-State Resolver and the Development Task Controller without granting authority or bypassing the Security Gate.
+- Add deterministic tests for single intent, multi-intent dependencies, negative constraints, ambiguity, read-before-write ordering, high-impact authorization classification, and verification requirements.
+- Add CI contract verification and close P16 only after fresh applicable CI passes.
 
 ## Planned
 - Continue evolving the top-level Human Language Interpretation capability through regression-tested multilingual/contextual improvements without weakening project isolation, constraints, authorization, evidence, Security Gate, or verification.
-- Evaluate whether higher-impact remote mutation hardening should become a future milestone. Any such work requires operation-specific authorization, verification, Security Gate checks, bounded recovery, and explicit production/destructive-action boundaries.
+- Evaluate higher-impact remote mutation hardening only as a separately authorized future milestone; P16 planning must not itself widen mutation capability.
 - Preserve repository-first recovery and keep semantic `.ai` state outside automatic self-healing.
 
 ## Blocked
-- None.
+- Final P15 `main` post-merge workflows remain queued by GitHub Actions infrastructure rather than failed. Reopen P15 only if those runs eventually expose an implementation regression.
 
 ## Completed recently
 - P9 Development Task Controller v1 implemented and verified.
@@ -25,4 +29,4 @@
 - P15 repair commit `0be462dac63501a31221fcd972e0de078657d110` passed both feature-branch workflows before merge.
 
 ## Verification note
-P11, P12, P13, and P14 are closed with fresh GitHub Actions evidence. P15 implementation is merged and feature-branch verification passed; final main-branch semantic closure remains evidence-driven and must not weaken authority boundaries. The next milestone must be derived explicitly from verified repository state and project intent.
+P11, P12, P13, and P14 are closed with fresh GitHub Actions evidence. P15 implementation is merged and feature-branch verification passed; final `main` post-merge workflows are externally queued, not failed. P16 is now the active maturity milestone and must remain non-executing/non-authorizing at the compiler boundary.
