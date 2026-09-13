@@ -30,9 +30,20 @@
 
 ## P11 milestone decision
 
-- P11 is the current milestone: DevOS Federation & Self-Healing Context v1.
-- P11 exists to make repository-first project continuity resilient across AI tools/accounts, chat loss, connectivity interruptions, stale generated state, and handoffs.
+- P11 DevOS Federation & Self-Healing Context v1 is complete.
+- P11 makes repository-first project continuity resilient across AI tools/accounts, chat loss, connectivity interruptions, stale generated state, and handoffs.
 - P11 prioritizes versioned project identity, compatibility, freshness/integrity detection, safe reconciliation, cross-AI handoff, provenance, and deterministic self-healing.
+
+## P15 milestone decision — Human Language Interpretation
+
+- P15 Human Language Interpretation v2 is a top-level DevOS capability, not a side feature.
+- Every ordinary human-originated DevOS request enters through the Human Language Execution Engine before project/workflow selection and bounded technical execution.
+- The top-level semantic path is `Human input → Human Language Execution Engine → Project Router / State Resolver → Development Task Controller → bounded workflow/runtime → Verification + Security → durable state`.
+- The deterministic v2 interpreter is the minimum executable behavior contract. Richer AI/model-assisted multilingual and contextual interpretation may evolve above it without changing downstream safety contracts.
+- P15 supports contextual short commands, English/Hinglish shorthand, referential continuation, compatible multi-intent composition, negative constraints, ambiguity/confidence output, and explicit high-impact authorization escalation.
+- `SECURITY_REVIEW` routes through `workflows/security.md` and the Security Gate.
+- Interpretation never grants authority. Language confidence, emotional intensity, urgency, prior conversational context, or stance codes cannot independently authorize production, destructive, security-sensitive, deployment, merge, database, credential, or other high-impact operations.
+- P15 was merged to `main` through PR #8 on merge commit `770c8b3583515e3c947562854be7a2d2fd34710d` after both feature-branch verification workflows passed on repair commit `0be462dac63501a31221fcd972e0de078657d110`.
 
 ## Future persistence rule
 
@@ -43,6 +54,6 @@
 
 ## Verification boundary
 
-- Static context-sync verification proves the repository contract is structurally present; it does not prove that GitHub Actions executed successfully or that a managed project's tests passed.
-- External-project execution evidence is required before declaring reusable context synchronization operational.
-- P11 is complete only when a fresh AI/account can recover from repository evidence alone and deterministic context can self-heal without silently changing semantic project intent.
+- Static contract verification proves repository contracts are structurally present; it does not by itself prove semantic AI behavior or application correctness.
+- Milestone closure requires fresh applicable verification evidence.
+- Higher-impact execution remains separately authorized and verified even when language interpretation is HIGH confidence.
