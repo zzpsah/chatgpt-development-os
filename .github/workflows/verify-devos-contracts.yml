@@ -43,6 +43,9 @@ jobs:
       - name: Verify Production E2E Harness
         run: python tools/test-production-e2e-harness.py
 
+      - name: Verify Failure and Recovery Proof
+        run: python tools/test-failure-recovery-proof.py
+
       - name: Verify AI State Resolver
         run: python tools/verify-state-resolver.py
 

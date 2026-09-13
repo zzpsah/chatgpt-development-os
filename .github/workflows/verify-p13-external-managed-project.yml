@@ -8,6 +8,10 @@ on:
       - 'tools/production-e2e-harness.py'
       - 'tools/verify-production-e2e-managed-project.py'
       - 'core/production-e2e-harness.md'
+      - 'tools/failure-recovery-proof.py'
+      - 'tools/test-failure-recovery-proof.py'
+      - 'tools/verify-failure-recovery-managed-project.py'
+      - 'core/failure-recovery-proof.md'
       - 'adapters/reference-host.py'
       - 'adapters/reference-verification.py'
       - 'tools/runtime-adapter-bridge.py'
@@ -61,4 +65,20 @@ jobs:
         with:
           name: production-e2e-managed-project-evidence
           path: managed-project/.ai/EVIDENCE/production-e2e-managed-project.json
+          if-no-files-found: error
+
+      - name: Verify Failure Recovery Proof against automation-suite
+        run: >-
+          python devos/tools/verify-failure-recovery-managed-project.py
+          --project-root "$GITHUB_WORKSPACE/managed-project"
+          --expected-repository zzpsah/automation-suite
+
+      - name: Upload Failure Recovery evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-recovery-managed-project-evidence
+          path: |
+            managed-project/.ai/EVIDENCE/failure-recovery-managed-checkpoint.json
+            managed-project/.ai/EVIDENCE/failure-recovery-managed-result.json
+            managed-project/.ai/EVIDENCE/failure-recovery-managed-proof.json
           if-no-files-found: error

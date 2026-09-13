@@ -7,6 +7,7 @@ HIGH_IMPACT = {"deploy", "production", "merge", "database", "migration", "delete
 SECURITY_TERMS = {"security", "auth", "authentication", "authorization", "credential", "secret"}
 MUTATING_IMPACTS = {"LOW_IMPACT_MUTATION", "HIGH_IMPACT_MUTATION", "PRODUCTION_OR_DESTRUCTIVE"}
 READ_ONLY_PREFIXES = ("inspect ", "read ", "list ", "show ", "examine ", "view ")
+NON_MATERIAL_GATING_ANNOTATIONS = {"HIGH_IMPACT_REQUIRES_AUTHORIZATION_CHECK"}
 CONSTRAINT_TERMS = {
     "DO_NOT_DEPLOY": "deploy",
     "DO_NOT_PRODUCTION": "production",
@@ -65,7 +66,14 @@ def _negative_constraint_conflict(steps: list[dict], constraints: list[str]) -> 
 
 
 def compile_plan(intent: str, objective: str, project: str | None, constraints: list[str], ambiguity: list[str]) -> dict:
-    material_ambiguity = [a for a in ambiguity if a.strip()]
+    annotations = sorted({
+        a.strip() for a in ambiguity
+        if a.strip() in NON_MATERIAL_GATING_ANNOTATIONS
+    })
+    material_ambiguity = [
+        a.strip() for a in ambiguity
+        if a.strip() and a.strip() not in NON_MATERIAL_GATING_ANNOTATIONS
+    ]
     if not project:
         material_ambiguity.append("project unresolved")
     if not objective.strip():
@@ -81,6 +89,7 @@ def compile_plan(intent: str, objective: str, project: str | None, constraints: 
             "constraints": constraints,
             "assumptions": [],
             "ambiguity": sorted(set(material_ambiguity)),
+            "gating_annotations": annotations,
             "authority_requirements": [],
             "verification_requirements": [],
             "decision": "CLARIFY",
@@ -135,6 +144,7 @@ def compile_plan(intent: str, objective: str, project: str | None, constraints: 
             "constraints": constraints,
             "assumptions": [],
             "ambiguity": [],
+            "gating_annotations": annotations,
             "authority_requirements": authority_requirements,
             "verification_requirements": verification_requirements,
             "decision": "BLOCKED",
@@ -154,6 +164,7 @@ def compile_plan(intent: str, objective: str, project: str | None, constraints: 
         "constraints": constraints,
         "assumptions": [],
         "ambiguity": [],
+        "gating_annotations": annotations,
         "authority_requirements": authority_requirements,
         "verification_requirements": verification_requirements,
         "decision": "PLANNED",
