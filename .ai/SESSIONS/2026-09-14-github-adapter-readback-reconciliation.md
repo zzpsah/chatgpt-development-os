@@ -11,7 +11,7 @@ Harden the governed GitHub provider adapter so an observed post-mutation HTTP 40
 ## Change
 - Branch: `fix/github-adapter-readback-reconciliation`.
 - Added bounded readback-only retries for HTTP 404 after a successful mutation.
-- Default delays: 1s, 2s, 4s; three total readback attempts.
+- Default delays: 1s, 2s, 4s; up to four total readback attempts (initial read plus one after each delay).
 - No mutation replay is introduced.
 - 401/authentication errors, validation errors, and network uncertainty remain non-retriable by this layer.
 - Exhausted reconciliation remains `HOLD / READBACK_REQUIRED` and preserves the provider response for safe reconciliation.
