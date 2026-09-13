@@ -4,6 +4,21 @@ on:
   pull_request:
     paths:
       - 'docs/DEVOS-MASTER-ENGINEERING-MAP.md'
+      - 'docs/DEVOS-MASTER-ENGINEERING-MAP-v2.md'
+      - 'docs/DEVOS-INTERPRETER-EXPERIMENT-LEDGER.md'
+      - 'core/devos-living-state-and-evolution.md'
+      - 'docs/handoff/README.md'
+      - '.ai/CURRENT-STATE.md'
+      - '.ai/TASKS.md'
+      - '.ai/DECISIONS.md'
+      - 'tools/test-devos-living-docs.py'
+      - '.github/workflows/verify-living-devos-docs.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/DEVOS-MASTER-ENGINEERING-MAP.md'
+      - 'docs/DEVOS-MASTER-ENGINEERING-MAP-v2.md'
       - 'docs/DEVOS-INTERPRETER-EXPERIMENT-LEDGER.md'
       - 'core/devos-living-state-and-evolution.md'
       - 'docs/handoff/README.md'
