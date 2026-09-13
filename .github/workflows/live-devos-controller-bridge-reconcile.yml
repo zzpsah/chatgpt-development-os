@@ -1,0 +1,144 @@
+name: Live DevOS Controller Bridge Reconcile
+
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  reconcile:
+    name: Reconcile and continue governed mutation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Reconcile create result, execute update/delete, and verify final absence
+        env:
+          DEVOS_GITHUB_APP_ID: ${{ secrets.DEVOS_GITHUB_APP_ID }}
+          DEVOS_GITHUB_APP_PRIVATE_KEY: ${{ secrets.DEVOS_GITHUB_APP_PRIVATE_KEY }}
+        run: |
+          python - <<'PY'
+          import importlib.util
+          import json
+          import sys
+          import time
+          from pathlib import Path
+
+          root = Path.cwd()
+          spec = importlib.util.spec_from_file_location('devos_controller_bridge_reconcile', root / 'tools/devos-github-controller-bridge.py')
+          bridge = importlib.util.module_from_spec(spec)
+          sys.modules[spec.name] = bridge
+          assert spec and spec.loader
+          spec.loader.exec_module(bridge)
+
+          OWNER = 'zzpsah'
+          REPO = 'chatgpt-development-os'
+          BRANCH = 'live-test/controller-bridge-mutation-20260914'
+          RESOURCE = 'artifacts/live-test/controller-bridge-20260914.txt'
+          PROJECT = REPO
+          WORKFLOW = 'devos-live-controller-bridge-reconcile-v1'
+          TEST_HEAD = 'LIVE-TEST-CONTROLLER-BRIDGE-HEAD'
+          INITIAL_SHA = '6b08d07761cdaa4ae07bad6d0820239e022d52f6'
+
+          def invoke(action, content=None, expected_sha=None, impact='LOW', auth_impact='LOW'):
+              task_id = f'LIVE-RECON-{action.upper().replace(".", "-")}-20260914'
+              operation = {
+                  'provider': 'github', 'owner': OWNER, 'repository': REPO,
+                  'resource': RESOURCE, 'capability': action, 'impact': impact,
+                  'action': action, 'inputs': {
+                      'branch': BRANCH,
+                      'message': f'DevOS live reconcile: {action}',
+                  },
+              }
+              if content is not None:
+                  operation['inputs']['content'] = content
+              if expected_sha is not None:
+                  operation['inputs']['expected_sha'] = expected_sha
+              objective = f'Reconcile and execute governed GitHub {action}'
+              controller = {
+                  'protocol_version': 'P16-CONTROLLER-v1', 'decision': 'EXECUTION_CANDIDATE',
+                  'authority': 'UNCHANGED', 'execution': 'NONE', 'authorization': 'UNCHANGED',
+                  'task_id': task_id, 'objective': objective, 'project': PROJECT,
+                  'workflow': WORKFLOW, 'repository_head': TEST_HEAD,
+                  'gates': {'scope': True, 'repository_revalidated': True, 'readiness': True,
+                            'capability': True, 'authorization': True, 'security': True,
+                            'verification_path': True},
+                  'compiled_step': {'id': task_id, 'objective': objective, 'impact': impact,
+                                    'verification': 'FRESH_PROVIDER_READBACK',
+                                    'provider_operation': operation},
+              }
+              readiness = {
+                  'protocol': 'DEVOS-STEP-READINESS-v1', 'plan_protocol': 'DEVOS-GOAL-PLAN-v1',
+                  'status': 'READY', 'authority': 'UNCHANGED', 'authorization': 'UNCHANGED',
+                  'execution': 'NONE',
+                  'gates': {'scope': True, 'authorization': True, 'security': True,
+                            'capability': True, 'verification': True},
+                  'step_id': task_id, 'repository_head': TEST_HEAD,
+                  'step': {'id': task_id, 'objective': objective, 'impact': impact,
+                           'verification': 'FRESH_PROVIDER_READBACK'},
+              }
+              authorization = {
+                  'provider': 'github', 'owner': OWNER, 'repository': REPO,
+                  'resource': RESOURCE, 'capability': action, 'workflow': WORKFLOW,
+                  'project': PROJECT, 'impact_ceiling': auth_impact, 'freshness': TEST_HEAD,
+                  'authorization_id': f'LIVE-RECON-{action.upper().replace(".", "-")}-20260914',
+              }
+              result = bridge.execute(controller, readiness, authorization)
+              print(json.dumps({'action': action, 'result': result}, indent=2, sort_keys=True))
+              return result
+
+          updated = invoke('file.update', 'DevOS controller bridge live test v1\nUPDATED\n', INITIAL_SHA)
+          if updated.get('status') not in {'COMPLETE', 'HOLD'}:
+              raise SystemExit(f'update failed: {updated}')
+          content = updated.get('provider_response', {}).get('content', {})
+          update_sha = content.get('sha')
+          if not update_sha:
+              update_sha = updated.get('readback', {}).get('sha')
+          if not update_sha:
+              raise SystemExit(f'update produced no reconciliable sha: {updated}')
+
+          time.sleep(2)
+          deleted = invoke('file.delete', expected_sha=update_sha, impact='HIGH', auth_impact='HIGH')
+          if deleted.get('status') not in {'COMPLETE', 'HOLD'}:
+              raise SystemExit(f'delete failed: {deleted}')
+
+          time.sleep(2)
+          read_controller = {
+              'protocol_version': 'P16-CONTROLLER-v1', 'decision': 'EXECUTION_CANDIDATE',
+              'authority': 'UNCHANGED', 'execution': 'NONE', 'authorization': 'UNCHANGED',
+              'task_id': 'LIVE-RECON-READ-20260914', 'objective': 'Verify test file absence',
+              'project': PROJECT, 'workflow': WORKFLOW, 'repository_head': TEST_HEAD,
+              'gates': {'scope': True, 'repository_revalidated': True, 'readiness': True,
+                        'capability': True, 'authorization': True, 'security': True,
+                        'verification_path': True},
+              'compiled_step': {'id': 'LIVE-RECON-READ-20260914', 'objective': 'Verify test file absence',
+                                'impact': 'READ_ONLY', 'verification': 'FRESH_PROVIDER_READ',
+                                'provider_operation': {
+                                    'provider': 'github', 'owner': OWNER, 'repository': REPO,
+                                    'resource': RESOURCE, 'capability': 'read.file', 'impact': 'READ_ONLY',
+                                    'action': 'file.get', 'inputs': {'branch': BRANCH},
+                                }},
+          }
+          read_readiness = {
+              'protocol': 'DEVOS-STEP-READINESS-v1', 'plan_protocol': 'DEVOS-GOAL-PLAN-v1',
+              'status': 'READY', 'authority': 'UNCHANGED', 'authorization': 'UNCHANGED',
+              'execution': 'NONE',
+              'gates': {'scope': True, 'authorization': True, 'security': True,
+                        'capability': True, 'verification': True},
+              'step_id': 'LIVE-RECON-READ-20260914', 'repository_head': TEST_HEAD,
+              'step': {'id': 'LIVE-RECON-READ-20260914', 'objective': 'Verify test file absence',
+                       'impact': 'READ_ONLY', 'verification': 'FRESH_PROVIDER_READ'},
+          }
+          final_read = bridge.execute(read_controller, read_readiness)
+          print('FINAL_RECONCILE:', json.dumps(final_read, sort_keys=True))
+          if final_read.get('status') != 'FAILED' or 'PROVIDER_READ_FAILED' not in final_read.get('reason_codes', []):
+              raise SystemExit(f'unexpected final reconcile state: {final_read}')
+
+          print('LIVE_DEVOS_CONTROLLER_BRIDGE_RECONCILE: PASS')
+          PY
