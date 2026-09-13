@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import importlib.util
+import sys
 
 MODULE = Path(__file__).with_name("devos-actionable-hold.py")
 spec = importlib.util.spec_from_file_location("devos_actionable_hold", MODULE)
 assert spec and spec.loader
 mod = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = mod
 spec.loader.exec_module(mod)
 
 
