@@ -24,6 +24,11 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Verify Documentation Integrity
+        run: |
+          python tools/verify-documentation-integrity.py
+          python tools/test-documentation-integrity.py
+
       - name: Install parser dependency
         run: python -m pip install pyyaml
 
