@@ -8,6 +8,7 @@ on:
     paths:
       - 'tools/current-source-evidence.py'
       - 'tools/test-current-source-evidence.py'
+      - 'tools/test-current-source-health-integration.py'
       - '.github/workflows/verify-current-source-evidence.yml'
       - 'tools/devos-health.py'
       - 'tools/devos-doctor.py'
@@ -31,5 +32,7 @@ jobs:
         run: python tools/verify-readiness-evidence.py
       - name: Verify current-source evidence packets
         run: python tools/test-current-source-evidence.py
+      - name: Verify current-source Health Doctor integration
+        run: python tools/test-current-source-health-integration.py
       - name: Verify Foundation Health remains conservative
         run: python tools/test-foundation-health.py
