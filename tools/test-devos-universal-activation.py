@@ -7,6 +7,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+ACTIVATION_CARD = ROOT / "DEVOS-ACTIVATE.md"
 spec = importlib.util.spec_from_file_location("devos_universal_activation", ROOT / "tools" / "devos-universal-activation.py")
 assert spec and spec.loader
 module = importlib.util.module_from_spec(spec)
@@ -49,6 +50,16 @@ assert "does not grant approval" in ready["authority_boundary"], ready
 default = check({"invocation": "DEVOS", "repository_root": str(ROOT)}, "READY_FOR_BOOTSTRAP")
 assert default["stance"]["canonical"] == "DEVOS::CONTINUE::DESI", default
 
+card = ACTIVATION_CARD.read_text(encoding="utf-8")
+for marker in (
+    "# DevOS Activation Card — Any AI, Any Account, Any Plan",
+    "requires no API key, paid plan, plugin, MCP server",
+    "DEVOS_NOT_AVAILABLE",
+    "COPIED ACTIVATION CARD != REPOSITORY ACCESS",
+):
+    assert marker in card, marker
+
 print("PASS: universal activation recognizes only explicit DevOS invocations")
 print("PASS: unavailable or incomplete repository context never becomes bootstrap-ready")
 print("PASS: DEVOS::GOD resolves to repository-backed bootstrap, not execution authority")
+print("PASS: free-model activation card preserves the repository-access boundary")

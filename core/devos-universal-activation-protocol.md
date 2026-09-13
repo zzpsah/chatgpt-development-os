@@ -56,6 +56,12 @@ mutation: NONE
 
 The protocol is host-neutral. A ChatGPT Custom GPT, Codex skill, Claude plugin, MCP/App adapter, IDE agent, or future compatible host may call the same resolver. A host without repository access can recognize the request, but it must report `DEVOS_NOT_AVAILABLE`; it cannot honestly claim DevOS was loaded.
 
+## Inter-AI and free-model transport
+
+The protocol has a zero-dependency fallback: [`DEVOS-ACTIVATE.md`](../DEVOS-ACTIVATE.md). A user may provide its public raw URL or copy/paste its activation card into any AI chat, including a free model without plugin, MCP, API, or workspace support.
+
+This transport makes the DevOS rules available; it does not grant missing capabilities. A model with repository access can recover current state. A model without access must return `DEVOS_NOT_AVAILABLE` or `PROJECT_UNKNOWN` rather than invent source, Git, CI, or current project facts.
+
 ## Bootstrap after readiness
 
 After `READY_FOR_BOOTSTRAP`, the host must:
@@ -76,4 +82,5 @@ STANCE != AUTHORIZATION
 BOOTSTRAP != EXECUTION
 CHAT MEMORY != DEVOS ACTIVATION
 PROVIDER CREDENTIAL != DEVOS AUTHORIZATION
+COPIED ACTIVATION CARD != REPOSITORY ACCESS
 ```

@@ -6,6 +6,7 @@
 - Missing repository evidence returns `DEVOS_NOT_AVAILABLE`; incomplete durable context returns `PROJECT_UNKNOWN`; invalid stance syntax returns `INVALID_INVOCATION`.
 - `DEVOS::GOD` grants no authorization, execution evidence, provider access, production authority, or mutation permission.
 - The protocol is host-neutral: ChatGPT, Codex, Claude, MCP/App, IDE, and future hosts may call it while repository-local state remains authoritative.
+- `DEVOS-ACTIVATE.md` is the zero-dependency inter-AI/free-model transport. It may be pasted or linked, but copied instructions never become repository evidence or authority.
 
 ## Core documentation law
 - **What is not written was never done.**

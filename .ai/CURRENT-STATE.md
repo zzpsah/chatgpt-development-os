@@ -15,6 +15,7 @@
 - PR #23 exact final source head: `954b094a3832c300d371426d682eac90156cbb04`.
 - PR #23 exact-head verification passed: Actionable Hold 16, Contracts 639, Trust-First 102, Full DevOS 561, Current-Source Evidence 31, MCP Repository Create 28.
 - Universal Activation Protocol v1 is the active unnumbered bounded objective. It adds repository-backed, host-neutral handling for `DEVOS::<STANCE>` while preserving unchanged authority, authorization, execution, and mutation state.
+- The protocol also has a zero-dependency `DEVOS-ACTIVATE.md` transport for free/inter-AI chats. The activation card carries rules only; it never claims repository access, provider capability, or authority.
 - No new numbered phase is active or implied by this objective.
 
 ## Core documentation law
