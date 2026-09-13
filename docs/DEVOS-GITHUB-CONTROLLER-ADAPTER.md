@@ -14,7 +14,7 @@ P15 interpretation
   -> runtime handoff
   -> GitHub controller bridge
   -> remote permission gate
-  -> GitHub App installation token
+  -> proven GitHub App installation token
   -> one bounded provider operation
   -> fresh provider readback
   -> evidence/persistence
@@ -24,14 +24,18 @@ The bridge and adapter do not create authorization. GitHub credentials only prov
 
 ## Authentication
 
-The adapter uses GitHub App installation-token authentication inside GitHub Actions through:
+The controller bridge uses the repository-proven GitHub App authentication implementation in `tools/devos-github-actions-auth.py` to obtain the installation token, then injects that token into the provider adapter.
+
+Required GitHub Actions secrets:
 
 - `DEVOS_GITHUB_APP_ID`
 - `DEVOS_GITHUB_APP_PRIVATE_KEY`
 
 The private key is used only for short-lived JWT signing. It is never emitted as evidence or persisted in the repository.
 
-The adapter first resolves the target repository's App installation and then mints an installation token constrained to that repository. Current GitHub App installation tokens are short-lived; GitHub documents a one-hour lifetime. The adapter does not persist the token and does not rely on token shape/length. citeturn195196search0
+The current App installation is configured to the target repository. The adapter does not persist the installation token and does not include credential material in evidence. GitHub documents installation tokens as short-lived, expiring after one hour. citeturn195196search0
+
+An early attempt to use the `repository_ids` installation-token request variant through the new adapter path returned `401 Bad credentials`, while the existing proven runtime helper continued to authenticate successfully. The controller bridge therefore deliberately reuses the known-good authentication/token implementation rather than duplicating an unproven provider-auth path.
 
 ## Read operations
 
@@ -43,6 +47,8 @@ Supported provider reads:
 - `pr.get`
 
 A read returns `FRESH_PROVIDER_READ` evidence and never changes authorization or remote state.
+
+`tools/devos-github-proven-auth-read.py` supplies the same proven App token provider to the adapter for live read verification.
 
 ## Governed mutations
 
@@ -85,6 +91,8 @@ A successful HTTP response without the required readback is never reported as `C
 
 The compiled controller step must contain an explicit `provider_operation` object. The bridge does not infer provider operations from free-form objective text.
 
+The bridge supplies the proven GitHub App token provider to the adapter, so the normal governed controller path uses the same authentication path already proven by the runtime smoke test.
+
 ## Security boundary
 
 The adapter never stores or prints:
@@ -108,4 +116,10 @@ Deterministic checks:
 - `tools/test-devos-github-provider-adapter.py`
 - `tools/test-devos-github-controller-bridge.py`
 
-Live read proof remains read-only. A provider mutation requires the normal DevOS authorization/P17/security gates and must be tested separately against an explicitly approved sandbox target.
+Fresh exact-head live proof on the final PR head established:
+
+- baseline App authentication: PASS;
+- repository read through the adapter using the proven App auth provider: PASS;
+- deterministic adapter and controller-bridge checks: PASS.
+
+Live mutation remains unexecuted. Any remote mutation still requires the normal DevOS authorization/P17/Security Gate conditions and fresh provider readback.
