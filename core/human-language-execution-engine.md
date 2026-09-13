@@ -1,14 +1,20 @@
 # Human Language Execution Engine v2
 
+## Status
+
+Normative top-level DevOS input layer. Every human-originated DevOS request enters through this contract before project workflow selection, planning, execution, verification, or persistence.
+
 ## Purpose
 
 The Human Language Execution Engine converts natural-language requests into safe, evidence-driven engineering workflows without requiring the user to know internal command names.
 
 Core transformation:
 
-`Human phrase + conversation context + project state → Canonical intent(s) + constraints + ambiguity → Workflow → Scope → Authorization → Evidence → Action → Verification → Persistence`
+`Human phrase + conversation context + durable project state → Canonical intent(s) + constraints + ambiguity → Project/Workflow → Scope → Authorization → Evidence → Action → Verification → Persistence`
 
-The engine is an interpretation and routing layer. It never grants authority and does not replace project routing, source inspection, workflow rules, security controls, or verification.
+Human-language interpretation is not an optional helper or side feature. It is the top-level semantic interface of DevOS. Stance codes, host adapters, project routers, task controllers, workflows, and runtimes consume the interpreted objective; they do not bypass it for ordinary human requests.
+
+The engine never grants authority. It does not replace source inspection, project identity evidence, workflow rules, security controls, or verification.
 
 ## Canonical intents
 
@@ -21,17 +27,27 @@ v2 treats short and elliptical language as first-class input. Phrases such as `c
 The interpreter must:
 
 1. interpret meaning rather than exact keywords;
-2. tolerate common Hinglish/code-switching and shorthand;
+2. tolerate common Hinglish/code-switching, shorthand, spelling variation, and incomplete conversational phrasing;
 3. resolve pronouns/deictic phrases (`ye`, `wo`, `wahi`, `this`, `that`, `same`) only when a usable referent exists;
 4. preserve corrections and negative constraints such as `deploy mat karna`;
-5. compose multiple compatible intents rather than dropping them;
+5. support safe multiple-intent composition rather than dropping compatible intents;
 6. distinguish interpretation confidence from technical evidence;
 7. clarify when project, intent, or referent ambiguity is material;
 8. never infer high-impact authorization from context, urgency, profanity, or prior low-impact authorization.
 
-## Executable pre-interpreter
+## Top-level entry contract
 
-`tools/human-language-interpreter.py` provides a deterministic v2 pre-interpreter for common language forms. It emits a structured envelope containing:
+For human-originated work the default DevOS path is:
+
+`Human input → Human Language Execution Engine → Project Router / State Resolver → Development Task Controller → bounded workflow/runtime → Verification + Security → durable state`
+
+The selected repository and its project-local `.ai/` context remain authoritative after project resolution. The interpreter may use context to resolve language, but it must not invent a project identity or override repository evidence.
+
+A stance such as `DEVOS::CONTINUE` or `DEVOS::GOD` modifies operating posture after semantic interpretation; it is not a separate language bypass. Likewise, host-specific AI interpretation may enrich semantics, but its output must conform to this contract before technical action.
+
+## Executable interpreter
+
+`tools/human-language-interpreter.py` provides the deterministic v2 reference interpreter for common language forms. It emits a structured envelope containing:
 
 ```yaml
 protocol: DEVOS-HUMAN-LANGUAGE-v2
@@ -48,7 +64,7 @@ authority: UNCHANGED
 execution: NONE
 ```
 
-This deterministic layer is intentionally not presented as universal natural-language understanding. A host AI/model may provide richer semantic interpretation, but the resulting objective remains subject to the same project, authorization, security, evidence, and verification contracts.
+The reference interpreter is a deterministic minimum behavior contract, not the ceiling of DevOS language understanding. DevOS may evolve richer model-assisted semantic interpretation for multilingual language, corrections, ellipsis, referents, temporal context, intent composition, and conversational continuity. Richer interpretation must preserve the same structured boundaries and must never manufacture authority.
 
 ## Short-command rule
 
@@ -62,9 +78,15 @@ Negative constraints are durable for the interpreted objective and must not be l
 
 may resolve the prior objective while adding `DO_NOT_DEPLOY`. A negative constraint never becomes a positive authorization later merely because work continues.
 
+## Multiple intents
+
+Compatible intents must compose safely. For example, `continue, fix the error, then check security` can normalize to `RESUME_WORK → BUG_FIX → SECURITY_REVIEW → VALIDATION` when context supports that ordering. Composition must preserve constraints, project identity, and authorization boundaries and must not silently broaden into unrelated work.
+
 ## Authorization boundary
 
 Interpretation does not grant authority. Reading and ordinary analysis may proceed under their normal rules. Production-impacting, destructive, irreversible, security-sensitive, deployment, merge, database, credential, or other high-impact operations remain independently gated. The v2 interpreter explicitly returns `authorization: UNCHANGED`, `authority: UNCHANGED`, and `execution: NONE`.
+
+**No technical action is justified solely by emotional intensity.** Urgency, frustration, praise, slang, or profanity may affect conversational interpretation but never independently authorizes code, data, infrastructure, security, deployment, or production changes.
 
 ## Evidence boundary
 
@@ -72,11 +94,26 @@ For technical conclusions distinguish `Observed`, `Likely`, and `Unknown`. HIGH 
 
 ## Workflow routing
 
-After interpretation: resolve the project; load durable `.ai` context; select workflow; inspect actual source/config/tests/Git; determine scope and authorization; execute the smallest authorized action; verify with fresh applicable evidence; persist meaningful semantic progress.
+After interpretation:
+
+1. resolve the project with `core/project-router.md`;
+2. load durable project `.ai` context and recover current state;
+3. select or compose the appropriate workflow;
+4. inspect actual source/config/tests/Git;
+5. determine scope and authorization;
+6. execute the smallest authorized action;
+7. verify with fresh applicable evidence;
+8. persist meaningful semantic progress.
 
 ## Verification contract
 
 Execution outcomes remain `VERIFIED`, `PARTIAL`, `UNVERIFIED`, or `FAILED`. Never infer success from absence of an error.
+
+## Evolution contract
+
+Human-language interpretation is a continuously evolvable top-level DevOS capability. Future versions may improve language coverage, contextual reasoning, correction handling, multilingual understanding, referent resolution, intent decomposition, and confidence calibration without forcing downstream workflows to change their safety contracts.
+
+Evolution must be regression-tested against prior language behavior. A language upgrade must not weaken project isolation, explicit constraints, authorization, evidence, security, or verification.
 
 ## Test corpus
 
