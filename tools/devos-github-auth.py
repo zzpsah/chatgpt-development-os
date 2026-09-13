@@ -17,6 +17,7 @@ from typing import Any, Mapping
 from urllib.parse import urlencode
 
 AUTH_MODES = {"github_app_user", "github_app_installation"}
+DEFAULT_OAUTH_STATE_MAX_AGE_SECONDS = 600
 
 
 class GitHubAuthError(ValueError):
@@ -44,12 +45,16 @@ class GitHubIdentityBinding:
     expires_at: datetime | None
 
 
+def _utc(value: datetime) -> datetime:
+    return (value if value.tzinfo else value.replace(tzinfo=timezone.utc)).astimezone(timezone.utc)
+
+
 def create_oauth_transaction(client_id: str, redirect_uri: str, *, now: datetime | None = None) -> OAuthTransaction:
     if not client_id.strip():
         raise GitHubAuthError("AUTH_CONFIG_INVALID: client_id required")
     if not redirect_uri.startswith("https://"):
         raise GitHubAuthError("AUTH_CONFIG_INVALID: HTTPS redirect_uri required")
-    moment = now or datetime.now(timezone.utc)
+    moment = _utc(now or datetime.now(timezone.utc))
     return OAuthTransaction(client_id, redirect_uri, secrets.token_urlsafe(32), moment)
 
 
@@ -60,8 +65,35 @@ def build_github_authorize_url(transaction: OAuthTransaction, *, allow_signup: b
     return "https://github.com/login/oauth/authorize?" + urlencode(params)
 
 
-def validate_oauth_callback(expected_state: str, returned_state: str, code: str) -> str:
-    if not expected_state or not returned_state or not hmac.compare_digest(expected_state, returned_state):
+def validate_oauth_callback(
+    transaction: OAuthTransaction,
+    returned_state: str,
+    code: str,
+    *,
+    now: datetime | None = None,
+    max_age_seconds: int = DEFAULT_OAUTH_STATE_MAX_AGE_SECONDS,
+    consumed: bool = False,
+) -> str:
+    """Validate one pending OAuth callback transaction.
+
+    A deployment must persist pending/consumed state outside Git. This primitive
+    fail-closes stale and already-consumed transactions so callers cannot treat a
+    matching state string as indefinitely reusable authorization evidence.
+    """
+    if max_age_seconds <= 0:
+        raise GitHubAuthError("AUTH_CONFIG_INVALID: OAuth state max age must be positive")
+    if consumed:
+        raise GitHubAuthError("AUTHORIZATION_HOLD: reused OAuth state")
+
+    moment = _utc(now or datetime.now(timezone.utc))
+    issued_at = _utc(transaction.issued_at)
+    age_seconds = (moment - issued_at).total_seconds()
+    if age_seconds < 0:
+        raise GitHubAuthError("AUTHORIZATION_HOLD: OAuth callback predates transaction")
+    if age_seconds > max_age_seconds:
+        raise GitHubAuthError("AUTHORIZATION_HOLD: OAuth state expired")
+
+    if not transaction.state or not returned_state or not hmac.compare_digest(transaction.state, returned_state):
         raise GitHubAuthError("AUTH_STATE_MISMATCH")
     if not code or len(code) > 4096:
         raise GitHubAuthError("AUTHORIZATION_HOLD: invalid callback code")
@@ -75,15 +107,15 @@ def _parse_time(value: str | None) -> datetime | None:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError as exc:
         raise GitHubAuthError("AUTH_TOKEN_SCOPE_UNKNOWN: invalid expiry timestamp") from exc
-    return (parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)).astimezone(timezone.utc)
+    return _utc(parsed)
 
 
 def normalize_permissions(raw: Mapping[str, Any]) -> tuple[tuple[str, str], ...]:
     normalized: list[tuple[str, str]] = []
     for name, level in raw.items():
-        if not isinstance(name, str) or not isinstance(level, str):
+        if not isinstance(name, str) or not name.strip() or not isinstance(level, str) or not level.strip():
             raise GitHubAuthError("GITHUB_CAPABILITY_UNCONFIRMED")
-        normalized.append((name, level))
+        normalized.append((name.strip(), level.strip().lower()))
     return tuple(sorted(normalized))
 
 
@@ -145,7 +177,7 @@ def is_expired(binding: GitHubIdentityBinding, *, now: datetime | None = None, s
         return False
     if skew_seconds < 0:
         raise GitHubAuthError("AUTH_CONFIG_INVALID: negative expiry skew")
-    moment = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    moment = _utc(now or datetime.now(timezone.utc))
     return moment.timestamp() >= binding.expires_at.timestamp() - skew_seconds
 
 

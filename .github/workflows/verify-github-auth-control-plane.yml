@@ -18,6 +18,24 @@ on:
       - '.ai/TASKS.md'
       - '.ai/DECISIONS.md'
       - 'docs/DEVOS-MASTER-ENGINEERING-MAP.md'
+  push:
+    branches: [main]
+    paths:
+      - 'core/devos-github-identity-token-control-plane.md'
+      - 'tools/devos-github-auth.py'
+      - 'tools/test-devos-github-auth.py'
+      - 'tools/devos-github-capability-discovery.py'
+      - 'tools/test-devos-github-capability-discovery.py'
+      - 'tools/devos-github-actions-auth.py'
+      - 'tools/test-devos-github-actions-auth.py'
+      - 'docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md'
+      - 'docs/DEVOS-GITHUB-HOSTED-RUNTIME.md'
+      - '.github/workflows/verify-github-auth-control-plane.yml'
+      - '.github/workflows/devos-github-app-runtime.yml'
+      - '.ai/CURRENT-STATE.md'
+      - '.ai/TASKS.md'
+      - '.ai/DECISIONS.md'
+      - 'docs/DEVOS-MASTER-ENGINEERING-MAP.md'
   workflow_dispatch:
 
 permissions:

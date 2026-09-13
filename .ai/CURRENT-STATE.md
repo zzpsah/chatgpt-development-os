@@ -12,11 +12,11 @@
 - PR #23 merge commit: `7c60c3a4a36982ba894e2f30ba9dd98500f98d02`.
 - No new numbered phase is active or implied by this closure state.
 
-## GitHub Identity & Token Control Plane v1 — in implementation
+## GitHub Identity & Token Control Plane v1 — repository implementation
 
 - Objective: support independently authorized GitHub accounts/installations through a GitHub App-oriented authentication boundary while keeping credentials separate from DevOS authorization.
-- Branch: `feat/github-identity-token-control-plane`.
-- Current branch head: `d5c12a87b7b15787c8e7dfb6857563798c3e7b59`.
+- Branch/PR: `feat/github-identity-token-control-plane` / PR #32.
+- Exact current branch head is authoritative in Git/PR metadata. This living state intentionally does not self-pin the commit that contains itself.
 - Added normative contract: `core/devos-github-identity-token-control-plane.md`.
 - Added side-effect-free primitives: `tools/devos-github-auth.py`.
 - Added deterministic authentication regression suite: `tools/test-devos-github-auth.py`.
@@ -25,12 +25,12 @@
 - Added GitHub-hosted runtime authenticator: `tools/devos-github-actions-auth.py`.
 - Added deterministic GitHub-hosted runtime regression suite: `tools/test-devos-github-actions-auth.py`.
 - Added GitHub-hosted manual runtime workflow: `.github/workflows/devos-github-app-runtime.yml`.
-- Extended control-plane CI to verify the GitHub-hosted runtime contract.
+- Extended control-plane CI to verify the GitHub-hosted runtime contract and relevant pushes to `main`.
 - Added deployment/runtime guide: `docs/DEVOS-GITHUB-HOSTED-RUNTIME.md`.
 - Added durable session provenance for the authentication/control-plane work.
-- The first fresh runtime-contract CI attempt exposed a repository-input validation bug for `owner/../repo`; the validator was hardened and the next exact-head control-plane run passed.
-- Fresh exact-head control-plane verification for `ff28f9c164a2eb00629e6fef6ba01569d6368378`: Verify DevOS GitHub Identity and Token Control Plane run `34783664764` / #20 — `success`; all three control-plane test steps passed, including the GitHub-hosted runtime auth contract.
-- Fresh companion verification observed at that point: Development OS `34783664782` / #606 success; Current-Source Evidence `34783664841` / #63 success; Living Engineering Map `34783664783` / #33 success; MCP Repository Create `34783664828` / #60 success; Trust-First Audit `34783664787` / #147 success. Development OS Contracts `34783664781` / #684 was still in progress at the last observation.
+- Audit hardening closes four pre-merge gaps: OAuth state freshness/reuse protection, permission-level-aware capability evaluation, target-repository scope enforcement, and stale durable-head self-references.
+- Capability discovery remains fail-closed: unknown mappings/levels/scope are never promoted to `AVAILABLE`.
+- Historical exact-head runtime/control-plane CI remains historical evidence only. Final merge readiness requires fresh CI on the exact final PR head; after merge, fresh push CI on the merge commit is the current repository evidence.
 
 ## External GitHub App activation — user-reported configuration
 
@@ -57,10 +57,10 @@ The manual workflow is deliberately read-only: it authenticates, discovers the i
 
 ## Live activation boundary
 
-- The GitHub repository-side runtime implementation is present and its contract is freshly CI-verified.
-- User-reported GitHub App registration, installation, and Actions-secret configuration are now recorded as external setup facts.
+- The GitHub repository-side runtime implementation is present and contract-tested.
+- User-reported GitHub App registration, installation, and Actions-secret configuration are recorded as external setup facts.
 - Live proof still requires the manual runtime workflow completing successfully against the installed App and target repository.
-- Browser OAuth callback configuration is **not required for the GitHub-hosted Actions runtime**. A callback remains relevant only if a separate interactive web/OAuth client is introduced.
+- Browser OAuth callback configuration is **not required for the GitHub-hosted Actions runtime**. A callback remains relevant only if a separate interactive web/OAuth client is introduced; that path must use one-time pending transaction storage plus the checked-in freshness/reuse checks.
 - `production_ready=false` and `live_provider_proven=false` remain unchanged until fresh live evidence exists.
 
 ## Core documentation law
@@ -115,4 +115,4 @@ Historical evidence snapshots remain dated and do not auto-refresh when source a
 
 ## Next bounded direction
 
-Execute the existing manual GitHub-hosted runtime workflow against `zzpsah/chatgpt-development-os` to obtain fresh live installation-token/read-only provider evidence. Do not claim live GitHub authentication or production readiness until that live evidence exists. Do not create P18/P19 merely for bookkeeping.
+Recovery rule for PR #32: if the PR is open, require exact-final-head CI and code review before merge; if it is merged, treat the repository-side v1 implementation as closed at deterministic/integration/CI evidence level and inspect fresh post-merge CI. Live activation remains separate: the user-reported GitHub App setup may be verified only by executing the manual read-only runtime workflow under an explicitly authorized live-provider verification objective. Do not claim production readiness or live-provider proof until that evidence exists. Do not create P18/P19 merely for bookkeeping.

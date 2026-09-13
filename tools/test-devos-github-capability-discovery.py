@@ -22,10 +22,12 @@ def main() -> None:
         ["file.update", "branch.create", "repository.delete"],
         provider_permissions={"contents": "write", "administration": "write"},
         required_permissions={
-            "file.update": ("contents",),
-            "branch.create": ("contents",),
-            "repository.delete": ("administration",),
+            "file.update": {"contents": "write"},
+            "branch.create": {"contents": "write"},
+            "repository.delete": {"administration": "write"},
         },
+        target_repository="example/repo",
+        repository_scope=("example/repo",),
     )
     assert [r.status for r in results] == ["AVAILABLE", "AVAILABLE", "AVAILABLE"]
 
@@ -33,27 +35,55 @@ def main() -> None:
         "pr.merge",
         provider_permissions={"contents": "write"},
         required_permissions={},
+        target_repository="example/repo",
+        repository_scope=("example/repo",),
     )
     assert hold.status == "UNCONFIRMED"
     assert hold.reason == "PROVIDER_MAPPING_REQUIRED"
 
-    unavailable = MODULE.evaluate_capability(
+    insufficient = MODULE.evaluate_capability(
+        "file.update",
+        provider_permissions={"contents": "read"},
+        required_permissions={"file.update": {"contents": "write"}},
+        target_repository="example/repo",
+        repository_scope=("example/repo",),
+    )
+    assert insufficient.status == "UNAVAILABLE"
+    assert insufficient.reason.startswith("INSUFFICIENT_PROVIDER_PERMISSION_LEVEL:")
+
+    outside_scope = MODULE.evaluate_capability(
         "branch.force_update",
         provider_permissions={"contents": "write"},
-        required_permissions={"branch.force_update": ("administration",)},
+        required_permissions={"branch.force_update": {"contents": "write"}},
+        target_repository="example/other",
+        repository_scope=("example/repo",),
     )
-    assert unavailable.status == "UNAVAILABLE"
+    assert outside_scope.status == "UNAVAILABLE"
+    assert outside_scope.reason == "TARGET_REPOSITORY_OUTSIDE_SCOPE"
+
+    missing_target = MODULE.evaluate_capability(
+        "pr.merge",
+        provider_permissions={"pull_requests": "write"},
+        required_permissions={"pr.merge": {"pull_requests": "write"}},
+        repository_scope=("example/repo",),
+    )
+    assert missing_target.status == "UNCONFIRMED"
+    assert missing_target.reason == "TARGET_REPOSITORY_REQUIRED"
 
     metadata = MODULE.safe_capability_metadata(
         provider="github",
         identity="example",
         permissions={"contents": "write"},
         results=(results[0],),
+        target_repository="example/repo",
+        repository_scope=("example/repo",),
     )
     assert metadata["credential_material"] == "NOT_INCLUDED"
     assert metadata["authorization"] == "UNCHANGED"
     assert metadata["execution"] == "NONE"
     assert metadata["mutation"] == "NONE"
+    assert metadata["target_repository"] == "example/repo"
+    assert metadata["repository_scope"] == ["example/repo"]
     assert "token" not in str(metadata).lower()
 
     try:
@@ -67,7 +97,7 @@ def main() -> None:
     else:
         raise AssertionError("unsupported capability must fail closed")
 
-    print("DevOS GitHub capability discovery checks: PASS (5 scenarios)")
+    print("DevOS GitHub capability discovery checks: PASS (8 scenarios)")
 
 
 if __name__ == "__main__":

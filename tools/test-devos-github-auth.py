@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import importlib.util
 from pathlib import Path
 import sys
@@ -39,8 +39,19 @@ def main() -> None:
     assert "state=" in url
     assert "redirect_uri=https%3A%2F%2Fexample.test%2Fcallback" in url
 
-    assert MODULE.validate_oauth_callback(tx.state, tx.state, "code-1") == "code-1"
-    expect_error(lambda: MODULE.validate_oauth_callback(tx.state, "wrong", "code-1"), "AUTH_STATE_MISMATCH")
+    assert MODULE.validate_oauth_callback(tx, tx.state, "code-1", now=now + timedelta(seconds=30)) == "code-1"
+    expect_error(
+        lambda: MODULE.validate_oauth_callback(tx, "wrong", "code-1", now=now + timedelta(seconds=30)),
+        "AUTH_STATE_MISMATCH",
+    )
+    expect_error(
+        lambda: MODULE.validate_oauth_callback(tx, tx.state, "code-1", now=now + timedelta(seconds=601)),
+        "AUTHORIZATION_HOLD",
+    )
+    expect_error(
+        lambda: MODULE.validate_oauth_callback(tx, tx.state, "code-1", now=now + timedelta(seconds=30), consumed=True),
+        "AUTHORIZATION_HOLD",
+    )
 
     binding = MODULE.build_identity_binding(
         {
@@ -76,7 +87,7 @@ def main() -> None:
     )
     assert MODULE.redact_secret("super-secret") != "super-secret"
 
-    print("DevOS GitHub auth checks: PASS (10 assertions)")
+    print("DevOS GitHub auth checks: PASS (12 scenarios)")
 
 
 if __name__ == "__main__":
