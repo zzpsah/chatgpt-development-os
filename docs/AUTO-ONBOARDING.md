@@ -216,9 +216,17 @@ An explicitly installed GitHub App, organization workflow, or equivalent authori
 
 The public DevOS repository itself does **not** grant permission to modify arbitrary repositories.
 
-## Semantic onboarding boundary
+## GitHub-side versus local automation
 
-The initializer may derive basic facts such as project name, project identifier, infrastructure presence, and Git/non-Git state. It must not invent business requirements, architecture, product decisions, security guarantees, deployment correctness, test success, or root causes.
+GitHub-side automation can validate repository-local DevOS context and synchronize repository-derived evidence after pushes and pull requests. It cannot silently observe or mutate a developer's local machine.
+
+A configured local worker may discover projects only under explicitly configured roots and invoke idempotent onboarding within its granted host capabilities. Organization-wide automatic onboarding requires a separately installed GitHub App, organization workflow, or equivalent authorized integration.
+
+Neither local nor GitHub-side automation creates DevOS authorization. Provider capability, provider credentials, P17 readiness, and exact user authorization remain separate controls.
+
+## Context generation boundary
+
+The initializer may derive basic repository facts such as project name, project identifier, infrastructure presence, and Git/non-Git state. It must not invent business requirements, architecture, product decisions, security guarantees, deployment correctness, test success, or root causes. Semantic understanding requires repository inspection and evidence.
 
 ## Health / validation
 
