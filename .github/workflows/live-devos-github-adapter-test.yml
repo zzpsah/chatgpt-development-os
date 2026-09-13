@@ -35,6 +35,7 @@ jobs:
           import importlib.util
           import json
           import sys
+          import urllib.parse
           from pathlib import Path
 
           root = Path.cwd()
@@ -44,6 +45,29 @@ jobs:
           sys.modules[spec.name] = module
           assert spec and spec.loader
           spec.loader.exec_module(module)
+
+          auth = module._load_module(module.AUTH_MODULE_PATH, 'devos_proven_auth')
+          app_id = auth.os.environ.get('DEVOS_GITHUB_APP_ID', '').strip()
+          private_key = auth.os.environ.get('DEVOS_GITHUB_APP_PRIVATE_KEY', '')
+          if not app_id or not private_key:
+              raise SystemExit('missing GitHub App credentials')
+
+          def proven_token_provider(repository: str) -> str:
+              owner_name, repo_name = module._parse_repository(repository)
+              app_jwt = auth.make_jwt(app_id, private_key)
+              installation = auth.request_json(
+                  f"{module.API_ROOT}/repos/{urllib.parse.quote(owner_name)}/{urllib.parse.quote(repo_name)}/installation",
+                  method='GET',
+                  bearer=app_jwt,
+              )
+              installation_id = installation.get('id')
+              if not isinstance(installation_id, int):
+                  raise RuntimeError('GitHub App installation was not resolved for target repository')
+              token_response = auth.mint_installation_token(app_jwt, installation_id)
+              token = token_response.get('token')
+              if not isinstance(token, str) or not token:
+                  raise RuntimeError('GitHub did not return an installation token')
+              return token
 
           repo = 'chatgpt-development-os'
           owner = 'zzpsah'
@@ -82,7 +106,7 @@ jobs:
                   'freshness': None,
                   'authorization_id': f'LIVE-TEST-{capability.upper().replace(".", "-")}-20260914',
               }
-              result = module.execute(operation, authorization)
+              result = module.execute(operation, authorization, token_provider=proven_token_provider)
               print(json.dumps({'operation': operation, 'result': result}, indent=2, sort_keys=True))
               if result.get('status') != 'COMPLETE' or result.get('mutation') != 'COMPLETE' or result.get('evidence') != 'FRESH_PROVIDER_READBACK':
                   raise SystemExit(f'{action} failed: {result}')
