@@ -14,13 +14,30 @@ def load(name, filename):
 
 
 def main():
+    interpreter = load("interpreter", "human-language-interpreter.py")
     compiler = load("compiler", "semantic-goal-to-plan.py")
     readiness_mod = load("readiness", "step-readiness-orchestrator.py")
     controller = load("controller", "development-task-controller.py")
     handoff = load("handoff", "devos-runtime-handoff.py")
 
     head = "repo-head-1"
-    plan = compiler.compile_plan("VALIDATION", "inspect repository", "DEVOS", [], [])
+
+    interpreted = interpreter.interpret({
+        "phrase": "check repository",
+        "context": {"project": "DEVOS"},
+    })
+    assert interpreted["decision"] == "INTERPRETED"
+    assert interpreted["objective"] == "check repository"
+    assert "VALIDATION" in interpreted["intents"]
+    assert interpreted["execution"] == "NONE"
+
+    plan = compiler.compile_plan(
+        interpreted["intents"][0],
+        interpreted["objective"],
+        interpreted["project"],
+        interpreted["constraints"],
+        [],
+    )
     assert plan["decision"] == "PLANNED"
     step = plan["steps"][0]
 
@@ -72,7 +89,7 @@ def main():
     assert stale["status"] == "STOP"
     assert handoff.build_p17_handoff(decision, stale)["status"] == "BLOCKED"
 
-    print("PASS: P16 -> P17 -> controller -> runtime handoff reference path")
+    print("PASS: P15 -> P16 -> P17 -> controller -> runtime handoff reference path")
 
 
 if __name__ == "__main__":
