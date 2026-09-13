@@ -1,0 +1,12 @@
+[
+  {"utterance":"fix this error","intent":"BUG_FIX"},
+  {"utterance":"ye error thik kro","intent":"BUG_FIX"},
+  {"utterance":"security dekh","intent":"SECURITY_REVIEW"},
+  {"utterance":"check kro sahi hai","intent":"VALIDATION"},
+  {"utterance":"why ye issue aa rha","intent":"INVESTIGATE"},
+  {"utterance":"isko aur acha kro","intent":"QUALITY_IMPROVEMENT"},
+  {"utterance":"continue","intent":"RESUME_WORK","needs_context":true},
+  {"utterance":"wahi continue","intent":"RESUME_WORK","needs_context":true},
+  {"utterance":"kr do","intent":"FEATURE_CHANGE","needs_context":true},
+  {"utterance":"deploy mat karna, fix error","intent":"BUG_FIX","constraint":"NO_DEPLOY"}
+]
