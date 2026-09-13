@@ -20,34 +20,37 @@
 - P16 planning remains non-executing/non-authorizing.
 - P17 `READY` means eligibility only; authority/authorization/execution remain unchanged.
 
-## Production E2E + Failure Recovery closures
+## Production E2E / recovery / continuation closures
 - Production E2E Harness closed through PR #11.
-- Failure + Recovery Proof closed through PR #12 at `83fd14e4cc696f3cd96778fe7d447db1216c3fc0` after Contracts 503, Full 428, External 24 passed on final head `29c07deed803df430b2f7fd40bf302bb8deac160`.
-- No-blind-mutation-replay remains a durable safety invariant.
+- Failure + Recovery Proof closed through PR #12 at `83fd14e4cc696f3cd96778fe7d447db1216c3fc0`.
+- Multi-Session / Fresh-AI Continuation Proof closed through PR #13 at `cd8524b11f923e5e29eeaf445869b6239954ed1f` from final head `99822037a9e24625f2e7c216300c4aabd94e134e`.
+- Multi-session final verification: Contracts 518, Full DevOS 443, External Managed Project 31 all succeeded.
+- No-blind-mutation-replay remains a durable safety invariant across recovery and session boundaries.
 
-## Multi-session / fresh-AI continuation decision
-- This is a gap-driven maturity gate, not an automatic numbered milestone.
-- Repository-local state must be sufficient for a fresh process/AI to recover project identity, active objective, latest safe checkpoint, constraints and verification obligations without chat/account memory.
-- Continuation packets preserve facts only and must carry `authority: UNCHANGED`, `authorization: UNCHANGED`, `execution: NONE`.
-- Same-head continuation returns `REVALIDATE_REQUIRED`; a saved candidate is never directly executable.
-- Changed-head continuation returns `RECOMPILE_REQUIRED`; prior authorization is explicitly non-reusable after repository drift.
-- Project identity mismatch, unsupported protocol, packet authority/authorization tampering, packet execution authority, and inherited mutation-replay prohibition all HOLD.
-- Authorization/Security Gate evidence does not silently migrate across session, step or repository-head boundaries.
-- A fresh process may reconstruct what work remains, but must re-run ordinary P16/P17/controller/runtime/verification gates before execution/completion.
+## Multi-session / fresh-AI continuation decisions
+- Repository-local state preserves context, not permission.
+- Same-head continuation requires fresh revalidation; saved candidates are never directly executable.
+- Changed-head continuation requires recompilation/revalidation and prior authorization is not reusable.
+- Authorization/Security Gate evidence does not migrate across sessions, steps, or repository heads merely because objective/step identifiers match.
+- A fresh process/AI can reconstruct active work from repository evidence only; completion still requires fresh verification.
+- Real managed-project proof uses `zzpsah/automation-suite` with no commit/push and evidence-only local writes.
 
-## Two-process proof decision
-- The deterministic proof must use separate Python processes so Session B cannot depend on imported in-memory state from Session A.
-- Session A communicates only through a persisted continuation packet.
-- Session B uses the packet plus current repository evidence and must return revalidation/recompilation semantics, never an execution handoff.
+## Controlled higher-impact remote mutation direction
+- The next maturity work is gap-driven controlled mutation proof, not an automatic numbered milestone.
+- Before executing any proof, audit the existing Remote Mutation Controls and runtime-adapter contracts and use the smallest already-supported operation.
+- The first proof must be non-production, tightly scoped, reversible or isolated, and independently verifiable.
+- Mutation authority must be bound to the exact current step/work unit and current repository state; a prior approval or matching task id is insufficient.
+- Security Gate remains independent wherever the existing impact classification requires it.
+- Post-mutation state must be freshly observed and verified before success is claimed.
+- If a mutation attempt occurs and later verification fails, Failure + Recovery's `MUTATION_REPLAY_FORBIDDEN` HOLD remains authoritative; automatic replay is not allowed.
+- Destructive, production, database, credential/secret, or security-sensitive mutation remains out of scope unless separately and explicitly authorized.
 
-## Real managed-project continuation decision
-- `zzpsah/automation-suite` is the real external read-only managed-project proof target.
-- Session A may write only bounded local `.ai/EVIDENCE/` continuation artifacts in the ephemeral checkout.
-- Session B derives current project identity from Git origin and current head from Git, not from chat memory.
-- The proof must preserve unchanged HEAD/origin, zero tracked source diff, evidence-only worktree deltas, and no commit/push.
-- External evidence artifact upload is part of the proof provenance.
+## Production-readiness decision
+- Production readiness is an evidence claim, not a phase label.
+- It must be supported by a documented matrix of proven paths, unproven paths, authorization boundaries, recovery behavior, real-project evidence, and known limitations.
+- Green component tests alone do not prove broad production safety.
 
 ## Verification boundary
-- Earlier successful runs are historical evidence only.
-- PR #13 closes only after fresh Contracts, Full DevOS and External Managed Project success on the exact final semantic-state head.
+- Earlier successful runs are historical evidence only for a new head.
+- Each maturity gate closes only after fresh applicable verification on the exact final head.
 - Higher-impact execution remains separately authorized and Security-Gate controlled.
