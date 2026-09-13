@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 """Regression tests for the read-only DevOS foundation bootstrap checker."""
 
+from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 import tempfile
 
-import devos_bootstrap
+MODULE_PATH = Path(__file__).with_name("devos-bootstrap.py")
+spec = spec_from_file_location("devos_bootstrap", MODULE_PATH)
+assert spec and spec.loader
+module = module_from_spec(spec)
+spec.loader.exec_module(module)
+devos_bootstrap = module
 
 
 def test_repository_passes() -> None:
