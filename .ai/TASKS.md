@@ -7,13 +7,21 @@
 - Keep P17 non-executing/non-authorizing; `READY` is eligibility only.
 - Require a direct verified path: `P15 human request → P16 compiled plan → P17 readiness → P16 compiled-plan controller → P17-aware runtime handoff`.
 
+## Foundation audit
+- **P0–P15 Foundation Value Audit is complete and recorded** in `docs/P0-P15-FOUNDATION-VALUE-AUDIT.md`.
+- P0–P15 are retained as dependency-bearing foundations; no phase is marked for deletion without consumer/contract evidence.
+- The audit regression guard is `tools/test-foundation-value-audit.py`.
+
 ## Pending verification
 - Fresh applicable CI must pass on the final P17 head after retarget/revalidation against current `main`.
 - Do not reuse pre-retarget P17 runs as final closure evidence.
 
 ## Planned after P17
-- Run a real managed-project end-to-end maturity proof from natural human language through durable verified outcome.
+- Build the **Production E2E Harness**: natural human request → P15 interpretation → P16 plan → P17 readiness → controller → bounded runtime → verification → persistence → recovery.
+- Add failure-injection proof for stale plans, dependency failures, capability absence, authorization mismatch, verification failure, persistence corruption, and connection-layer failures.
+- Prove long-running/fresh-AI continuation on a realistic managed project.
 - Use observed failures/gaps to drive subsequent hardening instead of adding milestone numbers for their own sake.
+- Harden higher-impact remote mutation only after E2E/recovery gates are proven.
 - Continue multilingual/contextual language regression evolution without weakening project isolation, constraints, authorization, evidence, Security Gate, or verification boundaries.
 - Normalize P0–P8 historical documentation where useful without rewriting Git history.
 
@@ -26,6 +34,7 @@
 - P14 Adaptive Verification & Self-Healing v1.
 - P15 Human Language Interpretation v2 merged through PR #8.
 - **P16 Semantic Goal-to-Plan Compiler v1 merged through PR #9 on merge commit `460a212ebb7600619f396a455ac3e47e5a5c80fa`.**
+- P0–P15 foundation-value audit and regression guard.
 
 ## P16 final verification evidence
 - Final source head: `877833ef0f11d5a869284f9b86407c155125d96f`.

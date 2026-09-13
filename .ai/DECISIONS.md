@@ -15,6 +15,14 @@
 - `.ai/manifest.yaml` is the repository-local canonical identity declaration; `projects/registry.md` is the natural-language routing map.
 - Observed Git/CI repository evidence is compared with the canonical declaration. A mismatch is surfaced as an identity conflict and blocks silent substitution; it does not authorize changes to either repository.
 
+## P0–P15 foundation value decision
+
+- P0–P15 are not to be treated as disposable historical milestones.
+- Current architecture evidence shows that the early foundations supply bootstrap, portable context, evidence/verification, security/authorization, bounded autonomy, runtime, portability, automation/onboarding, controller, recovery, federation, operational intelligence, orchestration, adaptive verification, and human-language entry capabilities consumed by the current system.
+- Historical milestone age is not a valid reason for deletion.
+- Any future deprecation requires repository evidence showing that no current consumer or normative contract depends on the capability.
+- The durable capability ledger is `docs/P0-P15-FOUNDATION-VALUE-AUDIT.md` and must be updated when a foundation capability is consolidated, replaced, or deprecated.
+
 ## P9 milestone status
 
 - P9 Development Task Controller v1 is implemented and integrated into the repository CI contract verification workflow.
@@ -45,16 +53,18 @@
 - Interpretation never grants authority. Language confidence, emotional intensity, urgency, prior conversational context, or stance codes cannot independently authorize production, destructive, security-sensitive, deployment, merge, database, credential, or other high-impact operations.
 - P15 was merged to `main` through PR #8 on merge commit `770c8b3583515e3c947562854be7a2d2fd34710d` after both feature-branch verification workflows passed on repair commit `0be462dac63501a31221fcd972e0de078657d110`.
 
-## P16 milestone decision — Semantic Goal-to-Plan Compiler
+## P16 milestone decision
 
-- P16 Semantic Goal-to-Plan Compiler v1 is the active maturity milestone.
-- P16 exists to bridge top-level semantic interpretation and the Development Task Controller with an explicit bounded plan graph rather than allowing downstream execution logic to reconstruct intent informally.
-- Canonical path becomes `Human input → Human Language Execution Engine → Project Router / State Resolver → Semantic Goal-to-Plan Compiler → Development Task Controller → bounded workflow/runtime → Verification + Security → durable state`.
-- The compiler preserves interpreted constraints, project identity, ambiguity, evidence provenance, dependencies, authority requirements, verification requirements, and stop/escalation conditions.
-- The compiler emits planning structure only. It returns `execution: NONE`, does not grant authority, and cannot convert a plan into permission.
-- High-impact, security-sensitive, production, destructive, deployment, merge, database, credential, and similar operations remain independently authorized and Security-Gate controlled.
-- Material ambiguity must produce `CLARIFY` or `BLOCKED` rather than a guessed plan step.
-- P16 closure requires an executable deterministic reference compiler, regression corpus, Development Task Controller integration, CI contract verification, and fresh passing CI evidence.
+- P16 Semantic Goal-to-Plan Compiler v1 is complete and merged to `main` through PR #9 on merge commit `460a212ebb7600619f396a455ac3e47e5a5c80fa`.
+- Final-head verification passed on source head `877833ef0f11d5a869284f9b86407c155125d96f`: contracts run 476, full DevOS run 402, and P13 external managed-project run 11.
+- P16 remains planning-only; compiler output never grants authority or execution evidence.
+
+## Post-P17 development strategy
+
+- After P17 closure, development becomes **gap-driven production maturity**, not automatic milestone-number expansion.
+- The first maturity gate is a Production E2E Harness proving the complete request-to-recovery path on a managed software project.
+- Subsequent gates are failure injection/recovery, long-running fresh-AI continuation, controlled higher-impact remote mutation, and production release readiness.
+- Component-level CI success is necessary but is not sufficient evidence of whole-system autonomous development.
 
 ## Future persistence rule
 
@@ -67,4 +77,4 @@
 
 - Static contract verification proves repository contracts are structurally present; it does not by itself prove semantic AI behavior or application correctness.
 - Milestone closure requires fresh applicable verification evidence.
-- Higher-impact execution remains separately authorized and verified even when language interpretation or planning confidence is HIGH.
+- Higher-impact execution remains separately authorized and verified even when language interpretation is HIGH confidence.
