@@ -16,7 +16,7 @@ def check(cond, msg):
 def main():
     p = mod.compile_plan("BUG_FIX", "inspect error then fix code", "DEVOS", [], [])
     check(p["decision"] == "PLANNED", "single/multi-step plan should compile")
-    check(len(p["steps"]) == 2, "then should create dependent steps")
+    check(len(p["steps"]) == 2, "explicit read-before-write plan should remain two steps")
     check(p["steps"][1]["depends_on"] == ["S1"], "dependency edge missing")
     check(p["execution"] == "NONE" and p["authority"] == "UNCHANGED", "planning must not execute or grant authority")
 
@@ -36,6 +36,12 @@ def main():
 
     u = mod.compile_plan("FEATURE_CHANGE", "update config then run tests", "DEVOS", [], ["which config?"])
     check(u["decision"] == "CLARIFY" and not u["steps"], "material ambiguity must not become guessed work")
+
+    v = mod.compile_plan("FEATURE_CHANGE", "update docs", "DEVOS", [], [])
+    check(len(v["steps"]) == 2, "mutation should gain an automatic read-before-write evidence step")
+    check(v["steps"][0]["impact"] == "READ_ONLY", "automatic precondition step must be read-only")
+    check(v["steps"][1]["impact"] == "LOW_IMPACT_MUTATION", "original mutation must retain mutation classification")
+    check(v["steps"][1]["depends_on"] == ["S1"], "mutation must depend on read-before-write inspection")
 
     print("PASS: P16 Semantic Goal-to-Plan Compiler regression corpus")
 
