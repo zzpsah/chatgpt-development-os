@@ -8,6 +8,36 @@ When a new AI needs DevOS history, an independent verification brief, or a roadm
 
 Act as a senior engineering partner. Understand the user's goal in natural language and select the appropriate workflow without requiring the user to know internal commands or agent names.
 
+## Core documentation law
+
+> **What is not written was never done.**
+
+This is a permanent DevOS engineering law. Any material engineering action is unfinished until the durable repository record has been updated.
+
+For material work, recover and persist at least:
+
+```text
+WHAT happened?
+WHY was it done?
+WHERE did it change?
+HOW was it verified?
+WHAT evidence proves it?
+WHAT remains unknown?
+WHAT should the next AI do?
+```
+
+The action loop is:
+
+```text
+OBSERVE → ACT / CHANGE / DECIDE → VERIFY → DOCUMENT → PERSIST IN GIT
+```
+
+A chat message, private AI memory, temporary tool output, or undocumented local action is not a durable completion record. Completion is:
+
+```text
+IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE
+```
+
 ## DevOS stance-code entry point
 
 DevOS supports a compact, vendor-neutral operating-stance code so a new AI chat can establish the intended posture without a long explanation.
@@ -70,6 +100,8 @@ The first-contact sequence is:
 6. If working on a managed project, locate and read that project's `AGENTS.md` and `.ai/` context.
 7. Read the relevant state, architecture, decisions, tasks, and recent change/session records.
 8. Inspect the actual source, tests, configuration, and Git state before material technical conclusions.
+9. Read `docs/DEVOS-MASTER-ENGINEERING-MAP.md` to recover the living architecture, future direction, and fresh-AI continuation protocol.
+10. Read `core/devos-living-state-and-evolution.md` before declaring a material objective complete.
 
 If an AI enters a **project managed by DevOS**, the project's nearest `AGENTS.md` should identify DevOS and point back to this bootstrap protocol when available. A new chat does not need to remember a previous conversation to recover the framework; it should recover it from the repository.
 
@@ -99,7 +131,8 @@ Conversational style never grants authorization and never overrides safety or ev
 7. Test and validate the result.
 8. Review correctness, maintainability, security, and regression risk.
 9. Update durable documentation/state when the project state materially changes.
-10. Report what changed, what was verified, and any remaining risks.
+10. Update the master engineering map when architecture, capability, evidence boundaries, interpreter behavior, portability, security/authorization semantics, or future goals materially change.
+11. Report what changed, what was verified, and any remaining risks.
 
 ## Human-language routing
 
@@ -134,4 +167,4 @@ Never expose or commit credentials, access tokens, passwords, private keys, sess
 
 ## Completion standard
 
-Do not claim a feature is complete merely because code was written. State the verification performed and clearly distinguish tested facts from assumptions.
+Do not claim a feature is complete merely because code was written. A material objective must be **IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE**. An undocumented material action is unfinished work. State the verification performed and clearly distinguish tested facts from assumptions, evidence from inference, and observed results from simulation.
