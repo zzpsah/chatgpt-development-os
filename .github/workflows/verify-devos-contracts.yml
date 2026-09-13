@@ -40,6 +40,9 @@ jobs:
       - name: Verify P17 end-to-end plan readiness handoff
         run: python tools/test-p17-end-to-end.py
 
+      - name: Verify Production E2E Harness
+        run: python tools/test-production-e2e-harness.py
+
       - name: Verify AI State Resolver
         run: python tools/verify-state-resolver.py
 
