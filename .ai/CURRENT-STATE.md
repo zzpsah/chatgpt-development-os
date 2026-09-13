@@ -6,74 +6,55 @@
 - Source tree + Git are authoritative; ChatGPT Memory/chat history are supplementary only.
 - P11 repository-first recovery/revalidation remains a durable invariant.
 - P9 through P17 are complete on `main`.
-- Production E2E Harness, Failure + Recovery Proof, and Multi-Session / Fresh-AI Continuation Proof are verified and closed.
-- Active maturity gate: **Controlled Remote Mutation Proof**, PR #14 on `devos/controlled-remote-mutation-proof`.
-- This gate is currently **provider-simulated / contract-level only**. No new live DevOS runtime remote mutation has been authorized or executed as proof.
+- Production E2E Harness, Failure + Recovery Proof, Multi-Session / Fresh-AI Continuation Proof, and **Controlled Remote Mutation Proof are verified and closed**.
+- Active maturity gate: **Production-Readiness Evidence Matrix & Limitations**.
 
 ## Canonical governed path
 
 `Human request → P15 interpretation → P16 plan → P17 readiness → controller → bounded runtime → verification → persistence → recovery / continuation`
 
-Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, and continuation packets never manufacture permission.
+Interpretation, planning, readiness, provider credentials, prior approvals, prior successful runs, recovery checkpoints, continuation packets, and simulated provider evidence never manufacture permission.
 
 ## Multi-Session / Fresh-AI Continuation closure
 
-PR #13 merged at `cd8524b11f923e5e29eeaf445869b6239954ed1f` from final source head `99822037a9e24625f2e7c216300c4aabd94e134e` after:
-- Contracts 518 / `34757017554`: success.
-- Full DevOS 443 / `34757017532`: success.
-- External Managed Project 31 / `34757017535`: success.
+PR #13 merged at `cd8524b11f923e5e29eeaf445869b6239954ed1f` from final source head `99822037a9e24625f2e7c216300c4aabd94e134e` after Contracts 518, Full DevOS 443, and External Managed Project 31 passed.
 
-## Active Controlled Remote Mutation Proof
+## Controlled Remote Mutation Proof closure
 
 Normative contract: `core/controlled-remote-mutation-proof.md`.
 Supervisor: `tools/controlled-remote-mutation-proof.py`.
 Regression corpus: `tools/test-controlled-remote-mutation-proof.py`.
 Existing mutation capability under proof: `github.mutate.file` only.
-New read-only verification capability: `github.inspect.file`.
+Read-only current-state/readback capability: `github.inspect.file`.
 
-### Maturity gap being closed
+Final verified source head: `bf5da56950d32722ce78898854eb3aa660321c38`.
+PR #14 merged at `ffbdd7a4849dd012604911accd1211f172bde53b`.
 
-The existing GitHub mutation adapter already required explicit `ALREADY_GRANTED` authorization, Security Gate PASS, repository-relative path confinement, expected current SHA, and a single provider mutation attempt. The missing maturity evidence was fresh provider readback: a successful update response alone could not prove the resulting remote file state.
+Fresh final-head verification:
+- Verify Development OS Contracts — run 528 / `34757546919`: success.
+- Verify Development OS — run 453 / `34757546920`: success.
+- Verify P13 External Managed Project — run 37 / `34757546868`: success.
 
-### Implemented proof sequence
+### Proven simulated/provider-contract mutation invariants
 
-`fresh github.inspect.file → exact SHA match → exact-step authorization + Security Gate → one github.mutate.file attempt → fresh github.inspect.file readback → compare observed content/SHA → VERIFIED or HOLD`
+- `github.inspect.file` provides bounded fresh current-state/readback evidence.
+- Exact authorization and Security Gate PASS are required before `github.mutate.file`.
+- Fresh provider SHA must match the expected SHA before mutation.
+- The mutation adapter is invoked at most once per governed attempt.
+- Provider mutation response is mutation-attempt evidence, not verified completion.
+- Fresh post-mutation readback must observe the intended content and current SHA before `VERIFIED`.
+- Stale SHA blocks before mutation.
+- Conflict, failed/mismatched readback, or unproven final state HOLDs with mutation replay forbidden.
+- An uncertain provider response may be reconciled by readback if the exact intended state is observed, but no second mutation call is issued automatically.
 
-Rules now proven by provider-simulated tests:
-- missing exact authorization blocks before provider read/mutation;
-- missing Security Gate PASS blocks before mutation;
-- stale expected SHA blocks before mutation;
-- exactly one mutation call is allowed per governed attempt;
-- successful provider update is mutation-attempt evidence, not verified completion;
-- fresh readback must observe intended content and a current SHA before `VERIFIED`;
-- conflict or failed/mismatched readback produces `HOLD` with replay forbidden;
-- an uncertain provider response may be reconciled by fresh readback if the intended state is observed, but the mutation is never reissued automatically;
-- invalid/out-of-repository paths block.
+### Explicit evidence boundary
 
-### Contract/runtime changes
+This closure is **provider-simulated / contract-level proof**, not a live DevOS runtime mutation against a real repository/provider resource.
 
-- `adapters/github-reference.py` adds bounded read-only `github.inspect.file` / `get_file` provider support.
-- `tools/runtime-adapter-bridge.py` routes `github.inspect.file` under `NOT_REQUIRED` authorization while preserving the existing mutation gate.
-- `core/runtime-adapter-bridge.md`, `core/remote-mutation-controls.md`, and `adapters/github-integration.md` now require fresh readback/observed-state verification for controlled file mutation maturity claims.
-- `tools/verify-remote-mutation.py` and existing GitHub/runtime bridge tests are strengthened.
-- Contracts CI includes `Verify Controlled Remote Mutation Proof`.
+Normal GitHub repository edits used to implement DevOS are development actions through the connected GitHub tooling; they are not treated as DevOS runtime mutation-proof authorization/evidence.
 
-### Verification observed before final semantic-state head
-
-Implementation head `776d2836a73bb564e61dfb6b89871ac4d4b6e670`:
-- Contracts 523: Controlled Remote Mutation Proof and all observed contract steps passed.
-- Full DevOS 448: all observed jobs passed except `Verify Remote Mutation Controls v1`.
-- The Full 448 failure was a literal documentation-verifier mismatch only: `core/remote-mutation-controls.md` still described provider evidence but no longer contained the exact phrase `actual provider evidence` required by `tools/verify-remote-mutation.py`.
-- Commit `f072bda4fb8110880878e69af82c99881b5f65f5` restored that wording without changing runtime behavior.
-
-Because this durable-state update changes the branch head, fresh exact-head Contracts + Full DevOS + External Managed Project verification is required before PR #14 can merge.
-
-## Explicit unproven boundary
-
-This PR does **not** prove a live DevOS runtime mutation against a real repository/provider resource. Normal GitHub development commits made while implementing DevOS are not counted as runtime-proof authorization/evidence.
-
-Still unproven / out of scope without separate explicit authorization:
-- live real-provider `github.mutate.file` proof;
+Still unproven or unavailable unless separately explicitly authorized/bounded:
+- live real-provider `github.mutate.file` runtime proof;
 - branch mutation;
 - pull-request mutation;
 - workflow mutation;
@@ -82,16 +63,28 @@ Still unproven / out of scope without separate explicit authorization:
 - permission/credential/secret mutation;
 - destructive mutation.
 
-## Closure gate
+## Active maturity gate — Production-Readiness Evidence Matrix & Limitations
 
-PR #14 may close only after the exact final head:
-1. remains mergeable;
-2. passes Contracts, including the controlled mutation proof;
-3. passes Full DevOS, including Remote Mutation Controls and repository-only recovery;
-4. passes applicable External Managed Project read-only proofs;
-5. has durable task/decision/session provenance.
+Goal: produce an evidence-based readiness view rather than a blanket “production ready” label.
 
-After this provider-simulated proof closes, DevOS should produce a production-readiness evidence matrix that clearly distinguishes proven, simulated, real-provider, and unproven paths. A live mutation proof, if ever desired, requires separate explicit authorization for the exact target/path/operation.
+The matrix must distinguish at least:
+- deterministic/component contract proof;
+- integrated repository proof;
+- real managed-project read-only proof;
+- provider-simulated mutation proof;
+- live-provider mutation proof;
+- production/destructive capabilities;
+- known limitations and unproven boundaries.
+
+It must map each major DevOS capability to:
+- implementation status;
+- verification level;
+- real/simulated evidence source;
+- authorization/Security Gate boundary;
+- recovery/no-replay behavior;
+- production-readiness claim allowed or explicitly not allowed.
+
+No live high-impact mutation should be performed merely to fill a matrix cell. A live-provider mutation proof, if desired later, requires separate explicit authorization for an exact target/path/operation.
 
 ## Recovery precedence
 
