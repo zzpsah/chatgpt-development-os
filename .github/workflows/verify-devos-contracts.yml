@@ -34,6 +34,12 @@ jobs:
       - name: Verify P16 Semantic Goal-to-Plan Compiler
         run: python tools/test-semantic-goal-to-plan.py
 
+      - name: Verify P17 Step Readiness and Authorization Orchestrator
+        run: python tools/test-step-readiness-orchestrator.py
+
+      - name: Verify P17 end-to-end plan readiness handoff
+        run: python tools/test-p17-end-to-end.py
+
       - name: Verify AI State Resolver
         run: python tools/verify-state-resolver.py
 
