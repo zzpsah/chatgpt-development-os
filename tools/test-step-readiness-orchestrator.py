@@ -131,10 +131,23 @@ def main():
     assert mod.evaluate(constraint)["status"] == "BLOCKED"
 
     unresolved_state = payload("S1")
-    unresolved_state["plan"]["state_resolution"] = {"protocol": "DEVOS-AI-STATE-RESOLUTION-v2", "unresolved_claim_ids": ["C1"]}
+    unresolved_state["plan"]["state_resolution"] = {
+        "protocol": "DEVOS-AI-STATE-RESOLUTION-v2",
+        "status": "NEEDS_EVIDENCE",
+        "authority": "UNCHANGED",
+        "authorization": "UNCHANGED",
+        "execution": "NONE",
+        "mutation": "NONE",
+        "claims": [{"id": "C1", "state_confidence": "unknown"}],
+        "weakest_state_confidence": "unknown",
+        "unresolved_claim_ids": ["C1"],
+        "state_confidence_summary": {"observed": 0, "likely": 0, "unknown": 1},
+    }
     unresolved_result = mod.evaluate(unresolved_state)
     assert unresolved_result["status"] == "BLOCKED"
-    assert "PLAN_STATE_CLAIMS_UNRESOLVED=C1" in unresolved_result["reasons"]
+    assert any(reason in unresolved_result["reasons"] for reason in (
+        "PLAN_STATE_RESOLUTION_NOT_RESOLVED", "PLAN_STATE_CLAIMS_UNRESOLVED=C1"
+    ))
 
     print("PASS: P17 Step Readiness & Authorization Orchestrator regression corpus")
 

@@ -10,6 +10,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 SECURITY_RELEVANT = {"HIGH_IMPACT_MUTATION", "SECURITY_SENSITIVE", "PRODUCTION_OR_DESTRUCTIVE"}
 ALLOWED_IMPACTS = {"READ_ONLY", "LOW_IMPACT_MUTATION", "HIGH_IMPACT_MUTATION", "SECURITY_SENSITIVE", "PRODUCTION_OR_DESTRUCTIVE"}
+STATE_CONFIDENCE = {"observed": 2, "likely": 1, "unknown": 0}
 CONSTRAINT_TERMS = {
     "DO_NOT_DEPLOY": "deploy",
     "DO_NOT_PRODUCTION": "production",
@@ -79,6 +80,50 @@ def _has_cycle(steps: dict[str, dict[str, Any]]) -> bool:
     return any(visit(sid) for sid in sorted(steps))
 
 
+def _validate_state_resolution_summary(state_resolution: Any) -> str | None:
+    """Revalidate the full P16-preserved resolver v2 provenance before readiness."""
+    if not isinstance(state_resolution, dict) or state_resolution.get("protocol") != "DEVOS-AI-STATE-RESOLUTION-v2":
+        return "PLAN_STATE_RESOLUTION_INVALID"
+    if state_resolution.get("authority") != "UNCHANGED" or state_resolution.get("authorization") != "UNCHANGED":
+        return "PLAN_STATE_RESOLUTION_AUTHORITY_CHANGED"
+    if state_resolution.get("execution") != "NONE" or state_resolution.get("mutation") != "NONE":
+        return "PLAN_STATE_RESOLUTION_EXECUTION_CHANGED"
+    if state_resolution.get("status") != "RESOLVED":
+        return "PLAN_STATE_RESOLUTION_NOT_RESOLVED"
+
+    unresolved = state_resolution.get("unresolved_claim_ids")
+    if not isinstance(unresolved, list):
+        return "PLAN_STATE_RESOLUTION_UNRESOLVED_INVALID"
+    if unresolved:
+        return "PLAN_STATE_CLAIMS_UNRESOLVED=" + ",".join(sorted(str(item) for item in unresolved))
+
+    claims = state_resolution.get("claims")
+    if not isinstance(claims, list):
+        return "PLAN_STATE_RESOLUTION_CLAIMS_INVALID"
+
+    counts = {level: 0 for level in STATE_CONFIDENCE}
+    for claim in claims:
+        if not isinstance(claim, dict):
+            return "PLAN_STATE_RESOLUTION_CLAIM_INVALID"
+        confidence = claim.get("state_confidence")
+        if confidence not in STATE_CONFIDENCE:
+            return "PLAN_STATE_RESOLUTION_CONFIDENCE_INVALID"
+        claim_id = claim.get("id")
+        if claim_id is not None and (not isinstance(claim_id, str) or not claim_id.strip()):
+            return "PLAN_STATE_RESOLUTION_CLAIM_ID_INVALID"
+        counts[confidence] += 1
+
+    if counts["unknown"]:
+        return "PLAN_STATE_RESOLUTION_HIDDEN_UNKNOWN_CLAIM"
+    if state_resolution.get("state_confidence_summary") != counts:
+        return "PLAN_STATE_RESOLUTION_SUMMARY_INCONSISTENT"
+    weakest = state_resolution.get("weakest_state_confidence")
+    expected_weakest = min((claim["state_confidence"] for claim in claims), key=lambda value: STATE_CONFIDENCE[value], default="unknown")
+    if weakest != expected_weakest:
+        return "PLAN_STATE_RESOLUTION_WEAKEST_INCONSISTENT"
+    return None
+
+
 def _validated_steps(plan: dict[str, Any]) -> tuple[dict[str, dict[str, Any]] | None, str | None]:
     if plan.get("protocol") != "DEVOS-GOAL-PLAN-v1" or plan.get("decision") != "PLANNED":
         return None, "PLAN_NOT_PLANNED_OR_PROTOCOL_INVALID"
@@ -99,13 +144,9 @@ def _validated_steps(plan: dict[str, Any]) -> tuple[dict[str, dict[str, Any]] | 
 
     state_resolution = plan.get("state_resolution")
     if state_resolution is not None:
-        if not isinstance(state_resolution, dict) or state_resolution.get("protocol") != "DEVOS-AI-STATE-RESOLUTION-v2":
-            return None, "PLAN_STATE_RESOLUTION_INVALID"
-        unresolved = state_resolution.get("unresolved_claim_ids", [])
-        if not isinstance(unresolved, list):
-            return None, "PLAN_STATE_RESOLUTION_UNRESOLVED_INVALID"
-        if unresolved:
-            return None, "PLAN_STATE_CLAIMS_UNRESOLVED=" + ",".join(sorted(str(item) for item in unresolved))
+        state_error = _validate_state_resolution_summary(state_resolution)
+        if state_error:
+            return None, state_error
 
     constraints = plan.get("constraints", [])
     if not isinstance(constraints, list) or any(not isinstance(item, str) for item in constraints):

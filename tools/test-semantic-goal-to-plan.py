@@ -71,10 +71,32 @@ def main():
     db_block = mod.compile_plan("FEATURE_CHANGE", "update database", "DEVOS", ["DO_NOT_DATABASE"], [])
     check(db_block["decision"] == "BLOCKED", "database negative constraint must block database mutation")
 
-    unresolved_state = {"protocol": "DEVOS-AI-STATE-RESOLUTION-v2", "weakest_state_confidence": "unknown", "unresolved_claim_ids": ["C1"]}
+    unresolved_state = {
+        "protocol": "DEVOS-AI-STATE-RESOLUTION-v2",
+        "status": "NEEDS_EVIDENCE",
+        "authority": "UNCHANGED",
+        "authorization": "UNCHANGED",
+        "execution": "NONE",
+        "mutation": "NONE",
+        "claims": [{"id": "C1", "state_confidence": "unknown"}],
+        "weakest_state_confidence": "unknown",
+        "unresolved_claim_ids": ["C1"],
+        "state_confidence_summary": {"observed": 0, "likely": 0, "unknown": 1},
+    }
     state_block = mod.compile_plan("FEATURE_CHANGE", "update docs", "DEVOS", [], [], unresolved_state)
     check(state_block["decision"] == "CLARIFY", "unknown state claims must not become a planned action")
-    resolved_state = {"protocol": "DEVOS-AI-STATE-RESOLUTION-v2", "weakest_state_confidence": "observed", "unresolved_claim_ids": []}
+    resolved_state = {
+        "protocol": "DEVOS-AI-STATE-RESOLUTION-v2",
+        "status": "RESOLVED",
+        "authority": "UNCHANGED",
+        "authorization": "UNCHANGED",
+        "execution": "NONE",
+        "mutation": "NONE",
+        "claims": [{"id": "C1", "state_confidence": "observed"}],
+        "weakest_state_confidence": "observed",
+        "unresolved_claim_ids": [],
+        "state_confidence_summary": {"observed": 1, "likely": 0, "unknown": 0},
+    }
     state_plan = mod.compile_plan("FEATURE_CHANGE", "update docs", "DEVOS", [], [], resolved_state)
     check(state_plan["decision"] == "PLANNED" and state_plan["state_resolution"] == resolved_state, "resolved state provenance must be retained in plan")
 
