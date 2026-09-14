@@ -1,0 +1,55 @@
+{
+  "protocol": "DEVOS-AGENT-RUNTIME-PROFILE-REGISTRY-v1",
+  "profiles": [
+    {
+      "runtime_id": "reference-local-agent",
+      "display_name": "Reference Local Agent",
+      "adapter_version": "1.0",
+      "status": "VERIFIED",
+      "capabilities": {
+        "filesystem.read": "VERIFIED_AVAILABLE",
+        "filesystem.write_scoped": "VERIFIED_AVAILABLE",
+        "git.inspect": "VERIFIED_AVAILABLE",
+        "verification.run": "VERIFIED_AVAILABLE"
+      },
+      "evidence": [
+        {
+          "kind": "repository_test",
+          "ref": "tools/test-agent-runtime-profile-registry.py#reference-local-agent",
+          "scope": "static-contract-conformance"
+        }
+      ],
+      "limitations": [
+        "Reference contract profile only; it does not prove a vendor runtime integration.",
+        "No provider, deployment, production, credential, database, permission, destructive, or network mutation capability is implied."
+      ]
+    },
+    {
+      "runtime_id": "codex",
+      "display_name": "Codex",
+      "adapter_version": "unverified",
+      "status": "DECLARED",
+      "capabilities": {},
+      "evidence": [],
+      "limitations": ["Template only. No runtime capability is verified by this repository yet."]
+    },
+    {
+      "runtime_id": "claude-code",
+      "display_name": "Claude Code",
+      "adapter_version": "unverified",
+      "status": "DECLARED",
+      "capabilities": {},
+      "evidence": [],
+      "limitations": ["Template only. No runtime capability is verified by this repository yet."]
+    },
+    {
+      "runtime_id": "openhands",
+      "display_name": "OpenHands",
+      "adapter_version": "unverified",
+      "status": "DECLARED",
+      "capabilities": {},
+      "evidence": [],
+      "limitations": ["Template only. No runtime capability is verified by this repository yet."]
+    }
+  ]
+}

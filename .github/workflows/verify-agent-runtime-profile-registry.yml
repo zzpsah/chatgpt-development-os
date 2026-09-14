@@ -1,0 +1,40 @@
+name: Verify Agent Runtime Profile Registry
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify registry regression corpus
+        run: python tools/test-agent-runtime-profile-registry.py
+
+      - name: Verify registry contract markers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('core/agent-runtime-profile-registry.md').read_text(encoding='utf-8')
+          for marker in (
+              'DEVOS-AGENT-RUNTIME-PROFILE-REGISTRY-v1',
+              'Declared runtime identity is not verified runtime capability.',
+              'codex',
+              'claude-code',
+              'openhands',
+              'production_ready: false',
+          ):
+              assert marker in text, marker
+          print('PASS: runtime profile registry contract markers')
+          PY
