@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import fnmatch
 import json
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -27,13 +27,21 @@ def _changed(patterns: list[str], paths: list[str]) -> bool:
     return any(fnmatch.fnmatch(path, pattern) for pattern in patterns for path in paths)
 
 
+def _canonical_fact_value(value: Any) -> str | None:
+    """Return a deterministic JSON representation for comparison, or None if unsupported."""
+    try:
+        return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
+    except (TypeError, ValueError):
+        return None
+
+
 def resolve(payload: dict[str, Any]) -> dict[str, Any]:
     raw_claims = payload.get("claims", [])
     events = {str(event.get("type", "")) for event in payload.get("events", []) if isinstance(event, dict)}
     changed_paths = [str(path) for path in payload.get("changed_paths", []) if _is_text(path)]
     out = _base()
     if not isinstance(raw_claims, list):
-        out.update({"status": "BLOCKED", "reason": "CLAIMS_INVALID", "claims": [], "weakest_state_confidence": "unknown", "unresolved_claim_ids": []})
+        out.update({"status": "BLOCKED", "reason": "CLAIMS_INVALID", "claims": [], "weakest_state_confidence": "unknown", "unresolved_claim_ids": [], "contradiction_fact_keys": []})
         return out
 
     ids = [str(c.get("id", "")).strip() for c in raw_claims if isinstance(c, dict)]
@@ -54,6 +62,12 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
         rules = [str(rule) for rule in revalidate_on]
         reasons: list[str] = []
 
+        has_fact_key = "fact_key" in item
+        has_fact_value = "fact_value" in item
+        fact_key = str(item.get("fact_key", "")).strip() if has_fact_key else None
+        fact_value = item.get("fact_value") if has_fact_value else None
+        canonical_fact_value = _canonical_fact_value(fact_value) if has_fact_value else None
+
         if not claim_id or not _is_text(statement):
             confidence = "unknown"; reasons.append("CLAIM_ID_OR_STATEMENT_INVALID")
         if confidence not in CONFIDENCE:
@@ -64,6 +78,13 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
             confidence = "unknown"; reasons.append("OBSERVED_CLAIM_GROUNDING_MISSING")
         if claim_id in duplicate_ids:
             confidence = "unknown"; reasons.append("DUPLICATE_CLAIM_ID")
+        if has_fact_key != has_fact_value:
+            confidence = "unknown"; reasons.append("FACT_IDENTITY_INCOMPLETE")
+        elif has_fact_key:
+            if not fact_key:
+                confidence = "unknown"; reasons.append("FACT_KEY_INVALID")
+            if canonical_fact_value is None:
+                confidence = "unknown"; reasons.append("FACT_VALUE_INVALID")
         if grounding_type == "execution_evidence" and item.get("p12_freshness") not in {"current", "fresh"}:
             if confidence == "observed":
                 confidence = "likely"
@@ -85,9 +106,33 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
             "id": claim_id or None, "statement": statement if _is_text(statement) else None,
             "state_confidence": confidence,
             "grounding": {"type": grounding_type, "ref": grounding_ref if _is_text(grounding_ref) else None},
+            "fact_key": fact_key if has_fact_key and fact_key else None,
+            "fact_value": fact_value if has_fact_value else None,
             "revalidated_at": item.get("revalidated_at"), "revalidate_on": rules,
             "reasons": reasons,
+            "_canonical_fact_value": canonical_fact_value,
         })
+
+    # Cross-claim contradiction resolution is deliberately identity-based, not
+    # prose-semantic guessing. Different supported values for the same explicit
+    # fact_key make every involved otherwise-resolved claim unknown.
+    by_fact: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for item in resolved:
+        if item["state_confidence"] != "unknown" and item["fact_key"] and item["_canonical_fact_value"] is not None:
+            by_fact[item["fact_key"]].append(item)
+
+    contradiction_fact_keys: list[str] = []
+    for fact_key, items in by_fact.items():
+        values = {item["_canonical_fact_value"] for item in items}
+        if len(values) > 1:
+            contradiction_fact_keys.append(fact_key)
+            for item in items:
+                item["state_confidence"] = "unknown"
+                if "CROSS_CLAIM_CONTRADICTION" not in item["reasons"]:
+                    item["reasons"].append("CROSS_CLAIM_CONTRADICTION")
+
+    for item in resolved:
+        item.pop("_canonical_fact_value", None)
 
     unresolved = sorted(str(item["id"]) for item in resolved if item["id"] and item["state_confidence"] == "unknown")
     has_unknown = any(item["state_confidence"] == "unknown" for item in resolved)
@@ -97,6 +142,7 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
         "claims": resolved,
         "weakest_state_confidence": weakest,
         "unresolved_claim_ids": unresolved,
+        "contradiction_fact_keys": sorted(contradiction_fact_keys),
         "state_confidence_summary": {level: sum(1 for item in resolved if item["state_confidence"] == level) for level in CONFIDENCE},
     })
     return out
