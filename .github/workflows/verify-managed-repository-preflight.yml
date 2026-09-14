@@ -1,6 +1,10 @@
 name: Verify Managed Repository Preflight
 
 on:
+  push:
+    branches:
+      - main
+      - master
   pull_request:
   workflow_dispatch:
 

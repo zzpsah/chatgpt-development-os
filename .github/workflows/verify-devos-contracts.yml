@@ -76,6 +76,9 @@ jobs:
       - name: Verify bounded local disposable delivery proof
         run: python tools/test-local-delivery-proof.py
 
+      - name: Verify managed repository read-only preflight
+        run: python tools/test-managed-repository-preflight.py
+
       - name: Verify Production E2E Harness
         run: python tools/test-production-e2e-harness.py
 
