@@ -2,6 +2,37 @@
 
 All notable DevOS distribution changes are summarized here. Exact implementation truth remains in source/Git/PR/CI and durable `.ai` records; this file is release navigation, not execution authority.
 
+## 0.20.0 — 2026-09-14
+
+Production Target Evidence Intake v1 release line.
+
+### Added / completed
+
+- `tools/production-target-evidence.py` for deterministic validation of target-bound external production evidence.
+- Exact source-SHA, production-target-ID, timestamp, observer, criterion, evidence-reference, scope, and SHA-256 binding.
+- Closed coverage of the five external Production Readiness v2 blockers: runtime direct conformance, recovery/disaster, operational observability, deployment target, and high-impact governance.
+- `PASS | FAIL | UNOBSERVED` criterion states with fail-closed schema and evidence requirements.
+- `CANDIDATE_COMPLETE` verdict when all five criteria carry valid target-bound PASS evidence, while still forcing `production_ready=false` and `readiness_promotion_allowed=false`.
+- Adversarial regression corpus covering source/target mismatch, missing/duplicate/unknown criteria, missing evidence, invalid digests/timestamps, and altered authority boundaries.
+- Dedicated Python 3.11/3.12 CI and `devos production-target-evidence` CLI dispatch.
+
+### Security / integrity invariants
+
+- `VALID TARGET EVIDENCE != PRODUCTION READY`.
+- `VALID TARGET EVIDENCE != AUTHORIZATION`.
+- `VALID TARGET EVIDENCE != DEPLOYMENT AUTHORIZATION`.
+- `EVIDENCE != AUTHORIZATION`.
+- `PLAN != EXECUTION`.
+- `READY != EXECUTION`.
+- `CI PASS != AUTHORIZATION`.
+
+### Known limitations
+
+- This intake validates evidence that already exists; it does not run production probes or operations.
+- A complete packet requires separate semantic review and durable Production Readiness v2 reconciliation before any readiness criterion may change.
+- Production deployment, destructive restore testing, credential/permission/database mutation, and other high-impact operations remain separately gated and are not authorized by this release line.
+- `production_ready=false` remains correct until direct target-specific evidence is both valid and separately reconciled.
+
 ## 0.19.0 — 2026-09-14
 
 Current-source production-readiness evidence v2 release line.
