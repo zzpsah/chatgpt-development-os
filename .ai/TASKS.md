@@ -28,6 +28,7 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 - `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` records P9–P17 architecture history and major unnumbered milestones through PR #45.
 - `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md` records the contradiction contract and non-goals.
 - History/navigation docs never replace current source, Git/CI, `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, core contracts, or tests.
+- Plain Project Context and Recovery Guide v1 remains the default fresh-session entry and uses a host-neutral context-recovery acknowledgement; stance codes remain optional shorthand after orientation.
 
 ### Concurrent-main reconciliation
 

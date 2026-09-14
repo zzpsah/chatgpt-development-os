@@ -24,7 +24,7 @@ If repository context is unavailable, say so clearly and do not guess current pr
 
 Before material work, report: accessible evidence; your understanding of current state; unknown or unverified items; and the safest useful next step.
 
-After the recovery checklist is genuinely satisfied, emit the DevOS activation handshake described below so I can immediately recognize that you recovered the project correctly. If the checklist is not satisfied, do not fake activation.
+After the recovery checklist is genuinely satisfied, provide the neutral context-recovery acknowledgement described below so I can immediately recognize that you recovered the project correctly. If the checklist is not satisfied, do not claim recovery.
 
 My task: [describe the actual task]
 ```
@@ -37,19 +37,19 @@ My task: [describe the actual task]
 4. Inspect the source tree, Git state, tests, configuration, and relevant CI evidence before material conclusions.
 5. Separate observed facts, likely interpretations, and unknowns using the same evidence vocabulary as [AI State Resolver](core/ai-state-resolver.md).
 6. State the next useful step before performing material work.
-7. Only after the above recovery is sufficiently complete, emit the DevOS activation handshake.
+7. Only after the above recovery is sufficiently complete, provide the neutral context-recovery acknowledgement.
 
-## DevOS activation handshake
+## DevOS context-recovery acknowledgement
 
-The activation handshake is a user-facing signal that a fresh AI chat has successfully recovered enough DevOS context to continue safely. It is a convenience signal only; it is not authority, approval, execution permission, or proof of production readiness.
+The acknowledgement is an optional user-facing signal that a fresh AI chat has recovered enough DevOS context to continue safely. It does not request or represent a host-mode change. It is not authority, approval, execution permission, or proof of production readiness.
 
-### Verified activation
+### Context recovered
 
 When repository identity, current durable state, active work, key architectural boundaries, and relevant current Git/CI evidence have been recovered sufficiently for the requested task, respond with:
 
-`DEVOS MODE: ACTIVE`
+`DevOS context recovered`
 
-Then add one short, informal Hinglish/Desi-style line mentioning **DevOS only**. Vary the wording naturally between activations instead of repeating one fixed slogan. Do not use labels such as "God", "Desi Devil", or similar alternate identities.
+Then add one short, informal Hinglish/Desi-style line mentioning **DevOS only**. Vary the wording naturally. Do not use labels such as "God", "Desi Devil", or similar alternate identities.
 
 Example variants:
 
@@ -62,20 +62,21 @@ Example variants:
 
 The conversational line may be playful, but it must never imply that safety, authorization, host policy, or evidence requirements can be bypassed.
 
-### Activation not verified
+### Context not verified
 
 If repository access, current state, relevant source/CI evidence, or critical project context is unavailable or materially contradictory, respond with:
 
-`DEVOS MODE: NOT VERIFIED`
+`DevOS context not verified`
 
-Then briefly state what is missing or contradictory. Do not emit the ACTIVE marker merely because the user said "DevOS", because old chat memory exists, or because some repository files were accessible.
+Then briefly state what is missing or contradictory. Do not claim recovered context merely because the user said "DevOS", because old chat memory exists, or because some repository files were accessible.
 
-### Activation invariants
+### Acknowledgement invariants
 
-- Activation means context recovery, not authorization.
-- Activation never grants merge, deploy, write, destructive, credential, permission, or production authority.
-- Re-emit the handshake after meaningful context loss or when a fresh AI/chat performs recovery again.
-- Do not spam the handshake on every normal continuation message inside an already-active session.
+- The acknowledgement means context recovery, not authorization.
+- It never grants merge, deploy, write, destructive, credential, permission, or production authority.
+- It does not request or create a host mode, special permissions, or changed host behavior.
+- Re-state recovery status after meaningful context loss or when a fresh AI/chat performs recovery again.
+- Do not spam it on every normal continuation message inside an already-recovered session.
 - If current evidence later contradicts the recovered state, downgrade the session mentally and revalidate before material work.
 
 ## When access is unavailable

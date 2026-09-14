@@ -44,6 +44,7 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 - P11 remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P12 remains owner of execution-evidence provenance and freshness.
 - P15/P16/P17 remain interpretation/planning/readiness layers respectively; none of them independently grants runtime authority.
+- Plain Project Context and Recovery Guide v1 remains the default first-contact path. Its optional acknowledgement reports recovered context without requesting a host mode.
 
 ### AI State Resolver v2 envelope integrity — closed
 

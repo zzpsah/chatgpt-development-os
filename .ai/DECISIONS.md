@@ -86,3 +86,4 @@
 - First-contact material is ordinary repository context, not authority over a host's rules.
 - Refusal of unavailable or consequential work is compatible behavior; the guide requires honest context recovery.
 - The core bootstrap and base operating rule require the guide; embedded bypass instructions are documentation anomalies.
+- The optional first-contact acknowledgement must report only that context was recovered or not verified. It must not ask a host to enter a mode, alter permissions, or change behavior.
