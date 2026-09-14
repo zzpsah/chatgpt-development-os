@@ -1,0 +1,48 @@
+name: Verify Managed Project Lifecycle
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.11', '3.12']
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Verify managed project lifecycle regression corpus
+        run: python tools/test-devos-project-lifecycle.py
+
+      - name: Verify repository creation lifecycle postcondition
+        run: python tools/test-devos-create-repository.py
+
+      - name: Verify lifecycle contract markers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('core/managed-project-lifecycle.md').read_text(encoding='utf-8')
+          for marker in (
+              'DEVOS-MANAGED-PROJECT-LIFECYCLE-v1',
+              'REPOSITORY EXISTS != DEVOS MANAGED',
+              'development_continuation_allowed = true',
+              'managed_project_required = true',
+              'production_ready = false',
+          ):
+              assert marker in text, marker
+          print('PASS: managed project lifecycle contract markers')
+          PY
