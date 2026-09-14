@@ -42,6 +42,7 @@ From a checked-out repository:
 python tools/devos.py version
 python tools/devos.py doctor --root .
 python tools/devos.py release-check
+python tools/devos.py production-readiness --json
 ```
 
 For a fresh AI or a full project recovery, start with:
@@ -60,18 +61,21 @@ AI account memory or old chat history is supplementary only; it is never authori
 
 ## Release status
 
-Current distribution version: **0.18.0**.
+Current distribution version: **0.19.0**.
 
 ```bash
 python tools/devos.py version
 python tools/devos.py release-check
+python tools/devos.py production-readiness --json
 ```
 
-`0.18.0` extends the P17-complete distribution line with challenge-bound Agent Runtime Conformance Evidence Intake v1. Candidate runtime evidence can now be bound to an exact runtime/head/nonce and validated fail-closed without allowing the evidence packet to self-promote a runtime registry entry.
+`0.19.0` adds Production Readiness Evidence v2: a current-source, fail-closed readiness model that can represent current source evidence, current live reads, bounded historical live mutation proof, and explicit external production blockers without allowing evidence to manufacture authority.
 
-**Distribution release readiness is not production readiness.** `production_ready = false` remains deliberate. A green release gate does not authorize deployment, production mutation, credentials, database changes, permission changes, destructive actions, or unscoped external execution.
+The current v2 assessment is intentionally **HOLD**, not READY. Five production-required criteria still require direct external evidence: a directly verified production runtime, production backup/restore RPO/RTO, production SLO/alert/incident-response observability, an explicit deployment target with rollout/rollback/readback evidence, and separately authorized production-scoped high-impact governance.
 
-See [`docs/RELEASE.md`](docs/RELEASE.md) for the exact-source ZIP/checksum process and release boundaries, and [`.github/SECURITY.md`](.github/SECURITY.md) for vulnerability reporting.
+**Distribution release readiness is not production readiness.** `production_ready = false` remains evidence-driven. A green release gate or valid readiness assessment does not authorize publication, deployment, production mutation, credentials, database changes, permission changes, destructive actions, or unscoped external execution.
+
+See [`docs/RELEASE.md`](docs/RELEASE.md) for the exact-source ZIP/checksum process, [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md) for the current blocker-exact production assessment, and [`.github/SECURITY.md`](.github/SECURITY.md) for vulnerability reporting.
 
 ## What DevOS provides
 
@@ -121,6 +125,7 @@ DOCUMENTATION != AUTHORIZATION
 PROVIDER CREDENTIAL != DEVOS AUTHORIZATION
 PROVIDER RESPONSE != COMPLETION PROOF
 RECOVERY != AUTOMATIC MUTATION REPLAY
+PRODUCTION READY != DEPLOYMENT AUTHORIZATION
 ```
 
 ### Autonomous development, runtime, and verification
@@ -144,6 +149,7 @@ The current repository contains bounded proof slices for:
 - local disposable Git-repository delivery;
 - managed-repository read-only preflight;
 - isolated managed-repository safe file update proof;
+- governed live GitHub create/update/delete plus readback at its recorded bounded scope;
 - exact diff/test/readback evidence;
 - runtime-neutral P17 + scoped-approval handoff;
 - evidence → durable-state reconciliation.
@@ -161,6 +167,19 @@ These proofs do **not** imply general production deployment authority.
 ### Provider governance
 
 DevOS includes bounded GitHub provider/controller integration, identity/token controls, scope-aware capability discovery, current-state anchors, readback verification, and uncertain-mutation reconciliation. Proven provider capability never becomes blanket authorization.
+
+### Production-readiness assessment
+
+`config/production-readiness-v2.json` and `tools/verify-production-readiness-v2.py` provide the current production-readiness contract.
+
+The verifier rejects missing/unknown criteria, fake READY states, concealed blockers, missing evidence references, altered authorization/publication/deployment boundaries, and invalid live-mutation provenance. Normal validation may succeed while the verdict is `HOLD`; `--require-production` fails until every production-required criterion is actually `PROVEN`.
+
+```bash
+python tools/devos.py production-readiness --json
+python tools/devos.py production-readiness --require-production --json
+```
+
+Readiness evidence itself can never authorize publication or deployment.
 
 ## Multi-AI portability
 
@@ -210,9 +229,11 @@ After feature completion, the Evidence → Durable State Reconciliation path can
 
 Important references:
 
-- `config/readiness-evidence.json`
+- `config/readiness-evidence.json` — historical v1 snapshot
+- `config/production-readiness-v2.json` — current production-readiness assessment
 - `.ai/RECONCILIATION-LEDGER.jsonl`
 - [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md)
+- [`core/production-readiness-evidence-v2.md`](core/production-readiness-evidence-v2.md)
 - [`core/evidence-durable-state-reconciliation.md`](core/evidence-durable-state-reconciliation.md)
 
 ## Architecture and history
@@ -233,7 +254,7 @@ P9 through P17 are completed architecture stages at their recorded evidence leve
 - Prefer exact expected-state anchors and fresh readback after mutation.
 - Never blindly replay an uncertain mutation.
 - Never claim tests, deployment, provider results, or completion without actual evidence.
-- Keep `production_ready = false` unless a separately bounded evidence-backed objective explicitly changes it.
+- Keep `production_ready = false` until the v2 production-readiness criteria are all directly evidenced and independently verified.
 
 See [`.github/SECURITY.md`](.github/SECURITY.md).
 
@@ -263,4 +284,4 @@ chatgpt-development-os/
 
 ## Version
 
-**0.18.0** — P17-complete distribution line plus challenge-bound runtime conformance evidence intake. Runtime evidence remains candidate evidence until separate direct observation, semantic review, durable registry change, and verification are completed.
+**0.19.0** — P17-complete distribution line plus current-source Production Readiness Evidence v2. The assessment is blocker-exact and fail-closed; current production verdict remains HOLD until the five external production criteria have direct evidence.
