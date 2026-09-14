@@ -43,6 +43,11 @@ The following work extended the numbered architecture without creating new numbe
 - **AI State Resolver v2 Envelope Integrity — PR #44:** hardened resolver→P16→P17 provenance validation and fail-closed tamper detection.
 - **Post-PR #44 Durable-State Reconciliation — PR #45:** synchronized durable task/current-state records after resolver hardening.
 - **AI State Resolver v2 Cross-Claim Contradiction Handling — PR #46:** added explicit `fact_key` / deterministic `fact_value` identity, contradiction-to-unknown resolution, P16 `CLARIFY` propagation, P17 tamper resistance, and durable previous-stage documentation. Merged at `36f3001487fb7ce666bb1e7241b539645878101a`; exact verified feature head `490eeebea69a4f4ae44657f5d94edaef35a26db4`.
+- **Post-PR #46 Durable-State Reconciliation — PR #48:** reconciled current/task state after contradiction handling and preserved concurrent first-contact documentation hardening. Merged at `7009e8e1b4398462b1a9321bb1e2a38a3c35e478`.
+- **Resolver Contradiction Envelope Integrity — PR #49:** added independent P16/P17 recomputation of explicit structured contradictions so forged resolver status/reasons or post-plan `fact_value` tampering fail closed. Merged at `58d37ea23d025d7414f0d55fe2ba5ccc42068b8e`; exact verified source head `3c0711a9803649505d105728e90e1ef90b3d7ce8`.
+- **Post-PR #49 Durable-State Reconciliation — PR #51:** marked contradiction envelope-integrity hardening complete, pinned exact-head CI evidence, and cleared stale active-state records. Merged at `2500ddc235ce99dbe45a6cd0537d4b0d2372c4a4`.
+
+Closed PRs #47 and #50 are not completed milestones and were not merged. They are retained only as provenance for ideas later re-evaluated against fresh `main`; stale or duplicate branch state is not authoritative.
 
 ## Live GitHub provider evidence milestone
 
@@ -94,7 +99,9 @@ IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE
 
 ## Current evolution direction
 
-PR #46 closes the currently promoted cross-claim contradiction objective. No next numbered or unnumbered engineering milestone is automatically created by this history record. Future development should recover fresh `main`, inspect current gaps and user intent, then explicitly promote the next bounded objective without manufacturing P18/P19 for bookkeeping.
+The latest completed historical line is PR #49 plus post-merge durable reconciliation PR #51. The currently active unnumbered objective is **AI State Resolver v2 detailed contradiction provenance** on `feat/resolver-detailed-contradiction-provenance`, selected from fresh `main` after closing stale/diverged PR #50. It is not yet a completed historical milestone: exact-head CI, merge, and post-merge durable reconciliation are still required.
+
+This active objective adds audit detail only; it does not create P18/P19, does not choose a truth winner, and does not alter authority, authorization, execution, provider mutation, or `production_ready = false`.
 
 ## Recovery use
 
