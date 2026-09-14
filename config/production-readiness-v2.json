@@ -36,7 +36,7 @@
       "evidence_class": "current_source",
       "evidence_refs": [
         "tools/step-readiness-orchestrator.py",
-        "tools/devos-security-gate.py",
+        "tools/verify-security-gate.py",
         "core/remote-resource-permission-governance.md"
       ],
       "limitations": [
@@ -50,7 +50,7 @@
       "status": "PROVEN",
       "evidence_class": "current_source",
       "evidence_refs": [
-        "tools/verification-engine.py",
+        "tools/verify-verification-engine.py",
         "tools/test-production-readiness-v2.py",
         ".github/workflows/verify-production-readiness-v2.yml"
       ],
@@ -110,8 +110,9 @@
       "status": "HOLD",
       "evidence_class": "external_required",
       "evidence_refs": [
-        "docs/FAILURE-RECOVERY.md",
-        "tools/repository-only-recovery.py"
+        "tools/failure-recovery-proof.py",
+        "tools/recovery-friction.py",
+        "tools/verify-recovery-precedence.py"
       ],
       "limitations": [
         "Repository recovery proofs do not establish production backup/restore RPO/RTO guarantees."
@@ -125,7 +126,8 @@
       "evidence_class": "external_required",
       "evidence_refs": [
         "tools/devos-health.py",
-        "tools/devos-doctor.py"
+        "tools/devos-doctor.py",
+        "tools/operational-intelligence.py"
       ],
       "limitations": [
         "Repository health checks are not a production SLO, alerting, incident-response, or telemetry deployment."
@@ -153,7 +155,7 @@
       "evidence_class": "external_required",
       "evidence_refs": [
         "core/remote-resource-permission-governance.md",
-        "tools/devos-security-gate.py"
+        "tools/verify-security-gate.py"
       ],
       "limitations": [
         "High-impact capability must not be exercised merely to satisfy a readiness matrix."
