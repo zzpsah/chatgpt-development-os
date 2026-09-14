@@ -51,6 +51,7 @@ P9–P17 are architecture history. Their completion does **not** imply productio
 - **Managed-Repository Delivery v1 Read-Only Preflight — feature head `fda3e3a6db624d69d6d651cd531c537ad579c9cd`:** added exact local Git-head/clean-worktree/path recovery through P15 → P16 → P17 and an intentional HOLD before any managed-repository write.
 - **Isolated Managed-Repository Write Proof v1 — feature head `2ef6b6e3df832ca132123b85caa69f7eda67d1f3`:** proved one exact scoped local file update in a newly created isolated Git fixture with test, diff, readback, runtime validation, and external evidence packet; no commit/push/provider/deployment/production action occurred.
 - **Agent Runtime Profile Registry + Conformance v1 — PR #59:** added durable protocol `DEVOS-AGENT-RUNTIME-PROFILE-REGISTRY-v1`, evidence-backed runtime profile export, fail-closed declaration/conformance states, and dedicated regression CI. Merged at `d426ccf480e48544e8078ab7b61065ffd6b18f48`; exact verified feature head `447e8fbaee96eb0be22e9a59d75da147dbcbb8ac`. `reference-local-agent` is verified only for static repository contract conformance; `codex`, `claude-code`, and `openhands` remain declaration-only templates until separate evidence-backed proofs exist. Reconciliation record digest: `4a613b466092c9c1e811ab16e6fe8af41dfc08668b74312e8c69b3b9d909d7e1`.
+- **DevOS 0.17.0 Distribution Release Readiness v1 — PR #61:** replaced stale `0.12 / P12` distribution metadata with canonical `VERSION=0.17.0`, a release manifest, current README/changelog, public security policy, release process, a shell-free cross-platform CLI, fail-closed release checker, adversarial regression tests, and Linux/Windows Python 3.11/3.12 release CI. PR #61 merged at `ecee10168b43d13430dd71c2e8d85556956f56a6`; exact verified feature head `b4f46eb7919177e3a0dc19d902401630cd6c12ec`. The post-merge main release run `34822341533` rebuilt and verified the exact merged-source distribution artifact `10338323248` (`devos-source-ecee10168b43d13430dd71c2e8d85556956f56a6`, digest `sha256:4a44fbaa6d9df23afb538afe27b2b38595b3c0aa1632292a43f26b2dea3a2091`). This milestone is engineering/distribution release readiness only: no tag, GitHub Release, package publication, deployment, production-readiness upgrade, credential/database/permission/destructive action, runtime-verification promotion, or public-license change occurred. Reconciliation record digest: `80154dd84d9e6bd7cdfac0d379a708d25455a9542565feb0edcb117bf6362af6`.
 
 Closed/stale duplicate PRs remain provenance only and are never substituted for merged current source.
 
@@ -91,6 +92,8 @@ RECOVERY != AUTOMATIC MUTATION REPLAY
 MACHINE FACT != SEMANTIC AUTHORITY
 RECONCILIATION READY != REPOSITORY MUTATION
 DECLARED RUNTIME != VERIFIED RUNTIME CAPABILITY
+DISTRIBUTION RELEASE READY != PRODUCTION READY
+DISTRIBUTION RELEASE READY != PUBLICATION AUTHORIZATION
 ```
 
 Material work follows:
@@ -107,18 +110,18 @@ IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE
 
 ## Current evolution direction
 
-The latest completed line combines language-safe interpretation, evidence-first durable reconciliation, runtime-neutral handoff validation, isolated delivery proof, managed-repository preflight/write proof, and evidence-backed runtime profile conformance.
+The completed line now includes P9–P17, language-safe interpretation, resolver/provider hardening, evidence-first durable reconciliation, runtime-neutral handoff validation, isolated and managed-repository bounded delivery proofs, evidence-backed runtime profile conformance, and DevOS `0.17.0` engineering distribution release readiness.
 
-Runtime portability must advance through direct conformance evidence one runtime at a time. A familiar vendor/runtime name, external reputation, or caller-supplied capability declaration is not sufficient to mark an integration verified.
+Release readiness deliberately stops before public publication or production deployment. Runtime portability must continue through direct conformance evidence one runtime at a time. A familiar vendor/runtime name, external reputation, release status, or caller-supplied capability declaration is not sufficient to mark an integration verified or authorize execution.
 
-No new objective is automatically promoted by this history record. Future development must recover fresh `main`, open PRs, CI, durable state, relevant source/tests, concurrent AI work, and current user intent first. `production_ready = false` remains unchanged unless a separate evidence-backed objective explicitly changes it.
+No new objective is automatically promoted by this history record. Future development must recover fresh `main`, open issues/PRs, CI, durable state, relevant source/tests, concurrent AI work, and current user intent first. `production_ready = false` remains unchanged unless a separate evidence-backed objective explicitly changes it.
 
 ## Recovery use
 
 A fresh maintainer should use this file as history/navigation only, then recover current truth in this order:
 
-1. source tree + Git/PR/CI metadata;
+1. source tree + Git/PR/CI/release-artifact metadata;
 2. `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, and `.ai/RECONCILIATION-LEDGER.jsonl`;
-3. relevant core contracts/tests;
+3. relevant core contracts/tests/release manifest;
 4. `.ai/DECISIONS.md` and session provenance;
 5. this historical ledger for architectural context.
