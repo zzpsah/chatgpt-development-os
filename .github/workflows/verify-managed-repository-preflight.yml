@@ -1,0 +1,28 @@
+name: Verify Managed Repository Preflight
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run preflight regression corpus
+        run: python tools/test-managed-repository-preflight.py
+      - name: Verify normative contract markers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('core/managed-repository-delivery-preflight.md').read_text(encoding='utf-8')
+          for marker in ('DEVOS-MANAGED-REPOSITORY-PREFLIGHT-v1', 'EXPLICIT_STEP_SCOPED_APPROVAL_REQUIRED', 'EVIDENCE_OUTPUT_MUST_BE_OUTSIDE_INSPECTED_REPOSITORY', 'production_ready = false'):
+              assert marker in text, marker
+          print('PASS: managed repository preflight contract markers')
+          PY
