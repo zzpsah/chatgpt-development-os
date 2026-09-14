@@ -67,7 +67,7 @@ def _negative_constraint_conflict(steps: list[dict], constraints: list[str]) -> 
 
 
 def _state_resolution_summary(state_resolution: dict) -> tuple[dict | None, str | None]:
-    """Validate resolver v2 output before P16 trusts its uncertainty summary."""
+    """Validate resolver v2 output while preserving the full resolver provenance."""
     if not isinstance(state_resolution, dict) or state_resolution.get("protocol") != "DEVOS-AI-STATE-RESOLUTION-v2":
         return None, "state resolution invalid"
     if state_resolution.get("authority") != "UNCHANGED" or state_resolution.get("authorization") != "UNCHANGED":
@@ -88,7 +88,6 @@ def _state_resolution_summary(state_resolution: dict) -> tuple[dict | None, str 
     claims = state_resolution.get("claims", [])
     if not isinstance(claims, list):
         return None, "state resolution claims invalid"
-    compact_claims = []
     counts = {level: 0 for level in STATE_CONFIDENCE}
     computed_unresolved: list[str] = []
     any_unknown = False
@@ -106,24 +105,14 @@ def _state_resolution_summary(state_resolution: dict) -> tuple[dict | None, str 
             any_unknown = True
             if isinstance(claim_id, str) and claim_id.strip():
                 computed_unresolved.append(claim_id.strip())
-        compact_claims.append({"id": claim_id, "state_confidence": confidence})
 
+    preserved = dict(state_resolution)
     if status == "BLOCKED":
-        return {
-            "protocol": state_resolution["protocol"],
-            "status": status,
-            "weakest_state_confidence": weakest,
-            "unresolved_claim_ids": list(unresolved),
-            "claims": compact_claims,
-            "claim_count": len(compact_claims),
-            "state_confidence_summary": counts,
-            "authority": "UNCHANGED", "authorization": "UNCHANGED", "execution": "NONE", "mutation": "NONE",
-        }, "state resolution blocked"
+        return preserved, "state resolution blocked"
 
-    provided_counts = state_resolution.get("state_confidence_summary")
-    if provided_counts != counts:
+    if state_resolution.get("state_confidence_summary") != counts:
         return None, "state resolution confidence summary inconsistent"
-    expected_weakest = min((item["state_confidence"] for item in compact_claims), key=lambda value: STATE_CONFIDENCE[value], default="unknown")
+    expected_weakest = min((claim["state_confidence"] for claim in claims), key=lambda value: STATE_CONFIDENCE[value], default="unknown")
     if weakest != expected_weakest:
         return None, "state resolution weakest confidence inconsistent"
     if sorted(unresolved) != sorted(computed_unresolved):
@@ -132,16 +121,7 @@ def _state_resolution_summary(state_resolution: dict) -> tuple[dict | None, str 
     if status != expected_status:
         return None, "state resolution status inconsistent"
 
-    return {
-        "protocol": state_resolution["protocol"],
-        "status": status,
-        "weakest_state_confidence": weakest,
-        "unresolved_claim_ids": list(unresolved),
-        "claims": compact_claims,
-        "claim_count": len(compact_claims),
-        "state_confidence_summary": counts,
-        "authority": "UNCHANGED", "authorization": "UNCHANGED", "execution": "NONE", "mutation": "NONE",
-    }, None
+    return preserved, None
 
 
 def compile_plan(intent: str, objective: str, project: str | None, constraints: list[str], ambiguity: list[str],
