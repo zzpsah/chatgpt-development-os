@@ -15,8 +15,14 @@ This file tracks **work state**, not normative law. Current source/Git/PR/CI are
 
 ## Active bounded work
 
-- No bounded engineering objective is active after Managed-Repository Delivery v1 read-only preflight closure.
+- No bounded engineering objective is active after Isolated Managed-Repository Write Proof v1 closure.
 - Choose future work only from fresh `main`, CI, durable state, relevant source/tests, and current user intent. Do not create P18/P19 merely for bookkeeping.
+
+## Completed — Isolated Managed-Repository Write Proof v1
+
+- Main feature head `2ef6b6e3df832ca132123b85caa69f7eda67d1f3` proves one actual file update in a newly created isolated Git fixture after read-only preflight and exact derived approval.
+- Diff, test, final readback, runtime validation, and external evidence packet agree; no commit or push occurs.
+- This is not proof of an existing managed-repository write or provider mutation.
 
 ## Completed — Managed-Repository Delivery v1 Read-Only Preflight
 
