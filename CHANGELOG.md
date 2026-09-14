@@ -2,6 +2,48 @@
 
 All notable DevOS distribution changes are summarized here. Exact implementation truth remains in source/Git/PR/CI and durable `.ai` records; this file is release navigation, not execution authority.
 
+## 0.19.0 — 2026-09-14
+
+Current-source production-readiness evidence v2 release line.
+
+### Added / completed
+
+- `config/production-readiness-v2.json` with an explicit closed set of ten production-required criteria.
+- `tools/verify-production-readiness-v2.py` with exact schema, evidence-path, blocker, verdict, version, and authorization-boundary validation.
+- `tools/test-production-readiness-v2.py` adversarial corpus covering fake READY states, concealed blockers, duplicate/missing criteria, missing evidence, version mismatch, altered authority boundaries, and invalid evidence classes.
+- Dedicated Python 3.11/3.12 production-readiness CI.
+- `devos production-readiness` CLI dispatch and `--require-production` fail-closed mode.
+- Current readiness documentation that distinguishes source/live evidence already proved from production-only evidence that still requires direct external observation.
+- Coherent 0.19.0 release identity so the new readiness gate is not silently attached to the already verified 0.18.0 source artifact.
+
+### Evidence improvements
+
+- Current-source integrity, authorization/security gating, deterministic verification, bounded current provider reads, and the recorded governed GitHub create/update/delete proof can be represented as `PROVEN` at their exact scopes.
+- Production-only gaps are no longer hidden behind a generic false flag; they are deterministic blocker IDs.
+- `production_blockers` must exactly equal all required criteria still in `HOLD`.
+- A future all-PROVEN evidence set can produce `READY`, but readiness still cannot create publication, deployment, execution, or mutation authority.
+
+### Security / integrity invariants
+
+- `VALID ASSESSMENT != PRODUCTION READY`.
+- `PRODUCTION READY != PUBLICATION AUTHORIZATION`.
+- `PRODUCTION READY != DEPLOYMENT AUTHORIZATION`.
+- `EVIDENCE != AUTHORIZATION`.
+- `INTERPRETATION != AUTHORIZATION`.
+- `PLAN != EXECUTION`.
+- `READY != EXECUTION`.
+- `CONTINUE != BLANKET AUTHORIZATION`.
+- `CI PASS != AUTHORIZATION`.
+- `PROVIDER CREDENTIAL != DEVOS AUTHORIZATION`.
+- `RECOVERY != AUTOMATIC MUTATION REPLAY`.
+
+### Known limitations
+
+- `production_ready = false` remains evidence-driven because five production-required criteria still HOLD: direct production-runtime conformance, production backup/restore RPO/RTO, production observability/SLO/incident routing, an explicit deployment target with rollout/rollback/readback proof, and production-scoped high-impact governance.
+- Public tagging/GitHub Release/package publication and deployment remain separate objectives and are not authorized by this release line.
+- A historical bounded live mutation proof is not arbitrary production mutation authority.
+- Production-only external evidence must be directly observed and durably reconciled before any blocker can be promoted to PROVEN.
+
 ## 0.18.0 — 2026-09-14
 
 Runtime conformance evidence intake release line.
