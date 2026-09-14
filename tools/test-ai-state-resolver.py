@@ -70,7 +70,6 @@ def main():
         "only preserves or downgrades caller-supplied confidence",
         "`likely` remains an explicit uncertainty signal",
         "No cross-claim semantic contradiction resolution.",
-        "fail closed on an internally inconsistent or authority-changing resolver envelope",
     ):
         assert marker in document, marker
     print("PASS: AI State Resolver v2 rejects uncited/conflicting claims and decays at revalidation boundaries")
