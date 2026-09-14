@@ -41,7 +41,15 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
     changed_paths = [str(path) for path in payload.get("changed_paths", []) if _is_text(path)]
     out = _base()
     if not isinstance(raw_claims, list):
-        out.update({"status": "BLOCKED", "reason": "CLAIMS_INVALID", "claims": [], "weakest_state_confidence": "unknown", "unresolved_claim_ids": [], "contradiction_fact_keys": []})
+        out.update({
+            "status": "BLOCKED",
+            "reason": "CLAIMS_INVALID",
+            "claims": [],
+            "weakest_state_confidence": "unknown",
+            "unresolved_claim_ids": [],
+            "contradiction_fact_keys": [],
+            "contradictions": [],
+        })
         return out
 
     ids = [str(c.get("id", "")).strip() for c in raw_claims if isinstance(c, dict)]
@@ -67,6 +75,9 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
         fact_key = str(item.get("fact_key", "")).strip() if has_fact_key else None
         fact_value = item.get("fact_value") if has_fact_value else None
         canonical_fact_value = _canonical_fact_value(fact_value) if has_fact_value else None
+        valid_fact_identity = bool(
+            has_fact_key and has_fact_value and fact_key and canonical_fact_value is not None
+        )
 
         if not claim_id or not _is_text(statement):
             confidence = "unknown"; reasons.append("CLAIM_ID_OR_STATEMENT_INVALID")
@@ -90,46 +101,62 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
                 confidence = "likely"
             reasons.append("P12_EXECUTION_EVIDENCE_NOT_CURRENT")
         if grounding_type == "durable_state":
-            # A durable record proves that the assertion was recorded, not that
-            # its underlying implementation/result was freshly established.
-            # Only current P12 execution evidence may retain `observed`.
             if confidence == "observed":
                 confidence = "likely"; reasons.append("DURABLE_STATE_CANNOT_SELF_UPGRADE_TO_OBSERVED")
-            # Revalidation markers describe why durable-state support needs a
-            # fresh check; they apply to already-likely durable claims as well.
             if BOUNDARY_EVENTS.intersection(rules).intersection(events):
                 reasons.append("REVALIDATION_BOUNDARY_REACHED")
             elif _changed([rule for rule in rules if rule not in BOUNDARY_EVENTS], changed_paths):
                 reasons.append("REVALIDATION_PATH_CHANGED")
 
-        resolved.append({
-            "id": claim_id or None, "statement": statement if _is_text(statement) else None,
+        resolved_item: dict[str, Any] = {
+            "id": claim_id or None,
+            "statement": statement if _is_text(statement) else None,
             "state_confidence": confidence,
             "grounding": {"type": grounding_type, "ref": grounding_ref if _is_text(grounding_ref) else None},
-            "fact_key": fact_key if has_fact_key and fact_key else None,
-            "fact_value": fact_value if has_fact_value else None,
-            "revalidated_at": item.get("revalidated_at"), "revalidate_on": rules,
+            "revalidated_at": item.get("revalidated_at"),
+            "revalidate_on": rules,
             "reasons": reasons,
-            "_canonical_fact_value": canonical_fact_value,
-        })
+            "_canonical_fact_value": canonical_fact_value if valid_fact_identity else None,
+        }
+        # Legacy claims intentionally omit fact identity fields. Malformed fact
+        # identity is already unresolved and likewise is not propagated as if it
+        # were a valid comparison key/value pair.
+        if valid_fact_identity:
+            resolved_item["fact_key"] = fact_key
+            resolved_item["fact_value"] = fact_value
+        resolved.append(resolved_item)
 
     # Cross-claim contradiction resolution is deliberately identity-based, not
     # prose-semantic guessing. Different supported values for the same explicit
     # fact_key make every involved otherwise-resolved claim unknown.
     by_fact: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for item in resolved:
-        if item["state_confidence"] != "unknown" and item["fact_key"] and item["_canonical_fact_value"] is not None:
-            by_fact[item["fact_key"]].append(item)
+        if (
+            item["state_confidence"] != "unknown"
+            and item.get("fact_key")
+            and item["_canonical_fact_value"] is not None
+        ):
+            by_fact[str(item["fact_key"])].append(item)
 
     contradiction_fact_keys: list[str] = []
-    for fact_key, items in by_fact.items():
-        values = {item["_canonical_fact_value"] for item in items}
+    contradictions: list[dict[str, Any]] = []
+    for fact_key in sorted(by_fact):
+        items = by_fact[fact_key]
+        values = sorted({str(item["_canonical_fact_value"]) for item in items})
         if len(values) > 1:
             contradiction_fact_keys.append(fact_key)
+            claim_ids: list[str] = []
             for item in items:
                 item["state_confidence"] = "unknown"
                 if "CROSS_CLAIM_CONTRADICTION" not in item["reasons"]:
                     item["reasons"].append("CROSS_CLAIM_CONTRADICTION")
+                if item["id"]:
+                    claim_ids.append(str(item["id"]))
+            contradictions.append({
+                "fact_key": fact_key,
+                "claim_ids": sorted(claim_ids),
+                "canonical_values": values,
+            })
 
     for item in resolved:
         item.pop("_canonical_fact_value", None)
@@ -143,6 +170,7 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
         "weakest_state_confidence": weakest,
         "unresolved_claim_ids": unresolved,
         "contradiction_fact_keys": sorted(contradiction_fact_keys),
+        "contradictions": contradictions,
         "state_confidence_summary": {level: sum(1 for item in resolved if item["state_confidence"] == level) for level in CONFIDENCE},
     })
     return out
