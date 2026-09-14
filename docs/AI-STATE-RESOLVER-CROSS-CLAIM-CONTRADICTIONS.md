@@ -96,9 +96,9 @@ The checks are deliberately redundant across resolver → P16 → P17. Each gove
 
 ## Boundaries
 
-This feature and its envelope-integrity hardening do not grant authorization, do not choose which claim is true, do not execute verification, do not mutate a provider, and do not change `production_ready`.
+This feature does not grant authorization, does not choose which claim is true, does not execute verification, does not mutate a provider, and does not change `production_ready`.
 
-P12 still owns execution-evidence provenance and freshness. P16 still owns plan compilation. P17 still owns step readiness/authorization checks.
+The envelope-integrity hardening preserves the same boundary. P12 still owns execution-evidence provenance and freshness. P16 still owns plan compilation. P17 still owns step readiness/authorization checks.
 
 ## Non-goals
 
