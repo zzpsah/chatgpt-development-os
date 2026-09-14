@@ -15,9 +15,13 @@ This file tracks **work state**, not normative law. Current source/Git/PR/CI are
 
 ## Active bounded work
 
-- No bounded engineering objective remains active after post-PR #54 reconciliation.
-- Select future work only from fresh `main`, open PRs, current CI, durable state, relevant source/tests, and current user intent.
-- Do not create P18/P19 merely for bookkeeping.
+### Local Disposable Delivery Proof v1
+
+- Implement and prove the local-only automated delivery loop in a newly created temporary Git repository.
+- Bind explicit approval to exact repository head, target, capability, impact ceiling, and P16 step ID before the file update.
+- Require P15 interpretation, P16 read-then-write plan, P17 readiness, controller/runtime handoff, local test, readback, Git diff, evidence packet, and fresh evidence recovery.
+- Keep all provider, commit/push, deployment, credential, database, permission, destructive, and production actions out of scope.
+- Completion requires local regression, exact-head CI, merge, and durable reconciliation. No P18/P19 is created.
 
 ## Completed — Automated Evidence → Durable State Reconciliation v1
 

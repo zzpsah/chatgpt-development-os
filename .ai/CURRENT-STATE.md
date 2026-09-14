@@ -30,9 +30,12 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 
 ## Active bounded work
 
-- No bounded engineering objective remains active after the post-PR #54 reconciliation.
-- Any next objective must be selected from fresh `main`, open PRs, CI, durable state, relevant source/tests, and current user intent.
-- Do not create P18/P19 merely for bookkeeping.
+### Local Disposable Delivery Proof v1
+
+- Repository-only proof objective; no P18/P19 phase is created.
+- Prove one safe local file update in a new temporary Git repository through `P15 → P16 → P17 → explicit scoped approval → controller/runtime handoff → test/readback → evidence packet → fresh recovery`.
+- The scope is exactly one low-impact marker-file update. No provider, managed repository, production, deployment, credential, database, permission, destructive, commit, or push operation is in scope.
+- Completion requires exact-head CI, durable reconciliation, and explicit retention of these limitations.
 
 ## Current verified capability state
 

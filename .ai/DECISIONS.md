@@ -93,3 +93,9 @@
 - Language recognition must not create authority, authorization, execution, a truth winner, or production readiness.
 - High-impact terms must be recognized consistently by P15 and P16 so a translated request cannot be downgraded to read-only; P17 remains the independent readiness/authorization gate.
 - The corpus is an explicit bounded contract, not a claim of universal language or dialect support.
+
+## Local Disposable Delivery Proof v1
+- The first automated-delivery proof is restricted to a newly created temporary local Git repository and one low-impact file update.
+- The approval must bind the exact project path, Git head, target, capability, impact ceiling, and P16 step. A mismatch or stale pre-write state holds rather than updating.
+- P15 interpretation, P16 planning, P17 readiness, controller/runtime handoff, testing, readback, and evidence recovery remain independently visible evidence stages.
+- Successful local proof does not authorize commits, pushes, managed-repository operations, provider access, deployment, production, credentials, database, permission, destructive operations, or general automated delivery.

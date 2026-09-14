@@ -73,6 +73,9 @@ jobs:
       - name: Verify P17 end-to-end plan readiness handoff
         run: python tools/test-p17-end-to-end.py
 
+      - name: Verify bounded local disposable delivery proof
+        run: python tools/test-local-delivery-proof.py
+
       - name: Verify Production E2E Harness
         run: python tools/test-production-e2e-harness.py
 

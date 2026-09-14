@@ -175,6 +175,10 @@ Regression + CI
 CONTINUE | HOLD | STOP | ESCALATE
 ```
 
+### Local delivery proof boundary
+
+`core/local-disposable-delivery-proof.md` now exercises this flow in a new temporary Git repository with one scoped low-impact file update. It proves the local mechanism only: explicit approval binding, test/readback, evidence persistence, and fresh evidence recovery. It does not make deployment, commits, pushes, provider operations, production, or destructive work automatic.
+
 ## Every-AI maintenance contract
 
 A new AI is a maintainer, not merely a reader.
