@@ -5,10 +5,11 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI/release-artifact metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
 - **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
-- DevOS `0.19.0` Production Readiness Evidence v2 implementation merged through PR #66 at `8cd731b7b91ca9e67983b6deca8646b38e078e33` from exact verified feature head `f81184975ffbb02a3e58466459e12858fdd8294a`.
-- Historical `config/readiness-evidence.json` remains pinned v1 evidence and is not rewritten as current proof.
-- Current production-readiness model: `config/production-readiness-v2.json`.
-- `docs/DEVOS-MASTER-ENGINEERING-MAP.md` remains the living architecture index; no P18/P19 was created for this unnumbered hardening milestone.
+- Latest fully merged/reconciled `main` before the active objective: `69b06853d5f360659ce42d5cf2c5ec7c8dccc04d` (PR #67 durable reconciliation for DevOS 0.19.0).
+- Final 0.19.0 exact-source artifact: ID `10355742368`, source `69b06853d5f360659ce42d5cf2c5ec7c8dccc04d`, digest `sha256:8de1daa8c592c5a3a2128493a1ba6c728ce975d45662253d783cf6aa8ff40bbf`.
+- Active branch: `feature/production-target-evidence-intake-v1`, created from exact `69b06853d5f360659ce42d5cf2c5ec7c8dccc04d` after confirming 0 open PRs and 0 open issues.
+- Candidate distribution version: `0.20.0`.
+- `docs/DEVOS-MASTER-ENGINEERING-MAP.md` remains the living architecture index; no P18/P19 is created for this unnumbered evidence-intake milestone.
 
 ## Core documentation law
 
@@ -26,92 +27,110 @@ Completion requires:
 
 `Human request → P15 interpretation → state resolution → P16 plan → P17 readiness → Actionable HOLD / Scoped Approval → controller → bounded runtime → verification → evidence/durable-state reconciliation → persistence → recovery / continuation`
 
-Interpretation, planning, readiness, credentials, CI, generated facts, reconciliation metadata, prior approvals, recovery state, documentation, or release status never manufacture permission.
+Interpretation, planning, readiness, credentials, CI, generated facts, evidence intake, reconciliation metadata, prior approvals, recovery state, documentation, or release status never manufacture permission.
 
-## Active bounded work
+## Active bounded work — DevOS 0.20.0 Production Target Evidence Intake v1
 
-- No numbered feature milestone is active.
-- No unreconciled repo-side DevOS `0.19.0` implementation objective remains after PR #66 reconciliation.
-- Future development must begin from fresh `main`, current CI/issues/PRs, relevant source/tests, direct runtime/provider evidence, concurrent AI work, and current user intent.
-- Do not create P18/P19 merely for bookkeeping.
+Fresh recovery after DevOS 0.19.0 found a specific G9 gap: Production Readiness Evidence v2 names five external blockers, but the repository had no common target-bound intake contract for direct evidence covering those blockers.
 
-## DevOS 0.19.0 Production Readiness Evidence v2 — closed / engineering-distribution release-ready
+The active objective adds a **read-only candidate-evidence intake boundary** for:
 
-- PR #66 title: `Add Production Readiness Evidence v2 for DevOS 0.19.0`.
-- Exact verified feature head: `f81184975ffbb02a3e58466459e12858fdd8294a`.
-- Merge commit: `8cd731b7b91ca9e67983b6deca8646b38e078e33`; GitHub signature verified.
-- Feature-head applicable workflow set: **14/14 success**.
-- Dedicated Production Readiness Evidence v2 workflow `34845941978`: Python 3.11 + 3.12 success.
-- Feature-head release workflow `34845941874`: success; Ubuntu/Windows × Python 3.11/3.12 release matrix **4/4 success**.
-- Post-merge exact-main push workflow set: **11/11 success**.
-- Post-merge Production Readiness Evidence v2 workflow `34846071705`: success.
-- Post-merge distribution release workflow `34846071713`: success; release matrix **4/4 success**.
-- Exact merged-source artifact: ID `10348113380`; name `devos-source-8cd731b7b91ca9e67983b6deca8646b38e078e33`; digest `sha256:fd07fcebcaebca703c11787e634940de904e85be5e3115894808b6a7955307f0`; size `744297` bytes; not expired when verified.
-- Durable reconciliation record digest: `8a8ce6db2bccbe211030ab681577736717e978cab8760c074e65faca09c8d49f`.
+- `runtime_direct_conformance`
+- `recovery_disaster`
+- `operational_observability`
+- `deployment_target`
+- `high_impact_governance`
 
-The repo-side readiness-modeling objective is complete. The model now distinguishes historical/current source, bounded live-read/live-mutation evidence, and direct external production evidence without allowing evidence to manufacture authority.
+Implemented on the active branch so far:
 
-## Current Production Readiness v2 verdict
+- `tools/production-target-evidence.py` — exact production target/source/timestamp/observer/criterion/evidence binding;
+- `tools/test-production-target-evidence.py` — adversarial fail-closed corpus;
+- `.github/workflows/verify-production-target-evidence.yml` — Python 3.11/3.12 verification;
+- `core/production-target-evidence-intake.md` — normative contract;
+- `devos production-target-evidence` CLI dispatch;
+- source identity advanced coherently to `0.20.0`;
+- release manifest, README, changelog and current Production Readiness v2 source identity updated.
 
-Current deterministic verdict: **HOLD**.
+Pending before closure:
 
-`production_ready = false`
+1. exact feature-head CI and regression verification;
+2. fix any CI defects without weakening evidence or authority boundaries;
+3. expected-head PR merge after green CI;
+4. fresh merged-main CI and exact-source 0.20.0 artifact verification;
+5. final durable reconciliation/history update.
 
-### Criteria PROVEN at bounded scopes
+## Production Target Evidence v1 semantics
 
-- `source_integrity` — current source/release machinery.
-- `authorization_security` — current governance/security source.
-- `deterministic_verification` — current verifier/regression source.
-- `provider_read` — bounded current live-read evidence.
-- `remote_mutation` — bounded historical live GitHub create/update/delete + readback evidence.
+A valid packet binds already-observed evidence to one exact production target and exact source SHA. Required criterion states are `PASS | FAIL | UNOBSERVED`.
 
-### Required production blockers still needing direct external evidence
+- malformed/unsafe packet → `BLOCKED`;
+- structurally valid but incomplete/failed evidence → `HOLD`;
+- all five criteria PASS → `CANDIDATE_COMPLETE`.
 
-- `runtime_direct_conformance` — no production runtime has direct observed conformance durably promoted from declaration-only state.
-- `recovery_disaster` — no production backup/storage target with measured restore RPO/RTO evidence.
-- `operational_observability` — no production service target, SLO, alert routing, telemetry, or incident-response evidence.
-- `deployment_target` — no explicit production target with environment contract, rollout, rollback, and production readback evidence.
-- `high_impact_governance` — production-scoped high-impact operations remain separately authorization-gated and unproven.
+`CANDIDATE_COMPLETE` is deliberately **not** production readiness. It still fixes:
 
-These HOLD criteria are future target-specific evidence objectives, not unfinished repository implementation and not authorization to execute production/high-impact actions merely to make the matrix green.
-
-## Readiness v2 authority boundary
-
-The v2 assessment fixes these independently of its verdict:
-
+- `readiness_promotion_allowed = false`
+- `semantic_review_required = true`
+- `production_ready = false`
 - `authority = UNCHANGED`
 - `authorization = UNCHANGED`
 - `execution = NONE`
 - `mutation = NONE`
 - `publication_authorized = false`
 - `deployment_authorized = false`
-- `evidence_can_authorize = false`
 
-Therefore:
+A later separate semantic review + durable Production Readiness v2 reconciliation is required before any blocker can change status.
 
-- `VALID ASSESSMENT != PRODUCTION READY`
-- `PRODUCTION READY != PUBLICATION AUTHORIZATION`
-- `PRODUCTION READY != DEPLOYMENT AUTHORIZATION`
-- `EVIDENCE != AUTHORIZATION`
-- `CONTINUE != BLANKET AUTHORIZATION`
-- `PLAN != EXECUTION`
-- `READY != EXECUTION`
+## Current Production Readiness v2 verdict
 
-## Retained verified capability state
+Current deterministic verdict remains **HOLD**.
+
+`production_ready = false`
+
+Already PROVEN at bounded scopes:
+
+- `source_integrity`
+- `authorization_security`
+- `deterministic_verification`
+- `provider_read`
+- `remote_mutation`
+
+Still requiring direct target-specific external evidence:
+
+- `runtime_direct_conformance`
+- `recovery_disaster`
+- `operational_observability`
+- `deployment_target`
+- `high_impact_governance`
+
+The new intake contract makes these evidence requirements machine-checkable; it does not authorize the underlying production/high-impact operations and does not fabricate the missing evidence.
+
+## Retained architecture foundations
 
 - P9 through P17 remain complete at their recorded evidence levels.
-- P11 remains repository-first recovery/cross-AI continuity baseline.
-- P12 remains evidence provenance/freshness owner.
-- P15/P16/P17 remain interpretation/planning/readiness layers; none independently grants runtime authority.
-- AI State Resolver v2 contradiction/envelope hardening remains closed through its recorded sequence.
-- `reference-local-agent` remains verified only for recorded static repository-contract conformance.
-- `codex`, `claude-code`, and `openhands` remain declaration-only templates until separate direct evidence is observed, reviewed, and durably promoted.
-- `EVIDENCE_PACKET_VALID != VERIFIED RUNTIME` remains enforced.
-- Governed GitHub create/update/delete + readback proof remains valid only at its recorded bounded scope; uncertain mutation is never blindly replayed.
+- P11 remains the repository-first recovery, revalidation, and cross-AI continuity baseline.
+- P12 remains the evidence provenance/freshness owner.
+- P15 remains language interpretation; P16 bounded planning; P17 exact-step readiness/authorization.
+- AI State Resolver v2 contradiction/envelope hardening remains retained.
+- GitHub provider/controller readback, multi-project isolation, Actionable HOLD, runtime-neutral handoff, runtime-profile/conformance evidence intake, release machinery, Production Readiness v2, and durable reconciliation remain retained foundations.
 
-## Explicit non-actions for 0.19.0 closure
+## Permanent boundaries
 
-No public Git tag, GitHub Release, package publication, production deployment, credential/secret change, database mutation, permission change, destructive action, production-scoped high-impact operation, or vendor-runtime promotion was performed to close this objective.
+- `CONTINUE != BLANKET AUTHORIZATION`.
+- `INTERPRETATION != AUTHORIZATION`.
+- `PLAN != EXECUTION`.
+- `READY != EXECUTION`.
+- `CI PASS != AUTHORIZATION`.
+- `DOCUMENTATION != AUTHORIZATION`.
+- `VALID TARGET EVIDENCE != PRODUCTION READY`.
+- `PRODUCTION READY != PUBLICATION AUTHORIZATION`.
+- `PRODUCTION READY != DEPLOYMENT AUTHORIZATION`.
+- Provider credentials/capability never manufacture DevOS authority.
+- Uncertain provider mutation is never blindly replayed.
+
+## Explicit non-actions
+
+This objective does not itself run a production probe, deploy software, change credentials/secrets/permissions/databases, perform destructive restore testing, execute a production-scoped high-impact action, promote a runtime, publish a release/tag/package, or change production readiness.
 
 ## Recovery precedence
 
@@ -120,23 +139,8 @@ No public Git tag, GitHub Release, package publication, production deployment, c
 3. `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, `.ai/RECONCILIATION-LEDGER.jsonl`.
 4. Relevant core contracts/tests/configuration.
 5. `.ai/SESSIONS/` and historical evidence.
-6. ChatGPT Memory/chat history only as supplementary context.
-
-## Stable references
-
-- `AGENTS.md`
-- `.ai/manifest.yaml`
-- `.ai/CURRENT-STATE.md`
-- `.ai/TASKS.md`
-- `.ai/RECONCILIATION-LEDGER.jsonl`
-- `docs/DEVOS-MASTER-ENGINEERING-MAP.md`
-- `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md`
-- `docs/PRODUCTION-READINESS-EVIDENCE.md`
-- `core/production-readiness-evidence-v2.md`
-- `config/production-readiness-v2.json`
-- `docs/RELEASE.md`
-- `.github/SECURITY.md`
+6. Chat/model memory only as supplementary context.
 
 ## Next action
 
-No implementation objective is automatically active after this reconciliation. Any attempt to move Production Readiness v2 from HOLD to READY must start as a separately scoped target-specific evidence objective and preserve the independent authorization/publication/deployment boundaries.
+Use exact feature-head CI as source of truth, repair any failures without weakening safety semantics, merge only after clean concurrency/head checks, then verify merged-main release evidence and reconcile durable state.

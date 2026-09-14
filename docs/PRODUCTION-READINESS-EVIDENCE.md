@@ -27,6 +27,34 @@ Current production blockers:
 
 `production_blockers` must exactly match all required criteria in `HOLD`; the verifier rejects attempts to conceal one.
 
+## Target-specific external evidence intake
+
+DevOS 0.20.0 adds [`core/production-target-evidence-intake.md`](../core/production-target-evidence-intake.md) and `tools/production-target-evidence.py` as a **read-only candidate-evidence intake boundary** for the five external blockers above.
+
+The intake binds already-observed evidence to an exact production target ID, exact source SHA, timezone-aware observation timestamp, observer, criterion set, evidence references/digests/scopes, and unchanged authority boundaries.
+
+```bash
+python tools/devos.py production-target-evidence <packet.json> \
+  --expected-source-sha <sha> \
+  --expected-target-id <target>
+```
+
+A fully valid all-PASS packet returns `CANDIDATE_COMPLETE`, but still fixes:
+
+```text
+readiness_promotion_allowed = false
+semantic_review_required = true
+production_ready = false
+execution = NONE
+mutation = NONE
+publication_authorized = false
+deployment_authorized = false
+```
+
+Therefore a candidate packet can never self-promote this readiness matrix. A separate semantic review and durable readiness reconciliation must determine whether the evidence is current, applicable, sufficiently scoped, and safe to promote.
+
+The intake does not authorize or execute production probes, deployments, destructive restore tests, credential/permission/database changes, or other high-impact operations.
+
 ## Already-proven criteria
 
 ### Source integrity — PROVEN
@@ -39,7 +67,7 @@ P17 readiness, Security Gate verification, scoped approval semantics, and remote
 
 ### Deterministic verification — PROVEN
 
-The repository includes deterministic/integration/security verification contracts and an adversarial Production Readiness v2 corpus. A green suite is evidence only; it is not permission to execute or deploy.
+The repository includes deterministic/integration/security verification contracts and adversarial readiness/target-evidence corpora. A green suite is evidence only; it is not permission to execute or deploy.
 
 ### Provider read — PROVEN at bounded current-live-read scope
 
@@ -83,6 +111,7 @@ Therefore:
 
 ```text
 VALID ASSESSMENT != PRODUCTION READY
+VALID TARGET EVIDENCE != PRODUCTION READY
 PRODUCTION READY != PUBLICATION AUTHORIZATION
 PRODUCTION READY != DEPLOYMENT AUTHORIZATION
 EVIDENCE != AUTHORIZATION
@@ -92,8 +121,8 @@ Even a future evidence-backed `READY` verdict would not itself publish a release
 
 ## v1 historical boundary
 
-`config/readiness-evidence.json` and `tools/verify-readiness-evidence.py` remain historical v1 evidence integrity machinery. v1 intentionally rejected live/production claims and pinned old scenario evidence to old source heads. v2 does not falsify or relabel that history; it is a new current-source assessment protocol that can represent later bounded live evidence while retaining its limitations.
+`config/readiness-evidence.json` and `tools/verify-readiness-evidence.py` remain historical v1 evidence integrity machinery. v1 intentionally rejected live/production claims and pinned old scenario evidence to old source heads. v2 does not falsify or relabel that history; it is a current-source assessment protocol that can represent later bounded live evidence while retaining its limitations.
 
 ## Completion rule
 
-Production readiness can become `READY` only when all ten required criteria are directly evidenced and verified. No high-impact operation should be performed merely to make the matrix green. External production evidence must come from a separately defined target and separately authorized activity, then be documented and durably reconciled.
+Production readiness can become `READY` only when all ten required criteria are directly evidenced, semantically reviewed, and durably reconciled. No high-impact operation should be performed merely to make the matrix green. External production evidence must come from a separately defined target and separately authorized activity, then be documented and durably reconciled.

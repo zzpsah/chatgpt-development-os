@@ -61,21 +61,24 @@ AI account memory or old chat history is supplementary only; it is never authori
 
 ## Release status
 
-Current distribution version: **0.19.0**.
+Current distribution version: **0.20.0**.
 
 ```bash
 python tools/devos.py version
 python tools/devos.py release-check
 python tools/devos.py production-readiness --json
+python tools/devos.py production-target-evidence <packet.json> --expected-source-sha <sha> --expected-target-id <target>
 ```
 
-`0.19.0` adds Production Readiness Evidence v2: a current-source, fail-closed readiness model that can represent current source evidence, current live reads, bounded historical live mutation proof, and explicit external production blockers without allowing evidence to manufacture authority.
+`0.20.0` adds Production Target Evidence Intake v1. It validates already-observed target-bound evidence for the five external Production Readiness v2 blockers while keeping evidence, readiness, and authorization separate.
 
-The current v2 assessment is intentionally **HOLD**, not READY. Five production-required criteria still require direct external evidence: a directly verified production runtime, production backup/restore RPO/RTO, production SLO/alert/incident-response observability, an explicit deployment target with rollout/rollback/readback evidence, and separately authorized production-scoped high-impact governance.
+A fully valid all-PASS packet returns `CANDIDATE_COMPLETE`, not production readiness. It still forces `production_ready=false`, `readiness_promotion_allowed=false`, `execution=NONE`, `mutation=NONE`, and requires separate semantic review plus durable readiness reconciliation.
 
-**Distribution release readiness is not production readiness.** `production_ready = false` remains evidence-driven. A green release gate or valid readiness assessment does not authorize publication, deployment, production mutation, credentials, database changes, permission changes, destructive actions, or unscoped external execution.
+The current v2 assessment itself remains intentionally **HOLD**, not READY, until direct target-specific evidence is actually observed and separately reconciled.
 
-See [`docs/RELEASE.md`](docs/RELEASE.md) for the exact-source ZIP/checksum process, [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md) for the current blocker-exact production assessment, and [`.github/SECURITY.md`](.github/SECURITY.md) for vulnerability reporting.
+**Distribution release readiness is not production readiness.** A green release gate, valid readiness assessment, or valid target-evidence packet does not authorize publication, deployment, production mutation, credentials, database changes, permission changes, destructive actions, or unscoped external execution.
+
+See [`docs/RELEASE.md`](docs/RELEASE.md), [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md), [`core/production-target-evidence-intake.md`](core/production-target-evidence-intake.md), and [`.github/SECURITY.md`](.github/SECURITY.md).
 
 ## What DevOS provides
 
@@ -126,6 +129,7 @@ PROVIDER CREDENTIAL != DEVOS AUTHORIZATION
 PROVIDER RESPONSE != COMPLETION PROOF
 RECOVERY != AUTOMATIC MUTATION REPLAY
 PRODUCTION READY != DEPLOYMENT AUTHORIZATION
+VALID TARGET EVIDENCE != PRODUCTION READY
 ```
 
 ### Autonomous development, runtime, and verification
@@ -168,18 +172,21 @@ These proofs do **not** imply general production deployment authority.
 
 DevOS includes bounded GitHub provider/controller integration, identity/token controls, scope-aware capability discovery, current-state anchors, readback verification, and uncertain-mutation reconciliation. Proven provider capability never becomes blanket authorization.
 
-### Production-readiness assessment
+### Production-readiness assessment and target evidence
 
 `config/production-readiness-v2.json` and `tools/verify-production-readiness-v2.py` provide the current production-readiness contract.
 
 The verifier rejects missing/unknown criteria, fake READY states, concealed blockers, missing evidence references, altered authorization/publication/deployment boundaries, and invalid live-mutation provenance. Normal validation may succeed while the verdict is `HOLD`; `--require-production` fails until every production-required criterion is actually `PROVEN`.
 
+`tools/production-target-evidence.py` is the separate external-evidence intake boundary. It validates one explicit production target, exact source SHA, timezone-aware observation, observer, the exact five external criteria, evidence references/digests/scopes, and unchanged authority boundaries. It performs no production action itself.
+
 ```bash
 python tools/devos.py production-readiness --json
 python tools/devos.py production-readiness --require-production --json
+python tools/devos.py production-target-evidence <packet.json> --expected-source-sha <sha> --expected-target-id <target>
 ```
 
-Readiness evidence itself can never authorize publication or deployment.
+Readiness or target evidence itself can never authorize publication, deployment, or high-impact execution.
 
 ## Multi-AI portability
 
@@ -231,6 +238,7 @@ Important references:
 
 - `config/readiness-evidence.json` — historical v1 snapshot
 - `config/production-readiness-v2.json` — current production-readiness assessment
+- `core/production-target-evidence-intake.md` — target-bound external evidence intake
 - `.ai/RECONCILIATION-LEDGER.jsonl`
 - [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md)
 - [`core/production-readiness-evidence-v2.md`](core/production-readiness-evidence-v2.md)
@@ -284,4 +292,4 @@ chatgpt-development-os/
 
 ## Version
 
-**0.19.0** — P17-complete distribution line plus current-source Production Readiness Evidence v2. The assessment is blocker-exact and fail-closed; current production verdict remains HOLD until the five external production criteria have direct evidence.
+**0.20.0** — P17-complete distribution line plus blocker-exact Production Readiness Evidence v2 and target-bound external Production Target Evidence Intake v1. The production verdict remains HOLD until valid target-specific evidence is separately semantically reviewed and durably reconciled.
