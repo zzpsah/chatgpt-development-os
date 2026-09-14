@@ -26,10 +26,13 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 
 ## Active bounded work
 
-- No new bounded engineering objective is activated by this reconciliation.
-- AI State Resolver v2 detailed contradiction provenance is closed through PR #52 and must not remain marked active.
-- Any next objective must be selected from fresh `main`, open PRs, CI, durable state, source evidence, and current user intent.
-- No P18/P19 is created merely for bookkeeping.
+### P15 bounded multilingual interpretation and gating
+
+- Repository-only hardening objective; no P18/P19 phase is created.
+- Preserve Devanagari Hindi Unicode during deterministic interpretation and support a bounded Hindi/Hinglish regression corpus.
+- Prove the entire `P15 → P16 → P17` path: language interpretation may select an intent and constraints, but it never grants authority, authorization, or execution.
+- High-impact Hindi phrases must remain independently classified and gated by P16/P17; explicit negative constraints must block conflicting plans.
+- This does not claim universal Hindi, regional-language, or model-level language coverage.
 
 ## Current verified capability state
 

@@ -226,6 +226,10 @@ Experiments record source head, input/context, baseline/candidate outputs, seman
 
 > **The interpreter may learn better language understanding; it may never learn that language itself grants authority.**
 
+### Current bounded P15 objective
+
+The active P15 objective adds bounded Devanagari Hindi/Hinglish coverage to the deterministic reference interpreter. Its corpus runs the interpreted envelope through P16 and P17, proving that translated high-impact wording remains independently classified and authorization-gated, negative constraints block conflicting plans, and unresolved referents clarify. This is corpus-level regression evidence only; it does not claim universal language or dialect coverage.
+
 ## Self-maintaining knowledge model
 
 Automation may safely update machine-verifiable facts such as Git HEAD, changed files, CI outcomes, timestamps, generated indexes, factual summaries, health diagnostics, and evidence references.

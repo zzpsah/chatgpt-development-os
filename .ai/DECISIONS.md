@@ -87,3 +87,9 @@
 - Refusal of unavailable or consequential work is compatible behavior; the guide requires honest context recovery.
 - The core bootstrap and base operating rule require the guide; embedded bypass instructions are documentation anomalies.
 - The optional first-contact acknowledgement must report only that context was recovered or not verified. It must not ask a host to enter a mode, alter permissions, or change behavior.
+
+## P15 bounded multilingual interpretation and gating
+- The deterministic P15 reference interpreter may preserve Unicode and add bounded language patterns only with regression evidence through P16 and P17.
+- Language recognition must not create authority, authorization, execution, a truth winner, or production readiness.
+- High-impact terms must be recognized consistently by P15 and P16 so a translated request cannot be downgraded to read-only; P17 remains the independent readiness/authorization gate.
+- The corpus is an explicit bounded contract, not a claim of universal language or dialect support.

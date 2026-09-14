@@ -11,8 +11,13 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 
 ## Active bounded work
 
-- No bounded engineering objective is active after merged PR #52.
-- Select the next objective only after fresh inspection of `main`, open PRs, CI, durable state, relevant source/tests, and current user intent.
+### P15 bounded multilingual interpretation and gating
+
+- Preserve Devanagari Hindi Unicode through the deterministic P15 interpreter.
+- Maintain a corpus of bounded Hindi/Hinglish examples with expected interpretation, P16 classification, and P17 outcome.
+- Prove high-impact Hindi wording remains authorization-gated and explicit negative constraints block conflicting plans.
+- Preserve `INTERPRETATION != AUTHORIZATION`, `PLAN != EXECUTION`, and `READY != EXECUTION`.
+- Completion requires local regression, exact-head CI, merge, and durable reconciliation. This does not create P18/P19.
 - Do not create P18/P19 merely for bookkeeping.
 
 ## Completed — AI State Resolver v2 detailed contradiction provenance

@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SECURITY_RELEVANT = {"HIGH_IMPACT_MUTATION", "SECURITY_SENSITIVE", "PRODUCTION_OR_DESTRUCTIVE"}
 ALLOWED_IMPACTS = {"READ_ONLY", "LOW_IMPACT_MUTATION", "HIGH_IMPACT_MUTATION", "SECURITY_SENSITIVE", "PRODUCTION_OR_DESTRUCTIVE"}
 STATE_CONFIDENCE = {"observed": 2, "likely": 1, "unknown": 0}
-CONSTRAINT_TERMS = {"DO_NOT_DEPLOY":"deploy","DO_NOT_PRODUCTION":"production","DO_NOT_MERGE":"merge","DO_NOT_DATABASE":"database","DO_NOT_MIGRATION":"migration","DO_NOT_DELETE":"delete","DO_NOT_SECRET":"secret","DO_NOT_CREDENTIAL":"credential","DO_NOT_PERMISSION":"permission"}
+CONSTRAINT_TERMS = {"DO_NOT_DEPLOY":("deploy","डिप्लॉय","तैनात"),"DO_NOT_PRODUCTION":("production","प्रोडक्शन"),"DO_NOT_MERGE":("merge","मर्ज"),"DO_NOT_DATABASE":("database","डेटाबेस"),"DO_NOT_MIGRATION":("migration","माइग्रेशन"),"DO_NOT_DELETE":("delete","डिलीट","हटाओ","मिटाओ"),"DO_NOT_SECRET":("secret","गुप्त"),"DO_NOT_CREDENTIAL":("credential",),"DO_NOT_PERMISSION":("permission","अनुमति")}
 
 def _load_p16_classifier():
     path=ROOT/"tools"/"semantic-goal-to-plan.py"; spec=importlib.util.spec_from_file_location("p16_semantic_classifier",path)
@@ -150,7 +150,7 @@ def _validated_steps(plan:dict[str,Any])->tuple[dict[str,dict[str,Any]]|None,str
         if not term:continue
         for sid,step in steps.items():
             if step.get("impact")=="READ_ONLY":continue
-            if term in str(step.get("objective","")).lower():return None,f"PLAN_CONSTRAINT_CONFLICT={constraint}:{sid}"
+            if any(term in str(step.get("objective","")).lower() for term in CONSTRAINT_TERMS.get(constraint,())):return None,f"PLAN_CONSTRAINT_CONFLICT={constraint}:{sid}"
     return steps,None
 
 def evaluate(payload:dict[str,Any])->dict[str,Any]:

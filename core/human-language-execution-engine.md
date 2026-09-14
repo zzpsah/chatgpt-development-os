@@ -27,7 +27,7 @@ v2 treats short and elliptical language as first-class input. Phrases such as `c
 The interpreter must:
 
 1. interpret meaning rather than exact keywords;
-2. tolerate common Hinglish/code-switching, shorthand, spelling variation, and incomplete conversational phrasing;
+2. tolerate bounded common Hinglish/code-switching, Devanagari Hindi, shorthand, spelling variation, and incomplete conversational phrasing;
 3. resolve pronouns/deictic phrases (`ye`, `wo`, `wahi`, `this`, `that`, `same`) only when a usable referent exists;
 4. preserve corrections and negative constraints such as `deploy mat karna`;
 5. support safe multiple-intent composition rather than dropping compatible intents;
@@ -64,7 +64,7 @@ authority: UNCHANGED
 execution: NONE
 ```
 
-The reference interpreter is a deterministic minimum behavior contract, not the ceiling of DevOS language understanding. DevOS may evolve richer model-assisted semantic interpretation for multilingual language, corrections, ellipsis, referents, temporal context, intent composition, and conversational continuity. Richer interpretation must preserve the same structured boundaries and must never manufacture authority.
+The reference interpreter is a deterministic minimum behavior contract, not the ceiling of DevOS language understanding. It preserves Unicode input and has a bounded Devanagari Hindi/Hinglish regression corpus for continuation, validation, repair, security, deployment, negative constraints, and unresolved referents. DevOS may evolve richer model-assisted semantic interpretation for broader multilingual language, corrections, ellipsis, referents, temporal context, intent composition, and conversational continuity. Richer interpretation must preserve the same structured boundaries and must never manufacture authority.
 
 ## Short-command rule
 
@@ -118,7 +118,9 @@ Evolution must be regression-tested against prior language behavior. A language 
 
 ## Test corpus
 
-`tools/test-human-language-interpreter.py` exercises short commands, contextual continuation, Hinglish shorthand, referential language, multi-intent phrases, explicit negative deployment constraints, unknown-context clarification, and high-impact authorization escalation. It runs in the contract CI suite.
+`config/p15-multilingual-corpus.json` is the bounded Devanagari Hindi/Hinglish corpus. `tools/test-p15-multilingual-flow.py` runs every corpus case through P15 → P16 → P17. It proves Unicode preservation, read-only classification, continuation only with context, high-impact deployment gating, negative deployment constraints, and no execution/authorization upgrade. It is not a claim of universal language coverage or model-level fluency.
+
+`tools/test-human-language-interpreter.py` retains focused interpreter regressions. Both tests run in the contract CI suite.
 
 ## Safety invariant
 

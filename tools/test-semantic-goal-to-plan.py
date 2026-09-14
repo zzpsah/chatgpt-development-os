@@ -65,6 +65,13 @@ def main():
     check(high["steps"][1]["impact"] == "PRODUCTION_OR_DESTRUCTIVE", "deploy must remain production/destructive")
     check(high["steps"][1]["authorization_required"] is True, "deploy must require authorization")
 
+    hindi_high = mod.compile_plan("FEATURE_CHANGE", "प्रोडक्शन में तैनात करो", "DEVOS", [], ["HIGH_IMPACT_REQUIRES_AUTHORIZATION_CHECK"])
+    check(hindi_high["decision"] == "PLANNED", "Hindi high-impact request should compile with a preserved gate")
+    check(hindi_high["steps"][1]["impact"] == "PRODUCTION_OR_DESTRUCTIVE", "Hindi deploy must remain production/destructive")
+    check(hindi_high["steps"][1]["authorization_required"] is True, "Hindi deploy must require authorization")
+    hindi_block = mod.compile_plan("FEATURE_CHANGE", "स्टेजिंग पर डिप्लॉय करो", "DEVOS", ["DO_NOT_DEPLOY"], [])
+    check(hindi_block["decision"] == "BLOCKED", "Hindi negative deployment constraint must block a conflicting step")
+
     database_read = mod.compile_plan("VALIDATION", "inspect database", "DEVOS", [], [])
     check(database_read["steps"][0]["impact"] == "READ_ONLY", "inspect database must not be mislabeled as mutation")
 
