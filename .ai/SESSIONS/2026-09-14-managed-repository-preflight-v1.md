@@ -27,6 +27,10 @@ The regression corpus creates a temporary Git fixture and proves a clean preflig
 - `production_ready = false`
 - No provider, deployment, production, credential, secret, database, permission, deletion, commit, push, or destructive action.
 
+## CI repair
+
+The first exact-main CI run exposed two documentation-contract gaps: the dedicated workflow expected the literal external-evidence reason code, and the follow-up CI workflow change lacked a same-boundary durable record. Both are repaired before rerunning exact-head CI.
+
 ## Pending closure
 
 Run local regression and relevant existing regressions, require exact-feature-head CI, then reconcile durable current/task/decision state after integration. No managed-repository mutation is part of this objective.

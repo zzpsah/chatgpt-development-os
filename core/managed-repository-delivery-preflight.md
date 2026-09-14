@@ -47,7 +47,7 @@ The preflight intentionally marks even a low-impact managed-repository change as
 
 ## Evidence and persistence
 
-`--output` may write the JSON packet only **outside** the inspected repository. This preserves the read-only target-repository boundary. The packet has an `evidence_id`, but it is external preflight evidence; it becomes durable repository evidence only through a later separately governed documentation/persistence step.
+`--output` may write the JSON packet only **outside** the inspected repository. The enforced reason code is `EVIDENCE_OUTPUT_MUST_BE_OUTSIDE_INSPECTED_REPOSITORY`. This preserves the read-only target-repository boundary. The packet has an `evidence_id`, but it is external preflight evidence; it becomes durable repository evidence only through a later separately governed documentation/persistence step.
 
 A fresh AI can recover the packet from its supplied path and re-check the exact repository head. If the head has changed, the request is stale and must be regenerated.
 
