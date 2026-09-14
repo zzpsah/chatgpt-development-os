@@ -4,7 +4,7 @@
 
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
-- Chat/account/model memory is supplementary only and never authoritative project state.
+- **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
 - Current reconciliation target is post-PR #54 merge commit `e31c2099b5d9ce88ee4a20c225fe70b424dffa3d`.
 - `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture index.
 - `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable numbered/unnumbered milestone ledger.
@@ -100,7 +100,7 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 3. `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, `.ai/RECONCILIATION-LEDGER.jsonl`, and other semantic `.ai` state.
 4. Relevant core contracts/tests.
 5. `.ai/SESSIONS/` and historical evidence.
-6. Chat/model/account memory only as supplementary context.
+6. ChatGPT Memory/chat history only as supplementary context.
 
 ## Stable references
 
