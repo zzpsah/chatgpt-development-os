@@ -46,6 +46,16 @@ The objective does not perform direct vendor-runtime execution and therefore mus
 - `.ai/CURRENT-STATE.md` and `.ai/TASKS.md`
   - track this objective as active until exact-head CI, merge, post-merge artifact verification, and durable reconciliation complete.
 
+## Exact-head CI repair observed on PR #64
+
+Initial PR head `15874bb74eba4e8ee40f2fa0c66da7300ec49664` passed the new runtime-profile/conformance regression workflow and the normal release gate itself, but Distribution Release Readiness run `34829965476` failed in all four OS/Python matrix jobs at **Run release-gate adversarial regression corpus**.
+
+Fresh job inspection showed the root cause was test-fixture drift rather than a release-gate failure: `tools/test-devos-release-check.py` hard-coded `0.17.0` as the expected canonical version and used `0.18.0` as the deliberately mismatched version. Once `0.18.0` became canonical, both assertions were stale.
+
+Repair commit `8c09280f79c306b64a56687ad2b173436d09a506` makes the regression corpus derive its baseline from canonical `VERSION` and creates a guaranteed-different stable semantic version by incrementing the patch component. This keeps the adversarial intent while preventing future minor-version changes from silently invalidating the test fixture.
+
+The failed run remains historical evidence and must not be substituted for the new exact-head CI triggered by the repair.
+
 ## Invariants
 
 ```text
@@ -60,6 +70,6 @@ DISTRIBUTION RELEASE READY != PUBLICATION AUTHORIZATION
 
 ## Verification / merge boundary
 
-The feature must pass all applicable exact-head CI before merge. Merge must use the exact observed head guard. After merge, fresh `main`, the exact-source 0.18.0 release artifact, and triggered post-merge CI must be verified before a separate durable reconciliation closes the objective.
+The repaired feature head must pass all applicable exact-head CI before merge. Merge must use the exact observed head guard. After merge, fresh `main`, the exact-source 0.18.0 release artifact, and triggered post-merge CI must be verified before a separate durable reconciliation closes the objective.
 
 No public tag/GitHub Release/package publication/deployment is part of this objective.
