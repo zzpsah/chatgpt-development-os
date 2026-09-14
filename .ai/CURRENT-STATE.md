@@ -5,7 +5,7 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
 - **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
-- Current bounded objective started from `main` at `2500ddc235ce99dbe45a6cd0537d4b0d2372c4a4`, the merge of post-PR #49 durable-state reconciliation PR #51.
+- Current reconciliation checkpoint is post-PR #52 merge commit `2a5e13ad5a46085dc6949bfbcf325f84e29f9d02`.
 - `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture index; `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable stage-history/navigation ledger.
 
 ## Core documentation law
@@ -26,23 +26,26 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 
 ## Active bounded work
 
-### AI State Resolver v2 — detailed contradiction provenance
-
-Fresh post-#51 inspection found no open competing PR. Closed stale/diverged PR #50 contained one useful non-duplicate concept after PR #49 superseded its downstream integrity work: deterministic detailed contradiction provenance.
-
-Current bounded objective on `feat/resolver-detailed-contradiction-provenance`:
-
-- keep PR #46 contradiction semantics and PR #49 P16/P17 independent contradiction recomputation unchanged;
-- resolver emits `contradictions` alongside `contradiction_fact_keys`;
-- each detail record contains the explicit `fact_key`, sorted involved claim IDs, and sorted canonical conflicting JSON values;
-- non-contradictory and blocked-top-level results emit `contradictions: []`;
-- P16 independently recomputes the expected detailed provenance from claims and returns `CLARIFY` if the field is forged or inconsistent;
-- P17 independently repeats the validation on P16-preserved provenance and returns `BLOCKED` if detailed contradiction provenance is forged or changes after planning;
-- the detail is audit evidence only and cannot grant authority, erase uncertainty, select a winning claim, create execution, or make a step READY.
-
-This is an unnumbered observability/integrity hardening objective. No P18/P19 is created.
+- No new bounded engineering objective is activated by this reconciliation.
+- AI State Resolver v2 detailed contradiction provenance is closed through PR #52 and must not remain marked active.
+- Any next objective must be selected from fresh `main`, open PRs, CI, durable state, source evidence, and current user intent.
+- No P18/P19 is created merely for bookkeeping.
 
 ## Current verified capability state
+
+### AI State Resolver v2 detailed contradiction provenance — merged
+
+- PR #52 — `Add detailed resolver contradiction provenance` — merged at `2a5e13ad5a46085dc6949bfbcf325f84e29f9d02`.
+- Exact final source head: `b091ef2058f3c089d3daeafb41ca9fc58568f435`.
+- Resolver emits deterministic `contradictions` records alongside `contradiction_fact_keys`.
+- Each contradiction record contains the explicit `fact_key`, sorted involved `claim_ids`, and sorted canonical conflicting JSON values.
+- Non-contradictory and invalid-top-level claim input produce `contradictions: []`.
+- P16 independently recomputes expected detailed contradiction provenance from claims and returns `CLARIFY` when detail is forged or inconsistent.
+- P17 independently revalidates the same detail on P16-preserved provenance and returns `BLOCKED` when detail is forged or inconsistent after planning.
+- The detailed field is audit evidence only; claims remain the independently recomputed source for contradiction integrity.
+- Exact-final-head CI passed all triggered workflows: Development OS `34811362766`, Development OS Contracts `34811362710`, MCP Repository Create `34811362769`, Actionable Hold `34811362786`, P13 External Managed Project `34811362707`, Current-Source Evidence `34811362749`, GitHub Identity/Token `34811362750`, Living Engineering Map `34811362775`, and Trust-First Audit `34811362701`.
+- Closed PR #50 remains unmerged; only its non-duplicate detailed-provenance idea was re-evaluated and promoted from fresh `main`.
+- No authority, authorization, execution, provider mutation, automatic truth-winner selection, or production-readiness upgrade was introduced.
 
 ### Resolver contradiction envelope integrity — merged
 
@@ -53,9 +56,7 @@ This is an unnumbered observability/integrity hardening objective. No P18/P19 is
 - P17 independently recomputes contradiction integrity from full resolver provenance retained by P16.
 - A post-P16 `fact_value` edit that creates a hidden contradiction is `BLOCKED` even when top-level status/confidence/count metadata remains superficially valid.
 - Exact-final-head CI passed all triggered workflows: Development OS Contracts `34810461613`, Development OS `34810461872`, Actionable Hold `34810461632`, Living Engineering Map `34810461677`, Trust-First Audit `34810461612`, GitHub Identity/Token `34810461701`, Current-Source Evidence `34810461718`, MCP Repository Create `34810461678`, and P13 External Managed Project `34810461615`.
-- The Contracts workflow completed its full regression suite including P16, P17, resolver, Security Gate, P12, and P14 checks.
 - PR #51 reconciled durable state after #49 and merged at `2500ddc235ce99dbe45a6cd0537d4b0d2372c4a4`.
-- This hardening creates no authority, authorization, execution, provider mutation, or production-readiness upgrade.
 
 ### AI State Resolver v2 cross-claim contradiction handling — merged
 
@@ -121,8 +122,7 @@ This is an unnumbered observability/integrity hardening objective. No P18/P19 is
 
 ## Next action
 
-- Open a bounded PR for detailed contradiction provenance from the current branch.
-- Require exact-final-head applicable CI; repair compatibility failures without weakening claims-based P16/P17 recomputation.
-- Merge only under the user's currently applicable bounded DevOS authorization and only when exact-head CI is green and the PR remains mergeable.
-- After merge, reconcile durable state so this completed objective is not left active.
-- Keep `production_ready = false`; do not invent a new numbered phase solely for bookkeeping.
+- Recover fresh `main`, open PRs, CI, durable state, and relevant source before selecting another bounded engineering objective.
+- Do not reactivate completed resolver hardening merely to continue development.
+- Keep `production_ready = false` unless a separately bounded evidence-backed objective explicitly changes it.
+- Do not invent a new numbered phase solely for bookkeeping.
