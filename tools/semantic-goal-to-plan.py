@@ -2,6 +2,7 @@
 import argparse
 import json
 import re
+from collections import defaultdict
 
 HIGH_IMPACT = {"deploy", "production", "merge", "database", "migration", "delete", "secret", "credential", "permission"}
 SECURITY_TERMS = {"security", "auth", "authentication", "authorization", "credential", "secret"}
@@ -66,6 +67,41 @@ def _negative_constraint_conflict(steps: list[dict], constraints: list[str]) -> 
     return None
 
 
+def _canonical_fact_value(value) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def _expected_contradictions(claims: list[dict]) -> tuple[list[dict] | None, str | None]:
+    groups: dict[str, list[tuple[str | None, str, str]]] = defaultdict(list)
+    for claim in claims:
+        has_key = "fact_key" in claim and claim.get("fact_key") is not None
+        has_value = "fact_value" in claim
+        if has_key != has_value:
+            return None, "state resolution fact identity incomplete"
+        if not has_key:
+            continue
+        fact_key = claim.get("fact_key")
+        if not isinstance(fact_key, str) or not fact_key.strip():
+            return None, "state resolution fact key invalid"
+        canonical = _canonical_fact_value(claim.get("fact_value"))
+        groups[fact_key.strip()].append((claim.get("id"), canonical, claim.get("state_confidence")))
+
+    expected: list[dict] = []
+    for fact_key in sorted(groups):
+        members = groups[fact_key]
+        values = sorted({canonical for _, canonical, _ in members})
+        if len(values) <= 1:
+            continue
+        if any(confidence != "unknown" for _, _, confidence in members):
+            return None, "state resolution cross-claim contradiction hidden"
+        expected.append({
+            "fact_key": fact_key,
+            "claim_ids": sorted(str(claim_id) for claim_id, _, _ in members if isinstance(claim_id, str) and claim_id.strip()),
+            "canonical_values": values,
+        })
+    return expected, None
+
+
 def _state_resolution_summary(state_resolution: dict) -> tuple[dict | None, str | None]:
     """Validate resolver v2 output while preserving the full resolver provenance."""
     if not isinstance(state_resolution, dict) or state_resolution.get("protocol") != "DEVOS-AI-STATE-RESOLUTION-v2":
@@ -105,6 +141,13 @@ def _state_resolution_summary(state_resolution: dict) -> tuple[dict | None, str 
             any_unknown = True
             if isinstance(claim_id, str) and claim_id.strip():
                 computed_unresolved.append(claim_id.strip())
+
+    expected_contradictions, contradiction_error = _expected_contradictions(claims)
+    if contradiction_error:
+        return None, contradiction_error
+    contradictions = state_resolution.get("contradictions", [])
+    if contradictions != expected_contradictions:
+        return None, "state resolution contradiction summary inconsistent"
 
     preserved = dict(state_resolution)
     if status == "BLOCKED":
