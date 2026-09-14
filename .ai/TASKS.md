@@ -2,120 +2,76 @@
 
 ## How to read this file
 
-This file tracks **work state**, not normative law. Source tree + current Git/PR/CI metadata are authoritative for exact implementation/integration state. Durable principles and authorization/security decisions live in `.ai/DECISIONS.md` and the relevant core contracts.
+This file tracks **work state**, not normative law. Current source/Git/PR/CI are authoritative for exact implementation state. Durable principles and authorization/security decisions live in `.ai/DECISIONS.md` and core contracts. Historical milestone detail lives in `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` and `.ai/SESSIONS/`.
 
-## Normative references — not task records
+## Normative references
 
-- **Core documentation law:** **What is not written was never done.**
-- **Core safety invariants:** provider capability/credentials never manufacture DevOS authorization; `CONTINUE != BLANKET AUTHORIZATION`; `READY != EXECUTION`; `production_ready = false` unless separately upgraded by evidence and an explicit bounded decision.
+- **What is not written was never done.**
+- `CONTINUE != BLANKET AUTHORIZATION`.
+- `READY != EXECUTION`.
+- `CI PASS != AUTHORIZATION`.
+- provider credentials/capability never manufacture DevOS authority.
+- `production_ready = false` unless a separately bounded evidence-backed decision changes it.
 
 ## Active bounded work
 
-- No bounded engineering objective is active after the P15 multilingual closure.
-- Select future work only from fresh `main`, current CI, source gaps, durable state, and current user intent. Do not create P18/P19 merely for bookkeeping.
+- No bounded engineering objective remains active after post-PR #54 reconciliation.
+- Select future work only from fresh `main`, open PRs, current CI, durable state, relevant source/tests, and current user intent.
+- Do not create P18/P19 merely for bookkeeping.
+
+## Completed — Automated Evidence → Durable State Reconciliation v1
+
+- PR #54 — `Add automated evidence to durable-state reconciliation v1` — merged at `e31c2099b5d9ce88ee4a20c225fe70b424dffa3d`.
+- Exact final feature head: `a2da0eaf2a5464d4a716859168bf0ba4d87659a6`.
+- Adds `tools/evidence-durable-state-reconciler.py` with protocol `DEVOS-EVIDENCE-DURABLE-RECONCILIATION-v1`.
+- Machine-verifiable merge/CI/file/document facts can be normalized deterministically; semantic project state still requires explicit review.
+- Fail-closed boundary invariants: `authority=UNCHANGED`, `authorization=UNCHANGED`, `execution=NONE`, `mutation=NONE`, `production_ready=false`.
+- Ready output emits a deterministic `DEVOS-DURABLE-RECONCILIATION-RECORD-v1`, canonical digest, and bounded write plan; it does not perform repository/provider writes itself.
+- Regression corpus covers unmerged work, failed/stale/missing CI, missing required docs, absent semantic review, forged authority/execution/production readiness, unknown auto-authorization fields, and record/digest tampering.
+- Dedicated workflow `.github/workflows/verify-evidence-durable-reconciliation.yml` passed on exact feature head.
+- Exact-head successful runs: Development OS `34813287533`; Contracts `34813287564`; Current-Source Evidence `34813287546`; MCP Repository Create `34813287537`; Trust-First Audit `34813287565`; Evidence Durable Reconciliation `34813287654`.
+- Machine reconciliation record is persisted in `.ai/RECONCILIATION-LEDGER.jsonl`; digest `3d60ab6d8c9b066a4835cc877b38b636cc136e19e6b18fce1b8e1d79702ebac5` is pinned in `.ai/SESSIONS/2026-09-14-post-pr54-evidence-reconciliation.md`.
+- Post-merge semantic review preserves P15 multilingual closure and records that the master map already contains G5/G8/G10 architectural direction; no new numbered phase is required.
+- No authority, authorization, provider mutation, deployment, automatic merge policy, next-objective inference, or production-readiness upgrade was introduced.
 
 ## Completed — P15 bounded Devanagari Hindi/Hinglish interpretation and gating
 
-- Main commit `001f48e64d3e7e6e32d9befc9bb00899b8868e03` preserves Devanagari Unicode and adds the bounded P15 corpus plus P15 → P16 → P17 flow regression.
-- Hindi deployment remains production/destructive and requires approval; explicit negative deployment wording blocks a conflicting plan; contextless referents clarify.
-- Exact-head CI passed: Development OS `34812860000`; Contracts `34812859861`; Trust-First `34812859744`; Living Engineering Map `34812859740`; GitHub Identity/Token `34812859825`; Provider Controller Adapter `34812859833`; Remote Permission Governance `34812859951`.
-- The capability remains deterministic corpus coverage only, with no universal language, authority, execution, mutation, or production-readiness claim.
-- Do not create P18/P19 merely for bookkeeping.
+- Main commit `001f48e64d3e7e6e32d9befc9bb00899b8868e03` preserves Unicode Hindi and adds bounded multilingual corpus plus P15 → P16 → P17 regression.
+- Hindi high-impact deployment remains independently production/destructive and authorization-gated; negative deployment wording blocks conflicting plans; unresolved referents clarify.
+- Exact-head successful runs: Development OS `34812860000`; Contracts `34812859861`; Trust-First Audit `34812859744`; Living Engineering Map `34812859740`; GitHub Identity/Token `34812859825`; Provider Controller Adapter `34812859833`; Remote Permission Governance `34812859951`.
+- Coverage is bounded deterministic corpus evidence, not universal language competence or authority.
 
-## Completed — AI State Resolver v2 detailed contradiction provenance
+## Completed — AI State Resolver v2 hardening sequence
 
-- PR #52 — `Add detailed resolver contradiction provenance` — merged at `2a5e13ad5a46085dc6949bfbcf325f84e29f9d02`.
-- Exact final source head: `b091ef2058f3c089d3daeafb41ca9fc58568f435`.
-- Resolver emits deterministic `contradictions` records alongside `contradiction_fact_keys`.
-- Each contradiction record contains `fact_key`, sorted involved `claim_ids`, and sorted canonical JSON values.
-- Non-contradictory and invalid-top-level results emit `contradictions: []`.
-- P16 independently recomputes the expected detailed provenance from claims and returns `CLARIFY` when detail is forged/inconsistent.
-- P17 independently revalidates the same detail and returns `BLOCKED` when detail is forged/inconsistent after planning.
-- Existing post-P16 `fact_value` tamper defense remains intact and claims-based.
-- Exact-final-head CI passed: Development OS `34811362766`; Development OS Contracts `34811362710`; MCP Repository Create `34811362769`; Actionable Hold `34811362786`; P13 External Managed Project `34811362707`; Current-Source Evidence `34811362749`; GitHub Identity/Token `34811362750`; Living Engineering Map `34811362775`; Trust-First Audit `34811362701`.
-- Closed PR #50 remains unmerged; only its non-duplicate detailed-provenance concept was recovered after fresh comparison against current `main`.
-- No authority, authorization, execution, provider mutation, automatic winner selection, production mutation, or production-readiness upgrade was introduced.
-
-## Completed — resolver contradiction envelope integrity
-
-- PR #49 — `Harden resolver contradiction envelope integrity` — merged at `58d37ea23d025d7414f0d55fe2ba5ccc42068b8e`.
-- Exact final source head: `3c0711a9803649505d105728e90e1ef90b3d7ce8`.
-- P16 independently recomputes explicit same-`fact_key` / canonical-`fact_value` contradictions from resolver claim provenance.
-- P16 fails closed on hidden contradictions, inconsistent contradiction reasons, or inconsistent `contradiction_fact_keys`.
-- P17 independently recomputes contradiction integrity from the full resolver provenance retained by P16.
-- Post-P16 `fact_value` tampering that creates a hidden contradiction is `BLOCKED` even when status/confidence/count metadata remains superficially consistent.
-- Adversarial integration coverage proves forged contradiction hiding is rejected by P16 and post-plan fact-value tampering is rejected by P17.
-- Exact-final-head CI passed: Development OS Contracts `34810461613`; Development OS `34810461872`; Actionable Hold `34810461632`; Living Engineering Map `34810461677`; Trust-First Audit `34810461612`; GitHub Identity/Token `34810461701`; Current-Source Evidence `34810461718`; MCP Repository Create `34810461678`; P13 External Managed Project `34810461615`.
-- PR #51 reconciled post-#49 durable state and merged at `2500ddc235ce99dbe45a6cd0537d4b0d2372c4a4`.
-
-## Completed — AI State Resolver v2 cross-claim contradiction handling
-
-- PR #46 — `Add resolver cross-claim contradiction handling` — merged at `36f3001487fb7ce666bb1e7241b539645878101a`.
-- Exact final feature head: `490eeebea69a4f4ae44657f5d94edaef35a26db4`.
-- Adds optional explicit `fact_key` + deterministic JSON `fact_value` identity while preserving legacy claims with neither field.
-- Same valid `fact_key` + different canonical values => involved claims become `unknown` with `CROSS_CLAIM_CONTRADICTION`; resolver status becomes `NEEDS_EVIDENCE` and records `contradiction_fact_keys`.
-- Arbitrary statement prose is not semantically paired by guesswork and no automatic winner is selected.
-- P16 uses the unresolved-state path and returns `CLARIFY`; P17 fails closed if unknown contradiction claims are hidden in a forged planned envelope.
-- Exact final-head CI passed: Development OS `34809630956`; Contracts `34809630926`; Current-Source `34809630993`; Trust-First `34809630947`; Living Engineering Map `34809631004`; GitHub Identity/Token `34809631046`; MCP Repository Create `34809630925`.
-- PR #47 was a concurrent duplicate attempt and was closed without merge after #46 became authoritative.
-- PR #48 reconciled post-#46 durable state and merged at `7009e8e1b4398462b1a9321bb1e2a38a3c35e478`.
+- PR #44 — envelope integrity.
+- PR #46 — explicit cross-claim contradiction identity/handling.
+- PR #49 — downstream P16/P17 independent contradiction recomputation and tamper defense.
+- PR #52 — detailed contradiction provenance and downstream detail validation.
+- Post-feature durable reconciliations and exact heads/CI are recorded in stage history and session records.
+- Closed/stale duplicate PRs remain historical provenance only and are never substituted for merged current source.
 
 ## Completed — previous-stage documentation ledger
 
-- `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` documents numbered architecture stages P9–P17 and major unnumbered proof/hardening milestones through PR #52.
-- The ledger is navigation/history only; current source, Git/PR/CI, `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, core contracts, tests, and decisions remain authoritative.
-- `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md` records the contradiction contract, downstream envelope-integrity defenses, detailed contradiction provenance, and non-goals.
-
-## Completed — first-contact acknowledgement hardening
-
-- Main commit `f07c7c5a4afd4fd25c0da5b1ed7ee88733168baa` hardened the Plain Project Context and Recovery Guide first-contact signal.
-- Fresh sessions use the host-neutral acknowledgement `DevOS context recovered` / `DevOS context not verified` instead of requesting or implying a host mode.
-
-## Completed — AI State Resolver v2 envelope integrity
-
-- PR #44 merged at `a4a3413bb27802ef38a698550807e8fb0102f839`; exact final source head `71d93755e171da5e83e62b00baa4680a0e929f5e`.
-- P16 validates/preserves the full resolver envelope; P17 independently revalidates it and fails closed on hidden uncertainty or changed safety invariants.
-- PR #45 merged at `aa38761270ac9acdf6af90a4bae64890c766ec91` to reconcile post-#44 durable state.
-
-## Completed — GitHub governed provider slice
-
-- GitHub Identity & Token Control Plane v1 — PR #32.
-- Governed provider/controller adapter — PR #35.
-- DevOS activation handshake historical milestone — PR #39; current first-contact wording was later hardened by `f07c7c5...`.
-- GitHub mutation readback reconciliation — PR #42.
-- Live read-only App run `34785659043` succeeded without exposing credential material.
-- Isolated governed create/update/delete provider evidence is durable; this proves the scoped path, not blanket production/destructive authority.
-
-## Earlier completed unnumbered objectives
-
-- Production E2E Harness — PR #11.
-- Failure + Recovery Proof — PR #12.
-- Multi-Session / Fresh-AI Continuation Proof — PR #13.
-- Controlled Remote Mutation Proof — PR #14.
-- Production-Readiness Evidence Matrix & Limitations — PR #16.
-- Trust-First audit gap closure — PR #17.
-- Foundation Health & State Consistency — PR #18.
-- Universal Project Onboarding + Repository Creation — PR #19.
-- Cross-Host Recovery Friction & Onboarding Proof — PR #20.
-- Recovery Friction → Foundation Health/Doctor Integration — PR #21.
-- Host-neutral MCP/App `repository.create` — PR #22.
-- Actionable HOLD + Scoped Approval + Governed Continuation — PR #23.
-- Current-Source Evidence Refresh — PR #24.
-- MCP/App Permission Control Plane + Multi-Project Agent Isolation — PR #27.
+- `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable navigation ledger for P9–P17 and major unnumbered milestones.
+- `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture/future-flow map.
+- `core/evidence-durable-state-reconciliation.md` is the normative contract for PR #54 capability.
+- `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md` is the resolver contradiction contract.
 
 ## Retained platform foundations
 
-- P9 through P17 are completed architecture stages at their recorded evidence levels.
-- P11 remains the repository-first recovery/revalidation/cross-AI continuity baseline.
-- P12 remains the advisory/runtime-observability and evidence provenance/freshness substrate.
-- Later unnumbered hardening objectives must not be relabeled as P18/P19 merely for bookkeeping.
+- P9 through P17 remain completed architecture stages at their recorded evidence levels.
+- P11 remains repository-first recovery/revalidation/cross-AI continuity baseline.
+- P12 remains evidence provenance/freshness owner.
+- P15 remains language interpretation; P16 planning; P17 readiness/authorization.
+- GitHub governed provider capability, readback reconciliation, multi-project isolation, Actionable HOLD, current-source evidence, onboarding, recovery, adaptive verification/self-healing, and trust-first auditing remain retained foundations.
 
 ## Current HOLD / limits
 
 - `production_ready = false`.
-- Resolver confidence and contradiction provenance never grant authorization, execution, mutation, or completion.
-- P12 retains execution-evidence provenance/freshness ownership; P16 retains planning; P17 retains readiness/authorization.
-- No production/deployment/credential/permission/destructive authority was introduced by the resolver hardening sequence.
+- Machine evidence and reconciliation records never grant authorization, execution, completion authority, or provider permission.
+- Semantic CURRENT/TASKS/roadmap changes require review; commit messages are not semantic truth.
+- Uncertain provider mutation is never blindly replayed.
+- Parallel AI branches must revalidate against fresh `main` before integration.
 
 ## Task-map invariant
 
