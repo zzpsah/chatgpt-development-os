@@ -5,10 +5,10 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
 - **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
-- Current reconciliation target is post-PR #54 merge commit `e31c2099b5d9ce88ee4a20c225fe70b424dffa3d`.
+- Current post-feature checkpoint: PR #57 merge commit `5d0bdbc0258e898ece21f99937dc4f5b886778a0` plus this durable reconciliation.
 - `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture index.
 - `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable numbered/unnumbered milestone ledger.
-- `.ai/RECONCILIATION-LEDGER.jsonl` is the machine-readable post-feature reconciliation ledger introduced by PR #54.
+- `.ai/RECONCILIATION-LEDGER.jsonl` is the machine-readable post-feature reconciliation ledger.
 
 ## Core documentation law
 
@@ -24,68 +24,62 @@ Completion requires:
 
 ## Canonical governed path
 
-`Human request → P15 interpretation → state resolution → P16 plan → P17 readiness → Actionable HOLD / Scoped Approval → controller → bounded runtime → verification → evidence/durable-state reconciliation → persistence → recovery / continuation`
+`Human request → P15 interpretation → state resolution → P16 plan → P17 readiness → Actionable HOLD / Scoped Approval → controller → runtime handoff → bounded runtime → verification/readback → evidence/durable-state reconciliation → persistence → recovery / continuation`
 
-Interpretation, planning, readiness, credentials, CI, generated facts, reconciliation metadata, prior approvals, recovery state, or documentation never manufacture permission.
+Interpretation, planning, readiness, runtime capability, credentials, CI, generated facts, reconciliation metadata, prior approvals, recovery state, or documentation never manufacture permission.
 
 ## Active bounded work
 
-- No bounded engineering objective is active after the local delivery proof closure.
-- Future work must be selected from fresh `main`, CI, durable state, source gaps, and current user intent. No P18/P19 phase is created for bookkeeping.
+- No bounded engineering objective remains active after the post-PR #57 reconciliation.
+- Future work must be selected from fresh `main`, open PRs, CI, durable state, relevant source/tests, and current user intent.
+- Do not create P18/P19 merely for bookkeeping.
 
 ## Current verified capability state
 
+### Universal Agent Runtime Adapter v1 — merged
+
+- PR #57 — `Add universal agent runtime adapter v1` — merged at `5d0bdbc0258e898ece21f99937dc4f5b886778a0`.
+- Exact final feature head: `da57d48c1ec28eac71eff75b59f9c701e9c9c593`.
+- Normative contract: `core/agent-runtime-adapter.md`.
+- Reference implementation: `tools/agent-runtime-handoff.py`.
+- Generic capability profile: `adapters/agent-runtime-profile.example.json`.
+- The adapter sits after the existing controller/P17 runtime-ready bridge and is side-effect free.
+- It revalidates P17 readiness, exact scoped approval, repository HEAD, runtime capabilities, approved relative file paths, and v1 operation classes `file.create` / `file.update`.
+- It emits a canonical SHA-256 `handoff_id` and validates returned runtime identity, touched files, observed diff, passing tests, final readback, and prohibited-operation absence.
+- A runtime `COMPLETED` claim becomes `VERIFIED_RUNTIME_RESULT` only when evidence agrees with the approved handoff.
+- Exact-head CI passed: Development OS `34816332421`; Contracts `34816332435`; Current-Source Evidence `34816332392`; MCP Repository Create `34816332425`; Trust-First Audit `34816332380`; Evidence Durable Reconciliation `34816332373`; Agent Runtime Adapter `34816332410`.
+- PR #56 was closed without merge after concurrent main advancement; PR #57 is the authoritative integration.
+- No vendor-specific Codex/Claude/OpenHands/Gemini execution integration is claimed by v1.
+
 ### Local Disposable Delivery Proof v1 — closed
 
-- Main commit `1f735fa11e19b9852ce9210338bc0907ab0b5b1c` proves a temporary local Git repository delivery path: P15 → P16 → P17 → exact scoped approval → controller/runtime handoff → local file update → test/readback → evidence packet → fresh evidence recovery.
-- Approval is bound to exact repository path, initial Git head, P16 step, capability, target, and low-impact ceiling. Missing preparation or mismatched approval holds without changing the target file.
-- Exact-head CI passed: Development OS `34816057996`, Contracts `34816057880`, Trust-First `34816057979`, Living Engineering Map `34816057867`, GitHub Identity/Token `34816057874`, Provider Controller Adapter `34816057869`, and Remote Permission Governance `34816057885`.
-- The proof is local and disposable only. It does not prove or authorize commit/push, managed-repository, provider, deployment, production, credential, database, permission, destructive, or general automated delivery operations.
+- Main commit `1f735fa11e19b9852ce9210338bc0907ab0b5b1c`, followed by closure commit `284def759c6532bc80701dcfaff5446d5e315ac4`, proves a temporary local Git repository path: P15 → P16 → P17 → exact local scoped approval → controller/runtime handoff → local file update → test/readback → evidence packet → fresh recovery.
+- Approval is bound to exact project path, initial Git head, P16 step, capability, target, and low-impact ceiling.
+- Exact-head CI recorded: Development OS `34816057996`; Contracts `34816057880`; Trust-First `34816057979`; Living Engineering Map `34816057867`; GitHub Identity/Token `34816057874`; Provider Controller Adapter `34816057869`; Remote Permission Governance `34816057885`.
+- The proof is local/disposable only and does not prove commit/push, managed-repository, provider, deployment, production, credential, database, permission, destructive, or general automated-delivery authority.
+- Runtime Adapter v1 is complementary infrastructure; the current local proof is not claimed to have already been rewired through the new adapter envelope.
 
 ### Automated Evidence → Durable State Reconciliation v1 — merged
 
-- PR #54 — `Add automated evidence to durable-state reconciliation v1` — merged at `e31c2099b5d9ce88ee4a20c225fe70b424dffa3d`.
-- Exact final feature head: `a2da0eaf2a5464d4a716859168bf0ba4d87659a6`.
-- Normative contract: `core/evidence-durable-state-reconciliation.md`.
-- Deterministic tool: `tools/evidence-durable-state-reconciler.py`.
-- The tool validates merged feature evidence, exact-head successful workflow evidence, required workflow presence, explicit documentation requirements, and semantic-review provenance.
-- Statuses are `BLOCKED`, `NEEDS_EVIDENCE`, `SEMANTIC_REVIEW_REQUIRED`, and `READY_FOR_DURABLE_RECONCILIATION`.
-- Ready output includes `DEVOS-DURABLE-RECONCILIATION-RECORD-v1`, a canonical SHA-256 digest, and a bounded write plan; the tool itself performs no repository/provider write.
-- Machine facts may be automated; semantic CURRENT/TASKS/roadmap/authority meaning still requires review.
-- Exact-final-head CI passed: Development OS `34813287533`; Development OS Contracts `34813287564`; Current-Source Evidence `34813287546`; MCP Repository Create `34813287537`; Trust-First Audit `34813287565`; Evidence Durable Reconciliation `34813287654`.
-- Structured PR #54 reconciliation evidence is persisted in `.ai/RECONCILIATION-LEDGER.jsonl`; canonical record digest `3d60ab6d8c9b066a4835cc877b38b636cc136e19e6b18fce1b8e1d79702ebac5` is pinned in the post-merge session record.
-- The pre-write record keeps `durable_state: false` by design; durable completion requires the subsequent persistence + fresh reconciliation-PR verification/readback.
-- No authority, authorization, execution, provider mutation, automatic next-objective selection, architecture-phase creation, semantic truth selection, or production-readiness upgrade was introduced.
+- PR #54 merged at `e31c2099b5d9ce88ee4a20c225fe70b424dffa3d`; post-merge reconciliation PR #55 merged at `ec77c2efed145fe2c419fba365aad33a6f10990e`.
+- `tools/evidence-durable-state-reconciler.py` separates machine-verifiable merge/CI/file/document facts from semantic state review.
+- `.ai/RECONCILIATION-LEDGER.jsonl` now includes durable reconciliation records for PR #54 and PR #57.
+- PR #57 record digest: `3885b140ce1c81c387ed6dad7a9ceb8183e275717540d5b5711269f1a6a95374`.
+- Machine facts, CI, commit messages, and reconciliation records never create semantic authority or production readiness.
 
-### P15 bounded Devanagari Hindi/Hinglish interpretation and gating — closed
+### P15 multilingual interpretation and resolver hardening — retained
 
-- Main commit `001f48e64d3e7e6e32d9befc9bb00899b8868e03` preserves Unicode Hindi input and adds bounded multilingual corpus coverage plus P15 → P16 → P17 safety regression.
-- Hindi deployment language remains production/destructive and independently gated; explicit negative deployment wording blocks conflicting plans; unresolved referents clarify.
-- Exact-head CI evidence recorded: Development OS `34812860000`; Contracts `34812859861`; Trust-First Audit `34812859744`; Living Engineering Map `34812859740`; GitHub Identity/Token `34812859825`; Provider Controller Adapter `34812859833`; Remote Permission Governance `34812859951`.
-- This is bounded corpus evidence only, not universal multilingual competence and not authority.
-
-### AI State Resolver v2 contradiction hardening — merged sequence
-
-- PR #44: resolver envelope integrity.
-- PR #46: explicit `fact_key` / deterministic `fact_value` cross-claim contradiction handling.
-- PR #49: independent P16/P17 contradiction recomputation and hidden-tamper rejection.
-- PR #52: deterministic detailed contradiction provenance with independent downstream validation.
-- Historical exact heads, merge commits, CI run IDs, and duplicate/stale PR handling are preserved in `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md`, `.ai/SESSIONS/`, and prior durable records.
+- Bounded Devanagari Hindi/Hinglish corpus and P15 → P16 → P17 safety gating are completed at their recorded evidence level.
+- AI State Resolver v2 envelope integrity, cross-claim contradiction handling, downstream contradiction recomputation, and detailed contradiction provenance are completed through PRs #44, #46, #49, and #52.
 - Resolver confidence/provenance never grants authorization, execution, mutation, completion, or production readiness.
 
-### Numbered architecture
+### Numbered architecture and provider foundations
 
 - P9 through P17 are complete at their recorded evidence levels.
-- P11 remains repository-first recovery/revalidation/cross-AI continuity baseline.
+- P11 remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P12 remains owner of execution-evidence provenance/freshness.
 - P15/P16/P17 remain interpretation/planning/readiness layers respectively; none independently grants runtime authority.
-
-### Live GitHub provider evidence — proven, scoped
-
-- GitHub App read-only runtime authentication is proven by run `34785659043`.
-- Governed GitHub mutation through P17/controller/provider path is proven on isolated create → update → delete resources with fresh readback/reconciliation.
-- PR #42 added bounded readback-only retry/reconciliation; uncertain mutation is never blindly replayed.
-- Proven provider capability does not authorize arbitrary or production mutation.
+- Governed GitHub provider mutation is proven only for its recorded isolated scope; uncertain mutation is never blindly replayed.
 
 ## Current boundaries
 
@@ -95,9 +89,11 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 - `CI PASS != AUTHORIZATION`.
 - `DOCUMENTATION != AUTHORIZATION`.
 - `PROVIDER CREDENTIAL != DEVOS AUTHORIZATION`.
+- `RUNTIME CAPABILITY != AUTHORIZATION`.
+- `RUNTIME RESULT != AUTHORITY`.
 - Machine-generated evidence/factual synchronization never becomes semantic truth by itself.
 - Historical exact-head evidence is pinned and is not silently rewritten when source advances.
-- Parallel AI work must be rebased/reconciled against fresh `main`; stale semantic state must never overwrite newer state.
+- Parallel AI work must revalidate against fresh `main`; stale semantic state must never overwrite newer state.
 
 ## Recovery precedence
 
@@ -114,11 +110,14 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 - Historical handoff: `docs/handoff/README.md`.
 - Master architecture: `docs/DEVOS-MASTER-ENGINEERING-MAP.md`.
 - Engineering stage history: `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md`.
+- Runtime adapter contract: `core/agent-runtime-adapter.md`.
+- Local delivery proof contract: `core/local-disposable-delivery-proof.md`.
 - Evidence reconciliation contract: `core/evidence-durable-state-reconciliation.md`.
 - Resolver contradiction contract: `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md`.
 
 ## Next action
 
-- Verify and merge the post-PR #54 reconciliation branch on its exact head, then read back fresh `main`.
-- After that, select the next bounded objective only from fresh repository evidence and current user intent.
+- Merge this post-PR #57 durable reconciliation only after exact-final-head CI passes, then read back fresh `main`.
+- After closure, choose the next objective from fresh repository evidence and current user intent rather than automatically extending the runtime adapter.
+- A future bounded integration objective may connect Local Disposable Delivery Proof v1 to Universal Agent Runtime Adapter v1; that integration is not silently assumed complete here.
 - Keep `production_ready = false` unless a separately bounded evidence-backed objective explicitly changes it.
