@@ -2,8 +2,10 @@
 
 Date: 2026-09-14
 Repository: `zzpsah/chatgpt-development-os`
-Base `main`: `36f3001487fb7ce666bb1e7241b539645878101a`
+Initial base `main`: `36f3001487fb7ce666bb1e7241b539645878101a`
+Fresh reconciliation base: `f07c7c5a4afd4fd25c0da5b1ed7ee88733168baa`
 Branch: `docs/reconcile-post-pr46-state`
+PR: #48
 
 ## Trigger
 
@@ -24,32 +26,45 @@ PR #46 (`Add resolver cross-claim contradiction handling`) merged under the user
 
 ## Closed behavior
 
-- Optional explicit `fact_key` + deterministic JSON `fact_value` identity is now merged.
+- Optional explicit `fact_key` + deterministic JSON `fact_value` identity is merged.
 - Cross-claim comparison occurs only for claims explicitly sharing a valid fact identity; arbitrary prose is not paired by guesswork.
 - Conflicting canonical values for the same fact make involved claims `unknown`, add `CROSS_CLAIM_CONTRADICTION`, record `contradiction_fact_keys`, and yield resolver `NEEDS_EVIDENCE`.
 - P16 propagates unresolved contradictions as `CLARIFY`.
 - P17 fails closed if contradiction-derived unknown claims are hidden by tampering with top-level planned-envelope metadata.
 - Legacy claims with no fact identity remain backward compatible.
 
-## Concurrent-main repair retained
+## Earlier concurrent-main repair retained
 
-PR #46 also retained the intent of the concurrent `040c7d21...` compact active/history rewrite while repairing two regressions detected by fresh evidence:
+PR #46 retained the intent of the concurrent `040c7d21...` compact active/history rewrite while repairing two regressions detected by fresh evidence:
 
 - the explicit ChatGPT Memory/chat-history supplementary-only recovery boundary was restored;
 - already-proven live read-only GitHub App and isolated governed mutation evidence was restored instead of being incorrectly marked pending/user-reported.
 
-The feature branch incorporated current `main` through a non-force two-parent merge commit before final CI.
+The feature branch incorporated that `main` through a non-force two-parent merge commit before final CI.
+
+## Fresh-main advance during PR #48
+
+After the first PR #48 exact head (`8e87649846668a496aa2a2c315a0c35afdc279f2`) passed all seven triggered gates, `main` advanced to `f07c7c5a4afd4fd25c0da5b1ed7ee88733168baa` with `docs: harden first-contact acknowledgement`.
+
+That fresh-main change is useful and must be preserved. It changes first-contact recovery wording from a mode/activation signal to the host-neutral acknowledgement:
+
+- `DevOS context recovered`
+- `DevOS context not verified`
+
+The acknowledgement reports context recovery only; it does not request a host mode, special permission, or changed host behavior.
+
+Because the fresh-main commit also touched `.ai/CURRENT-STATE.md` and `.ai/TASKS.md`, PR #48 became non-mergeable despite green CI. This reconciliation therefore incorporates the new first-contact semantics into its durable state before rebuilding the branch on the fresh `main` tree. No force update is required.
 
 ## Previous-stage documentation
 
-`docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` now serves as the durable navigation ledger for P9–P17 and major unnumbered hardening/proof milestones. This reconciliation adds PR #46 to that ledger.
+`docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` serves as the durable navigation ledger for P9–P17 and major unnumbered hardening/proof milestones. This reconciliation adds PR #46 to that ledger.
 
 ## Reconciliation changes
 
-- `.ai/CURRENT-STATE.md`: mark PR #46 closed/merged, pin exact verified evidence, remove stale active wording, preserve truthful provider evidence and recovery boundaries.
-- `.ai/TASKS.md`: move the contradiction objective to completed; leave no invented next phase/objective.
+- `.ai/CURRENT-STATE.md`: mark PR #46 closed/merged, pin exact verified evidence, preserve truthful provider evidence/recovery boundaries, and retain fresh host-neutral first-contact acknowledgement semantics.
+- `.ai/TASKS.md`: move the contradiction objective to completed, record the first-contact acknowledgement hardening, and leave no invented next phase/objective.
 - `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md`: append PR #46 and close the current evolution direction.
-- This session: record the closure evidence and rationale.
+- This session: record closure evidence plus both fresh-main reconciliations.
 
 ## Boundaries
 
@@ -60,4 +75,4 @@ The feature branch incorporated current `main` through a non-force two-parent me
 
 ## Completion condition
 
-This reconciliation is complete only after its exact final head passes triggered CI and the docs-only PR is merged. After merge, future continuation must recover fresh `main` before promoting the next bounded objective.
+This reconciliation is complete only after the rebuilt exact final head on current `main` passes triggered CI and PR #48 is merged. After merge, future continuation must recover fresh `main` before promoting the next bounded objective.
