@@ -5,10 +5,11 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI/release-artifact metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
 - **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
-- DevOS `0.20.0` Production Target Evidence Intake v1 implementation merged through PR #68 at `b9f4c6023aa4bc12111c713b6b262012ed3e51c4` from exact verified feature head `40957dfaf2965d16dc1159f1fca1aca183a4110c`.
-- Durable reconciliation PR #69 merged at `68a5b65e4c4ab7c8fa43d6ad722c4904442cbfb4` from exact verified reconciliation head `bb68ab7fcaad3b8ae683da917d2f9d819da9f058`; the merge commit signature was GitHub verified.
-- PR #69 final exact-main readback completed with 12/12 push workflows success and exact-source artifact ID `10361908379`, digest `sha256:1ad7f2f320c78087d360f32f8cda6da6f65e8a613205274873bd78f5596574e8`, size `761954` bytes.
-- `docs/DEVOS-MASTER-ENGINEERING-MAP.md` remains the living architecture index; no P18/P19 was created for this unnumbered G9 evidence-path hardening milestone.
+- Canonical distribution version: `0.21.0`.
+- Managed Project Lifecycle v1 implementation merged through PR #71 at `22ef14850d5d39ce8ff17d85c5608d48c9947066` from exact verified feature head `cdb291e73ad73afd5f2ae32b3933cb52ac1d1421`.
+- PR #71 exact feature head completed **15/15 workflows successfully**.
+- PR #71 post-merge exact-main push workflow set completed **11/11 successfully**.
+- Exact-source 0.21.0 artifact: ID `10371752023`, name `devos-source-22ef14850d5d39ce8ff17d85c5608d48c9947066`, digest `sha256:27bf129b748fe6c7d7cc04f122ba2a0e007d9c4147f238c766736a541b4c61b4`, size `775028` bytes.
 
 ## Core documentation law
 
@@ -26,66 +27,69 @@ Completion requires:
 
 `Human request → P15 interpretation → state resolution → P16 plan → P17 readiness → Actionable HOLD / Scoped Approval → controller → bounded runtime → verification → evidence/durable-state reconciliation → persistence → recovery / continuation`
 
-Interpretation, planning, readiness, credentials, CI, generated facts, evidence intake, reconciliation metadata, prior approvals, recovery state, documentation, or release status never manufacture permission.
+Interpretation, planning, readiness, credentials, CI, repository existence, generated facts, evidence intake, reconciliation metadata, prior approvals, recovery state, documentation, or release status never manufacture permission.
+
+## DevOS 0.21.0 Managed Project Lifecycle v1 — closed / engineering-distribution release-ready
+
+The gap exposed by `zzpsah/Devos-Browser` is now closed at the DevOS control-plane level.
+
+Permanent lifecycle invariants:
+
+```text
+REPOSITORY EXISTS != DEVOS MANAGED
+REPOSITORY CREATED != ONBOARDED
+REPOSITORY DISCOVERED != SAFE TO CONTINUE
+```
+
+Lifecycle behavior:
+
+```text
+CREATE or DISCOVER
+      ↓
+fresh repository readback
+      ↓
+Managed Project Lifecycle check
+      ↓
+MANAGED ?
+  ├─ YES → recover durable state → development may continue
+  ├─ NO  → onboarding required → fresh readback → re-check
+  └─ CONFLICT / malformed evidence → HOLD / BLOCKED
+```
+
+Implemented boundaries:
+
+- `tools/devos-project-lifecycle.py` classifies local/provider-observed repositories.
+- `DEVOS-REPOSITORY-DISCOVERY-SNAPSHOT-v1` supplies read-only provider evidence.
+- only `MANAGED` sets `development_continuation_allowed=true`.
+- local onboarding mutation requires explicit authorization and fresh managed-state readback.
+- `repository.create` now carries a mandatory `project.onboard` postcondition and holds development continuation until `MANAGED`.
+- `devos project-lifecycle` exposes the lifecycle gate through the CLI.
+- dedicated Python 3.11/3.12 lifecycle CI is merged.
+
+## Real remediation proof — `zzpsah/Devos-Browser`
+
+The repository that exposed this gap has been actually onboarded rather than left as a theoretical test case.
+
+Evidence:
+
+- initial main SHA `131a4f3182fd43cc19520a8803186b136a606eaa` contained only `README.md` and was UNMANAGED;
+- onboarding PR #2 merged at `dd94eb11984ea5ab08e1ff1b89307dfefcc15d0b`, with GitHub-verified merge signature;
+- Development OS Context Sync run `34904321784` completed successfully;
+- onboarding semantic-closure PR #3 merged at `9293e4057aa8e6989a8a40ca55aae4a70858738f`;
+- second Context Sync run `34904465022` completed successfully;
+- final observed browser-repository main after sync: `a19b3794822bfd0c035a144ef020ee979e700bef`;
+- fresh `.ai/manifest.yaml` readback confirms `managed_by: development-os`, canonical repository `zzpsah/Devos-Browser`, and DevOS authority `zzpsah/chatgpt-development-os`.
+
+Managed Project Lifecycle verdict for `zzpsah/Devos-Browser`: **MANAGED**.
+
+This proves project management/onboarding only. Browser/runtime application behavior, provider capability, tests, deployment, and production readiness are not implied.
 
 ## Active bounded work
 
-- No numbered feature milestone is active.
-- No unreconciled repository-side DevOS `0.20.0` implementation objective remains after PR #69 durable reconciliation and final readback.
-- Future work must begin from fresh `main`, current CI/issues/PRs, relevant source/tests, direct runtime/provider/target evidence, concurrent AI work, and current user intent.
+- No unreconciled DevOS control-plane implementation objective remains after Managed Project Lifecycle v1 closure.
+- `zzpsah/Devos-Browser` is now managed, but its next application task is requirement/source recovery before browser-runtime feature implementation.
+- Future DevOS core work must begin from fresh `main`, current CI/issues/PRs, relevant source/tests, direct external evidence, concurrent AI work, and current user intent.
 - Do not create P18/P19 merely for bookkeeping.
-
-## DevOS 0.20.0 Production Target Evidence Intake v1 — closed / engineering-distribution release-ready
-
-- PR #68 title: `Add Production Target Evidence Intake v1 for DevOS 0.20.0`.
-- Exact verified feature head: `40957dfaf2965d16dc1159f1fca1aca183a4110c`.
-- Feature merge commit: `b9f4c6023aa4bc12111c713b6b262012ed3e51c4`; GitHub signature verified.
-- Exact feature-head applicable workflow set: **15/15 success**.
-- Production Target Evidence Intake workflow `34877606752`: Python 3.11 + 3.12 success.
-- Development OS Contracts workflow `34877606812`: success, including fresh-AI recovery after restoring the retained P11 marker.
-- Feature-head release workflow `34877606820`: success; Ubuntu/Windows × Python 3.11/3.12 release matrix passed.
-- Feature post-merge exact-main push workflow set: **12/12 success**.
-- Feature post-merge Production Target Evidence Intake workflow `34877764353`: success.
-- Feature post-merge Development OS Contracts workflow `34877764359`: success.
-- Feature post-merge distribution release workflow `34877764342`: success.
-- Exact implementation-source artifact: ID `10361816279`; name `devos-source-b9f4c6023aa4bc12111c713b6b262012ed3e51c4`; digest `sha256:94f7b68abea833ff1a9814ca96e1f0ff017b5b75a5df6c1fde852e461d6f03cf`; size `758139` bytes; not expired when verified.
-- Durable reconciliation record digest: `c38edd8818a313ed6cd9fdeaa1367e8491ea212db89ae8b00b038c3de3fd5171`.
-- Reconciliation PR #69 exact head: `bb68ab7fcaad3b8ae683da917d2f9d819da9f058`; **15/15 workflows success**.
-- Reconciliation merge commit: `68a5b65e4c4ab7c8fa43d6ad722c4904442cbfb4`; GitHub signature verified.
-- Reconciliation post-merge exact-main push workflow set: **12/12 success**.
-- Reconciliation exact-source artifact: ID `10361908379`; name `devos-source-68a5b65e4c4ab7c8fa43d6ad722c4904442cbfb4`; digest `sha256:1ad7f2f320c78087d360f32f8cda6da6f65e8a613205274873bd78f5596574e8`; size `761954` bytes.
-
-The repository-side target-evidence intake objective is complete and durably reconciled. DevOS can now validate already-observed target-bound evidence for all five external Production Readiness v2 blockers without allowing that evidence to self-promote readiness or authority. This factual closure update records already-proven PR #69 readback and does not create another reconciliation obligation.
-
-## Production Target Evidence v1 semantics
-
-A packet binds already-observed evidence to one exact repository source SHA, one explicit production target, one timezone-aware observation, one observer, and exactly these five external criteria:
-
-- `runtime_direct_conformance`
-- `recovery_disaster`
-- `operational_observability`
-- `deployment_target`
-- `high_impact_governance`
-
-Criterion states are `PASS | FAIL | UNOBSERVED`.
-
-- malformed/unsafe packet → `BLOCKED`;
-- valid packet with a FAIL or UNOBSERVED criterion → `HOLD`;
-- valid all-PASS packet → `CANDIDATE_COMPLETE`.
-
-Even `CANDIDATE_COMPLETE` fixes:
-
-- `readiness_promotion_allowed = false`
-- `semantic_review_required = true`
-- `production_ready = false`
-- `authority = UNCHANGED`
-- `authorization = UNCHANGED`
-- `execution = NONE`
-- `mutation = NONE`
-- `publication_authorized = false`
-- `deployment_authorized = false`
-
-A separate semantic review + durable Production Readiness v2 reconciliation remains mandatory before any readiness criterion may change.
 
 ## Current Production Readiness v2 verdict
 
@@ -109,7 +113,7 @@ Still requiring direct target-specific external evidence:
 - `deployment_target`
 - `high_impact_governance`
 
-These HOLD criteria are future target-specific evidence objectives, not unfinished repository implementation and not permission to execute production/high-impact actions merely to make the matrix green.
+Managed Project Lifecycle v1 does not change these production blockers and does not create production authority.
 
 ## Retained architecture foundations
 
@@ -118,7 +122,7 @@ These HOLD criteria are future target-specific evidence objectives, not unfinish
 - P12 remains the evidence provenance/freshness owner.
 - P15 remains language interpretation; P16 bounded planning; P17 exact-step readiness/authorization.
 - AI State Resolver v2 contradiction/envelope hardening remains retained.
-- GitHub provider/controller readback, multi-project isolation, Actionable HOLD, runtime-neutral handoff, runtime-profile/conformance evidence intake, distribution release machinery, Production Readiness Evidence v2, Production Target Evidence Intake v1, and durable reconciliation remain retained foundations.
+- GitHub provider/controller readback, multi-project isolation, Actionable HOLD, universal onboarding, Managed Project Lifecycle, runtime-neutral handoff, runtime-profile/conformance evidence intake, distribution release machinery, Production Readiness Evidence v2, Production Target Evidence Intake v1, and durable reconciliation remain retained foundations.
 
 ## Permanent boundaries
 
@@ -128,6 +132,8 @@ These HOLD criteria are future target-specific evidence objectives, not unfinish
 - `READY != EXECUTION`.
 - `CI PASS != AUTHORIZATION`.
 - `DOCUMENTATION != AUTHORIZATION`.
+- `REPOSITORY EXISTS != DEVOS MANAGED`.
+- `ONBOARDING != APPLICATION VERIFIED`.
 - `VALID TARGET EVIDENCE != PRODUCTION READY`.
 - `PRODUCTION READY != PUBLICATION AUTHORIZATION`.
 - `PRODUCTION READY != DEPLOYMENT AUTHORIZATION`.
@@ -136,7 +142,7 @@ These HOLD criteria are future target-specific evidence objectives, not unfinish
 
 ## Explicit non-actions
 
-No production probe, deployment, credential/secret/permission/database mutation, destructive restore test, production-scoped high-impact operation, runtime promotion, public tag/GitHub Release/package publication, or production-readiness promotion was performed to complete 0.20.0.
+No production probe, deployment, credential/secret/permission/database mutation, destructive action, runtime promotion, public tag/GitHub Release/package publication, or production-readiness promotion was performed for 0.21.0 or the Devos-Browser onboarding proof.
 
 ## Recovery precedence
 
@@ -149,4 +155,4 @@ No production probe, deployment, credential/secret/permission/database mutation,
 
 ## Next action
 
-Recover fresh `main`, open PRs/issues, CI, durable state, relevant source/tests, and any direct external evidence before selecting another bounded objective. No next implementation objective is activated automatically by this reconciliation.
+For DevOS core, recover fresh state before selecting another bounded objective. For `zzpsah/Devos-Browser`, recover authoritative browser/runtime requirements and prior implementation evidence before starting application feature work.
