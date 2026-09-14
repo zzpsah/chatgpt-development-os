@@ -143,7 +143,7 @@ P9 is implemented and verified. Higher-impact remote mutations from P8 remain se
 - [x] Document and validate future-session persistence expectations
 - [x] Complete P10 with fresh CI and context-sync evidence
 
-## P11 — DevOS Federation & Self-Healing Context v1 — COMPLETE
+### P11 — DevOS Federation & Self-Healing Context v1 — COMPLETE
 
 Goal: make DevOS context portable, self-identifying, recoverable, and resistant to stale/partial context across AI tools, accounts, projects, and connectivity interruptions.
 
@@ -160,7 +160,7 @@ Goal: make DevOS context portable, self-identifying, recoverable, and resistant 
 
 P11 is complete with repository-first recovery, vendor-neutral handoff, deterministic derived-context self-healing, and fresh-AI repository-only recovery evidence.
 
-## P12 — Operational Intelligence — COMPLETE
+### P12 — Operational Intelligence — COMPLETE
 
 - [x] Build deterministic dependency graph, readiness, and blocker analysis
 - [x] Add transparent dependency-aware prioritization and checkpoint signals
@@ -169,7 +169,7 @@ P11 is complete with repository-first recovery, vendor-neutral handoff, determin
 - [x] Add an independently gated executable controller decision envelope
 - [x] Verify P12 through fresh GitHub Actions evidence
 
-## P13 — Autonomous Development Orchestration — COMPLETE
+### P13 — Autonomous Development Orchestration — COMPLETE
 
 Goal: turn one human goal and recovered task state into one bounded, independently gated next work unit, then choose `CONTINUE`, `STOP`, or `ESCALATE` without claiming execution.
 
@@ -180,6 +180,37 @@ Goal: turn one human goal and recovered task state into one bounded, independent
 - [x] Connect actual completed runtime outcomes back into fresh task-state selection
 - [x] Add durable orchestration checkpoints and resume proof
 - [x] Verify P13 against an isolated managed-project end-to-end scenario
+
+### P14 — Adaptive Verification & Self-Healing — COMPLETE
+
+- [x] Add adaptive verification behavior over available evidence and checks
+- [x] Add bounded self-healing behavior without widening authority
+- [x] Re-run verification deterministically after bounded healing
+- [x] Preserve explicit stop/escalation behavior when healing cannot safely continue
+
+### P15 — Human Language Interpretation v2 — COMPLETE
+
+- [x] Interpret human goals semantically without treating language as authorization
+- [x] Preserve unresolved ambiguity and high-impact boundaries
+- [x] Support bounded multilingual/Hindi/Hinglish interpretation evidence
+- [x] Feed normalized intent into the governed planning path
+
+### P16 — Semantic Goal-to-Plan Compiler — COMPLETE
+
+- [x] Convert interpreted objectives into bounded dependency-aware plans
+- [x] Preserve scope, impact, verification, ambiguity, and resolver provenance
+- [x] Reject malformed or tampered resolver envelopes fail-closed
+- [x] Keep plan generation separate from execution authorization
+
+### P17 — Step Readiness & Authorization Orchestrator — COMPLETE
+
+- [x] Gate exact steps on dependencies, capability, evidence, authorization, and security
+- [x] Independently validate preserved resolver/plan provenance
+- [x] Emit READY only for bounded execution candidates
+- [x] Preserve `READY != EXECUTION` and explicit authorization boundaries
+- [x] Verify end-to-end P15 → P16 → P17 governed behavior
+
+P9–P17 are completed architecture history. Completion does not imply production readiness, blanket authority, or permission to invent additional numbered stages for bookkeeping.
 
 ## Cross-cutting
 
@@ -203,13 +234,19 @@ Goal: turn one human goal and recovered task state into one bounded, independent
 - [x] Durable context continuity work completed as P10
 - [x] P11 continuity/federation scope recorded
 - [x] P11 identity, integrity, and safe reconciliation gates verified by fresh CI
+- [x] P14 adaptive verification and bounded self-healing recorded as completed history
+- [x] P15 semantic human-language interpretation recorded as completed history
+- [x] P16 semantic goal-to-plan compilation recorded as completed history
+- [x] P17 exact-step readiness and authorization orchestration recorded as completed history
 
 ## Execution rule
 
-Complete the current milestone before advancing to the next milestone. Do not mark work complete without repository evidence and appropriate verification.
+Do not mark work complete without repository evidence and appropriate verification. Completed numbered architecture stages are historical evidence, not automatic authorization for a new stage or broader execution.
 
 ## Current milestone
 
-### P14 — Adaptive Verification & Self-Healing — PLANNED
+No numbered feature milestone is currently active.
 
-P13 is complete with fresh GitHub Actions evidence for the managed-project proof. P14 starts from the verified P13 execution-feedback boundary. Higher-impact P8 remote mutations remain independently incomplete.
+The completed architecture line through P17 is historical. DevOS `0.17.0` is engineering/distribution release-ready, while `production_ready = false` remains intentional. Future development must begin from fresh `main`, durable state, relevant source/tests, open issue/PR/CI evidence, and current user intent; a new numbered milestone must be explicitly justified rather than created for bookkeeping.
+
+Runtime portability remains evidence-driven one runtime at a time. Higher-impact P8 mutations, public release/tag publication, deployment, credentials, database changes, permission expansion, and destructive actions remain separately gated and are not implied by roadmap completion.
