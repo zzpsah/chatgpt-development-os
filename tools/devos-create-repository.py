@@ -3,6 +3,10 @@
 
 Default mode is plan-only. Live creation requires --apply and DEVOS_ALLOW_REPO_CREATE=1.
 Credentials are read only from environment/configured client code and are never printed.
+
+Repository creation is only the provider-resource step. A created repository must
+still pass fresh readback plus the Managed Project Lifecycle gate before DevOS
+may continue application development.
 """
 from __future__ import annotations
 
@@ -16,6 +20,14 @@ import urllib.request
 
 PROTOCOL = "DEVOS-REPOSITORY-CREATE-v1"
 CAPABILITY = "repository.create"
+LIFECYCLE_POSTCONDITION = {
+    "managed_project_required": True,
+    "required_next_capability": "project.onboard",
+    "lifecycle_protocol": "DEVOS-MANAGED-PROJECT-LIFECYCLE-v1",
+    "fresh_repository_readback_required": True,
+    "development_continuation_allowed": False,
+}
+
 
 def validate_name(name: str) -> str | None:
     if not isinstance(name, str) or not name.strip():
@@ -23,6 +35,7 @@ def validate_name(name: str) -> str | None:
     if len(name.strip()) > 100:
         return "repository name is too long"
     return None
+
 
 def plan(owner: str, name: str, private: bool, description: str = "") -> dict:
     reason = validate_name(name)
@@ -33,6 +46,7 @@ def plan(owner: str, name: str, private: bool, description: str = "") -> dict:
             "protocol": PROTOCOL, "capability": CAPABILITY, "status": "BLOCKED",
             "reason": reason, "authority": "UNCHANGED", "authorization": "UNCHANGED",
             "execution": "NONE", "mutation": "NONE",
+            "lifecycle_postcondition": dict(LIFECYCLE_POSTCONDITION),
         }
     return {
         "protocol": PROTOCOL, "capability": CAPABILITY, "status": "READY",
@@ -40,7 +54,9 @@ def plan(owner: str, name: str, private: bool, description: str = "") -> dict:
         "description": description, "provider": "github", "authority": "UNCHANGED",
         "authorization": "UNCHANGED", "execution": "NONE", "mutation": "NONE",
         "verification_required": True,
+        "lifecycle_postcondition": dict(LIFECYCLE_POSTCONDITION),
     }
+
 
 def github_create(owner: str, name: str, private: bool, description: str, token: str) -> dict:
     """Create one repository via GitHub REST.
@@ -60,8 +76,6 @@ def github_create(owner: str, name: str, private: bool, description: str, token:
         "auto_init": False,
     }).encode("utf-8")
 
-    # GitHub uses a different endpoint for user vs organization owners.
-    # The owner is treated as an explicit target; no discovery-based mutation is performed.
     if owner == "@me":
         url = "https://api.github.com/user/repos"
     else:
@@ -87,13 +101,13 @@ def github_create(owner: str, name: str, private: bool, description: str, token:
                     "default_branch": data.get("default_branch")}
     except urllib.error.HTTPError as exc:
         body = exc.read().decode("utf-8", errors="replace")
-        # Never return Authorization headers or tokens.
         return {"status": "FAILED", "provider": "github", "http_status": exc.code,
                 "error": body[:1000]}
     except urllib.error.URLError as exc:
         return {"status": "UNCERTAIN", "provider": "github", "error": str(exc.reason)}
     except TimeoutError:
         return {"status": "UNCERTAIN", "provider": "github", "error": "request timeout"}
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Governed DevOS repository creation")
@@ -114,7 +128,7 @@ def main() -> int:
     elif not args.apply:
         code = 0
         report["status"] = "READY"
-        report["next"] = "Use --apply with explicit authorization only when the provider capability is available."
+        report["next"] = "After provider creation and fresh readback, run the managed-project lifecycle gate and onboard before development continuation."
     elif args.authorization != "EXPLICIT":
         code = 2
         report["status"] = "NEEDS_APPROVAL"
@@ -129,13 +143,13 @@ def main() -> int:
         report["provider_result"] = result
         report["execution"] = "ONE_REQUEST"
         report["mutation"] = "attempted"
-        # Even ATTEMPTED must not be reported as VERIFIED. A caller must perform fresh GET/readback.
         if result.get("status") == "UNCERTAIN":
             report["status"] = "HOLD"
             report["replay"] = "FORBIDDEN"
         elif result.get("status") == "ATTEMPTED":
             report["status"] = "NEEDS_READBACK"
             report["replay"] = "NOT_NEEDED_YET"
+            report["next"] = "Fresh provider readback, then Managed Project Lifecycle check/onboarding. Development continuation remains HOLD until MANAGED."
         else:
             report["status"] = "HOLD"
             report["replay"] = "FORBIDDEN"
@@ -152,11 +166,14 @@ def main() -> int:
         print(f"Status: {report.get('status')}")
         if report.get("reason"):
             print(f"Reason: {report['reason']}")
+        print("Managed-project postcondition: REQUIRED")
+        print("Development continuation: HOLD until lifecycle state MANAGED")
         print("Authority: UNCHANGED")
         print("Authorization: UNCHANGED")
         if report.get("execution") == "ONE_REQUEST":
             print("Execution: ONE_REQUEST")
     return code
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
