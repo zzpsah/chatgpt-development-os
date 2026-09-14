@@ -11,32 +11,40 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 
 ## Active bounded work
 
-### AI State Resolver v2 — cross-claim contradiction handling
+### Resolver contradiction envelope-integrity follow-up
 
-- Unnumbered hardening objective on PR #46 / branch `feat/resolver-cross-claim-contradictions`.
-- Optional explicit fact identity: `fact_key` + deterministic JSON `fact_value`.
-- No arbitrary statement-prose equivalence inference.
-- Same valid `fact_key` + different canonical values => involved claims become `unknown` with `CROSS_CLAIM_CONTRADICTION` and resolver `NEEDS_EVIDENCE`.
-- Existing downstream control path remains authoritative: P16 `CLARIFY`; forged hidden uncertainty => P17 fail-closed.
-- Legacy claims with neither fact-identity field remain backward compatible.
-- P12 retains execution-evidence provenance/freshness ownership; P16 retains planning; P17 retains readiness/authorization.
-- Exact-final-head CI is required before merge; completion additionally requires post-merge durable-state reconciliation.
-- Do not create P18/P19 merely for this unnumbered hardening objective.
+PR #46 closed the base cross-claim contradiction feature. The active narrow follow-up is defense in depth against a crafted/tampered resolver envelope.
 
-### Documentation in the same boundary
+Required behavior:
 
-- `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` records P9–P17 architecture history and major unnumbered milestones through PR #45.
-- `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md` records the contradiction contract and non-goals.
-- History/navigation docs never replace current source, Git/CI, `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, core contracts, or tests.
+- P16 independently recomputes explicit same-`fact_key` / canonical-`fact_value` contradiction groups from preserved claims;
+- a forged resolver envelope cannot turn contradictory claims back to `likely`, clear `contradiction_fact_keys`, and claim `RESOLVED`;
+- P16 verifies contradiction reasons and contradiction summary consistency before allowing a plan;
+- P17 independently recomputes contradiction integrity from P16-preserved provenance;
+- changing one `fact_value` after P16 to create a contradiction must make P17 fail closed even if status/confidence/count metadata remains superficially valid;
+- legacy claims without explicit fact identity remain backward compatible;
+- no NLP/prose fact pairing, automatic winner selection, authority change, or execution is introduced.
 
-### Concurrent-main reconciliation
+Verification requirements:
 
-- Feature work started from `main` at `aa38761270ac9acdf6af90a4bae64890c766ec91`; `main` then advanced to `040c7d21b5fac6224ced1bdbfeaa7c3b71b78c78` with a compact active/history-state rewrite.
-- The compact active/history intent is preserved.
-- The feature branch restores the explicit ChatGPT Memory/chat-history supplementary-only recovery boundary and already-proven live GitHub provider evidence that the concurrent rewrite accidentally regressed.
-- Current `main` was incorporated through a non-force two-parent merge commit; unrelated concurrent changes are preserved.
+- forged contradiction-hidden envelope => P16 `CLARIFY`;
+- valid same-value fact group => P16 `PLANNED`;
+- post-plan one-value tamper => P17 `BLOCKED` with hidden-contradiction evidence;
+- existing P16/P17/resolver regression suites remain green;
+- exact-final-head applicable CI passes before completion is claimed.
 
 ## Recently completed
+
+### PR #46 — AI State Resolver v2 cross-claim contradiction handling
+
+- Merged at `36f3001487fb7ce666bb1e7241b539645878101a`.
+- Exact final source head: `490eeebea69a4f4ae44657f5d94edaef35a26db4`.
+- Optional explicit `fact_key` + deterministic JSON `fact_value` identity added.
+- Same fact + different canonical values => involved claims `unknown` + `CROSS_CLAIM_CONTRADICTION`, resolver `NEEDS_EVIDENCE`, and P16 `CLARIFY` through the unresolved-state path.
+- Exact-final-head CI passed: Development OS `34809630956`, Contracts `34809630926`, Current-Source Evidence `34809630993`, Trust-First `34809630947`, Living Engineering Map `34809631004`, GitHub Identity/Token `34809631046`, MCP Repository Create `34809630925`.
+- `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md` records the current contradiction contract.
+- `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` records P9–P17 and major unnumbered milestones through the resolver evolution.
+- PR #47 was a concurrent duplicate attempt and was closed without merge after #46 became authoritative.
 
 ### PR #45 — post-PR #44 durable-state reconciliation
 
@@ -81,6 +89,13 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 - P11 remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P12 remains the advisory/runtime-observability and evidence provenance/freshness substrate.
 - Later unnumbered hardening objectives must not be relabeled as P18/P19 merely for bookkeeping.
+
+## Current HOLD / limits
+
+- `production_ready = false`.
+- Resolver confidence never grants authorization, execution, mutation, or completion.
+- P12 retains execution-evidence provenance/freshness ownership; P16 retains planning; P17 retains readiness/authorization.
+- No production/deployment/credential/permission/destructive authority is introduced by this follow-up.
 
 ## Task-map invariant
 
