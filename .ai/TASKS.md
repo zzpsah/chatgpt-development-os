@@ -11,10 +11,17 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 
 ## Active bounded work
 
-- No numbered phase is active.
-- No resolver implementation objective is active after PR #46.
-- Do not promote a new objective from stale chat/history alone. Recover fresh `main`, open PRs, CI, durable state, relevant source/tests, and current user intent first.
-- Do not create P18/P19 merely for bookkeeping.
+### AI State Resolver v2 — downstream contradiction integrity
+
+- Unnumbered defense-in-depth objective on `fix/resolver-downstream-contradiction-integrity`.
+- Keep PR #46 resolver contradiction behavior; do not duplicate/rewrite the completed feature.
+- Add detailed deterministic contradiction provenance for downstream validation while keeping `contradiction_fact_keys`.
+- P16 recomputes structured contradictions from preserved claims and returns `CLARIFY` if contradiction metadata/confidence was forged.
+- P17 recomputes again at readiness and blocks post-P16 `fact_value` tampering with `PLAN_STATE_RESOLUTION_HIDDEN_CONTRADICTION`.
+- Existing authority, authorization, P12 freshness ownership, Security Gate, provider, and production boundaries remain unchanged.
+- Exact-final-head CI + merge + post-merge durable reconciliation are required for completion.
+- Closed PR #47 is provenance for the narrow gap only; its duplicate/stale broad branch is not merged.
+- No P18/P19 bookkeeping phase.
 
 ## Completed — AI State Resolver v2 cross-claim contradiction handling
 
@@ -24,10 +31,8 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 - Same valid `fact_key` + different canonical values => involved claims become `unknown` with `CROSS_CLAIM_CONTRADICTION`; resolver status becomes `NEEDS_EVIDENCE` and records `contradiction_fact_keys`.
 - Arbitrary statement prose is not semantically paired by guesswork and no automatic winner is selected.
 - P16 reuses the existing unresolved-state path and returns `CLARIFY`; P17 fails closed if unknown contradiction claims are hidden in a forged planned envelope.
-- P12 retains evidence provenance/freshness ownership; P16 retains planning; P17 retains readiness/authorization.
 - Exact final-head CI passed: Development OS `34809630956`; Contracts `34809630926`; Current-Source `34809630993`; Trust-First `34809630947`; Living Engineering Map `34809631004`; GitHub Identity/Token `34809631046`; MCP Repository Create `34809630925`.
-- No authority, authorization, execution, provider mutation, production mutation, or production-readiness upgrade was introduced by the resolver feature.
-- PR #46 also reconciled concurrent-main durable-state drift while preserving the intended active/history separation.
+- PR #48 merged at `7009e8e1b4398462b1a9321bb1e2a38a3c35e478` to close durable state.
 
 ## Completed — previous-stage documentation ledger
 
@@ -38,9 +43,8 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 ## Completed — first-contact acknowledgement hardening
 
 - Main commit `f07c7c5a4afd4fd25c0da5b1ed7ee88733168baa` hardened the Plain Project Context and Recovery Guide first-contact signal.
-- Fresh sessions now use the host-neutral acknowledgement `DevOS context recovered` / `DevOS context not verified` instead of requesting or implying a host mode.
+- Fresh sessions use host-neutral `DevOS context recovered` / `DevOS context not verified` acknowledgement instead of requesting or implying a host mode.
 - The acknowledgement reports recovered context only; it does not create authority, permissions, or changed host behavior.
-- Stance codes remain optional shorthand after orientation.
 
 ## Completed — AI State Resolver v2 envelope integrity
 
@@ -52,7 +56,7 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 
 - GitHub Identity & Token Control Plane v1 — PR #32.
 - Governed provider/controller adapter — PR #35.
-- DevOS activation handshake historical milestone — PR #39; current first-contact wording was later hardened to a host-neutral context-recovery acknowledgement by `f07c7c5...`.
+- DevOS activation handshake historical milestone — PR #39; current first-contact wording was later hardened to host-neutral context-recovery acknowledgement by `f07c7c5...`.
 - GitHub mutation readback reconciliation — PR #42.
 - Live read-only App run `34785659043` succeeded without exposing credential material.
 - Isolated governed create/update/delete provider evidence is durable; this proves the scoped path, not blanket production/destructive authority.
