@@ -35,6 +35,13 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 - The ledger is navigation/history only; current source, Git/PR/CI, `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, core contracts, tests, and decisions remain authoritative.
 - `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md` records the bounded contradiction contract and non-goals.
 
+## Completed — first-contact acknowledgement hardening
+
+- Main commit `f07c7c5a4afd4fd25c0da5b1ed7ee88733168baa` hardened the Plain Project Context and Recovery Guide first-contact signal.
+- Fresh sessions now use the host-neutral acknowledgement `DevOS context recovered` / `DevOS context not verified` instead of requesting or implying a host mode.
+- The acknowledgement reports recovered context only; it does not create authority, permissions, or changed host behavior.
+- Stance codes remain optional shorthand after orientation.
+
 ## Completed — AI State Resolver v2 envelope integrity
 
 - PR #44 merged at `a4a3413bb27802ef38a698550807e8fb0102f839`; exact final source head `71d93755e171da5e83e62b00baa4680a0e929f5e`.
@@ -45,7 +52,7 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 
 - GitHub Identity & Token Control Plane v1 — PR #32.
 - Governed provider/controller adapter — PR #35.
-- DevOS activation handshake — PR #39.
+- DevOS activation handshake historical milestone — PR #39; current first-contact wording was later hardened to a host-neutral context-recovery acknowledgement by `f07c7c5...`.
 - GitHub mutation readback reconciliation — PR #42.
 - Live read-only App run `34785659043` succeeded without exposing credential material.
 - Isolated governed create/update/delete provider evidence is durable; this proves the scoped path, not blanket production/destructive authority.
