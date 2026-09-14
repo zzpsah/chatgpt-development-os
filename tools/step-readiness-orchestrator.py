@@ -52,11 +52,13 @@ def _contradiction_error(claims:list[dict[str,Any]],state_resolution:dict[str,An
         if canonical is None:return "PLAN_STATE_RESOLUTION_FACT_VALUE_INVALID"
         if claim.get("state_confidence")!="unknown" or has_reason:groups[fact_key.strip()].append((claim,canonical))
         if has_reason:reason_claims.add(id(claim))
-    expected=[]; seen=set()
+    expected=[]; expected_details=[]; seen=set()
     for fact_key in sorted(groups):
-        members=groups[fact_key]
-        if len({canonical for _,canonical in members})<=1:continue
+        members=groups[fact_key]; values=sorted({canonical for _,canonical in members})
+        if len(values)<=1:continue
         expected.append(fact_key)
+        claim_ids=sorted(str(claim.get("id")) for claim,_ in members if isinstance(claim.get("id"),str) and claim.get("id").strip())
+        expected_details.append({"fact_key":fact_key,"claim_ids":claim_ids,"canonical_values":values})
         for claim,_ in members:
             seen.add(id(claim))
             if claim.get("state_confidence")!="unknown" or "CROSS_CLAIM_CONTRADICTION" not in claim.get("reasons",[]):return "PLAN_STATE_RESOLUTION_HIDDEN_CONTRADICTION"
@@ -64,6 +66,9 @@ def _contradiction_error(claims:list[dict[str,Any]],state_resolution:dict[str,An
     actual=state_resolution.get("contradiction_fact_keys",[])
     if not isinstance(actual,list) or any(not isinstance(x,str) or not x.strip() for x in actual):return "PLAN_STATE_RESOLUTION_CONTRADICTION_FACTS_INVALID"
     if sorted(actual)!=expected:return "PLAN_STATE_RESOLUTION_CONTRADICTION_SUMMARY_INCONSISTENT"
+    actual_details=state_resolution.get("contradictions",[])
+    if not isinstance(actual_details,list):return "PLAN_STATE_RESOLUTION_CONTRADICTION_DETAILS_INVALID"
+    if actual_details!=expected_details:return "PLAN_STATE_RESOLUTION_CONTRADICTION_DETAILS_INCONSISTENT"
     return None
 
 def _validate_state_resolution_summary(state_resolution:Any)->str|None:
