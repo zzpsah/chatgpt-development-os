@@ -5,11 +5,9 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI/release-artifact metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
 - **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
-- Latest fully merged/reconciled `main` before the active objective: `69b06853d5f360659ce42d5cf2c5ec7c8dccc04d` (PR #67 durable reconciliation for DevOS 0.19.0).
-- Final 0.19.0 exact-source artifact: ID `10355742368`, source `69b06853d5f360659ce42d5cf2c5ec7c8dccc04d`, digest `sha256:8de1daa8c592c5a3a2128493a1ba6c728ce975d45662253d783cf6aa8ff40bbf`.
-- Active branch: `feature/production-target-evidence-intake-v1`, created from exact `69b06853d5f360659ce42d5cf2c5ec7c8dccc04d` after confirming 0 open PRs and 0 open issues.
-- Candidate distribution version: `0.20.0`.
-- `docs/DEVOS-MASTER-ENGINEERING-MAP.md` remains the living architecture index; no P18/P19 is created for this unnumbered evidence-intake milestone.
+- DevOS `0.20.0` Production Target Evidence Intake v1 implementation merged through PR #68 at `b9f4c6023aa4bc12111c713b6b262012ed3e51c4` from exact verified feature head `40957dfaf2965d16dc1159f1fca1aca183a4110c`.
+- Merge commit signature was GitHub verified.
+- `docs/DEVOS-MASTER-ENGINEERING-MAP.md` remains the living architecture index; no P18/P19 was created for this unnumbered G9 evidence-path hardening milestone.
 
 ## Core documentation law
 
@@ -29,11 +27,34 @@ Completion requires:
 
 Interpretation, planning, readiness, credentials, CI, generated facts, evidence intake, reconciliation metadata, prior approvals, recovery state, documentation, or release status never manufacture permission.
 
-## Active bounded work — DevOS 0.20.0 Production Target Evidence Intake v1
+## Active bounded work
 
-Fresh recovery after DevOS 0.19.0 found a specific G9 gap: Production Readiness Evidence v2 names five external blockers, but the repository had no common target-bound intake contract for direct evidence covering those blockers.
+- No numbered feature milestone is active.
+- No unreconciled repository-side DevOS `0.20.0` implementation objective remains after the PR #68 reconciliation.
+- Future work must begin from fresh `main`, current CI/issues/PRs, relevant source/tests, direct runtime/provider/target evidence, concurrent AI work, and current user intent.
+- Do not create P18/P19 merely for bookkeeping.
 
-The active objective adds a **read-only candidate-evidence intake boundary** for:
+## DevOS 0.20.0 Production Target Evidence Intake v1 — closed / engineering-distribution release-ready
+
+- PR #68 title: `Add Production Target Evidence Intake v1 for DevOS 0.20.0`.
+- Exact verified feature head: `40957dfaf2965d16dc1159f1fca1aca183a4110c`.
+- Merge commit: `b9f4c6023aa4bc12111c713b6b262012ed3e51c4`; GitHub signature verified.
+- Exact feature-head applicable workflow set: **15/15 success**.
+- Production Target Evidence Intake workflow `34877606752`: Python 3.11 + 3.12 success.
+- Development OS Contracts workflow `34877606812`: success, including fresh-AI recovery after restoring the retained P11 marker.
+- Feature-head release workflow `34877606820`: success; Ubuntu/Windows × Python 3.11/3.12 release matrix passed.
+- Post-merge exact-main push workflow set: **12/12 success**.
+- Post-merge Production Target Evidence Intake workflow `34877764353`: success.
+- Post-merge Development OS Contracts workflow `34877764359`: success.
+- Post-merge distribution release workflow `34877764342`: success.
+- Exact merged-source artifact: ID `10361816279`; name `devos-source-b9f4c6023aa4bc12111c713b6b262012ed3e51c4`; digest `sha256:94f7b68abea833ff1a9814ca96e1f0ff017b5b75a5df6c1fde852e461d6f03cf`; size `758139` bytes; not expired when verified.
+- Durable reconciliation record digest: `c38edd8818a313ed6cd9fdeaa1367e8491ea212db89ae8b00b038c3de3fd5171`.
+
+The repository-side target-evidence intake objective is complete. DevOS can now validate already-observed target-bound evidence for all five external Production Readiness v2 blockers without allowing that evidence to self-promote readiness or authority.
+
+## Production Target Evidence v1 semantics
+
+A packet binds already-observed evidence to one exact repository source SHA, one explicit production target, one timezone-aware observation, one observer, and exactly these five external criteria:
 
 - `runtime_direct_conformance`
 - `recovery_disaster`
@@ -41,33 +62,13 @@ The active objective adds a **read-only candidate-evidence intake boundary** for
 - `deployment_target`
 - `high_impact_governance`
 
-Implemented on the active branch so far:
-
-- `tools/production-target-evidence.py` — exact production target/source/timestamp/observer/criterion/evidence binding;
-- `tools/test-production-target-evidence.py` — adversarial fail-closed corpus;
-- `.github/workflows/verify-production-target-evidence.yml` — Python 3.11/3.12 verification;
-- `core/production-target-evidence-intake.md` — normative contract;
-- `devos production-target-evidence` CLI dispatch;
-- source identity advanced coherently to `0.20.0`;
-- release manifest, README, changelog and current Production Readiness v2 source identity updated.
-
-Pending before closure:
-
-1. exact feature-head CI and regression verification;
-2. fix any CI defects without weakening evidence or authority boundaries;
-3. expected-head PR merge after green CI;
-4. fresh merged-main CI and exact-source 0.20.0 artifact verification;
-5. final durable reconciliation/history update.
-
-## Production Target Evidence v1 semantics
-
-A valid packet binds already-observed evidence to one exact production target and exact source SHA. Required criterion states are `PASS | FAIL | UNOBSERVED`.
+Criterion states are `PASS | FAIL | UNOBSERVED`.
 
 - malformed/unsafe packet → `BLOCKED`;
-- structurally valid but incomplete/failed evidence → `HOLD`;
-- all five criteria PASS → `CANDIDATE_COMPLETE`.
+- valid packet with a FAIL or UNOBSERVED criterion → `HOLD`;
+- valid all-PASS packet → `CANDIDATE_COMPLETE`.
 
-`CANDIDATE_COMPLETE` is deliberately **not** production readiness. It still fixes:
+Even `CANDIDATE_COMPLETE` fixes:
 
 - `readiness_promotion_allowed = false`
 - `semantic_review_required = true`
@@ -79,7 +80,7 @@ A valid packet binds already-observed evidence to one exact production target an
 - `publication_authorized = false`
 - `deployment_authorized = false`
 
-A later separate semantic review + durable Production Readiness v2 reconciliation is required before any blocker can change status.
+A separate semantic review + durable Production Readiness v2 reconciliation remains mandatory before any readiness criterion may change.
 
 ## Current Production Readiness v2 verdict
 
@@ -103,7 +104,7 @@ Still requiring direct target-specific external evidence:
 - `deployment_target`
 - `high_impact_governance`
 
-The new intake contract makes these evidence requirements machine-checkable; it does not authorize the underlying production/high-impact operations and does not fabricate the missing evidence.
+These HOLD criteria are future target-specific evidence objectives, not unfinished repository implementation and not permission to execute production/high-impact actions merely to make the matrix green.
 
 ## Retained architecture foundations
 
@@ -112,7 +113,7 @@ The new intake contract makes these evidence requirements machine-checkable; it 
 - P12 remains the evidence provenance/freshness owner.
 - P15 remains language interpretation; P16 bounded planning; P17 exact-step readiness/authorization.
 - AI State Resolver v2 contradiction/envelope hardening remains retained.
-- GitHub provider/controller readback, multi-project isolation, Actionable HOLD, runtime-neutral handoff, runtime-profile/conformance evidence intake, release machinery, Production Readiness v2, and durable reconciliation remain retained foundations.
+- GitHub provider/controller readback, multi-project isolation, Actionable HOLD, runtime-neutral handoff, runtime-profile/conformance evidence intake, distribution release machinery, Production Readiness Evidence v2, Production Target Evidence Intake v1, and durable reconciliation remain retained foundations.
 
 ## Permanent boundaries
 
@@ -130,7 +131,7 @@ The new intake contract makes these evidence requirements machine-checkable; it 
 
 ## Explicit non-actions
 
-This objective does not itself run a production probe, deploy software, change credentials/secrets/permissions/databases, perform destructive restore testing, execute a production-scoped high-impact action, promote a runtime, publish a release/tag/package, or change production readiness.
+No production probe, deployment, credential/secret/permission/database mutation, destructive restore test, production-scoped high-impact operation, runtime promotion, public tag/GitHub Release/package publication, or production-readiness promotion was performed to complete 0.20.0.
 
 ## Recovery precedence
 
@@ -143,4 +144,4 @@ This objective does not itself run a production probe, deploy software, change c
 
 ## Next action
 
-Use exact feature-head CI as source of truth, repair any failures without weakening safety semantics, merge only after clean concurrency/head checks, then verify merged-main release evidence and reconcile durable state.
+Recover fresh `main`, open PRs/issues, CI, durable state, relevant source/tests, and any direct external evidence before selecting another bounded objective. No next implementation objective is activated automatically by this reconciliation.
