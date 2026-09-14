@@ -11,9 +11,15 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 
 ## Active bounded work
 
-- No numbered phase is active.
-- No resolver implementation objective is active after PR #46.
-- Do not promote a new objective from stale chat/history alone. Recover fresh `main`, open PRs, CI, durable state, relevant source/tests, and current user intent first.
+### Resolver contradiction envelope-integrity follow-up
+
+- Unnumbered defense-in-depth hardening after merged PR #46.
+- P16 independently recomputes explicit same-`fact_key` / canonical-`fact_value` contradictions from preserved resolver claims before planning.
+- P16 rejects hidden contradictions, inconsistent `CROSS_CLAIM_CONTRADICTION` reasons, and inconsistent `contradiction_fact_keys`.
+- P17 independently recomputes contradiction integrity from the full resolver provenance retained by P16.
+- A post-P16 `fact_value` edit that creates a contradiction must make P17 `BLOCKED` even if top-level status/confidence/count metadata remains superficially consistent.
+- No NLP/prose fact pairing, source-precedence winner selection, authority change, execution, or production-readiness upgrade is introduced.
+- Exact-final-head applicable CI is required before this follow-up is complete.
 - Do not create P18/P19 merely for bookkeeping.
 
 ## Completed — AI State Resolver v2 cross-claim contradiction handling
@@ -23,24 +29,22 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 - Adds optional explicit `fact_key` + deterministic JSON `fact_value` identity while preserving legacy claims with neither field.
 - Same valid `fact_key` + different canonical values => involved claims become `unknown` with `CROSS_CLAIM_CONTRADICTION`; resolver status becomes `NEEDS_EVIDENCE` and records `contradiction_fact_keys`.
 - Arbitrary statement prose is not semantically paired by guesswork and no automatic winner is selected.
-- P16 reuses the existing unresolved-state path and returns `CLARIFY`; P17 fails closed if unknown contradiction claims are hidden in a forged planned envelope.
-- P12 retains evidence provenance/freshness ownership; P16 retains planning; P17 retains readiness/authorization.
+- P16 uses the unresolved-state path and returns `CLARIFY`; P17 fails closed if unknown contradiction claims are hidden in a forged planned envelope.
 - Exact final-head CI passed: Development OS `34809630956`; Contracts `34809630926`; Current-Source `34809630993`; Trust-First `34809630947`; Living Engineering Map `34809631004`; GitHub Identity/Token `34809631046`; MCP Repository Create `34809630925`.
-- No authority, authorization, execution, provider mutation, production mutation, or production-readiness upgrade was introduced by the resolver feature.
-- PR #46 also reconciled concurrent-main durable-state drift while preserving the intended active/history separation.
+- No authority, authorization, execution, provider mutation, production mutation, or production-readiness upgrade was introduced.
+- PR #47 was a concurrent duplicate attempt and was closed without merge after #46 became authoritative.
+- PR #48 reconciled post-#46 durable state and is merged on current `main` lineage.
 
 ## Completed — previous-stage documentation ledger
 
 - `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` documents numbered architecture stages P9–P17 and major unnumbered proof/hardening milestones.
 - The ledger is navigation/history only; current source, Git/PR/CI, `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, core contracts, tests, and decisions remain authoritative.
-- `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md` records the bounded contradiction contract and non-goals.
+- `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md` records the contradiction contract and non-goals.
 
 ## Completed — first-contact acknowledgement hardening
 
 - Main commit `f07c7c5a4afd4fd25c0da5b1ed7ee88733168baa` hardened the Plain Project Context and Recovery Guide first-contact signal.
-- Fresh sessions now use the host-neutral acknowledgement `DevOS context recovered` / `DevOS context not verified` instead of requesting or implying a host mode.
-- The acknowledgement reports recovered context only; it does not create authority, permissions, or changed host behavior.
-- Stance codes remain optional shorthand after orientation.
+- Fresh sessions use the host-neutral acknowledgement `DevOS context recovered` / `DevOS context not verified` instead of requesting or implying a host mode.
 
 ## Completed — AI State Resolver v2 envelope integrity
 
@@ -52,7 +56,7 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 
 - GitHub Identity & Token Control Plane v1 — PR #32.
 - Governed provider/controller adapter — PR #35.
-- DevOS activation handshake historical milestone — PR #39; current first-contact wording was later hardened to a host-neutral context-recovery acknowledgement by `f07c7c5...`.
+- DevOS activation handshake historical milestone — PR #39; current first-contact wording was later hardened by `f07c7c5...`.
 - GitHub mutation readback reconciliation — PR #42.
 - Live read-only App run `34785659043` succeeded without exposing credential material.
 - Isolated governed create/update/delete provider evidence is durable; this proves the scoped path, not blanket production/destructive authority.
