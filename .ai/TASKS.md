@@ -4,7 +4,7 @@
 
 This file tracks **work state**, not normative law. Current source/Git/PR/CI are authoritative for exact implementation state. Durable principles and authorization/security decisions live in `.ai/DECISIONS.md` and core contracts. Historical milestone detail lives in `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` and `.ai/SESSIONS/`.
 
-## Normative references
+## Core safety invariants
 
 - **What is not written was never done.**
 - `CONTINUE != BLANKET AUTHORIZATION`.
