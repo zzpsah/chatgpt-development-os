@@ -32,12 +32,60 @@ AI B + Account B
 
 The repository and its durable records remain authoritative. No AI account, model, chat, vendor memory, or private session is authoritative project state.
 
+## Mandatory managed-project lifecycle gate
+
+Repository existence is not enough. Every repository selected for DevOS work must pass the Managed Project Lifecycle v1 gate before feature development continues.
+
+```text
+CREATE or DISCOVER repository
+            ↓
+fresh repository readback
+            ↓
+python tools/devos.py project-lifecycle ... --require-managed
+            ↓
+MANAGED ?
+  ├─ YES → recover state → continue
+  ├─ NO  → onboard → fresh readback → re-check
+  └─ CONFLICT → HOLD
+```
+
+Permanent rule:
+
+```text
+REPOSITORY EXISTS != DEVOS MANAGED
+REPOSITORY CREATED != ONBOARDED
+REPOSITORY DISCOVERED != SAFE TO CONTINUE
+```
+
+An unmanaged or partially managed repository sets `development_continuation_allowed = false`. This closes the lifecycle gap where a repository could be created or discovered but never receive durable DevOS state.
+
+Read-only local check:
+
+```bash
+python tools/devos.py project-lifecycle --path <project> --require-managed --json
+```
+
+Authorized local onboarding + managed readback:
+
+```bash
+python tools/devos.py project-lifecycle \
+  --path <project> \
+  --apply \
+  --authorization EXPLICIT \
+  --require-managed \
+  --json
+```
+
+Provider/controller integrations can supply `DEVOS-REPOSITORY-DISCOVERY-SNAPSHOT-v1` evidence to the same lifecycle tool. Remote snapshots are read-only; provider writes require a separately governed onboarding path.
+
 ## Existing-repository flow
 
 ```text
 Detect candidate
     ↓
-Resolve project root
+Resolve project root / repository identity
+    ↓
+Managed Project Lifecycle check
     ↓
 Inspect Git / existing AGENTS.md / .ai/
     ↓
@@ -45,13 +93,15 @@ Check DevOS identity compatibility
     ↓
 PLAN missing infrastructure (read-only)
     ↓
-Explicit onboarding apply
+Explicit onboarding apply when required
     ↓
 Preserve existing semantic context
     ↓
 Create only missing DevOS infrastructure
     ↓
-Optionally add GitHub context-sync caller when missing
+Fresh managed-state readback
+    ↓
+MANAGED verified
     ↓
 Run bootstrap / health validation
     ↓
@@ -80,11 +130,13 @@ Machine-readable output:
 python tools/devos-onboard.py --path <project> --json
 ```
 
+The Managed Project Lifecycle tool wraps this onboarding path for enforced detect → onboard → readback behavior.
+
 The existing PowerShell wrapper remains supported for Windows workflows.
 
 ## Repository creation capability
 
-For new remote repositories, DevOS now defines an explicit provider-dependent capability:
+For new remote repositories, DevOS defines an explicit provider-dependent capability:
 
 `repository.create`
 
@@ -114,6 +166,16 @@ A GitHub token is read from `GITHUB_TOKEN`; credentials are never printed or per
 
 The implementation supports the authenticated GitHub user with `--owner @me` and GitHub organizations by explicit owner name. It performs one provider create request and returns `ATTEMPTED`, `NEEDS_READBACK`, `HOLD`, or `BLOCKED`; it does not call an operation `VERIFIED` merely because the provider returned success. Fresh provider readback is required for a verified completion claim.
 
+Every repository-creation plan/result also carries this mandatory lifecycle postcondition:
+
+```text
+managed_project_required = true
+required_next_capability = project.onboard
+development_continuation_allowed = false
+```
+
+The first development action remains HOLD until fresh readback plus Managed Project Lifecycle verification returns `MANAGED`.
+
 ### Important connector limitation
 
 The ChatGPT GitHub connector may expose branch/file/commit/PR write operations without exposing repository creation. When the selected AI/provider does not expose `repository.create`, DevOS must return a capability-unavailable outcome such as:
@@ -127,12 +189,18 @@ Create repository outside current provider capability
             ↓
 Discover the new repository
             ↓
-Universal DevOS onboarding
+Managed Project Lifecycle check
             ↓
-Verify context
+Universal DevOS onboarding if required
+            ↓
+Fresh readback
+            ↓
+MANAGED verification
+            ↓
+first development action
 ```
 
-Never claim that a repository was created when the provider capability was unavailable.
+Never claim that a repository was created when the provider capability was unavailable. Never continue development merely because an externally created repository was discovered.
 
 ## What onboarding creates
 
@@ -182,9 +250,15 @@ repository.create (one request)
    ↓
 fresh provider verification
    ↓
-DevOS onboarding
+Managed Project Lifecycle check
    ↓
-context verification
+DevOS onboarding if required
+   ↓
+fresh managed-state readback
+   ↓
+MANAGED
+   ↓
+context recovery / verification
    ↓
 first development action
 ```
@@ -195,24 +269,26 @@ Repository creation does **not** authorize application development, production d
 
 For a project that already exists:
 
-1. Run plan mode.
-2. Review paths proposed for creation/preservation.
-3. Run `--apply` only when the project is intended to be managed by DevOS.
-4. Validate bootstrap/health state.
-5. Commit and push onboarding infrastructure if remote portability is required.
+1. Run the Managed Project Lifecycle read-only check.
+2. If `MANAGED`, recover durable state before work.
+3. If `ONBOARDING_REQUIRED`, review the proposed onboarding scope.
+4. Run `--apply --authorization EXPLICIT` only when the project is intended to be managed by DevOS.
+5. Require fresh readback to return `MANAGED`.
+6. Validate bootstrap/health state.
+7. Commit and push onboarding infrastructure if remote portability is required.
 
 ## Automatic onboarding levels
 
 DevOS distinguishes:
 
 ### Local automatic onboarding
-A configured local worker may discover projects under explicitly configured roots and invoke idempotent onboarding.
+A configured local worker may discover projects under explicitly configured roots and invoke the lifecycle gate plus idempotent onboarding within its authorized scope.
 
 ### Template automatic onboarding
-Approved DevOS templates can start with the durable context already present.
+Approved DevOS templates can start with the durable context already present and should verify `MANAGED` before development.
 
 ### Remote organization automatic onboarding
-An explicitly installed GitHub App, organization workflow, or equivalent authorized integration can create/onboard repositories within its granted scope.
+An explicitly installed GitHub App, organization workflow, or equivalent authorized integration can discover/create repositories, run the lifecycle check, onboard repositories within its granted scope, and verify fresh managed readback.
 
 The public DevOS repository itself does **not** grant permission to modify arbitrary repositories.
 
@@ -235,6 +311,8 @@ After onboarding, run the project's DevOS bootstrap/health validation.
 ```text
 ONBOARDED
 !=
+MANAGED READBACK VERIFIED
+!=
 APPLICATION VERIFIED
 !=
 PRODUCTION READY
@@ -254,20 +332,19 @@ A managed project must be recoverable by a fresh AI with no prior chat memory. T
 
 ## Acceptance
 
-Universal Project Onboarding v1 acceptance includes:
+Universal Project Onboarding + Managed Project Lifecycle acceptance includes:
 
-- valid existing project → READY;
-- missing infrastructure → CREATE only missing files;
-- second onboarding → preserve/no duplicate creation;
-- semantic context preservation;
-- incompatible managed identity → HOLD;
-- new Git project → caller workflow can be created;
-- non-Git project → local context can be initialized;
-- plan mode → no mutation;
-- apply mode → only DevOS infrastructure mutation;
-- `repository.create` plan mode → deterministic READY for valid targets;
-- repository creation without explicit authorization → NEEDS_APPROVAL;
-- repository creation without provider safety enablement → BLOCKED;
+- repository with no DevOS manifest → `ONBOARDING_REQUIRED`;
+- compatible but incomplete DevOS context → `ONBOARDING_REQUIRED`;
+- valid complete DevOS context → `MANAGED`;
+- incompatible managed identity → `HOLD`;
+- malformed provider snapshot → `BLOCKED`;
+- local apply without explicit authorization → `NEEDS_APPROVAL`;
+- authorized local apply → create only missing infrastructure;
+- post-apply fresh lifecycle readback → `MANAGED` required;
+- second lifecycle apply → preserve/no duplicate creation;
+- `repository.create` plan/result → mandatory onboarding postcondition;
+- development continuation → false unless state is `MANAGED`;
 - provider uncertainty → HOLD and replay forbidden;
 - authority remains UNCHANGED;
 - regression suite → PASS.
@@ -279,6 +356,8 @@ Universal Project Onboarding v1 acceptance includes:
 - Never put credentials, tokens, private keys, session cookies, or unnecessary personal/student data into `.ai`.
 - Never claim tests passed merely because onboarding succeeded.
 - Never claim repository creation succeeded without provider evidence and required readback.
+- Never treat repository existence as managed-project completion.
+- Never continue feature development on an unmanaged/partial/conflicting repository.
 - Never treat provider capability as authorization.
 - Never treat authorization as unlimited provider permission.
 - Git history remains authoritative for exact repository changes.
@@ -287,4 +366,4 @@ Universal Project Onboarding v1 acceptance includes:
 
 ## Completion criterion
 
-Universal Project Onboarding and Repository Creation v1 are complete only when the repository provides deterministic onboarding, a governed provider-dependent repository-creation capability, regression coverage, explicit unavailable-capability handling, documented local/template/remote automation boundaries, and the universal AI/account portability contract.
+Universal Project Onboarding and Managed Project Lifecycle v1 are complete only when DevOS deterministically detects unmanaged/partial/conflicting repositories, holds development until `MANAGED`, applies onboarding only within explicit authorization, verifies fresh managed readback, binds repository creation to onboarding as a mandatory postcondition, exposes the lifecycle through the CLI, and preserves the universal AI/account portability contract.
