@@ -2,6 +2,37 @@
 
 All notable DevOS distribution changes are summarized here. Exact implementation truth remains in source/Git/PR/CI and durable `.ai` records; this file is release navigation, not execution authority.
 
+## 0.21.0 — 2026-09-15
+
+Managed Project Lifecycle v1 release line.
+
+### Added / completed
+
+- `tools/devos-project-lifecycle.py` for deterministic local/provider-observed managed-project classification.
+- `DEVOS-REPOSITORY-DISCOVERY-SNAPSHOT-v1` read-only provider evidence format.
+- Explicit `MANAGED`, `ONBOARDING_REQUIRED`, `HOLD`, and `BLOCKED` lifecycle states.
+- Development continuation is permitted only after `MANAGED` readback.
+- Local detect → authorized onboarding → fresh managed-state readback flow.
+- Repository creation now carries a mandatory `project.onboard` postcondition and keeps development continuation on HOLD after provider creation/readback until management is verified.
+- `devos project-lifecycle` CLI dispatch and dedicated Python 3.11/3.12 CI.
+- Auto-onboarding documentation updated so externally created/discovered repositories cannot silently bypass DevOS context.
+
+### Security / integrity invariants
+
+- `REPOSITORY EXISTS != DEVOS MANAGED`.
+- `REPOSITORY CREATED != ONBOARDED`.
+- `REPOSITORY DISCOVERED != SAFE TO CONTINUE`.
+- `ONBOARDING != APPLICATION VERIFIED`.
+- `PROVIDER CAPABILITY != AUTHORIZATION`.
+- `CI PASS != AUTHORIZATION`.
+- `production_ready = false` remains unchanged.
+
+### Known limitations
+
+- Remote provider snapshots are read-only evidence; remote onboarding writes still require a governed provider/controller path with sufficient capability and authorization.
+- DevOS cannot silently enumerate or mutate every repository on a user/organization account without a configured connector, GitHub App, local worker, or other authorized discovery source.
+- Management verification proves durable DevOS context/identity only; it does not prove application correctness, deployment readiness, or production readiness.
+
 ## 0.20.0 — 2026-09-14
 
 Production Target Evidence Intake v1 release line.
