@@ -42,11 +42,29 @@ def main() -> None:
     assert payload["execution"] == "NONE"
     assert payload["mutation"] == "NONE"
 
+    readiness = run("production-readiness", "--json")
+    assert readiness.returncode == 0, readiness.stdout + readiness.stderr
+    readiness_payload = json.loads(readiness.stdout)
+    assert readiness_payload["assessment_valid"] is True, readiness_payload
+    assert readiness_payload["verdict"] == "HOLD", readiness_payload
+    assert readiness_payload["production_ready"] is False, readiness_payload
+    assert readiness_payload["publication_authorized"] is False, readiness_payload
+    assert readiness_payload["deployment_authorized"] is False, readiness_payload
+    assert readiness_payload["evidence_can_authorize"] is False, readiness_payload
+
+    require_production = run("production-readiness", "--require-production", "--json")
+    assert require_production.returncode == 2, require_production.stdout + require_production.stderr
+    require_payload = json.loads(require_production.stdout)
+    assert require_payload["assessment_valid"] is True, require_payload
+    assert require_payload["verdict"] == "HOLD", require_payload
+
     source = CLI.read_text(encoding="utf-8")
     assert "shell=True" not in source
     assert "subprocess.run([sys.executable" in source
 
-    print(f"PASS: DevOS CLI version={canonical_version} and release-check dispatch are deterministic and shell-free")
+    print(
+        f"PASS: DevOS CLI version={canonical_version}, release-check, and production-readiness dispatch are deterministic and shell-free"
+    )
 
 
 if __name__ == "__main__":

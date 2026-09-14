@@ -18,6 +18,7 @@ COMMANDS = {
     "health": ROOT / "tools" / "devos-health.py",
     "bootstrap": ROOT / "tools" / "devos-bootstrap.py",
     "release-check": ROOT / "tools" / "devos-release-check.py",
+    "production-readiness": ROOT / "tools" / "verify-production-readiness-v2.py",
 }
 
 
