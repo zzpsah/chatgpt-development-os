@@ -2,8 +2,10 @@
 
 Date: 2026-09-14
 Repository: `zzpsah/chatgpt-development-os`
-Base `main`: `aa38761270ac9acdf6af90a4bae64890c766ec91` (post-PR #45)
 Branch: `feat/resolver-cross-claim-contradictions`
+Initial base `main`: `aa38761270ac9acdf6af90a4bae64890c766ec91` (post-PR #45)
+Concurrent `main`: `040c7d21b5fac6224ced1bdbfeaa7c3b71b78c78` (`docs: separate active state from historical evidence`)
+PR: #46
 
 ## Trigger
 
@@ -67,6 +69,24 @@ Added `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` as a durable navigation ledger c
 
 The ledger explicitly does not create P18/P19 and does not replace Git/source/tests/PR metadata as authority.
 
+## Concurrent-main reconciliation
+
+While PR #46 was being opened, `main` advanced from `aa387612...` to `040c7d21...` via `docs: separate active state from historical evidence`.
+
+The intent to separate active state from historical evidence is retained. Fresh comparison and CI found two regressions in the new compact `.ai/CURRENT-STATE.md`:
+
+1. it removed the explicit `ChatGPT Memory/chat history` supplementary-only wording required by fresh-AI recovery tests;
+2. it downgraded already-proven live GitHub App/provider evidence to `pending` / user-reported state despite durable run/provider evidence already established in earlier sessions and commits.
+
+PR #46 repairs these durable-state regressions while preserving the compact active/history separation. It explicitly records:
+
+- ChatGPT Memory/chat history is supplementary only;
+- live read-only App run `34785659043` is proven;
+- isolated governed provider create/update/delete mutation evidence remains proven;
+- `production_ready = false` remains unchanged.
+
+The first PR CI candidate failed at Cross-Host Recovery because of the missing account-memory boundary in the concurrent-main state; the feature code had not reached its later resolver test steps in that run. The repair is performed in the same branch rather than weakening recovery tests.
+
 ## Safety / authority boundaries
 
 - `authority = UNCHANGED`
@@ -79,9 +99,9 @@ The ledger explicitly does not create P18/P19 and does not replace Git/source/te
 - `production_ready = false` is not upgraded.
 - No production, credential, permission, database, destructive, or provider mutation is part of the resolver feature.
 
-## Verification plan
+## Verification / integration plan
 
-1. Open PR from this branch to `main`.
+1. Reconcile the feature branch with current `main` without discarding unrelated concurrent changes.
 2. Require exact-head CI across triggered DevOS gates.
 3. Repair any compatibility failure on the same branch without weakening fail-closed semantics.
 4. Under the user's time-bounded standing authorization, merge only after the exact final head is green and mergeable.
