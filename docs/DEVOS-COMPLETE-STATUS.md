@@ -2,7 +2,7 @@
 
 **Repository:** `zzpsah/chatgpt-development-os`  
 **Canonical alias:** `DEVOS`  
-**Current distribution line:** `0.19.0` — engineering/distribution release-ready after PR #66 verification and durable reconciliation.
+**Current distribution line:** `0.20.0` — engineering/distribution release-ready after PR #68 verification and durable reconciliation.
 
 ## Executive status
 
@@ -28,37 +28,67 @@ Canonical governed path:
 
 P9 through P17 remain the completed numbered architecture stages at their recorded evidence levels. Later hardening/proof milestones remain deliberately unnumbered; no P18/P19 is created merely for bookkeeping.
 
-Retained completed foundations include repository-first recovery, P15 interpretation, P16 planning, P17 readiness/authorization/security gating, Actionable HOLD + Scoped Approval, contradiction-safe state resolution, bounded autonomous/runtime execution, deterministic verification, trust-first auditing, governed GitHub provider/controller integration, readback reconciliation, runtime-neutral handoff/result validation, runtime-profile/conformance evidence intake, distribution release machinery, and automated evidence → durable-state reconciliation.
+Retained completed foundations include repository-first recovery, P15 interpretation, P16 planning, P17 readiness/authorization/security gating, Actionable HOLD + Scoped Approval, contradiction-safe state resolution, bounded autonomous/runtime execution, deterministic verification, trust-first auditing, governed GitHub provider/controller integration, readback reconciliation, runtime-neutral handoff/result validation, runtime-profile/conformance evidence intake, distribution release machinery, Production Readiness Evidence v2, Production Target Evidence Intake v1, and automated evidence → durable-state reconciliation.
 
-## DevOS 0.19.0 Production Readiness Evidence v2 — completed
+## DevOS 0.20.0 Production Target Evidence Intake v1 — completed
 
-PR #66 `Add Production Readiness Evidence v2 for DevOS 0.19.0` is the current completed engineering milestone.
+PR #68 `Add Production Target Evidence Intake v1 for DevOS 0.20.0` is the current completed engineering milestone.
 
 Verified evidence:
 
-- exact feature head: `f81184975ffbb02a3e58466459e12858fdd8294a`;
-- feature-head applicable CI: **14/14 success**;
-- dedicated Production Readiness Evidence v2 workflow `34845941978`: Python 3.11 + 3.12 success;
-- feature-head distribution release workflow `34845941874`: Ubuntu/Windows × Python 3.11/3.12 **4/4 success**;
-- merge commit: `8cd731b7b91ca9e67983b6deca8646b38e078e33`, GitHub-verified signature;
-- post-merge exact-main push workflows: **11/11 success**;
-- post-merge readiness workflow `34846071705`: success;
-- post-merge distribution release workflow `34846071713`: Ubuntu/Windows × Python 3.11/3.12 **4/4 success**;
-- exact merged-source artifact ID `10348113380`;
-- artifact name `devos-source-8cd731b7b91ca9e67983b6deca8646b38e078e33`;
-- artifact digest `sha256:fd07fcebcaebca703c11787e634940de904e85be5e3115894808b6a7955307f0`;
-- artifact size `744297` bytes;
-- durable reconciliation record digest `8a8ce6db2bccbe211030ab681577736717e978cab8760c074e65faca09c8d49f`.
+- exact feature head: `40957dfaf2965d16dc1159f1fca1aca183a4110c`;
+- feature-head applicable CI: **15/15 success**;
+- dedicated Production Target Evidence Intake workflow `34877606752`: Python 3.11 + 3.12 success;
+- Development OS Contracts workflow `34877606812`: success after the fresh-AI P11 recovery marker repair;
+- feature-head distribution release workflow `34877606820`: Ubuntu/Windows × Python 3.11/3.12 success;
+- merge commit: `b9f4c6023aa4bc12111c713b6b262012ed3e51c4`, GitHub-verified signature;
+- post-merge exact-main push workflows: **12/12 success**;
+- post-merge target-evidence workflow `34877764353`: success;
+- post-merge Development OS Contracts workflow `34877764359`: success;
+- post-merge distribution release workflow `34877764342`: success;
+- exact merged-source artifact ID `10361816279`;
+- artifact name `devos-source-b9f4c6023aa4bc12111c713b6b262012ed3e51c4`;
+- artifact digest `sha256:94f7b68abea833ff1a9814ca96e1f0ff017b5b75a5df6c1fde852e461d6f03cf`;
+- artifact size `758139` bytes;
+- durable reconciliation record digest `c38edd8818a313ed6cd9fdeaa1367e8491ea212db89ae8b00b038c3de3fd5171`.
 
-The 0.19.0 repo-side objective is therefore **implemented, verified, documented, and durably reconciled** once this reconciliation PR itself is merged/read back.
+The 0.20.0 repository-side objective is implemented, verified, documented, and durably reconciled once this reconciliation PR itself is merged/read back.
+
+## Production Target Evidence Intake status
+
+The intake validates already-observed evidence for exactly the five external Production Readiness v2 blockers:
+
+- `runtime_direct_conformance`
+- `recovery_disaster`
+- `operational_observability`
+- `deployment_target`
+- `high_impact_governance`
+
+Evidence is bound to an exact source SHA, exact production target, timezone-aware observation, observer, evidence references/digests/scopes, and limitations.
+
+Criterion states are `PASS | FAIL | UNOBSERVED`.
+
+A valid all-PASS packet returns `CANDIDATE_COMPLETE`, but still fixes:
+
+```text
+readiness_promotion_allowed = false
+semantic_review_required = true
+production_ready = false
+authority = UNCHANGED
+authorization = UNCHANGED
+execution = NONE
+mutation = NONE
+publication_authorized = false
+deployment_authorized = false
+```
+
+Separate semantic review and durable Production Readiness v2 reconciliation are required before any criterion may change.
 
 ## Production-readiness status
 
 Current deterministic verdict remains **HOLD**.
 
 `production_ready = false`
-
-The v2 model intentionally separates a valid/current readiness assessment from actual production readiness and from deployment/publication authority.
 
 Already evidenced at bounded scopes:
 
@@ -80,7 +110,7 @@ Production-required blockers still needing direct external evidence:
 | deployment target | no production environment contract with rollout, rollback, and production readback proof |
 | high-impact governance | production-scoped high-impact operations remain separately authorization-gated and unproven |
 
-These five HOLD criteria are future target-specific evidence objectives. They are not evidence that the v2 implementation is unfinished, and they do not authorize running production/high-impact actions merely to make the matrix green.
+These HOLD criteria are target-specific external evidence requirements, not unfinished repository implementation and not permission to perform high-impact operations merely to make the matrix green.
 
 ## Authority invariants
 
@@ -95,21 +125,10 @@ PROVIDER CREDENTIAL != DEVOS AUTHORIZATION
 PROVIDER RESPONSE != COMPLETION PROOF
 RECOVERY != AUTOMATIC MUTATION REPLAY
 VALID ASSESSMENT != PRODUCTION READY
+VALID TARGET EVIDENCE != PRODUCTION READY
 PRODUCTION READY != PUBLICATION AUTHORIZATION
 PRODUCTION READY != DEPLOYMENT AUTHORIZATION
 EVIDENCE != AUTHORIZATION
-```
-
-The v2 assessment itself pins:
-
-```text
-authority = UNCHANGED
-authorization = UNCHANGED
-execution = NONE
-mutation = NONE
-publication_authorized = false
-deployment_authorized = false
-evidence_can_authorize = false
 ```
 
 ## Live provider proof boundary
@@ -132,9 +151,9 @@ The repository—not an AI vendor/account/chat—is the continuity layer:
 
 `EVIDENCE_PACKET_VALID != VERIFIED RUNTIME` remains mandatory.
 
-## Explicit non-actions for 0.19.0
+## Explicit non-actions for 0.20.0
 
-No public Git tag, GitHub Release, package publication, production deployment, credential/secret change, database mutation, permission change, destructive action, production-scoped high-impact operation, or vendor-runtime promotion was performed to close the 0.19.0 engineering objective.
+No production probe, public Git tag, GitHub Release, package publication, production deployment, credential/secret change, database mutation, permission change, destructive restore action, production-scoped high-impact operation, runtime promotion, or production-readiness promotion was performed to close the 0.20.0 engineering objective.
 
 ## Recovery order for a fresh maintainer/AI
 
@@ -156,10 +175,11 @@ No public Git tag, GitHub Release, package publication, production deployment, c
 - `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md`
 - `docs/PRODUCTION-READINESS-EVIDENCE.md`
 - `core/production-readiness-evidence-v2.md`
+- `core/production-target-evidence-intake.md`
 - `config/production-readiness-v2.json`
 - `docs/RELEASE.md`
 - `.github/SECURITY.md`
 
 ## Current bounded objective
 
-No new implementation objective is automatically active after the 0.19.0 durable reconciliation. Any future attempt to move the Production Readiness v2 verdict from HOLD to READY must be separately scoped to a concrete production target and backed by direct observed evidence while preserving independent authorization/publication/deployment boundaries.
+No new implementation objective is automatically active after the 0.20.0 durable reconciliation. Future development must begin with fresh recovery. Any attempt to move Production Readiness v2 from HOLD to READY remains target-specific, evidence-backed, and separately authorization-gated.
