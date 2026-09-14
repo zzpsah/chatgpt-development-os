@@ -22,7 +22,7 @@ fact_value: true
 
 `fact_key` is the stable identity of the fact being asserted. `fact_value` is the deterministic JSON value asserted for that fact.
 
-Both fields are optional for backward compatibility, but when one is supplied the other must also be supplied. Statement text is never semantically paired by guesswork. Two claims are compared only when they explicitly provide the same valid `fact_key`.
+Both fields are optional for backward compatibility, but when one is supplied the other must also be supplied; statement text is never semantically paired by guesswork. Two claims are compared only when they explicitly provide the same valid `fact_key`.
 
 ## Deterministic comparison
 
