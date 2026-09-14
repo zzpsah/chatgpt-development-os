@@ -5,7 +5,7 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
 - **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
-- Current reconciliation checkpoint is post-PR #49 merge commit `58d37ea23d025d7414f0d55fe2ba5ccc42068b8e`.
+- Current bounded objective started from `main` at `2500ddc235ce99dbe45a6cd0537d4b0d2372c4a4`, the merge of post-PR #49 durable-state reconciliation PR #51.
 - `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture index; `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable stage-history/navigation ledger.
 
 ## Core documentation law
@@ -26,10 +26,21 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 
 ## Active bounded work
 
-- No new bounded engineering objective is activated by this reconciliation.
-- Resolver contradiction envelope-integrity follow-up is closed through PR #49 and must not remain marked active.
-- Any next objective must be selected from fresh `main`, open PRs, CI, durable state, and source evidence.
-- No P18/P19 is created merely for bookkeeping.
+### AI State Resolver v2 — detailed contradiction provenance
+
+Fresh post-#51 inspection found no open competing PR. Closed stale/diverged PR #50 contained one useful non-duplicate concept after PR #49 superseded its downstream integrity work: deterministic detailed contradiction provenance.
+
+Current bounded objective on `feat/resolver-detailed-contradiction-provenance`:
+
+- keep PR #46 contradiction semantics and PR #49 P16/P17 independent contradiction recomputation unchanged;
+- resolver emits `contradictions` alongside `contradiction_fact_keys`;
+- each detail record contains the explicit `fact_key`, sorted involved claim IDs, and sorted canonical conflicting JSON values;
+- non-contradictory and blocked-top-level results emit `contradictions: []`;
+- P16 independently recomputes the expected detailed provenance from claims and returns `CLARIFY` if the field is forged or inconsistent;
+- P17 independently repeats the validation on P16-preserved provenance and returns `BLOCKED` if detailed contradiction provenance is forged or changes after planning;
+- the detail is audit evidence only and cannot grant authority, erase uncertainty, select a winning claim, create execution, or make a step READY.
+
+This is an unnumbered observability/integrity hardening objective. No P18/P19 is created.
 
 ## Current verified capability state
 
@@ -43,6 +54,7 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 - A post-P16 `fact_value` edit that creates a hidden contradiction is `BLOCKED` even when top-level status/confidence/count metadata remains superficially valid.
 - Exact-final-head CI passed all triggered workflows: Development OS Contracts `34810461613`, Development OS `34810461872`, Actionable Hold `34810461632`, Living Engineering Map `34810461677`, Trust-First Audit `34810461612`, GitHub Identity/Token `34810461701`, Current-Source Evidence `34810461718`, MCP Repository Create `34810461678`, and P13 External Managed Project `34810461615`.
 - The Contracts workflow completed its full regression suite including P16, P17, resolver, Security Gate, P12, and P14 checks.
+- PR #51 reconciled durable state after #49 and merged at `2500ddc235ce99dbe45a6cd0537d4b0d2372c4a4`.
 - This hardening creates no authority, authorization, execution, provider mutation, or production-readiness upgrade.
 
 ### AI State Resolver v2 cross-claim contradiction handling — merged
@@ -81,7 +93,7 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 - Credentials are technical capability only and never DevOS authorization.
 - Uncertain mutation is never blindly replayed.
 - Historical exact-head evidence remains pinned and is not silently rewritten when source advances.
-- Resolver confidence never grants authorization, execution, completion, mutation, or production readiness.
+- Resolver confidence and contradiction provenance never grant authorization, execution, completion, mutation, or production readiness.
 - P12 remains owner of execution-evidence provenance/freshness; P16 remains plan compiler; P17 remains readiness/authorization gate.
 
 ## Recovery and navigation
@@ -109,7 +121,8 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 
 ## Next action
 
-- Recover fresh `main`, open PRs, CI, durable state, and source before selecting another bounded engineering objective.
-- Do not reactivate completed resolver hardening merely to continue development.
-- Keep `production_ready = false` unless a separately bounded evidence-backed objective explicitly changes it.
-- Do not invent a new numbered phase solely for bookkeeping.
+- Open a bounded PR for detailed contradiction provenance from the current branch.
+- Require exact-final-head applicable CI; repair compatibility failures without weakening claims-based P16/P17 recomputation.
+- Merge only under the user's currently applicable bounded DevOS authorization and only when exact-head CI is green and the PR remains mergeable.
+- After merge, reconcile durable state so this completed objective is not left active.
+- Keep `production_ready = false`; do not invent a new numbered phase solely for bookkeeping.

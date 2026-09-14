@@ -223,13 +223,15 @@ Those belong to later Development OS milestones.
 
 Statement text is never semantically paired by guesswork. Cross-claim comparison happens only when two or more otherwise-resolved claims explicitly use the same valid `fact_key`.
 
-Values are compared by canonical JSON. If the same `fact_key` has more than one canonical value, every involved claim becomes `unknown`, receives `CROSS_CLAIM_CONTRADICTION`, and the fact identity is listed in `contradiction_fact_keys`. The resolver does not choose a winner based on confidence, ordering, prose, or convenience.
+Values are compared by canonical JSON. If the same `fact_key` has more than one canonical value, every involved claim becomes `unknown`, receives `CROSS_CLAIM_CONTRADICTION`, and the fact identity is listed in `contradiction_fact_keys`. The resolver also emits deterministic detailed contradiction provenance in `contradictions`, with the `fact_key`, sorted involved `claim_ids`, and sorted canonical JSON values. The resolver does not choose a winner based on confidence, ordering, prose, or convenience.
+
+Detailed contradiction provenance is audit evidence only. P16 and P17 independently recompute the expected contradiction groups from preserved claims and fail closed when `contradiction_fact_keys` or `contradictions` disagrees with those claims. The detail cannot grant authority, erase uncertainty, manufacture a plan, or make P17 READY.
 
 The detailed bounded contract is documented in `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md`.
 
 ### Downstream propagation
 
-P16 may receive a resolver result as `state_resolution`. If it includes unresolved claim IDs, P16 returns `CLARIFY` and preserves the named uncertainty. A `PLANNED` envelope retains resolver provenance. P17 rejects a tampered `PLANNED` envelope that contains unresolved resolver claims. `likely` remains an explicit uncertainty signal; it does not automatically block every plan. This does not change P17 authorization, Security Gate, capability, verification, or runtime gates.
+P16 may receive a resolver result as `state_resolution`. If it includes unresolved claim IDs, P16 returns `CLARIFY` and preserves the named uncertainty. A `PLANNED` envelope retains resolver provenance. P17 rejects a tampered `PLANNED` envelope that contains unresolved resolver claims or inconsistent contradiction detail. `likely` remains an explicit uncertainty signal; it does not automatically block every plan. This does not change P17 authorization, Security Gate, capability, verification, or runtime gates.
 
 A cross-claim contradiction therefore follows the ordinary unresolved-state path:
 
@@ -279,7 +281,7 @@ The resolver only preserves or downgrades caller-supplied confidence. It never u
 - `REVALIDATION_BOUNDARY_REACHED`
 - `REVALIDATION_PATH_CHANGED`
 
-The result contains the protocol identifier, unchanged authority/authorization, `execution: NONE`, `mutation: NONE`, resolved claims, their reasons, a weakest-confidence summary, unresolved claim IDs, and `contradiction_fact_keys`. `RESOLVED` means no claim is unknown; it does not mean a task is authorized, verified, or complete. `NEEDS_EVIDENCE` names unknown claims. `BLOCKED` means the `claims` input itself was invalid.
+The result contains the protocol identifier, unchanged authority/authorization, `execution: NONE`, `mutation: NONE`, resolved claims, their reasons, a weakest-confidence summary, unresolved claim IDs, `contradiction_fact_keys`, and `contradictions`. Each contradiction detail record contains a fact identity, involved claim IDs, and canonical values in deterministic order. `RESOLVED` means no claim is unknown; it does not mean a task is authorized, verified, or complete. `NEEDS_EVIDENCE` names unknown claims. `BLOCKED` means the `claims` input itself was invalid.
 
 ### Relationship to P12 and the continuation path
 

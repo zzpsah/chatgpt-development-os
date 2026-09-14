@@ -41,7 +41,15 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
     changed_paths = [str(path) for path in payload.get("changed_paths", []) if _is_text(path)]
     out = _base()
     if not isinstance(raw_claims, list):
-        out.update({"status": "BLOCKED", "reason": "CLAIMS_INVALID", "claims": [], "weakest_state_confidence": "unknown", "unresolved_claim_ids": [], "contradiction_fact_keys": []})
+        out.update({
+            "status": "BLOCKED",
+            "reason": "CLAIMS_INVALID",
+            "claims": [],
+            "weakest_state_confidence": "unknown",
+            "unresolved_claim_ids": [],
+            "contradiction_fact_keys": [],
+            "contradictions": [],
+        })
         return out
 
     ids = [str(c.get("id", "")).strip() for c in raw_claims if isinstance(c, dict)]
@@ -90,13 +98,8 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
                 confidence = "likely"
             reasons.append("P12_EXECUTION_EVIDENCE_NOT_CURRENT")
         if grounding_type == "durable_state":
-            # A durable record proves that the assertion was recorded, not that
-            # its underlying implementation/result was freshly established.
-            # Only current P12 execution evidence may retain `observed`.
             if confidence == "observed":
                 confidence = "likely"; reasons.append("DURABLE_STATE_CANNOT_SELF_UPGRADE_TO_OBSERVED")
-            # Revalidation markers describe why durable-state support needs a
-            # fresh check; they apply to already-likely durable claims as well.
             if BOUNDARY_EVENTS.intersection(rules).intersection(events):
                 reasons.append("REVALIDATION_BOUNDARY_REACHED")
             elif _changed([rule for rule in rules if rule not in BOUNDARY_EVENTS], changed_paths):
@@ -122,14 +125,24 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
             by_fact[item["fact_key"]].append(item)
 
     contradiction_fact_keys: list[str] = []
-    for fact_key, items in by_fact.items():
-        values = {item["_canonical_fact_value"] for item in items}
-        if len(values) > 1:
+    contradictions: list[dict[str, Any]] = []
+    for fact_key in sorted(by_fact):
+        items = by_fact[fact_key]
+        canonical_values = sorted({str(item["_canonical_fact_value"]) for item in items})
+        if len(canonical_values) > 1:
             contradiction_fact_keys.append(fact_key)
+            claim_ids: list[str] = []
             for item in items:
                 item["state_confidence"] = "unknown"
                 if "CROSS_CLAIM_CONTRADICTION" not in item["reasons"]:
                     item["reasons"].append("CROSS_CLAIM_CONTRADICTION")
+                if item["id"]:
+                    claim_ids.append(str(item["id"]))
+            contradictions.append({
+                "fact_key": fact_key,
+                "claim_ids": sorted(claim_ids),
+                "canonical_values": canonical_values,
+            })
 
     for item in resolved:
         item.pop("_canonical_fact_value", None)
@@ -142,7 +155,8 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
         "claims": resolved,
         "weakest_state_confidence": weakest,
         "unresolved_claim_ids": unresolved,
-        "contradiction_fact_keys": sorted(contradiction_fact_keys),
+        "contradiction_fact_keys": contradiction_fact_keys,
+        "contradictions": contradictions,
         "state_confidence_summary": {level: sum(1 for item in resolved if item["state_confidence"] == level) for level in CONFIDENCE},
     })
     return out
