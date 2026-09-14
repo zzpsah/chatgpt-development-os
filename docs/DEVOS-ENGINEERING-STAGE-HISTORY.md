@@ -42,6 +42,9 @@ The following work extended the numbered architecture without creating new numbe
 - **GitHub Mutation Readback Reconciliation — PR #42:** added bounded readback-only retries after provider write races; uncertain mutation is never blindly replayed.
 - **AI State Resolver v2 Envelope Integrity — PR #44:** hardened resolver→P16→P17 provenance validation and fail-closed tamper detection.
 - **Post-PR #44 Durable-State Reconciliation — PR #45:** synchronized durable task/current-state records after resolver hardening.
+- **AI State Resolver Cross-Claim Contradictions — PR #46:** added explicit `fact_key` / deterministic JSON `fact_value` identity, fail-closed `CROSS_CLAIM_CONTRADICTION`, and contradiction propagation through the existing unresolved-state path. Merged at `36f3001487fb7ce666bb1e7241b539645878101a`; final source head `490eeebea69a4f4ae44657f5d94edaef35a26db4`.
+
+PR #47 was a concurrent duplicate attempt after PR #46 became authoritative. It was closed without merge rather than replaying duplicate/stale work.
 
 ## Live GitHub provider evidence milestone
 
@@ -64,6 +67,20 @@ fresh readback / reconciliation
 Observed provider commits recorded in durable state include create `e8235f7864678a27bbf036def806a1624fb66678`, update/reconciliation `27a3b3cf4f7c8c8511f3c5a8f3283d8a6a883232`, and delete `3f530da3ee1efd4e52baad10fe4e644d4db5d116` with final ABSENT readback.
 
 This proves the scoped governed mutation path only. It does not authorize arbitrary repository deletion, branch deletion, force updates, production mutation, credentials/permission changes, or destructive external actions. `production_ready = false` remains intentional.
+
+## Resolver evolution summary
+
+The resolver hardening sequence is now:
+
+1. semantic resolver contract / evidence separation;
+2. deterministic v2 claim grounding, confidence, P12 freshness, and revalidation;
+3. resolver → P16 → P17 unresolved-state propagation;
+4. PR #44 full envelope-integrity validation and preserved provenance;
+5. PR #45 durable post-#44 reconciliation;
+6. PR #46 explicit cross-claim contradiction detection using stable fact identity;
+7. current narrow follow-up: independent contradiction recomputation at P16/P17 to prevent hidden contradiction or post-plan fact-value tampering.
+
+The current follow-up is defense in depth, not a new numbered stage.
 
 ## Architectural invariants accumulated across stages
 
@@ -93,13 +110,13 @@ IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE
 
 ## Current evolution direction
 
-After PR #44/#45, the resolver envelope-integrity objective is closed. The next bounded resolver hardening is explicit cross-claim contradiction detection using stable `fact_key` / deterministic `fact_value` identity. It is an unnumbered extension and must preserve P12/P16/P17 ownership boundaries.
+PR #46 closed the base contradiction feature. The active bounded work is only the contradiction-envelope integrity follow-up: P16/P17 independently recompute explicit fact contradictions from the claim provenance they consume. This preserves P12/P16/P17 ownership and keeps `production_ready = false`.
 
 ## Recovery use
 
 A fresh maintainer should use this file as history/navigation only, then recover current truth in this order:
 
-1. source tree + Git/PR metadata;
+1. source tree + Git/PR/CI metadata;
 2. `.ai/CURRENT-STATE.md` and `.ai/TASKS.md`;
 3. relevant core contracts/tests;
 4. `.ai/DECISIONS.md` and session provenance;
