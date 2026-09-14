@@ -5,8 +5,9 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
 - **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
-- Latest feature reconciled by this state is PR #61, `Add DevOS 0.17.0 distribution release readiness`, merged at `ecee10168b43d13430dd71c2e8d85556956f56a6`; source/Git/CI remain authoritative for exact current state.
-- Canonical distribution version: `0.17.0` from `VERSION`.
+- Latest closed release-readiness feature reconciled before this objective is PR #61, `Add DevOS 0.17.0 distribution release readiness`, merged at `ecee10168b43d13430dd71c2e8d85556956f56a6`; source/Git/CI remain authoritative for exact current state.
+- Current bounded source objective is **Agent Runtime Conformance Evidence Intake v1** on the DevOS `0.18.0` line. Until exact-head CI, merge, and post-merge reconciliation are observed, this record does not claim that objective closed.
+- Canonical distribution version in this source candidate: `0.18.0` from `VERSION`.
 - `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture index.
 - `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable milestone ledger.
 - `.ai/RECONCILIATION-LEDGER.jsonl` is the machine-readable post-feature reconciliation ledger.
@@ -31,27 +32,40 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 
 ## Active bounded work
 
-- No feature-development objective remains active after DevOS `0.17.0` Distribution Release Readiness v1 closure.
-- This post-PR #61 reconciliation is the bounded durable-state closure for that release-readiness objective; after merge, no recursive documentation PR is required solely to record the reconciliation merge SHA.
-- Future work must start from fresh `main`, open PRs/issues, CI, durable state, current source/tests, and current user intent.
+- **Agent Runtime Conformance Evidence Intake v1 / DevOS 0.18.0** is the current bounded objective in this source candidate.
+- Objective: create deterministic runtime/adapter/Git-head/nonce-bound challenge and candidate-evidence validation so future direct runtime proofs can be reviewed without allowing caller assertions to self-promote runtime capability.
+- `EVIDENCE_PACKET_VALID` is intentionally weaker than a verified runtime: `registry_promotion_allowed=false` and `direct_runtime_verified=false` remain mandatory.
+- `codex`, `claude-code`, and `openhands` remain declaration-only during this objective.
+- Completion requires exact-head feature CI, merge, fresh `main` verification, exact-source 0.18.0 release artifact evidence, and durable post-merge reconciliation.
 - Do not create P18/P19 merely for bookkeeping.
 
 ## Current release state
 
-### DevOS 0.17.0 Distribution Release Readiness v1 — closed
+### DevOS 0.18.0 Runtime Conformance Evidence Intake v1 — candidate
+
+- Canonical version/manifest/README/changelog/release process are moved together to `0.18.0` in this source candidate to avoid reusing `0.17.0` for a different exact source distribution.
+- New contract: `core/agent-runtime-conformance-evidence.md`.
+- New deterministic intake tool: `tools/agent-runtime-conformance-evidence.py`.
+- New adversarial regression corpus: `tools/test-agent-runtime-conformance-evidence.py`.
+- Runtime-profile CI is extended to verify the new corpus and contract markers.
+- The release manifest requires the conformance contract/tool/tests and preserves automatic tag/release/deploy as false.
+- No vendor runtime is promoted by this source change.
+- Exact-head CI/merge/post-merge evidence is not claimed here until actually observed.
+
+### DevOS 0.17.0 Distribution Release Readiness v1 — closed historical baseline
 
 - PR #61 merged at `ecee10168b43d13430dd71c2e8d85556956f56a6`; exact verified feature head `b4f46eb7919177e3a0dc19d902401630cd6c12ec`.
-- Canonical release metadata: `VERSION`, `config/release-manifest.json`, `CHANGELOG.md`, `docs/RELEASE.md`, `.github/SECURITY.md`.
+- Canonical release metadata at that milestone: `VERSION`, `config/release-manifest.json`, `CHANGELOG.md`, `docs/RELEASE.md`, `.github/SECURITY.md`.
 - Cross-platform CLI: `python tools/devos.py`.
 - Fail-closed distribution gate: `python tools/devos.py release-check` / `tools/devos-release-check.py`.
-- Release CI verifies Ubuntu + Windows on Python 3.11 and 3.12, then builds an exact Git `git archive` source ZIP, validates the archive, computes SHA-256, and uploads it as a CI artifact.
+- Release CI verified Ubuntu + Windows on Python 3.11 and 3.12, then built an exact Git `git archive` source ZIP, validated the archive, computed SHA-256, and uploaded it as a CI artifact.
 - Exact feature-head release workflow: `34822126832` — success; all other triggered feature-head workflows also succeeded.
 - Post-merge exact-main release workflow: `34822341533` — success.
 - Post-merge exact-main workflow set contained eight triggered workflows and all completed successfully: Isolated Managed Repository Write Proof `34822341488`; GitHub Provider Controller Adapter `34822341489`; Managed Repository Preflight `34822341626`; Development OS Contracts `34822341505`; Development OS `34822341560`; Distribution Release Readiness `34822341533`; Remote Resource Permission Governance `34822341509`; Trust-First Audit `34822341478`.
 - Exact merged-source artifact from `ecee10168b43d13430dd71c2e8d85556956f56a6`: artifact `10338323248`, name `devos-source-ecee10168b43d13430dd71c2e8d85556956f56a6`, digest `sha256:4a44fbaa6d9df23afb538afe27b2b38595b3c0aa1632292a43f26b2dea3a2091`, 719498 bytes, not expired when verified.
 - Reconciliation record digest: `80154dd84d9e6bd7cdfac0d379a708d25455a9542565feb0edcb117bf6362af6`.
-- Semantic status: **engineering/distribution release-ready**, not production-ready.
-- No Git tag, GitHub Release, package-registry publication, or deployment was performed by this objective.
+- Semantic status at that exact milestone: **engineering/distribution release-ready**, not production-ready.
+- No Git tag, GitHub Release, package-registry publication, or deployment was performed by that objective.
 - Public licensing terms were not changed.
 
 ## Current verified capability state
@@ -62,6 +76,13 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 - `reference-local-agent` is verified only for its recorded static repository-contract conformance.
 - `codex`, `claude-code`, and `openhands` remain declaration-only templates and must HOLD until separate direct evidence proves required capabilities.
 - Runtime identity never manufactures verified capability.
+
+### Runtime conformance evidence intake — source candidate, not vendor verification
+
+- Challenge identity binds runtime ID, adapter version, exact Git head, nonce, and required capability set with SHA-256.
+- Candidate evidence must cover exactly `filesystem.read`, `filesystem.write_scoped`, `git.inspect`, and `verification.run` with provenance and SHA-256 evidence digests.
+- Tamper, replay, mismatch, missing/extra capabilities, invalid provenance/digest, or failed required probes fail closed/HOLD.
+- A valid packet still cannot self-promote the registry and does not establish direct runtime verification.
 
 ### Universal Agent Runtime Adapter v1 — closed
 
@@ -119,6 +140,7 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 - `DISTRIBUTION RELEASE READY != PUBLICATION AUTHORIZATION`.
 - `PROVIDER CREDENTIAL != DEVOS AUTHORIZATION`.
 - `DECLARED RUNTIME != VERIFIED RUNTIME CAPABILITY`.
+- `EVIDENCE_PACKET_VALID != VERIFIED RUNTIME`.
 - Machine-generated evidence/factual synchronization never becomes semantic truth by itself.
 - Historical exact-head evidence remains pinned and is not silently rewritten when source advances.
 - Parallel AI work must revalidate against fresh `main`; stale semantic state must never overwrite newer state.
@@ -143,11 +165,14 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 - Changelog: `CHANGELOG.md`.
 - Security policy: `.github/SECURITY.md`.
 - Runtime profile registry: `core/agent-runtime-profile-registry.md`.
+- Runtime conformance evidence intake: `core/agent-runtime-conformance-evidence.md`.
 - Evidence reconciliation: `core/evidence-durable-state-reconciliation.md`.
 
 ## Next action
 
-- No additional feature is automatically promoted by the `0.17.0` release-readiness milestone.
-- Before any future work, recover fresh `main`, CI, open issues/PRs, durable state, and current user intent.
-- Actual publication/tagging or production deployment is a separate objective and is not implied by this release-readiness state.
+- Verify the 0.18.0 runtime-conformance evidence feature on its exact branch head through applicable CI.
+- Merge only if exact-head verification is green and the head/base remain expected.
+- After merge, freshly verify `main`, the 0.18.0 exact-source release artifact, and durable state; then reconcile this objective closed.
+- Do not promote any vendor runtime merely because a candidate evidence packet validates.
+- Actual public publication/tagging or production deployment remains a separate objective and is not implied.
 - Keep `production_ready = false` unless a separately scoped evidence-backed objective explicitly changes it.
