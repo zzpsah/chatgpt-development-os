@@ -1,0 +1,171 @@
+{
+  "protocol": "DEVOS-PRODUCTION-READINESS-EVIDENCE-v2",
+  "repository": "zzpsah/chatgpt-development-os",
+  "version": "0.19.0",
+  "assessment_scope": "CURRENT_SOURCE_PRODUCTION_READINESS",
+  "authority": "UNCHANGED",
+  "authorization": "UNCHANGED",
+  "execution": "NONE",
+  "mutation": "NONE",
+  "publication_authorized": false,
+  "deployment_authorized": false,
+  "evidence_can_authorize": false,
+  "production_ready": false,
+  "verdict": "HOLD",
+  "criteria": [
+    {
+      "id": "source_integrity",
+      "required_for_production": true,
+      "status": "PROVEN",
+      "evidence_class": "current_source",
+      "evidence_refs": [
+        "VERSION",
+        "config/release-manifest.json",
+        "tools/devos-release-check.py",
+        ".github/workflows/verify-release-readiness.yml"
+      ],
+      "limitations": [
+        "Exact-source CI/artifact evidence must be re-established for every new merged source head."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "authorization_security",
+      "required_for_production": true,
+      "status": "PROVEN",
+      "evidence_class": "current_source",
+      "evidence_refs": [
+        "tools/step-readiness-orchestrator.py",
+        "tools/devos-security-gate.py",
+        "core/remote-resource-permission-governance.md"
+      ],
+      "limitations": [
+        "Readiness and credentials never manufacture authorization."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "deterministic_verification",
+      "required_for_production": true,
+      "status": "PROVEN",
+      "evidence_class": "current_source",
+      "evidence_refs": [
+        "tools/verification-engine.py",
+        "tools/test-production-readiness-v2.py",
+        ".github/workflows/verify-production-readiness-v2.yml"
+      ],
+      "limitations": [
+        "A green verification suite is evidence, not execution or deployment authority."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "provider_read",
+      "required_for_production": true,
+      "status": "PROVEN",
+      "evidence_class": "current_live_read",
+      "evidence_refs": [
+        "tools/devos-github-actions-auth.py",
+        "tools/devos-github-proven-auth-read.py",
+        ".github/workflows/verify-github-provider-controller-adapter.yml"
+      ],
+      "limitations": [
+        "The live GitHub App read path proves bounded provider access only."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "remote_mutation",
+      "required_for_production": true,
+      "status": "PROVEN",
+      "evidence_class": "bounded_live_historical",
+      "evidence_refs": [
+        "docs/DEVOS-ENGINEERING-STAGE-HISTORY.md",
+        "tools/devos-github-provider-adapter.py",
+        "tools/devos-github-controller-bridge.py"
+      ],
+      "limitations": [
+        "The recorded live proof is scoped create/update/delete with readback; it is not arbitrary or production mutation authority.",
+        "Uncertain mutation must never be blindly replayed."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "runtime_direct_conformance",
+      "required_for_production": true,
+      "status": "HOLD",
+      "evidence_class": "external_required",
+      "evidence_refs": [
+        "config/agent-runtime-profile-registry.json",
+        "core/agent-runtime-conformance-evidence.md"
+      ],
+      "limitations": [
+        "Candidate evidence packets cannot self-promote a runtime."
+      ],
+      "blocker": "No production runtime has a separately observed direct conformance proof durably promoted from declaration-only state."
+    },
+    {
+      "id": "recovery_disaster",
+      "required_for_production": true,
+      "status": "HOLD",
+      "evidence_class": "external_required",
+      "evidence_refs": [
+        "docs/FAILURE-RECOVERY.md",
+        "tools/repository-only-recovery.py"
+      ],
+      "limitations": [
+        "Repository recovery proofs do not establish production backup/restore RPO/RTO guarantees."
+      ],
+      "blocker": "No production storage/backup target and measured restore RPO/RTO evidence are defined."
+    },
+    {
+      "id": "operational_observability",
+      "required_for_production": true,
+      "status": "HOLD",
+      "evidence_class": "external_required",
+      "evidence_refs": [
+        "tools/devos-health.py",
+        "tools/devos-doctor.py"
+      ],
+      "limitations": [
+        "Repository health checks are not a production SLO, alerting, incident-response, or telemetry deployment."
+      ],
+      "blocker": "No production service target, SLOs, alert routing, or incident-response evidence are defined."
+    },
+    {
+      "id": "deployment_target",
+      "required_for_production": true,
+      "status": "HOLD",
+      "evidence_class": "external_required",
+      "evidence_refs": [
+        "docs/RELEASE.md",
+        "config/release-manifest.json"
+      ],
+      "limitations": [
+        "Distribution release readiness deliberately stops before deployment."
+      ],
+      "blocker": "No explicit production deployment target, environment contract, rollout, rollback, or production readback evidence exists."
+    },
+    {
+      "id": "high_impact_governance",
+      "required_for_production": true,
+      "status": "HOLD",
+      "evidence_class": "external_required",
+      "evidence_refs": [
+        "core/remote-resource-permission-governance.md",
+        "tools/devos-security-gate.py"
+      ],
+      "limitations": [
+        "High-impact capability must not be exercised merely to satisfy a readiness matrix."
+      ],
+      "blocker": "Production-scoped high-impact operations remain intentionally unproven and require separate explicit authorization plus target-specific evidence."
+    }
+  ],
+  "production_blockers": [
+    "deployment_target",
+    "high_impact_governance",
+    "operational_observability",
+    "recovery_disaster",
+    "runtime_direct_conformance"
+  ]
+}
