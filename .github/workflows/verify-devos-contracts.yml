@@ -79,6 +79,9 @@ jobs:
       - name: Verify managed repository read-only preflight
         run: python tools/test-managed-repository-preflight.py
 
+      - name: Verify isolated managed repository write proof
+        run: python tools/test-isolated-managed-repository-write-proof.py
+
       - name: Verify Production E2E Harness
         run: python tools/test-production-e2e-harness.py
 
