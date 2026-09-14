@@ -17,8 +17,8 @@ A second implementation mismatch existed for durable-state claims: recovery/hand
 - Resolver status now becomes `NEEDS_EVIDENCE` whenever any resolved claim is `unknown`, even when a malformed claim has no usable claim ID.
 - Durable-state recovery/handoff/path revalidation reasons are surfaced for already-`likely` claims as well as observed claims that decay to likely.
 - P16 validates resolver v2 protocol, status, authority, authorization, execution, mutation, claim list, confidence summary, weakest confidence, and unresolved-claim consistency before planning.
-- P16 preserves a compact normalized resolver summary in the plan, including claim IDs/confidence, counts, status, and unchanged authority/execution invariants.
-- P17 recomputes and validates that compact summary. A `PLANNED` envelope with hidden unknown claims, changed authority/execution state, inconsistent counts, or an unresolved resolver status fails closed.
+- P16 preserves the full validated resolver provenance in the plan instead of replacing it with a reduced summary.
+- P17 independently recomputes and validates that preserved resolver provenance. A `PLANNED` envelope with hidden unknown claims, changed authority/execution state, inconsistent counts, or an unresolved resolver status fails closed.
 
 ## Preserved boundaries
 
@@ -39,8 +39,9 @@ The deterministic regression corpus now covers:
 - unknown claims without a usable ID still producing `NEEDS_EVIDENCE`;
 - P16 rejection of forged resolver authority/execution fields;
 - P16 rejection of a forged `RESOLVED` envelope that hides an unknown claim;
-- P17 rejection of a tampered planned resolver summary containing hidden uncertainty;
-- P17 rejection of a planned resolver summary whose authority boundary is changed.
+- exact preservation of valid resolver provenance through P16;
+- P17 rejection of preserved resolver provenance tampered to contain hidden uncertainty;
+- P17 rejection of preserved resolver provenance whose authority boundary is changed.
 
 ## Completion standard
 
