@@ -2,7 +2,7 @@
   "protocol": "DEVOS-DISTRIBUTION-RELEASE-MANIFEST-v1",
   "product": "ChatGPT Development OS",
   "canonical_repository": "zzpsah/chatgpt-development-os",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "channel": "stable",
   "minimum_python": "3.11",
   "entrypoint": "python tools/devos.py",
@@ -29,16 +29,21 @@
     ".ai/TASKS.md",
     "docs/RELEASE.md",
     ".github/SECURITY.md",
+    "core/agent-runtime-conformance-evidence.md",
+    "tools/agent-runtime-conformance-evidence.py",
+    "tools/test-agent-runtime-conformance-evidence.py",
     "tools/devos.py",
     "tools/devos-doctor.py",
     "tools/devos-health.py",
     "tools/devos-release-check.py",
+    ".github/workflows/verify-agent-runtime-profile-registry.yml",
     ".github/workflows/verify-release-readiness.yml"
   ],
   "release_boundaries": [
     "Distribution release readiness is not production readiness.",
     "A green release gate does not authorize deployment or external mutation.",
     "Vendor runtime declarations are not verified integrations unless backed by merged conformance evidence.",
+    "A valid conformance evidence packet is candidate evidence and cannot self-promote a runtime registry entry.",
     "Release artifacts must be built from an exact Git commit and checksummed."
   ]
 }
