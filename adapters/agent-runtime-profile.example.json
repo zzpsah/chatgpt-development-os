@@ -1,0 +1,11 @@
+{
+  "protocol": "DEVOS-AGENT-RUNTIME-PROFILE-v1",
+  "runtime_id": "generic-local-agent",
+  "adapter_version": "1.0",
+  "capabilities": {
+    "filesystem.read": "AVAILABLE",
+    "filesystem.write_scoped": "AVAILABLE",
+    "git.inspect": "AVAILABLE",
+    "verification.run": "AVAILABLE"
+  }
+}
