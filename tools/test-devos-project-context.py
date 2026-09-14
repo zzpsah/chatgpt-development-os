@@ -19,14 +19,15 @@ for marker in (
     "Using this convention is optional and revocable.",
     "flag it as a documentation anomaly.",
     "same evidence vocabulary as [AI State Resolver]",
-    "DEVOS MODE: ACTIVE",
-    "DEVOS MODE: NOT VERIFIED",
-    "Activation means context recovery, not authorization.",
-    "Activation never grants merge, deploy, write, destructive, credential, permission, or production authority.",
+    "DevOS context recovered",
+    "DevOS context not verified",
+    "The acknowledgement means context recovery, not authorization.",
+    "It never grants merge, deploy, write, destructive, credential, permission, or production authority.",
+    "It does not request or create a host mode, special permissions, or changed host behavior.",
 ):
     assert marker in GUIDE, marker
 
-for forbidden in ("god mode", "special mode", "must follow", "grant permissions"):
+for forbidden in ("activation handshake", "devos mode:", "god mode", "special mode", "must follow", "grant permissions"):
     assert forbidden not in GUIDE.lower(), forbidden
 
 for marker in (
@@ -46,6 +47,6 @@ assert "0. Read `DEVOS-PROJECT-CONTEXT.md` as the default plain-language entry" 
 assert "optional shorthand" in AGENTS
 
 print("PASS: first-contact guide is plain repository context, not host control")
-print("PASS: activation handshake remains context-only and authority-neutral")
+print("PASS: context-recovery acknowledgement remains host-neutral and authority-neutral")
 print("PASS: unavailable context, authorization boundaries, and live-compatibility limits are explicit")
 print("PASS: core bootstrap and operating rule require first-contact context recovery")

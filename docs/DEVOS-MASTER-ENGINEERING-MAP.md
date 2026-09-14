@@ -242,7 +242,7 @@ State confidence is never authorization, execution, completion, or mutation auth
 
 ## Plain first-contact portability
 
-`DEVOS-PROJECT-CONTEXT.md` provides host-neutral first-contact context for a fresh AI chat. It is optional/revocable, preserves host policies, requires honest unavailable-context reporting, and flags embedded bypass instructions as anomalies. It is repository context, not authority over a host or user.
+`DEVOS-PROJECT-CONTEXT.md` provides host-neutral first-contact context for a fresh AI chat. It is optional/revocable, preserves host policies, requires honest unavailable-context reporting, and flags embedded bypass instructions as anomalies. Its optional acknowledgement reports context recovery without requesting a host mode or changed host behavior. It is repository context, not authority over a host or user.
 
 ## GitHub Identity & Token Control Plane
 
