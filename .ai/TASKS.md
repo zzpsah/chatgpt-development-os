@@ -10,35 +10,65 @@
 - `SIMULATED EVIDENCE != LIVE PROVIDER PROOF`
 - `CHAT MEMORY != SOURCE OF TRUTH`
 
-## Active / next bounded objective
+## Active bounded work
 
-### GitHub App live read-only verification
+### AI State Resolver v2 — structured cross-claim contradiction hardening
 
-- Repository-side GitHub Identity & Token Control Plane v1 is merged on `main` through PR #32. Its code, contracts, deterministic tests, and CI workflow are closed at repository evidence level.
-- The active evidence gate is a **read-only live GitHub App runtime verification**: authenticate from GitHub Actions, resolve the installed App for `zzpsah/chatgpt-development-os`, mint a short-lived installation token, and read back repository identity.
-- Required evidence: fresh workflow result, non-secret identity/capability output, and explicit verification that no mutation occurred.
-- User-reported App registration, installation, and Actions secrets are setup claims only until the workflow supplies live provider evidence.
-- Do not expose secrets or add credential material to Git, `.ai`, logs, artifacts, or model output.
+Objective: deterministically surface incompatible claims about the same explicitly identified fact without introducing NLP guessing, evidence-precedence assumptions, authority, or execution.
+
+Required implementation:
+
+- optional structured `fact_key` + `fact_value` pair on resolver claims;
+- canonical JSON comparison for stable deterministic values;
+- incomplete structured identity => `unknown` / `FACT_IDENTITY_INCOMPLETE`;
+- same `fact_key` + multiple canonical values => every involved claim becomes `unknown` / `CROSS_CLAIM_CONTRADICTION`;
+- deterministic contradiction summary in resolver output;
+- contradiction IDs propagate to P16 as unresolved state and force `CLARIFY`;
+- P16 independently recomputes contradiction consistency;
+- P17 independently recomputes contradiction consistency after planning and blocks tampering;
+- stale/current disagreement is not silently resolved by precedence;
+- no change to P12 freshness ownership or P17 authorization/security/runtime gates.
+
+Verification requirements:
+
+- same fact/same canonical value remains resolved;
+- structured objects with different key order do not create false contradictions;
+- same fact/different value becomes unresolved;
+- stale-vs-current disagreement remains unresolved;
+- forged resolver contradiction metadata cannot bypass P16;
+- post-P16 fact-value tampering cannot bypass P17;
+- exact-head applicable CI must pass before completion is claimed.
 
 ## Current HOLD / limits
 
 - `production_ready = false`.
-- `live_provider_proven = false` until the read-only workflow succeeds with fresh evidence.
-- Browser OAuth callback/token exchange is out of scope for the GitHub-hosted runtime path.
+- No arbitrary/destructive/production mutation is authorized merely by resolver work.
+- Resolver confidence never grants authorization, execution, mutation, or completion.
+- P12 remains owner of execution-evidence provenance and freshness.
+- No automatic NLP/prose inference of fact identity.
+- No automatic winner selection between contradictory claims.
 - No P18/P19 phase is created merely for bookkeeping.
 
 ## Closed current foundations
 
-- **AI State Resolver v2** — merged on `main`; deterministic grounding, P16/P17 propagation, and continuation-path regressions are implemented. Durable-state grounding is capped at `likely`; only current P12 execution evidence can remain `observed`.
-- **Plain Project Context and Recovery Guide v1** — merged on `main`; the guide is the default fresh-session entry, and stance codes are optional shorthand after orientation.
-- **GitHub Identity & Token Control Plane v1 repository slice** — merged through PR #32; see `core/devos-github-identity-token-control-plane.md`, `docs/DEVOS-GITHUB-IDENTITY-AND-TOKEN-CONTROL-PLANE.md`, and `docs/DEVOS-GITHUB-HOSTED-RUNTIME.md`.
+- **AI State Resolver v2 grounding/freshness** — deterministic read-only claim resolution; durable-state grounding capped at `likely`; current P12 execution evidence required for `observed`.
+- **Resolver -> P16 -> P17 propagation** — unresolved claims force P16 `CLARIFY`; valid resolver provenance is retained; P17 rejects unresolved/tampered state.
+- **AI State Resolver v2 envelope-integrity hardening (PR #44)** — P16/P17 validate full resolver invariants and fail closed on hidden uncertainty or changed authority/execution state.
+- **Post-PR #44 durable-state reconciliation (PR #45)** — merged at `aa38761270ac9acdf6af90a4bae64890c766ec91`.
+- **Live GitHub App read-only provider proof** — workflow run `34785659043` succeeded.
+- **Governed GitHub controller/provider mutation proof** — isolated create/update/delete path proven with fresh readback/reconciliation evidence; this does not imply production readiness.
+- **GitHub mutation readback hardening (PR #42)** — bounded readback-only retries without mutation replay.
+- **Plain Project Context and Recovery Guide v1** — merged and retained.
+- **GitHub Identity & Token Control Plane v1 repository slice** — merged through PR #32.
+
+Detailed resolver-stage history: `docs/AI-STATE-RESOLVER-EVOLUTION.md`.
 
 ## Historical evidence index
 
 Detailed historical records remain in Git history, dated `.ai/SESSIONS/` files, `docs/handoff/`, and the master engineering map. They are not active tasks.
 
 - P9 Development Task Controller; P10 Context Continuity & Recovery; P11 Federation & Self-Healing Context; P12 Operational Intelligence; P13 Autonomous Development Orchestration; P14 Adaptive Verification & Self-Healing; P15 Human Language Interpretation; P16 Semantic Goal-to-Plan Compiler; P17 Step Readiness & Authorization Orchestrator.
-- Production E2E (PR #11), Failure + Recovery (PR #12), Multi-Session / Fresh-AI (PR #13), Controlled Remote Mutation (PR #14), Production-Readiness Evidence (PR #16), Trust-First Audit (PR #17), Foundation Health (PR #18), Onboarding (PR #19), Recovery Friction (PR #20/#21), repository.create (PR #22), Actionable HOLD (PR #23), Current-Source Evidence (PR #24), and MCP/App Permission Control Plane (PR #27).
+- Production E2E (PR #11), Failure + Recovery (PR #12), Multi-Session / Fresh-AI (PR #13), Controlled Remote Mutation (PR #14), Production-Readiness Evidence (PR #16), Trust-First Audit (PR #17), Foundation Health (PR #18), Onboarding (PR #19), Recovery Friction (PR #20/#21), repository.create (PR #22), Actionable HOLD (PR #23), Current-Source Evidence (PR #24), MCP/App Permission Control Plane (PR #27), GitHub identity/token control plane (PR #32), governed provider/controller adapter (PR #35), mutation readback hardening (PR #42), resolver envelope integrity (PR #44), and durable-state reconciliation (PR #45).
 
 ## Permanent task boundaries
 
