@@ -8,6 +8,7 @@ SECURITY_TERMS = {"security", "auth", "authentication", "authorization", "creden
 MUTATING_IMPACTS = {"LOW_IMPACT_MUTATION", "HIGH_IMPACT_MUTATION", "PRODUCTION_OR_DESTRUCTIVE"}
 READ_ONLY_PREFIXES = ("inspect ", "read ", "list ", "show ", "examine ", "view ")
 NON_MATERIAL_GATING_ANNOTATIONS = {"HIGH_IMPACT_REQUIRES_AUTHORIZATION_CHECK"}
+STATE_CONFIDENCE = {"observed": 2, "likely": 1, "unknown": 0}
 CONSTRAINT_TERMS = {
     "DO_NOT_DEPLOY": "deploy",
     "DO_NOT_PRODUCTION": "production",
@@ -65,6 +66,84 @@ def _negative_constraint_conflict(steps: list[dict], constraints: list[str]) -> 
     return None
 
 
+def _state_resolution_summary(state_resolution: dict) -> tuple[dict | None, str | None]:
+    """Validate resolver v2 output before P16 trusts its uncertainty summary."""
+    if not isinstance(state_resolution, dict) or state_resolution.get("protocol") != "DEVOS-AI-STATE-RESOLUTION-v2":
+        return None, "state resolution invalid"
+    if state_resolution.get("authority") != "UNCHANGED" or state_resolution.get("authorization") != "UNCHANGED":
+        return None, "state resolution authority boundary changed"
+    if state_resolution.get("execution") != "NONE" or state_resolution.get("mutation") != "NONE":
+        return None, "state resolution execution boundary changed"
+
+    status = state_resolution.get("status")
+    if status not in {"RESOLVED", "NEEDS_EVIDENCE", "BLOCKED"}:
+        return None, "state resolution status invalid"
+    unresolved = state_resolution.get("unresolved_claim_ids", [])
+    if not isinstance(unresolved, list) or any(not isinstance(item, str) or not item.strip() for item in unresolved):
+        return None, "state resolution unresolved claims invalid"
+    weakest = state_resolution.get("weakest_state_confidence", "unknown")
+    if weakest not in STATE_CONFIDENCE:
+        return None, "state resolution confidence invalid"
+
+    claims = state_resolution.get("claims", [])
+    if not isinstance(claims, list):
+        return None, "state resolution claims invalid"
+    compact_claims = []
+    counts = {level: 0 for level in STATE_CONFIDENCE}
+    computed_unresolved: list[str] = []
+    any_unknown = False
+    for claim in claims:
+        if not isinstance(claim, dict):
+            return None, "state resolution claim invalid"
+        confidence = claim.get("state_confidence")
+        if confidence not in STATE_CONFIDENCE:
+            return None, "state resolution claim confidence invalid"
+        claim_id = claim.get("id")
+        if claim_id is not None and (not isinstance(claim_id, str) or not claim_id.strip()):
+            return None, "state resolution claim id invalid"
+        counts[confidence] += 1
+        if confidence == "unknown":
+            any_unknown = True
+            if isinstance(claim_id, str) and claim_id.strip():
+                computed_unresolved.append(claim_id.strip())
+        compact_claims.append({"id": claim_id, "state_confidence": confidence})
+
+    if status == "BLOCKED":
+        return {
+            "protocol": state_resolution["protocol"],
+            "status": status,
+            "weakest_state_confidence": weakest,
+            "unresolved_claim_ids": list(unresolved),
+            "claims": compact_claims,
+            "claim_count": len(compact_claims),
+            "state_confidence_summary": counts,
+            "authority": "UNCHANGED", "authorization": "UNCHANGED", "execution": "NONE", "mutation": "NONE",
+        }, "state resolution blocked"
+
+    provided_counts = state_resolution.get("state_confidence_summary")
+    if provided_counts != counts:
+        return None, "state resolution confidence summary inconsistent"
+    expected_weakest = min((item["state_confidence"] for item in compact_claims), key=lambda value: STATE_CONFIDENCE[value], default="unknown")
+    if weakest != expected_weakest:
+        return None, "state resolution weakest confidence inconsistent"
+    if sorted(unresolved) != sorted(computed_unresolved):
+        return None, "state resolution unresolved claims inconsistent"
+    expected_status = "NEEDS_EVIDENCE" if any_unknown else "RESOLVED"
+    if status != expected_status:
+        return None, "state resolution status inconsistent"
+
+    return {
+        "protocol": state_resolution["protocol"],
+        "status": status,
+        "weakest_state_confidence": weakest,
+        "unresolved_claim_ids": list(unresolved),
+        "claims": compact_claims,
+        "claim_count": len(compact_claims),
+        "state_confidence_summary": counts,
+        "authority": "UNCHANGED", "authorization": "UNCHANGED", "execution": "NONE", "mutation": "NONE",
+    }, None
+
+
 def compile_plan(intent: str, objective: str, project: str | None, constraints: list[str], ambiguity: list[str],
                  state_resolution: dict | None = None) -> dict:
     annotations = sorted({
@@ -81,19 +160,15 @@ def compile_plan(intent: str, objective: str, project: str | None, constraints: 
         material_ambiguity.append("objective unresolved")
     state_summary = None
     if state_resolution is not None:
-        if not isinstance(state_resolution, dict) or state_resolution.get("protocol") != "DEVOS-AI-STATE-RESOLUTION-v2":
-            material_ambiguity.append("state resolution invalid")
-        else:
-            unresolved = state_resolution.get("unresolved_claim_ids", [])
-            if not isinstance(unresolved, list):
-                material_ambiguity.append("state resolution unresolved claims invalid")
-            elif unresolved:
-                material_ambiguity.append("state claims unresolved: " + ", ".join(sorted(str(x) for x in unresolved)))
-            state_summary = {
-                "protocol": state_resolution["protocol"],
-                "weakest_state_confidence": state_resolution.get("weakest_state_confidence", "unknown"),
-                "unresolved_claim_ids": unresolved,
-            }
+        state_summary, state_error = _state_resolution_summary(state_resolution)
+        if state_error:
+            material_ambiguity.append(state_error)
+        elif state_summary is not None and state_summary["status"] == "NEEDS_EVIDENCE":
+            unresolved = state_summary["unresolved_claim_ids"]
+            if unresolved:
+                material_ambiguity.append("state claims unresolved: " + ", ".join(sorted(unresolved)))
+            else:
+                material_ambiguity.append("state resolution needs evidence")
 
     if material_ambiguity:
         return {
