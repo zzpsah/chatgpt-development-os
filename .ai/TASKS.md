@@ -11,18 +11,23 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 
 ## Active bounded work
 
-### AI State Resolver v2 — detailed contradiction provenance
+- No bounded engineering objective is active after merged PR #52.
+- Select the next objective only after fresh inspection of `main`, open PRs, CI, durable state, relevant source/tests, and current user intent.
+- Do not create P18/P19 merely for bookkeeping.
 
-- Branch: `feat/resolver-detailed-contradiction-provenance`, created from `main` at `2500ddc235ce99dbe45a6cd0537d4b0d2372c4a4`.
-- Preserve PR #46 contradiction semantics and PR #49 downstream contradiction integrity.
-- Resolver adds deterministic `contradictions` records containing `fact_key`, sorted involved `claim_ids`, and sorted canonical JSON values.
-- `contradiction_fact_keys` remains the compact summary; detailed records are audit provenance only.
-- P16 independently recomputes expected detailed provenance from claims and must return `CLARIFY` when detail is forged/inconsistent.
-- P17 independently revalidates the same detail on P16-preserved provenance and must return `BLOCKED` when detail is forged/inconsistent after planning.
-- Existing post-P16 `fact_value` tamper defense remains intact.
-- Closed PR #50 is not merged; only its non-duplicate detailed-provenance concept was recovered after fresh comparison against current `main`.
-- Exact-final-head CI + merge + post-merge durable reconciliation are required for completion.
-- No authority, authorization, execution, provider mutation, production readiness, or P18/P19 bookkeeping phase is introduced.
+## Completed — AI State Resolver v2 detailed contradiction provenance
+
+- PR #52 — `Add detailed resolver contradiction provenance` — merged at `2a5e13ad5a46085dc6949bfbcf325f84e29f9d02`.
+- Exact final source head: `b091ef2058f3c089d3daeafb41ca9fc58568f435`.
+- Resolver emits deterministic `contradictions` records alongside `contradiction_fact_keys`.
+- Each contradiction record contains `fact_key`, sorted involved `claim_ids`, and sorted canonical JSON values.
+- Non-contradictory and invalid-top-level results emit `contradictions: []`.
+- P16 independently recomputes the expected detailed provenance from claims and returns `CLARIFY` when detail is forged/inconsistent.
+- P17 independently revalidates the same detail and returns `BLOCKED` when detail is forged/inconsistent after planning.
+- Existing post-P16 `fact_value` tamper defense remains intact and claims-based.
+- Exact-final-head CI passed: Development OS `34811362766`; Development OS Contracts `34811362710`; MCP Repository Create `34811362769`; Actionable Hold `34811362786`; P13 External Managed Project `34811362707`; Current-Source Evidence `34811362749`; GitHub Identity/Token `34811362750`; Living Engineering Map `34811362775`; Trust-First Audit `34811362701`.
+- Closed PR #50 remains unmerged; only its non-duplicate detailed-provenance concept was recovered after fresh comparison against current `main`.
+- No authority, authorization, execution, provider mutation, automatic winner selection, production mutation, or production-readiness upgrade was introduced.
 
 ## Completed — resolver contradiction envelope integrity
 
@@ -35,7 +40,6 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 - Adversarial integration coverage proves forged contradiction hiding is rejected by P16 and post-plan fact-value tampering is rejected by P17.
 - Exact-final-head CI passed: Development OS Contracts `34810461613`; Development OS `34810461872`; Actionable Hold `34810461632`; Living Engineering Map `34810461677`; Trust-First Audit `34810461612`; GitHub Identity/Token `34810461701`; Current-Source Evidence `34810461718`; MCP Repository Create `34810461678`; P13 External Managed Project `34810461615`.
 - PR #51 reconciled post-#49 durable state and merged at `2500ddc235ce99dbe45a6cd0537d4b0d2372c4a4`.
-- No authority, authorization, execution, provider mutation, production mutation, or production-readiness upgrade was introduced.
 
 ## Completed — AI State Resolver v2 cross-claim contradiction handling
 
@@ -51,7 +55,7 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 
 ## Completed — previous-stage documentation ledger
 
-- `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` documents numbered architecture stages P9–P17 and major unnumbered proof/hardening milestones.
+- `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` documents numbered architecture stages P9–P17 and major unnumbered proof/hardening milestones through PR #52.
 - The ledger is navigation/history only; current source, Git/PR/CI, `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, core contracts, tests, and decisions remain authoritative.
 - `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md` records the contradiction contract, downstream envelope-integrity defenses, detailed contradiction provenance, and non-goals.
 
@@ -104,7 +108,7 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 - `production_ready = false`.
 - Resolver confidence and contradiction provenance never grant authorization, execution, mutation, or completion.
 - P12 retains execution-evidence provenance/freshness ownership; P16 retains planning; P17 retains readiness/authorization.
-- No production/deployment/credential/permission/destructive authority is introduced by this resolver hardening sequence.
+- No production/deployment/credential/permission/destructive authority was introduced by the resolver hardening sequence.
 
 ## Task-map invariant
 
