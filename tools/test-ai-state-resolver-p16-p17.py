@@ -97,21 +97,53 @@ hidden_unknown_plan = p16.compile_plan("FEATURE_CHANGE", "update docs", "DEVOS",
 assert hidden_unknown_plan["decision"] == "CLARIFY", hidden_unknown_plan
 assert any("inconsistent" in item for item in hidden_unknown_plan["ambiguity"]), hidden_unknown_plan
 
+# Forge a contradictory resolver result into a superficially RESOLVED envelope.
+# P16 must recompute the explicit fact values instead of trusting status/counts.
+forged_contradiction = copy.deepcopy(contradiction)
+forged_contradiction["status"] = "RESOLVED"
+forged_contradiction["unresolved_claim_ids"] = []
+forged_contradiction["contradiction_fact_keys"] = []
+forged_contradiction["weakest_state_confidence"] = "likely"
+forged_contradiction["state_confidence_summary"] = {"observed": 0, "likely": 2, "unknown": 0}
+for item in forged_contradiction["claims"]:
+    item["state_confidence"] = "likely"
+    item["reasons"] = [reason for reason in item.get("reasons", []) if reason != "CROSS_CLAIM_CONTRADICTION"]
+forged_contradiction_plan = p16.compile_plan("FEATURE_CHANGE", "update docs", "DEVOS", [], [], forged_contradiction)
+assert forged_contradiction_plan["decision"] == "CLARIFY", forged_contradiction_plan
+assert "state resolution cross-claim contradiction hidden" in forged_contradiction_plan["ambiguity"], forged_contradiction_plan
+
 tampered_plan = copy.deepcopy(plan)
 tampered_plan["state_resolution"]["claims"][0]["state_confidence"] = "unknown"
 tampered_ready = readiness(tampered_plan)
 assert tampered_ready["status"] == "BLOCKED", tampered_ready
 assert "PLAN_STATE_RESOLUTION_HIDDEN_UNKNOWN_CLAIM" in tampered_ready["reasons"], tampered_ready
 
-# A malicious PLANNED envelope cannot hide a contradiction by changing only the
-# top-level resolver status/unresolved list; P17 recomputes unknown claims.
+# Existing top-level contradiction hiding remains rejected.
 tampered_contradiction_plan = p16.compile_plan("FEATURE_CHANGE", "update docs", "DEVOS", [], [], observed)
 tampered_contradiction_plan["state_resolution"] = copy.deepcopy(contradiction)
 tampered_contradiction_plan["state_resolution"]["status"] = "RESOLVED"
 tampered_contradiction_plan["state_resolution"]["unresolved_claim_ids"] = []
 tampered_contradiction_ready = readiness(tampered_contradiction_plan)
 assert tampered_contradiction_ready["status"] == "BLOCKED", tampered_contradiction_ready
-assert "PLAN_STATE_RESOLUTION_HIDDEN_UNKNOWN_CLAIM" in tampered_contradiction_ready["reasons"], tampered_contradiction_ready
+
+# Start from a valid same-value fact group that P16 legitimately plans. Then
+# tamper one fact_value after planning without changing confidence/status/counts.
+consistent = resolver.resolve({"claims": [
+    {"id": "C5", "statement": "test status A", "state_confidence": "likely",
+     "grounding": {"type": "durable_state", "ref": ".ai/CURRENT-STATE.md:20"},
+     "fact_key": "test.status", "fact_value": "passed"},
+    {"id": "C6", "statement": "test status B", "state_confidence": "likely",
+     "grounding": {"type": "durable_state", "ref": ".ai/TASKS.md:20"},
+     "fact_key": "test.status", "fact_value": "passed"},
+]})
+assert consistent["status"] == "RESOLVED", consistent
+consistent_plan = p16.compile_plan("FEATURE_CHANGE", "update docs", "DEVOS", [], [], consistent)
+assert consistent_plan["decision"] == "PLANNED", consistent_plan
+post_plan_tamper = copy.deepcopy(consistent_plan)
+post_plan_tamper["state_resolution"]["claims"][1]["fact_value"] = "failed"
+post_plan_ready = readiness(post_plan_tamper)
+assert post_plan_ready["status"] == "BLOCKED", post_plan_ready
+assert "PLAN_STATE_RESOLUTION_HIDDEN_CONTRADICTION" in post_plan_ready["reasons"], post_plan_ready
 
 tampered_authority_plan = copy.deepcopy(plan)
 tampered_authority_plan["state_resolution"]["authority"] = "GRANTED"
@@ -120,5 +152,7 @@ assert tampered_authority_ready["status"] == "BLOCKED", tampered_authority_ready
 assert "PLAN_STATE_RESOLUTION_AUTHORITY_CHANGED" in tampered_authority_ready["reasons"], tampered_authority_ready
 
 print("PASS: resolver claim confidence and full provenance propagate P16 -> P17 without creating authority")
-print("PASS: cross-claim contradictions propagate to P16 CLARIFY and cannot be hidden from P17")
+print("PASS: cross-claim contradictions propagate to P16 CLARIFY")
+print("PASS: P16 independently rejects a forged resolver envelope hiding explicit fact contradictions")
+print("PASS: P17 independently rejects post-plan fact-value tampering that creates a hidden contradiction")
 print("PASS: P16/P17 reject forged resolver status/authority/execution envelopes")
