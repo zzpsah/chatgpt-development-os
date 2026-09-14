@@ -5,7 +5,7 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
 - **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
-- PR #46 merged at `36f3001487fb7ce666bb1e7241b539645878101a`; current reconciliation base then advanced to `f07c7c5a4afd4fd25c0da5b1ed7ee88733168baa` via `docs: harden first-contact acknowledgement`.
+- Current bounded objective started from verified `main` at `7009e8e1b4398462b1a9321bb1e2a38a3c35e478` (merge of post-PR #46 durable reconciliation PR #48).
 - `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture index; `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable stage-history/navigation ledger.
 
 ## Core documentation law
@@ -26,10 +26,17 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 
 ## Active bounded work
 
-- No numbered phase is active.
-- AI State Resolver v2 cross-claim contradiction handling is **closed through PR #46** and must not remain marked active after this reconciliation.
-- No next engineering objective is promoted by this record. Future continuation must inspect fresh `main`, open PRs, CI, current durable state, and source gaps before selecting the next bounded objective.
-- Do not create P18/P19 merely for bookkeeping.
+### AI State Resolver v2 — downstream contradiction integrity
+
+- Unnumbered defense-in-depth objective on branch `fix/resolver-downstream-contradiction-integrity`.
+- PR #46 resolver contradiction detection remains authoritative and is not being reimplemented.
+- Resolver now exposes deterministic detailed contradiction provenance in addition to compact `contradiction_fact_keys` while preserving robust fact-value validation.
+- P16 independently recomputes contradiction groups from preserved `fact_key` / `fact_value` claim values before trusting resolver metadata.
+- P17 independently recomputes them again at readiness time, so post-P16 fact-value tampering fails closed.
+- Hidden contradiction at P16 ⇒ `CLARIFY`; post-plan hidden contradiction at P17 ⇒ `BLOCKED` / `PLAN_STATE_RESOLUTION_HIDDEN_CONTRADICTION`.
+- The useful concept was extracted from closed superseded PR #47; duplicate/stale durable-state changes from #47 are excluded.
+- Exact-final-head CI and merge are required before this objective can be marked complete.
+- No P18/P19 is created.
 
 ## Current verified capability state
 
@@ -49,9 +56,8 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 - Claims are compared only when they explicitly share the same valid `fact_key`; arbitrary statement prose is not semantically paired by guesswork.
 - Same fact + different canonical values makes all involved otherwise-resolved claims `unknown`, adds `CROSS_CLAIM_CONTRADICTION`, records `contradiction_fact_keys`, and produces `NEEDS_EVIDENCE`.
 - Existing downstream path remains authoritative: resolver `NEEDS_EVIDENCE` → P16 `CLARIFY`; P17 fails closed if unknown claims are hidden in a forged `PLANNED` envelope.
-- Legacy claims without fact identity remain backward compatible.
 - Exact final-head CI passed all triggered gates: Development OS `34809630956`, Contracts `34809630926`, Current-Source Evidence `34809630993`, Trust-First Audit `34809630947`, Living Engineering Map `34809631004`, GitHub Identity/Token Control Plane `34809631046`, and MCP Repository Create `34809630925`.
-- PR #46 also reconciled the concurrent `040c7d21...` compact active/history rewrite without discarding unrelated changes, restoring the explicit account-memory boundary and already-proven live provider evidence.
+- PR #48 merged at `7009e8e1b4398462b1a9321bb1e2a38a3c35e478` to reconcile post-#46 durable state while preserving first-contact acknowledgement hardening.
 
 ### AI State Resolver v2 envelope integrity — merged
 
@@ -100,9 +106,12 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 - Master architecture: `docs/DEVOS-MASTER-ENGINEERING-MAP.md`.
 - Engineering stage history: `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md`.
 - Resolver contradiction contract: `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md`.
+- Downstream contradiction integrity: `docs/AI-STATE-RESOLVER-DOWNSTREAM-CONTRADICTION-INTEGRITY.md`.
 
 ## Next action
 
-- Complete this post-PR #46 durable-state reconciliation with exact-head CI and merge.
-- After reconciliation merge, recover fresh `main` before promoting any next bounded objective.
+- Open and verify the downstream contradiction-integrity PR on its exact final head.
+- Repair any CI failure without weakening fail-closed semantics.
+- Under the user's current time-bounded standing authorization, merge only when exact-final-head CI is green and the PR is mergeable.
+- After merge, reconcile durable state so this objective is not left active.
 - Keep `production_ready = false`; do not invent a new numbered phase solely to continue development.
