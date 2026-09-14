@@ -43,9 +43,30 @@ When two or more otherwise-resolved claims have the same `fact_key` but differen
 2. every involved claim receives reason `CROSS_CLAIM_CONTRADICTION`;
 3. the fact identity is listed in `contradiction_fact_keys`;
 4. claim IDs are listed in `unresolved_claim_ids`;
-5. resolver status becomes `NEEDS_EVIDENCE`.
+5. resolver status becomes `NEEDS_EVIDENCE`;
+6. deterministic detailed contradiction provenance is emitted in `contradictions`.
 
 The resolver does not select a winner based on confidence, source type, ordering, recency text, or convenience. A separate fresh evidence step must resolve the conflict.
+
+## Detailed contradiction provenance
+
+`contradiction_fact_keys` remains the compact list used for quick inspection. The resolver additionally emits audit-only detail:
+
+```yaml
+contradictions:
+  - fact_key: deployment.complete
+    claim_ids: [C20, C21]
+    canonical_values: ["false", "true"]
+```
+
+For each conflicting `fact_key`:
+
+- `claim_ids` contains the involved non-empty claim IDs in deterministic sorted order;
+- `canonical_values` contains the distinct canonical JSON values in deterministic sorted order;
+- contradiction entries are sorted by `fact_key`;
+- a non-contradictory resolver result emits `contradictions: []`.
+
+The detail is provenance, not authority and not a second truth source. P16 and P17 independently recompute the expected contradiction groups from the preserved claims and reject inconsistent detail. A forged `contradictions` payload cannot create or erase a valid plan/readiness decision.
 
 ## Malformed fact identity
 
@@ -71,7 +92,7 @@ P16 returns `CLARIFY`
 no executable plan from unresolved state
 ```
 
-The downstream layers do not trust only the resolver's top-level status/count metadata.
+The downstream layers do not trust only the resolver's top-level status/count metadata or its detailed contradiction provenance.
 
 ### P16 defense in depth
 
@@ -80,17 +101,18 @@ P16 independently recomputes explicit `fact_key`/`fact_value` groups from the pr
 - a conflicting fact group remains `unknown`;
 - every conflicting claim retains `CROSS_CLAIM_CONTRADICTION`;
 - `contradiction_fact_keys` matches the actual conflicting fact identities;
+- `contradictions` exactly matches the recomputed fact key, involved claim IDs, and canonical values;
 - malformed or unserializable structured facts cannot be presented as a valid resolved envelope.
 
-A forged resolver envelope that changes contradictory claims back to `likely`, clears unresolved IDs, changes status to `RESOLVED`, or removes contradiction metadata therefore becomes `CLARIFY` instead of a plan.
+A forged resolver envelope that changes contradictory claims back to `likely`, clears unresolved IDs, changes status to `RESOLVED`, removes contradiction metadata, or invents detailed provenance therefore becomes `CLARIFY` instead of a plan.
 
 ### P17 defense in depth
 
 P17 independently recomputes the same structured contradiction integrity from the full resolver provenance preserved in a P16 plan.
 
-P17 fails closed when preserved resolver provenance contains a hidden structured contradiction or when post-P16 tampering creates one.
+P17 fails closed when preserved resolver provenance contains a hidden structured contradiction, when post-P16 tampering creates one, or when the detailed `contradictions` payload no longer matches the claims.
 
-This closes a separate post-planning tamper path: if a previously consistent fact group is altered after P16 by changing one `fact_value` while leaving confidence/status/count metadata untouched, P17 returns `BLOCKED` with a hidden-contradiction reason rather than declaring the step READY.
+This closes separate post-planning tamper paths: if a previously consistent fact group is altered after P16 by changing one `fact_value`, or if contradiction detail is forged while status/confidence/count metadata remains superficially valid, P17 returns `BLOCKED` rather than declaring the step READY.
 
 The checks are deliberately redundant across resolver → P16 → P17. Each governed boundary validates the evidence it consumes rather than assuming the previous boundary remained untampered.
 
@@ -98,7 +120,7 @@ The checks are deliberately redundant across resolver → P16 → P17. Each gove
 
 This feature does not grant authorization, does not choose which claim is true, does not execute verification, does not mutate a provider, and does not change `production_ready`.
 
-The envelope-integrity hardening preserves the same boundary. P12 still owns execution-evidence provenance and freshness. P16 still owns plan compilation. P17 still owns step readiness/authorization checks.
+The envelope-integrity and detailed-provenance hardening preserve the same boundary. P12 still owns execution-evidence provenance and freshness. P16 still owns plan compilation. P17 still owns step readiness/authorization checks.
 
 ## Non-goals
 
