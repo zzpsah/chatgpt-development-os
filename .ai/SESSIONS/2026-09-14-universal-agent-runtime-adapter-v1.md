@@ -8,11 +8,11 @@ Build a vendor-neutral, side-effect-free runtime boundary that compiles a P17 RE
 
 ## Concurrency context
 
-Another AI is separately developing `Automated Software Delivery v1` in a temporary disposable local Git repository. That work owns the actual local create/update/test/readback delivery loop.
+Another AI separately developed `Automated Software Delivery v1` / Local Disposable Delivery Proof v1 in a temporary disposable local Git repository. That work owns the actual local create/update/test/readback delivery loop.
 
 This slice intentionally does **not** implement a duplicate filesystem mutation engine. It standardizes the runtime handoff/result boundary that a delivery loop may consume.
 
-The branch started from fresh `main` at `ec77c2efed145fe2c419fba365aad33a6f10990e` after Evidence → Durable State Reconciliation v1 was durably closed. No open PR was visible at branch creation.
+The original branch started from `main` at `ec77c2efed145fe2c419fba365aad33a6f10990e`. Before integration, `main` advanced with the local delivery proof. The implementation was therefore transplanted onto a fresh branch based on the newer main rather than force-updating stale state.
 
 ## Existing foundations inspected
 
@@ -22,6 +22,7 @@ The branch started from fresh `main` at `ec77c2efed145fe2c419fba365aad33a6f10990
 - `tools/verify-host-profile.py` / `adapters/host-profile.example.json` — portable host capability declaration.
 - `tools/step-readiness-orchestrator.py` — P17 READY envelope and exact-step gates.
 - `tools/devos-actionable-hold.py` — scoped approval semantics and `CONTINUE != BLANKET AUTHORIZATION` behavior.
+- `tools/devos-runtime-handoff.py` — existing controller/P17 → runtime READY bridge; it does not provide runtime-profile binding or returned-result validation.
 
 ## Gap
 
@@ -121,6 +122,9 @@ Returned evidence remains evidence, not authority.
 ## Closure
 
 - Reconciled against the local delivery proof on fresh `main`; the two capabilities are complementary and were integrated without overwriting shared P15/P16/P17 or local-delivery files.
+- PR #56 was closed without merge when concurrent `main` advancement made it stale.
 - PR #57 merged at `5d0bdbc0258e898ece21f99937dc4f5b886778a0`; exact verified feature head `da57d48c1ec28eac71eff75b59f9c701e9c9c593`.
-- Exact feature-head CI passed: Agent Runtime Adapter `34816383973`; Current-Source Evidence `34816383964`; Development OS `34816383999`; Contracts `34816383990`; MCP Repository Create `34816383969`; Trust-First `34816383980`; Evidence Durable Reconciliation `34816383959`.
-- Durable state and decisions were reconciled after merge. No authority or production-readiness boundary changed.
+- Fresh exact-head GitHub readback confirms successful runs: Agent Runtime Adapter `34816332410`; Current-Source Evidence `34816332392`; Development OS `34816332421`; Contracts `34816332435`; MCP Repository Create `34816332425`; Trust-First `34816332380`; Evidence Durable Reconciliation `34816332373`.
+- A later concurrent durable-state commit had written incorrect `348163839xx` workflow identifiers; post-PR #57 evidence reconciliation corrects those identifiers without changing implementation or authority semantics.
+- Structured PR #57 reconciliation evidence is stored in `.ai/RECONCILIATION-LEDGER.jsonl` with canonical digest `24fb54fa69b084a2b6d34b15b00241a81d3db36df0ccb54795e4ec6d53abc88d`.
+- No authority or production-readiness boundary changed.
