@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -80,6 +81,41 @@ def _has_cycle(steps: dict[str, dict[str, Any]]) -> bool:
     return any(visit(sid) for sid in sorted(steps))
 
 
+def _canonical_fact_value(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def _expected_contradictions(claims: list[dict[str, Any]]) -> tuple[list[dict[str, Any]] | None, str | None]:
+    groups: dict[str, list[tuple[str | None, str, str]]] = defaultdict(list)
+    for claim in claims:
+        has_key = "fact_key" in claim and claim.get("fact_key") is not None
+        has_value = "fact_value" in claim
+        if has_key != has_value:
+            return None, "PLAN_STATE_RESOLUTION_FACT_IDENTITY_INCOMPLETE"
+        if not has_key:
+            continue
+        fact_key = claim.get("fact_key")
+        if not isinstance(fact_key, str) or not fact_key.strip():
+            return None, "PLAN_STATE_RESOLUTION_FACT_KEY_INVALID"
+        canonical = _canonical_fact_value(claim.get("fact_value"))
+        groups[fact_key.strip()].append((claim.get("id"), canonical, str(claim.get("state_confidence"))))
+
+    expected: list[dict[str, Any]] = []
+    for fact_key in sorted(groups):
+        members = groups[fact_key]
+        values = sorted({canonical for _, canonical, _ in members})
+        if len(values) <= 1:
+            continue
+        if any(confidence != "unknown" for _, _, confidence in members):
+            return None, "PLAN_STATE_RESOLUTION_HIDDEN_CONTRADICTION"
+        expected.append({
+            "fact_key": fact_key,
+            "claim_ids": sorted(str(claim_id) for claim_id, _, _ in members if isinstance(claim_id, str) and claim_id.strip()),
+            "canonical_values": values,
+        })
+    return expected, None
+
+
 def _validate_state_resolution_summary(state_resolution: Any) -> str | None:
     """Revalidate the full P16-preserved resolver v2 provenance before readiness."""
     if not isinstance(state_resolution, dict) or state_resolution.get("protocol") != "DEVOS-AI-STATE-RESOLUTION-v2":
@@ -112,6 +148,12 @@ def _validate_state_resolution_summary(state_resolution: Any) -> str | None:
         if claim_id is not None and (not isinstance(claim_id, str) or not claim_id.strip()):
             return "PLAN_STATE_RESOLUTION_CLAIM_ID_INVALID"
         counts[confidence] += 1
+
+    expected_contradictions, contradiction_error = _expected_contradictions(claims)
+    if contradiction_error:
+        return contradiction_error
+    if state_resolution.get("contradictions", []) != expected_contradictions:
+        return "PLAN_STATE_RESOLUTION_CONTRADICTION_SUMMARY_INCONSISTENT"
 
     if counts["unknown"]:
         return "PLAN_STATE_RESOLUTION_HIDDEN_UNKNOWN_CLAIM"
