@@ -1,6 +1,6 @@
 # DevOS Engineering Stage History
 
-> Durable navigation ledger for completed numbered stages and major unnumbered hardening milestones. This document summarizes history; source, tests, Git/PR metadata, `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, `.ai/DECISIONS.md`, and session evidence remain authoritative.
+> Durable navigation ledger for completed numbered stages and major unnumbered hardening milestones. This document summarizes history; source, tests, Git/PR metadata, `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, `.ai/DECISIONS.md`, reconciliation records, and session evidence remain authoritative.
 
 ## Numbered architecture stages
 
@@ -12,7 +12,7 @@
 | P12 | Operational Intelligence | Added advisory/runtime observability and execution-evidence provenance/freshness substrate used by later gates. |
 | P13 | Autonomous Development Orchestration | Added governed orchestration/checkpoint-resume behavior while preserving authorization boundaries. |
 | P14 | Adaptive Verification & Self-Healing | Added adaptive verification and bounded healing with deterministic re-verification. |
-| P15 | Human Language Interpretation v2 | Added semantic interpretation of natural language/Hinglish without treating language itself as authorization. |
+| P15 | Human Language Interpretation v2 | Added semantic interpretation of human language without treating language itself as authorization. |
 | P16 | Semantic Goal-to-Plan Compiler | Converts interpreted objectives into bounded dependency-aware plans with explicit impacts, verification, and ambiguity handling. |
 | P17 | Step Readiness & Authorization Orchestrator | Performs exact-step readiness, capability, authorization, security, dependency, and evidence gating before execution. |
 
@@ -47,8 +47,10 @@ The following work extended the numbered architecture without creating new numbe
 - **Resolver Contradiction Envelope Integrity — PR #49:** added independent P16/P17 recomputation of explicit structured contradictions so forged resolver status/reasons or post-plan `fact_value` tampering fail closed. Merged at `58d37ea23d025d7414f0d55fe2ba5ccc42068b8e`; exact verified source head `3c0711a9803649505d105728e90e1ef90b3d7ce8`.
 - **Post-PR #49 Durable-State Reconciliation — PR #51:** marked contradiction envelope-integrity hardening complete, pinned exact-head CI evidence, and cleared stale active-state records. Merged at `2500ddc235ce99dbe45a6cd0537d4b0d2372c4a4`.
 - **Resolver Detailed Contradiction Provenance — PR #52:** added deterministic audit-only contradiction detail (`fact_key`, sorted involved claim IDs, sorted canonical JSON values) and independent P16/P17 validation of that detail. Merged at `2a5e13ad5a46085dc6949bfbcf325f84e29f9d02`; exact verified source head `b091ef2058f3c089d3daeafb41ca9fc58568f435`.
+- **P15 Bounded Devanagari Hindi/Hinglish Corpus & Gating — main commits `001f48e...` / `07fcc3c...`:** preserved Unicode Hindi input, added bounded multilingual corpus coverage, and proved P15 → P16 → P17 gating so high-impact Hindi remains independently classified/approval-gated, negative deployment wording blocks conflicting plans, and unresolved referents clarify. Exact-head CI passed; coverage remains bounded corpus evidence rather than universal multilingual competence.
+- **Automated Evidence → Durable State Reconciliation v1 — PR #54:** added protocol `DEVOS-EVIDENCE-DURABLE-RECONCILIATION-v1`, deterministic merge/exact-head-CI/documentation evidence validation, mandatory semantic review for durable CURRENT/TASKS meaning, tamper-evident reconciliation records, and dedicated regression CI. Merged at `e31c2099b5d9ce88ee4a20c225fe70b424dffa3d`; exact verified feature head `a2da0eaf2a5464d4a716859168bf0ba4d87659a6`. The first structured record is persisted in `.ai/RECONCILIATION-LEDGER.jsonl` with digest `3d60ab6d8c9b066a4835cc877b38b636cc136e19e6b18fce1b8e1d79702ebac5` pinned by session evidence.
 
-Closed PRs #47 and #50 are not completed milestones and were not merged. They are retained only as provenance for ideas later re-evaluated against fresh `main`; stale or duplicate branch state is not authoritative.
+Closed PRs #47 and #50 are not completed milestones and were not merged. They remain provenance only; stale or duplicate branch state is not authoritative.
 
 ## Live GitHub provider evidence milestone
 
@@ -84,6 +86,8 @@ CI PASS != AUTHORIZATION
 PROVIDER CREDENTIAL != DEVOS AUTHORIZATION
 PROVIDER RESPONSE != COMPLETION PROOF
 RECOVERY != AUTOMATIC MUTATION REPLAY
+MACHINE FACT != SEMANTIC AUTHORITY
+RECONCILIATION READY != REPOSITORY MUTATION
 ```
 
 Material work follows:
@@ -100,16 +104,18 @@ IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE
 
 ## Current evolution direction
 
-The latest completed historical line is PR #52, built on the PR #46 → #49 resolver contradiction hardening sequence and reconciled history through PR #51. No new numbered or unnumbered objective is automatically promoted by this history record.
+The latest completed engineering line now includes bounded P15 multilingual hardening and PR #54 Evidence → Durable State Reconciliation v1 on top of the P9–P17 architecture and resolver/provider hardening sequence.
 
-Future development must recover fresh `main`, open PRs, CI, durable state, relevant source, and current user intent before selecting the next bounded objective. No P18/P19 bookkeeping phase is created, and `production_ready = false` remains unchanged unless a separate evidence-backed objective explicitly changes it.
+PR #54 implements part of the existing master-map goals for evidence-native development, automated engineering lifecycle, and self-maintaining engineering knowledge without creating a numbered phase. Machine-verifiable facts may be normalized automatically; semantic architecture, authority, roadmap, and production-readiness meaning still require explicit review.
+
+No new objective is automatically promoted by this history record. Future development must recover fresh `main`, open PRs, CI, durable state, relevant source/tests, and current user intent first. `production_ready = false` remains unchanged unless a separate bounded evidence-backed objective explicitly changes it.
 
 ## Recovery use
 
 A fresh maintainer should use this file as history/navigation only, then recover current truth in this order:
 
 1. source tree + Git/PR/CI metadata;
-2. `.ai/CURRENT-STATE.md` and `.ai/TASKS.md`;
+2. `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, and `.ai/RECONCILIATION-LEDGER.jsonl`;
 3. relevant core contracts/tests;
 4. `.ai/DECISIONS.md` and session provenance;
 5. this historical ledger for architectural context.
