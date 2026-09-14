@@ -99,3 +99,10 @@
 - The approval must bind the exact project path, Git head, target, capability, impact ceiling, and P16 step. A mismatch or stale pre-write state holds rather than updating.
 - P15 interpretation, P16 planning, P17 readiness, controller/runtime handoff, testing, readback, and evidence recovery remain independently visible evidence stages.
 - Successful local proof does not authorize commits, pushes, managed-repository operations, provider access, deployment, production, credentials, database, permission, destructive operations, or general automated delivery.
+
+## Universal Agent Runtime Adapter v1
+
+- PR #57 provides a vendor-neutral, side-effect-free runtime handoff/result-validation boundary.
+- A P17 READY step and scoped approval are prerequisites, not execution authority. The adapter accepts only low-impact `file.create` / `file.update` operations and exact repository-head/path/capability/approval/runtime-profile scope.
+- A runtime completion claim becomes verified only after independent diff, test, and final-readback validation. Returned evidence is not authority.
+- This does not establish a vendor-specific runtime integration, managed-repository delivery, external mutation, or production readiness.

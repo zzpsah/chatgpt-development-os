@@ -5,7 +5,7 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
 - **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
-- Current reconciliation target is post-PR #54 merge commit `e31c2099b5d9ce88ee4a20c225fe70b424dffa3d`.
+- Latest reconciled feature is PR #57 merge commit `5d0bdbc0258e898ece21f99937dc4f5b886778a0`; source/Git/CI remain authoritative for its exact state.
 - `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture index.
 - `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable numbered/unnumbered milestone ledger.
 - `.ai/RECONCILIATION-LEDGER.jsonl` is the machine-readable post-feature reconciliation ledger introduced by PR #54.
@@ -30,10 +30,18 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 
 ## Active bounded work
 
-- No bounded engineering objective is active after the local delivery proof closure.
+- No bounded engineering objective is active after PR #57 Universal Agent Runtime Adapter v1 closure.
 - Future work must be selected from fresh `main`, CI, durable state, source gaps, and current user intent. No P18/P19 phase is created for bookkeeping.
 
 ## Current verified capability state
+
+### Universal Agent Runtime Adapter v1 — closed
+
+- PR #57 — `Add universal agent runtime adapter v1` — merged at `5d0bdbc0258e898ece21f99937dc4f5b886778a0`; exact verified feature head `da57d48c1ec28eac71eff75b59f9c701e9c9c593`.
+- `tools/agent-runtime-handoff.py` compiles a P17 READY step and exact scoped approval into a SHA-256-bound, runtime-neutral handoff, then independently validates returned diff, test, and final-readback evidence.
+- It accepts only low-impact `file.create` / `file.update` scope with exact repository-head, capability, target, runtime-profile, and approval checks. It executes no action itself.
+- Exact feature-head CI passed: Agent Runtime Adapter `34816383973`; Current-Source Evidence `34816383964`; Development OS `34816383999`; Contracts `34816383990`; MCP Repository Create `34816383969`; Trust-First `34816383980`; Evidence Durable Reconciliation `34816383959`.
+- This is a portable contract and validator, not a vendor integration or proof that the existing local delivery proof is already executed through this envelope. It does not authorize external/provider mutation, commits, pushes, deployments, production, credentials, databases, permissions, deletion, or automatic approval.
 
 ### Local Disposable Delivery Proof v1 — closed
 
@@ -119,6 +127,5 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 
 ## Next action
 
-- Verify and merge the post-PR #54 reconciliation branch on its exact head, then read back fresh `main`.
-- After that, select the next bounded objective only from fresh repository evidence and current user intent.
+- Select the next bounded objective only from fresh repository evidence and current user intent. The recommended next bridge is Managed-Repository Delivery v1 read-only preflight: recover a real repository, validate exact scope/freshness, produce an approval package, and stop at HOLD before mutation.
 - Keep `production_ready = false` unless a separately bounded evidence-backed objective explicitly changes it.

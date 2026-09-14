@@ -118,11 +118,9 @@ Returned evidence remains evidence, not authority.
 - no automatic approval
 - no P18/P19 bookkeeping phase
 
-## Remaining before completion
+## Closure
 
-1. Compare against fresh `main` and any parallel Software Delivery v1 branch/PR.
-2. Open a bounded PR only if non-overlapping/reconciled.
-3. Require exact-final-head CI including the dedicated runtime-adapter workflow.
-4. Repair failures without weakening scope or evidence gates.
-5. Merge under current bounded authorization only if fresh mergeability and concurrency checks pass.
-6. Use Evidence → Durable State Reconciliation v1 for post-merge closure and leave a fresh recoverable state.
+- Reconciled against the local delivery proof on fresh `main`; the two capabilities are complementary and were integrated without overwriting shared P15/P16/P17 or local-delivery files.
+- PR #57 merged at `5d0bdbc0258e898ece21f99937dc4f5b886778a0`; exact verified feature head `da57d48c1ec28eac71eff75b59f9c701e9c9c593`.
+- Exact feature-head CI passed: Agent Runtime Adapter `34816383973`; Current-Source Evidence `34816383964`; Development OS `34816383999`; Contracts `34816383990`; MCP Repository Create `34816383969`; Trust-First `34816383980`; Evidence Durable Reconciliation `34816383959`.
+- Durable state and decisions were reconciled after merge. No authority or production-readiness boundary changed.
