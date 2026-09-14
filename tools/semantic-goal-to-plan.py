@@ -59,11 +59,13 @@ def _contradiction_integrity(claims:list[dict], state_resolution:dict)->str|None
         if claim.get("state_confidence")!="unknown" or has_reason:
             groups[fact_key.strip()].append((claim,canonical))
         if has_reason: contradiction_reason_claims.add(id(claim))
-    expected=[]; seen_reason_claims=set()
+    expected=[]; expected_details=[]; seen_reason_claims=set()
     for fact_key in sorted(groups):
-        members=groups[fact_key]; values={canonical for _,canonical in members}
+        members=groups[fact_key]; values=sorted({canonical for _,canonical in members})
         if len(values)<=1: continue
         expected.append(fact_key)
+        claim_ids=sorted(str(claim.get("id")) for claim,_ in members if isinstance(claim.get("id"),str) and claim.get("id").strip())
+        expected_details.append({"fact_key":fact_key,"claim_ids":claim_ids,"canonical_values":values})
         for claim,_ in members:
             seen_reason_claims.add(id(claim))
             if claim.get("state_confidence")!="unknown" or "CROSS_CLAIM_CONTRADICTION" not in claim.get("reasons",[]):
@@ -72,6 +74,9 @@ def _contradiction_integrity(claims:list[dict], state_resolution:dict)->str|None
     actual=state_resolution.get("contradiction_fact_keys",[])
     if not isinstance(actual,list) or any(not isinstance(x,str) or not x.strip() for x in actual): return "state resolution contradiction facts invalid"
     if sorted(actual)!=expected: return "state resolution contradiction summary inconsistent"
+    actual_details=state_resolution.get("contradictions",[])
+    if not isinstance(actual_details,list): return "state resolution contradiction details invalid"
+    if actual_details!=expected_details: return "state resolution contradiction details inconsistent"
     return None
 
 def _state_resolution_summary(state_resolution:dict)->tuple[dict|None,str|None]:
