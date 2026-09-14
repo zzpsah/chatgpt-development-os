@@ -49,9 +49,10 @@ The following work extended the numbered architecture without creating new numbe
 - **Resolver Detailed Contradiction Provenance — PR #52:** added deterministic audit-only contradiction detail (`fact_key`, sorted involved claim IDs, sorted canonical JSON values) and independent P16/P17 validation of that detail. Merged at `2a5e13ad5a46085dc6949bfbcf325f84e29f9d02`; exact verified source head `b091ef2058f3c089d3daeafb41ca9fc58568f435`.
 - **P15 Bounded Devanagari Hindi/Hinglish Corpus & Gating — main commits `001f48e...` / `07fcc3c...`:** preserved Unicode Hindi input, added bounded multilingual corpus coverage, and proved P15 → P16 → P17 gating so high-impact Hindi remains independently classified/approval-gated, negative deployment wording blocks conflicting plans, and unresolved referents clarify. Exact-head CI passed; coverage remains bounded corpus evidence rather than universal multilingual competence.
 - **Automated Evidence → Durable State Reconciliation v1 — PR #54:** added protocol `DEVOS-EVIDENCE-DURABLE-RECONCILIATION-v1`, deterministic merge/exact-head-CI/documentation evidence validation, mandatory semantic review for durable CURRENT/TASKS meaning, tamper-evident reconciliation records, and dedicated regression CI. Merged at `e31c2099b5d9ce88ee4a20c225fe70b424dffa3d`; exact verified feature head `a2da0eaf2a5464d4a716859168bf0ba4d87659a6`. The first structured record is persisted in `.ai/RECONCILIATION-LEDGER.jsonl` with digest `3d60ab6d8c9b066a4835cc877b38b636cc136e19e6b18fce1b8e1d79702ebac5` pinned by session evidence.
-- **Universal Agent Runtime Adapter v1 — PR #57:** added a side-effect-free, vendor-neutral compiler for P17 READY plus exact scoped approval and a validator for runtime-returned diff/test/readback evidence. It is restricted to low-impact `file.create` / `file.update` scope and does not claim vendor integration or mutation. Merged at `5d0bdbc0258e898ece21f99937dc4f5b886778a0`; exact verified feature head `da57d48c1ec28eac71eff75b59f9c701e9c9c593`.
+- **Local Disposable Delivery Proof v1 — main commits `1f735fa11e19b9852ce9210338bc0907ab0b5b1c` / `284def759c6532bc80701dcfaff5446d5e315ac4`:** proved one real bounded software-delivery loop in a newly created temporary local Git repository: P15 → P16 → P17 → exact scoped approval → controller/runtime handoff → marker-file update → local test → Git diff/readback → durable evidence packet → fresh evidence recovery. Exact-head CI passed: Development OS `34816057996`, Contracts `34816057880`, Trust-First `34816057979`, Living Engineering Map `34816057867`, GitHub Identity/Token `34816057874`, Provider Controller Adapter `34816057869`, Remote Permission Governance `34816057885`. The proof excludes commit/push, managed repositories/providers, deployment, production, credentials, database, permissions, destructive actions, and general automated-delivery authority.
+- **Universal Agent Runtime Adapter v1 — PR #57:** added a side-effect-free, vendor-neutral compiler for P17 READY plus exact scoped approval and a validator for runtime-returned diff/test/readback evidence. It is restricted to low-impact `file.create` / `file.update` scope and does not claim vendor integration or mutation. Merged at `5d0bdbc0258e898ece21f99937dc4f5b886778a0`; exact verified feature head `da57d48c1ec28eac71eff75b59f9c701e9c9c593`. Fresh exact-head CI passed: Agent Runtime Adapter `34816332410`, Current-Source Evidence `34816332392`, MCP Repository Create `34816332425`, Trust-First `34816332380`, Development OS `34816332421`, Contracts `34816332435`, Evidence Durable Reconciliation `34816332373`. PR #56 was closed without merge after concurrent main advancement and is not authoritative. Structured reconciliation is recorded in `.ai/RECONCILIATION-LEDGER.jsonl` with digest `24fb54fa69b084a2b6d34b15b00241a81d3db36df0ccb54795e4ec6d53abc88d`.
 
-Closed PRs #47 and #50 are not completed milestones and were not merged. They remain provenance only; stale or duplicate branch state is not authoritative.
+Closed PRs #47, #50, and #56 are not completed milestones and were not merged. They remain provenance only; stale or duplicate branch state is not authoritative.
 
 ## Live GitHub provider evidence milestone
 
@@ -89,6 +90,8 @@ PROVIDER RESPONSE != COMPLETION PROOF
 RECOVERY != AUTOMATIC MUTATION REPLAY
 MACHINE FACT != SEMANTIC AUTHORITY
 RECONCILIATION READY != REPOSITORY MUTATION
+RUNTIME CAPABILITY != AUTHORIZATION
+RUNTIME RESULT != AUTHORITY
 ```
 
 Material work follows:
@@ -105,11 +108,11 @@ IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE
 
 ## Current evolution direction
 
-The latest completed engineering line now includes bounded P15 multilingual hardening and PR #54 Evidence → Durable State Reconciliation v1 on top of the P9–P17 architecture and resolver/provider hardening sequence.
+The latest completed engineering line now includes bounded P15 multilingual hardening, Evidence → Durable State Reconciliation v1, Local Disposable Delivery Proof v1, and Universal Agent Runtime Adapter v1 on top of the P9–P17 architecture and resolver/provider hardening sequence.
 
-PR #54 implements part of the existing master-map goals for evidence-native development, automated engineering lifecycle, and self-maintaining engineering knowledge without creating a numbered phase. Machine-verifiable facts may be normalized automatically; semantic architecture, authority, roadmap, and production-readiness meaning still require explicit review.
+The local delivery proof establishes a real low-impact disposable-repository delivery loop. Runtime Adapter v1 separately standardizes the vendor-neutral handoff/result evidence boundary and does not retroactively claim that the existing local proof already uses the new envelope. Connecting those two capabilities is a possible future bounded integration objective, not an automatically promoted or already-completed capability.
 
-No new objective is automatically promoted by this history record. Future development must recover fresh `main`, open PRs, CI, durable state, relevant source/tests, and current user intent first. `production_ready = false` remains unchanged unless a separate bounded evidence-backed objective explicitly changes it.
+No new numbered phase is created. Machine-verifiable facts may be normalized automatically; semantic architecture, authority, roadmap, runtime capability, and production-readiness meaning still require explicit review. `production_ready = false` remains unchanged unless a separate bounded evidence-backed objective explicitly changes it.
 
 ## Recovery use
 
