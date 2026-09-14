@@ -35,14 +35,23 @@ def assert_blocked(report: dict, reason_fragment: str) -> None:
     assert report["authorization"] == "UNCHANGED"
 
 
+def different_stable_semver(version: str) -> str:
+    """Return a valid stable semver guaranteed to differ from the fixture baseline."""
+    parts = version.split(".")
+    assert len(parts) == 3 and all(part.isdigit() for part in parts), version
+    major, minor, patch = (int(part) for part in parts)
+    return f"{major}.{minor}.{patch + 1}"
+
+
 def main() -> None:
     checker = load_checker()
+    canonical_version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
     td, root = fixture()
     try:
         report = checker.check(root, require_git=False)
         assert report["status"] == "READY", report
-        assert report["version"] == "0.17.0"
+        assert report["version"] == canonical_version
         assert report["production_ready"] is False
         assert report["final_ci_required"] is True
     finally:
@@ -50,7 +59,7 @@ def main() -> None:
 
     td, root = fixture()
     try:
-        (root / "VERSION").write_text("0.18.0\n", encoding="utf-8")
+        (root / "VERSION").write_text(different_stable_semver(canonical_version) + "\n", encoding="utf-8")
         assert_blocked(checker.check(root, require_git=False), "RELEASE_MANIFEST_VERSION_MISMATCH")
     finally:
         td.cleanup()
@@ -89,6 +98,7 @@ def main() -> None:
         td.cleanup()
 
     print("PASS: DevOS distribution release gate fails closed across adversarial drift cases")
+    print(f"PASS: release-version regressions derive from canonical VERSION={canonical_version}")
 
 
 if __name__ == "__main__":

@@ -22,11 +22,14 @@ jobs:
       - name: Verify registry regression corpus
         run: python tools/test-agent-runtime-profile-registry.py
 
-      - name: Verify registry contract markers
+      - name: Verify conformance evidence intake regression corpus
+        run: python tools/test-agent-runtime-conformance-evidence.py
+
+      - name: Verify registry and conformance contract markers
         run: |
           python - <<'PY'
           from pathlib import Path
-          text = Path('core/agent-runtime-profile-registry.md').read_text(encoding='utf-8')
+          registry = Path('core/agent-runtime-profile-registry.md').read_text(encoding='utf-8')
           for marker in (
               'DEVOS-AGENT-RUNTIME-PROFILE-REGISTRY-v1',
               'Declared runtime identity is not verified runtime capability.',
@@ -35,6 +38,16 @@ jobs:
               'openhands',
               'production_ready: false',
           ):
-              assert marker in text, marker
-          print('PASS: runtime profile registry contract markers')
+              assert marker in registry, marker
+
+          intake = Path('core/agent-runtime-conformance-evidence.md').read_text(encoding='utf-8')
+          for marker in (
+              'DEVOS-AGENT-RUNTIME-CONFORMANCE-CHALLENGE-v1',
+              'EVIDENCE_PACKET_VALID != VERIFIED runtime',
+              'registry_promotion_allowed: false',
+              'direct_runtime_verified: false',
+              'production_ready: false',
+          ):
+              assert marker in intake, marker
+          print('PASS: runtime registry and conformance evidence contract markers')
           PY

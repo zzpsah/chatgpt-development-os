@@ -60,14 +60,14 @@ AI account memory or old chat history is supplementary only; it is never authori
 
 ## Release status
 
-Current distribution version: **0.17.0**.
+Current distribution version: **0.18.0**.
 
 ```bash
 python tools/devos.py version
 python tools/devos.py release-check
 ```
 
-`0.17.0` represents the P17-complete architecture line plus subsequently merged resolver, provider, multilingual, local-delivery, evidence-reconciliation, runtime-adapter, and runtime-profile hardening.
+`0.18.0` extends the P17-complete distribution line with challenge-bound Agent Runtime Conformance Evidence Intake v1. Candidate runtime evidence can now be bound to an exact runtime/head/nonce and validated fail-closed without allowing the evidence packet to self-promote a runtime registry entry.
 
 **Distribution release readiness is not production readiness.** `production_ready = false` remains deliberate. A green release gate does not authorize deployment, production mutation, credentials, database changes, permission changes, destructive actions, or unscoped external execution.
 
@@ -155,6 +155,8 @@ These proofs do **not** imply general production deployment authority.
 `tools/agent-runtime-handoff.py` defines a vendor-neutral handoff/result-validation contract.
 
 `config/agent-runtime-profile-registry.json` separates runtime identity from verified capability. A runtime must have evidence-backed required capabilities before it can be exported as a handoff-compatible profile. Vendor names such as Codex, Claude Code, or OpenHands are not treated as verified merely because they are recognized.
+
+`tools/agent-runtime-conformance-evidence.py` creates exact runtime/head/nonce-bound conformance challenges and validates returned candidate evidence packets. `EVIDENCE_PACKET_VALID` still means reviewable candidate evidence only: it does not verify runtime identity, mutate the registry, grant authorization, or make a declaration-only runtime handoff-ready.
 
 ### Provider governance
 
@@ -261,4 +263,4 @@ chatgpt-development-os/
 
 ## Version
 
-**0.17.0** — P17-complete distribution line with repository-first recovery, bounded multilingual interpretation, semantic planning/readiness, contradiction hardening, governed provider controls, bounded delivery proofs, runtime-neutral handoff/profile conformance, evidence reconciliation, and release-readiness gates.
+**0.18.0** — P17-complete distribution line plus challenge-bound runtime conformance evidence intake. Runtime evidence remains candidate evidence until separate direct observation, semantic review, durable registry change, and verification are completed.

@@ -70,13 +70,17 @@ Those remain separate, explicit operations with their own evidence and authoriza
 
 The merged runtime profile registry is authoritative for DevOS conformance claims. `reference-local-agent` is only verified for its recorded static contract evidence. `codex`, `claude-code`, and `openhands` remain declaration-only until a separate evidence-backed conformance proof is merged. A familiar runtime name is not capability evidence.
 
+DevOS `0.18.0` adds a challenge-bound conformance evidence intake. It can validate that a candidate packet matches one exact runtime ID, adapter version, Git head, nonce, required capability set, provenance shape, and SHA-256 evidence digests. `EVIDENCE_PACKET_VALID` is not a verified runtime and cannot mutate or promote the registry; separate directly observed invocation evidence, semantic review, durable registry change, and verification remain mandatory.
+
 ## Security and integrity
 
 Before publication, the exact candidate must have green applicable CI and no unresolved release-check blocker. Never place secrets, tokens, private keys, cookies, production data, or private school/user documents into release artifacts or repository history. Follow `.github/SECURITY.md` for vulnerability handling.
 
 ## Version policy
 
-DevOS uses semantic versioning for distribution metadata. `0.17.0` represents the P17-complete architecture line plus subsequently merged unnumbered hardening and delivery/runtime capabilities. Remaining `0.x` communicates that production-grade external execution/deployment guarantees are intentionally not claimed.
+DevOS uses semantic versioning for distribution metadata. `0.18.0` is a backward-compatible capability increment over the `0.17.0` P17-complete release-ready line, adding runtime conformance evidence intake while preserving all authority, authorization, execution, mutation, publication, and production-readiness boundaries. Remaining `0.x` communicates that production-grade external execution/deployment guarantees are intentionally not claimed.
+
+A new capability that changes the exact source distribution must not silently reuse an already release-ready version identifier; the canonical `VERSION`, release manifest, README, changelog, and exact-source CI artifact must move together.
 
 ## Release completion evidence
 

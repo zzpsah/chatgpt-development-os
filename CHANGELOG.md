@@ -2,6 +2,41 @@
 
 All notable DevOS distribution changes are summarized here. Exact implementation truth remains in source/Git/PR/CI and durable `.ai` records; this file is release navigation, not execution authority.
 
+## 0.18.0 — 2026-09-14
+
+Runtime conformance evidence intake release line.
+
+### Added / completed
+
+- `tools/agent-runtime-conformance-evidence.py` with exact runtime/adapter/Git-head/nonce challenge binding.
+- Candidate evidence validation for the required runtime capabilities: `filesystem.read`, `filesystem.write_scoped`, `git.inspect`, and `verification.run`.
+- SHA-256 challenge integrity and per-capability evidence-digest validation.
+- Fail-closed rejection of runtime/head/nonce mismatch, replay, malformed provenance, missing/extra capabilities, invalid digests, and tampered challenge data.
+- Explicit `HOLD` when a required capability probe reports failure.
+- Dedicated adversarial regression corpus and runtime-profile CI integration.
+- Release manifest now requires the conformance contract/tool/tests in the exact-source distribution.
+
+### Security / integrity invariants
+
+- `EVIDENCE_PACKET_VALID != VERIFIED runtime`.
+- `EVIDENCE_PACKET_VALID != registry mutation`.
+- `INTERPRETATION != AUTHORIZATION`.
+- `PLAN != EXECUTION`.
+- `READY != EXECUTION`.
+- `CONTINUE != BLANKET AUTHORIZATION`.
+- `CI PASS != AUTHORIZATION`.
+- `PROVIDER CREDENTIAL != DEVOS AUTHORIZATION`.
+- `PROVIDER RESPONSE != COMPLETION PROOF`.
+- `RECOVERY != AUTOMATIC MUTATION REPLAY`.
+
+### Known limitations
+
+- `production_ready = false` remains intentional.
+- A challenge-bound packet is candidate evidence only; `registry_promotion_allowed=false` and `direct_runtime_verified=false` remain mandatory verdict fields.
+- Codex, Claude Code and OpenHands remain declaration-only until separate direct runtime invocation evidence is actually observed, semantically reviewed, durably merged into the registry, and verified.
+- The evidence-intake tool does not invoke a vendor runtime, mutate Git/the registry, deploy, access credentials, alter databases/permissions, or perform destructive actions.
+- Distribution release readiness does not authorize public tagging/GitHub Release publication or production deployment.
+
 ## 0.17.0 — 2026-09-14
 
 First release-ready P17-complete distribution line.

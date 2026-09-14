@@ -9,6 +9,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 CLI = ROOT / "tools" / "devos.py"
+VERSION = ROOT / "VERSION"
 
 
 def run(*args: str) -> subprocess.CompletedProcess[str]:
@@ -22,18 +23,21 @@ def run(*args: str) -> subprocess.CompletedProcess[str]:
 
 
 def main() -> None:
+    canonical_version = VERSION.read_text(encoding="utf-8").strip()
+
     direct = run("version")
     assert direct.returncode == 0, direct.stderr
-    assert direct.stdout.strip() == "0.17.0", direct.stdout
+    assert direct.stdout.strip() == canonical_version, direct.stdout
 
     flag = run("--version")
     assert flag.returncode == 0, flag.stderr
-    assert flag.stdout.strip() == "0.17.0", flag.stdout
+    assert flag.stdout.strip() == canonical_version, flag.stdout
 
     release = run("release-check", "--no-git", "--json")
     assert release.returncode == 0, release.stdout + release.stderr
     payload = json.loads(release.stdout)
     assert payload["status"] == "READY", payload
+    assert payload["version"] == canonical_version, payload
     assert payload["production_ready"] is False
     assert payload["execution"] == "NONE"
     assert payload["mutation"] == "NONE"
@@ -42,7 +46,7 @@ def main() -> None:
     assert "shell=True" not in source
     assert "subprocess.run([sys.executable" in source
 
-    print("PASS: DevOS CLI version and release-check dispatch are deterministic and shell-free")
+    print(f"PASS: DevOS CLI version={canonical_version} and release-check dispatch are deterministic and shell-free")
 
 
 if __name__ == "__main__":
