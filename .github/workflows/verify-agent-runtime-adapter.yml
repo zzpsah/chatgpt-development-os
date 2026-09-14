@@ -1,0 +1,40 @@
+name: Verify Agent Runtime Adapter
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run runtime adapter regression corpus
+        run: python tools/test-agent-runtime-handoff.py
+
+      - name: Verify normative contract markers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('core/agent-runtime-adapter.md').read_text(encoding='utf-8')
+          for marker in (
+              'DEVOS-AGENT-RUNTIME-HANDOFF-v1',
+              'RUNTIME_RESULT_IS_EVIDENCE_NOT_AUTHORITY',
+              'file.create',
+              'file.update',
+              'production_ready = false',
+              'Automated Software Delivery v1',
+          ):
+              assert marker in text, marker
+          print('PASS: universal agent runtime adapter contract markers')
+          PY
