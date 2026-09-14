@@ -1,0 +1,47 @@
+name: Verify Production Readiness Evidence v2
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Validate current production-readiness assessment
+        run: python tools/verify-production-readiness-v2.py --json
+
+      - name: Run fail-closed adversarial regression corpus
+        run: python tools/test-production-readiness-v2.py
+
+      - name: Prove current source still HOLDs when production is required
+        run: |
+          python - <<'PY'
+          import subprocess, sys
+          proc = subprocess.run(
+              [sys.executable, 'tools/verify-production-readiness-v2.py', '--require-production', '--json'],
+              text=True,
+              capture_output=True,
+              check=False,
+          )
+          print(proc.stdout)
+          assert proc.returncode == 2, (proc.returncode, proc.stdout, proc.stderr)
+          print('PASS: current v2 assessment is valid but production requirement fails closed on explicit blockers')
+          PY
