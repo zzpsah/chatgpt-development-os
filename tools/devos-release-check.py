@@ -136,6 +136,17 @@ def check(root: Path, *, require_git: bool = True) -> dict[str, Any]:
     else:
         reasons.append("README_MISSING")
 
+    changelog_path = root / "CHANGELOG.md"
+    if changelog_path.is_file():
+        changelog = _read(changelog_path)
+        if version and f"## {version} —" not in changelog:
+            reasons.append("CHANGELOG_VERSION_MISMATCH")
+        for marker in ("production_ready = false", "Known limitations", "Security / integrity invariants"):
+            if marker not in changelog:
+                reasons.append(f"CHANGELOG_MARKER_MISSING={marker}")
+    else:
+        reasons.append("CHANGELOG_MISSING")
+
     manifest_ai = root / ".ai" / "manifest.yaml"
     if not manifest_ai.is_file() or f"canonical_repository: {CANONICAL_REPOSITORY}" not in _read(manifest_ai):
         reasons.append("CANONICAL_REPOSITORY_IDENTITY_INVALID")
