@@ -30,6 +30,7 @@ def main():
     assert "DURABLE_STATE_CANNOT_SELF_UPGRADE_TO_OBSERVED" in stable["claims"][0]["reasons"], stable
     assert stable["authority"] == "UNCHANGED" and stable["execution"] == "NONE", stable
     assert stable["contradiction_fact_keys"] == [], stable
+    assert stable["contradictions"] == [], stable
 
     boundary = module.resolve({"claims": [claim()], "events": [{"type": "RECOVERY_BOUNDARY"}]})
     assert boundary["claims"][0]["state_confidence"] == "likely", boundary
@@ -80,14 +81,20 @@ def main():
     ]})
     assert same_fact["status"] == "RESOLVED", same_fact
     assert same_fact["contradiction_fact_keys"] == [], same_fact
+    assert same_fact["contradictions"] == [], same_fact
 
     contradiction = module.resolve({"claims": [
-        claim("C20", confidence="likely", include_fact=True, fact_key="deployment.complete", fact_value=True),
         claim("C21", confidence="likely", include_fact=True, fact_key="deployment.complete", fact_value=False),
+        claim("C20", confidence="likely", include_fact=True, fact_key="deployment.complete", fact_value=True),
     ]})
     assert contradiction["status"] == "NEEDS_EVIDENCE", contradiction
     assert contradiction["unresolved_claim_ids"] == ["C20", "C21"], contradiction
     assert contradiction["contradiction_fact_keys"] == ["deployment.complete"], contradiction
+    assert contradiction["contradictions"] == [{
+        "fact_key": "deployment.complete",
+        "claim_ids": ["C20", "C21"],
+        "canonical_values": ["false", "true"],
+    }], contradiction
     assert all(item["state_confidence"] == "unknown" for item in contradiction["claims"]), contradiction
     assert all("CROSS_CLAIM_CONTRADICTION" in item["reasons"] for item in contradiction["claims"]), contradiction
 
@@ -96,12 +103,29 @@ def main():
         claim("C31", confidence="likely", include_fact=True, fact_key="release.targets", fact_value={"a": 1, "b": 2}),
     ]})
     assert structured_same["status"] == "RESOLVED", structured_same
+    assert structured_same["contradictions"] == [], structured_same
 
     unrelated = module.resolve({"claims": [
         claim("C40", confidence="likely", include_fact=True, fact_key="deployment.complete", fact_value=True),
         claim("C41", confidence="likely", include_fact=True, fact_key="tests.complete", fact_value=False),
     ]})
     assert unrelated["status"] == "RESOLVED", unrelated
+    assert unrelated["contradictions"] == [], unrelated
+
+    multi = module.resolve({"claims": [
+        claim("C52", confidence="likely", include_fact=True, fact_key="z.fact", fact_value=2),
+        claim("C51", confidence="likely", include_fact=True, fact_key="z.fact", fact_value=1),
+        claim("C62", confidence="likely", include_fact=True, fact_key="a.fact", fact_value="b"),
+        claim("C61", confidence="likely", include_fact=True, fact_key="a.fact", fact_value="a"),
+    ]})
+    assert multi["contradiction_fact_keys"] == ["a.fact", "z.fact"], multi
+    assert [item["fact_key"] for item in multi["contradictions"]] == ["a.fact", "z.fact"], multi
+    assert multi["contradictions"][0]["claim_ids"] == ["C61", "C62"], multi
+    assert multi["contradictions"][1]["claim_ids"] == ["C51", "C52"], multi
+
+    invalid_top = module.resolve({"claims": "not-a-list"})
+    assert invalid_top["status"] == "BLOCKED", invalid_top
+    assert invalid_top["contradictions"] == [], invalid_top
 
     document = DOCUMENT.read_text(encoding="utf-8")
     for marker in (
@@ -111,11 +135,15 @@ def main():
         "P16 returns `CLARIFY`",
         "P17 fails closed",
         "does not grant authorization",
+        "detailed contradiction provenance",
+        "claim_ids",
+        "canonical_values",
     ):
         assert marker in document, marker
 
     print("PASS: AI State Resolver v2 rejects uncited/malformed claims and decays at revalidation boundaries")
     print("PASS: explicit fact identity detects deterministic cross-claim contradictions without prose guessing")
+    print("PASS: detailed contradiction provenance is deterministic and audit-only")
     print("PASS: resolver preserves P12 evidence ownership and never grants authority or execution")
 
 
