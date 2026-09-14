@@ -15,8 +15,15 @@ This file tracks **work state**, not normative law. Current source/Git/PR/CI are
 
 ## Active bounded work
 
-- No bounded engineering objective is active after PR #57 Universal Agent Runtime Adapter v1 closure.
+- No bounded engineering objective is active after Managed-Repository Delivery v1 read-only preflight closure.
 - Choose future work only from fresh `main`, CI, durable state, relevant source/tests, and current user intent. Do not create P18/P19 merely for bookkeeping.
+
+## Completed — Managed-Repository Delivery v1 Read-Only Preflight
+
+- Main feature head `fda3e3a6db624d69d6d651cd531c537ad579c9cd` adds deterministic clean-worktree/HEAD/path preflight through P15 → P16 → P17.
+- It returns an exact scoped approval request and `HOLD`; external evidence output is forbidden inside the inspected checkout.
+- Exact-head CI passed: Development OS `34817368411`; Contracts `34817368361`; Trust-First `34817368368`; Provider Controller `34817368359`; Remote Permission Governance `34817368403`; Managed Repository Preflight `34817368326`.
+- No managed-repository mutation, provider operation, commit, push, deployment, production, credential, database, permission, destructive action, or approval grant was performed.
 
 ## Completed — Universal Agent Runtime Adapter v1
 

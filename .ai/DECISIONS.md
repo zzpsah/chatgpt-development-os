@@ -106,3 +106,10 @@
 - A P17 READY step and scoped approval are prerequisites, not execution authority. The adapter accepts only low-impact `file.create` / `file.update` operations and exact repository-head/path/capability/approval/runtime-profile scope.
 - A runtime completion claim becomes verified only after independent diff, test, and final-readback validation. Returned evidence is not authority.
 - This does not establish a vendor-specific runtime integration, managed-repository delivery, external mutation, or production readiness.
+
+## Managed-Repository Delivery v1 Read-Only Preflight
+
+- A managed-repository proposal requires clean-worktree and exact-HEAD observation before an approval request can be produced.
+- Preflight is intentionally `HOLD`, never write-ready: an approval request records required scope but is not approval.
+- Any optional evidence packet is external to the inspected repository. No target-repository write, test execution, commit, push, provider call, or authority change occurs in v1.
+- A future managed-repository write proof requires a separately authorized, isolated, low-impact objective and fresh revalidation.

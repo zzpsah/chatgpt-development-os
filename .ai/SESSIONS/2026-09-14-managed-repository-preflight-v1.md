@@ -31,6 +31,8 @@ The regression corpus creates a temporary Git fixture and proves a clean preflig
 
 The first exact-main CI run exposed two documentation-contract gaps: the dedicated workflow expected the literal external-evidence reason code, and the follow-up CI workflow change lacked a same-boundary durable record. Both are repaired before rerunning exact-head CI.
 
-## Pending closure
+## Closure
 
-Run local regression and relevant existing regressions, require exact-feature-head CI, then reconcile durable current/task/decision state after integration. No managed-repository mutation is part of this objective.
+- Feature head `fda3e3a6db624d69d6d651cd531c537ad579c9cd` passed exact-head CI: Development OS `34817368411`; Contracts `34817368361`; Trust-First `34817368368`; Provider Controller `34817368359`; Remote Permission Governance `34817368403`; Managed Repository Preflight `34817368326`.
+- The dedicated preflight workflow now runs on pull requests and pushes to `main`; the contracts workflow also executes its regression corpus.
+- Durable state, decisions, and task records were reconciled after verification. No managed-repository mutation is part of this objective.

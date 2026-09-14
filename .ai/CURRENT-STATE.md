@@ -30,10 +30,17 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 
 ## Active bounded work
 
-- No bounded engineering objective is active after PR #57 Universal Agent Runtime Adapter v1 closure.
+- No bounded engineering objective is active after Managed-Repository Delivery v1 read-only preflight closure.
 - Future work must be selected from fresh `main`, CI, durable state, source gaps, and current user intent. No P18/P19 phase is created for bookkeeping.
 
 ## Current verified capability state
+
+### Managed-Repository Delivery v1 — Read-Only Preflight — closed
+
+- Main feature head `fda3e3a6db624d69d6d651cd531c537ad579c9cd` adds `tools/managed-repository-preflight.py` and its dedicated contract/workflow.
+- It reads an existing clean local Git checkout, runs P15 → P16 → P17 to derive a read-then-change candidate, binds exact HEAD and safe allowed paths into a deterministic scoped approval request, persists optional evidence only outside the inspected repository, and returns `HOLD`.
+- `Development OS `34817368411`; Contracts `34817368361`; Trust-First `34817368368`; Provider Controller `34817368359`; Remote Permission Governance `34817368403`; Managed Repository Preflight `34817368326``.
+- It performs no target-repository write, test, commit, push, provider call, deployment, credential, database, permission, destructive action, or approval grant. This is read-only preflight evidence, not managed-repository delivery proof.
 
 ### Universal Agent Runtime Adapter v1 — closed
 
@@ -127,5 +134,5 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 
 ## Next action
 
-- Select the next bounded objective only from fresh repository evidence and current user intent. The recommended next bridge is Managed-Repository Delivery v1 read-only preflight: recover a real repository, validate exact scope/freshness, produce an approval package, and stop at HOLD before mutation.
+- Select the next bounded objective only from fresh repository evidence and current user intent. The next possible bounded objective is an isolated managed-repository write proof only after explicit approval for that separate objective. It must use a disposable test repository, one safe file update, fresh readback, no commit/push, and an independent evidence packet.
 - Keep `production_ready = false` unless a separately bounded evidence-backed objective explicitly changes it.
