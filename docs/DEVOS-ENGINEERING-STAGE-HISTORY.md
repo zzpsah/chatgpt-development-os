@@ -120,3 +120,17 @@ IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE
 ## Current evolution direction
 
 The completed line now includes P9–P17, language-safe interpretation, resolver/provider hardening, evidence-first durable reconciliation, runtime-neutral handoff validation, isolated and managed-repository bounded delivery proofs, evidence-backed runtime profile conformance, DevOS `0.17.0` distribution-release foundations, DevOS `0.18.0` runtime-conformance evidence intake, DevOS `0.19.0` current-source Production Readiness Evidence v2, and DevOS `0.20.0` target-bound external Production Target Evidence Intake v1.
+
+The repo-side 0.20.0 objective is complete while production readiness remains deterministically HOLD on five explicit external evidence criteria. Public publication and production deployment remain separate authorization-gated objectives. Runtime portability and production readiness must continue through direct target-specific evidence, one bounded proof at a time. A familiar vendor/runtime name, external reputation, release status, or caller-supplied capability declaration is not sufficient to mark an integration verified or authorize execution.
+
+No new objective is automatically promoted by this history record. Future development must recover fresh `main`, open issues/PRs, CI, durable state, relevant source/tests, concurrent AI work, and current user intent first.
+
+## Recovery use
+
+A fresh maintainer should use this file as history/navigation only, then recover current truth in this order:
+
+1. source tree + Git/PR/CI/release-artifact metadata;
+2. `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, and `.ai/RECONCILIATION-LEDGER.jsonl`;
+3. relevant core contracts/tests/release manifest;
+4. `.ai/DECISIONS.md` and session provenance;
+5. this historical ledger for architectural context.
