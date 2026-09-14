@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import fnmatch
 import json
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +13,7 @@ PROTOCOL = "DEVOS-AI-STATE-RESOLUTION-v2"
 CONFIDENCE = {"observed": 2, "likely": 1, "unknown": 0}
 BOUNDARY_EVENTS = {"RECOVERY_BOUNDARY", "HANDOFF_BOUNDARY"}
 GROUNDING_TYPES = {"execution_evidence", "durable_state", "none"}
+_MISSING = object()
 
 
 def _base() -> dict[str, Any]:
@@ -27,13 +28,18 @@ def _changed(patterns: list[str], paths: list[str]) -> bool:
     return any(fnmatch.fnmatch(path, pattern) for pattern in patterns for path in paths)
 
 
+def _canonical_fact_value(value: Any) -> str:
+    """Return a stable JSON representation for contradiction comparison."""
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
 def resolve(payload: dict[str, Any]) -> dict[str, Any]:
     raw_claims = payload.get("claims", [])
     events = {str(event.get("type", "")) for event in payload.get("events", []) if isinstance(event, dict)}
     changed_paths = [str(path) for path in payload.get("changed_paths", []) if _is_text(path)]
     out = _base()
     if not isinstance(raw_claims, list):
-        out.update({"status": "BLOCKED", "reason": "CLAIMS_INVALID", "claims": [], "weakest_state_confidence": "unknown", "unresolved_claim_ids": []})
+        out.update({"status": "BLOCKED", "reason": "CLAIMS_INVALID", "claims": [], "weakest_state_confidence": "unknown", "unresolved_claim_ids": [], "contradictions": []})
         return out
 
     ids = [str(c.get("id", "")).strip() for c in raw_claims if isinstance(c, dict)]
@@ -54,6 +60,13 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
         rules = [str(rule) for rule in revalidate_on]
         reasons: list[str] = []
 
+        raw_fact_key = item.get("fact_key", _MISSING)
+        raw_fact_value = item.get("fact_value", _MISSING)
+        has_fact_key = raw_fact_key is not _MISSING
+        has_fact_value = raw_fact_value is not _MISSING
+        fact_key = raw_fact_key.strip() if _is_text(raw_fact_key) else None
+        fact_value = None if raw_fact_value is _MISSING else raw_fact_value
+
         if not claim_id or not _is_text(statement):
             confidence = "unknown"; reasons.append("CLAIM_ID_OR_STATEMENT_INVALID")
         if confidence not in CONFIDENCE:
@@ -64,6 +77,8 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
             confidence = "unknown"; reasons.append("OBSERVED_CLAIM_GROUNDING_MISSING")
         if claim_id in duplicate_ids:
             confidence = "unknown"; reasons.append("DUPLICATE_CLAIM_ID")
+        if has_fact_key != has_fact_value or (has_fact_key and fact_key is None):
+            confidence = "unknown"; reasons.append("FACT_IDENTITY_INCOMPLETE")
         if grounding_type == "execution_evidence" and item.get("p12_freshness") not in {"current", "fresh"}:
             if confidence == "observed":
                 confidence = "likely"
@@ -83,10 +98,39 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
 
         resolved.append({
             "id": claim_id or None, "statement": statement if _is_text(statement) else None,
+            "fact_key": fact_key, "fact_value": fact_value,
             "state_confidence": confidence,
             "grounding": {"type": grounding_type, "ref": grounding_ref if _is_text(grounding_ref) else None},
             "revalidated_at": item.get("revalidated_at"), "revalidate_on": rules,
             "reasons": reasons,
+        })
+
+    # Cross-claim contradiction policy is deliberately structured, not NLP-based.
+    # Only claims that explicitly identify the same fact_key participate. Different
+    # canonical fact_value values for that key make every involved claim unknown.
+    fact_groups: dict[str, list[tuple[int, str]]] = defaultdict(list)
+    for index, item in enumerate(resolved):
+        if item["fact_key"] is not None and "FACT_IDENTITY_INCOMPLETE" not in item["reasons"]:
+            fact_groups[item["fact_key"]].append((index, _canonical_fact_value(item["fact_value"])))
+
+    contradictions: list[dict[str, Any]] = []
+    for fact_key in sorted(fact_groups):
+        members = fact_groups[fact_key]
+        values = sorted({canonical for _, canonical in members})
+        if len(values) <= 1:
+            continue
+        claim_ids: list[str] = []
+        for index, _ in members:
+            item = resolved[index]
+            item["state_confidence"] = "unknown"
+            if "CROSS_CLAIM_CONTRADICTION" not in item["reasons"]:
+                item["reasons"].append("CROSS_CLAIM_CONTRADICTION")
+            if item["id"]:
+                claim_ids.append(str(item["id"]))
+        contradictions.append({
+            "fact_key": fact_key,
+            "claim_ids": sorted(claim_ids),
+            "canonical_values": values,
         })
 
     unresolved = sorted(str(item["id"]) for item in resolved if item["id"] and item["state_confidence"] == "unknown")
@@ -95,6 +139,7 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
     out.update({
         "status": "NEEDS_EVIDENCE" if has_unknown else "RESOLVED",
         "claims": resolved,
+        "contradictions": contradictions,
         "weakest_state_confidence": weakest,
         "unresolved_claim_ids": unresolved,
         "state_confidence_summary": {level: sum(1 for item in resolved if item["state_confidence"] == level) for level in CONFIDENCE},
