@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 CLI = ROOT / "tools" / "devos.py"
@@ -58,12 +59,57 @@ def main() -> None:
     assert require_payload["assessment_valid"] is True, require_payload
     assert require_payload["verdict"] == "HOLD", require_payload
 
+    target_packet = {
+        "protocol": "DEVOS-PRODUCTION-TARGET-EVIDENCE-v1",
+        "repository": "zzpsah/chatgpt-development-os",
+        "source_sha": "0" * 40,
+        "target": {"id": "prod-cli-test", "environment": "production", "kind": "service", "ref": "target://cli-test"},
+        "observed_at": "2026-09-14T23:00:00+05:30",
+        "observer": {"kind": "test", "ref": "observer://cli-test"},
+        "criteria": [
+            {"id": item, "status": "UNOBSERVED", "evidence": [], "limitations": ["CLI dispatch test only."]}
+            for item in [
+                "deployment_target",
+                "high_impact_governance",
+                "operational_observability",
+                "recovery_disaster",
+                "runtime_direct_conformance",
+            ]
+        ],
+        "limitations": ["CLI dispatch test only."],
+        "authority": "UNCHANGED",
+        "authorization": "UNCHANGED",
+        "execution": "NONE",
+        "mutation": "NONE",
+        "publication_authorized": False,
+        "deployment_authorized": False,
+        "production_ready": False,
+    }
+    with tempfile.TemporaryDirectory() as temp_dir:
+        packet_path = Path(temp_dir) / "packet.json"
+        packet_path.write_text(json.dumps(target_packet), encoding="utf-8")
+        target_result = run(
+            "production-target-evidence",
+            str(packet_path),
+            "--expected-source-sha",
+            "0" * 40,
+            "--expected-target-id",
+            "prod-cli-test",
+            "--json",
+        )
+    assert target_result.returncode == 0, target_result.stdout + target_result.stderr
+    target_payload = json.loads(target_result.stdout)
+    assert target_payload["status"] == "HOLD", target_payload
+    assert target_payload["production_ready"] is False, target_payload
+    assert target_payload["readiness_promotion_allowed"] is False, target_payload
+    assert target_payload["semantic_review_required"] is True, target_payload
+
     source = CLI.read_text(encoding="utf-8")
     assert "shell=True" not in source
     assert "subprocess.run([sys.executable" in source
 
     print(
-        f"PASS: DevOS CLI version={canonical_version}, release-check, and production-readiness dispatch are deterministic and shell-free"
+        f"PASS: DevOS CLI version={canonical_version}, release-check, production-readiness, and production-target-evidence dispatch are deterministic and shell-free"
     )
 
 
