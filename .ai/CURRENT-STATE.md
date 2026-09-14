@@ -105,6 +105,15 @@ Still requiring direct target-specific external evidence:
 
 The new intake contract makes these evidence requirements machine-checkable; it does not authorize the underlying production/high-impact operations and does not fabricate the missing evidence.
 
+## Retained architecture foundations
+
+- P9 through P17 remain complete at their recorded evidence levels.
+- P11 remains the repository-first recovery, revalidation, and cross-AI continuity baseline.
+- P12 remains the evidence provenance/freshness owner.
+- P15 remains language interpretation; P16 bounded planning; P17 exact-step readiness/authorization.
+- AI State Resolver v2 contradiction/envelope hardening remains retained.
+- GitHub provider/controller readback, multi-project isolation, Actionable HOLD, runtime-neutral handoff, runtime-profile/conformance evidence intake, release machinery, Production Readiness v2, and durable reconciliation remain retained foundations.
+
 ## Permanent boundaries
 
 - `CONTINUE != BLANKET AUTHORIZATION`.
@@ -134,4 +143,4 @@ This objective does not itself run a production probe, deploy software, change c
 
 ## Next action
 
-Open the bounded 0.20.0 feature PR, use exact-head CI as source of truth, repair any failures, merge only after clean concurrency/head checks, then verify merged-main release evidence and reconcile durable state.
+Use exact feature-head CI as source of truth, repair any failures without weakening safety semantics, merge only after clean concurrency/head checks, then verify merged-main release evidence and reconcile durable state.
