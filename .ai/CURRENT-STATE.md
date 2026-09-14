@@ -4,11 +4,11 @@
 
 - Repository: `zzpsah/chatgpt-development-os`.
 - Source tree + Git/PR metadata are authoritative for exact implementation/integration state; ChatGPT Memory/chat history are supplementary only.
-- Current verified `main` head at this reconciliation checkpoint: `8d7ff1cde34c0e5d324b9a30034bbf5cff178cfc` (post-PR #42 and post-PR #39 activation-handshake merge).
+- Current verified `main` head at this reconciliation checkpoint: `a4a3413bb27802ef38a698550807e8fb0102f839` (merge of PR #44, AI State Resolver v2 envelope-integrity hardening).
 - P9 through P17 are complete on `main` at their stated evidence levels.
 - P11 Federation & Self-Healing Context remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P12 Operational Intelligence remains the advisory/runtime-observability and durable recovery substrate used by later governed execution paths.
-- Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, Current-Source Evidence Refresh, MCP/App Permission Control Plane + Multi-Project Agent Isolation, Actionable HOLD + Scoped Approval + Governed Continuation, GitHub Identity & Token Control Plane v1, governed GitHub provider/controller adapter integration, and GitHub mutation readback reconciliation hardening are closed at their stated evidence levels.
+- Universal Project Onboarding + Repository Creation, host-neutral MCP/App `repository.create`, Current-Source Evidence Refresh, MCP/App Permission Control Plane + Multi-Project Agent Isolation, Actionable HOLD + Scoped Approval + Governed Continuation, GitHub Identity & Token Control Plane v1, governed GitHub provider/controller adapter integration, GitHub mutation readback reconciliation hardening, and AI State Resolver v2 envelope-integrity hardening are closed at their stated evidence levels.
 - No new numbered phase is active or implied by the current closure state.
 
 ## Durable principles and boundaries
@@ -43,17 +43,23 @@ Interpretation, planning, readiness, provider credentials, prior approvals, prio
 
 ## Active bounded work
 
-### AI State Resolver v2
-
-- Unnumbered resolver-hardening objective on current `main`.
-- Upgrades the existing P0 contract with a deterministic read-only claim resolver while preserving P12 and P17 authority boundaries.
-- `observed` requires current P12 execution evidence with citable provenance; durable-state wording cannot self-upgrade a claim.
-- Durable-state claims are capped at `likely`; recovery/handoff boundaries and relevant changed paths remain explicit revalidation reasons.
-- Execution-evidence claims inherit P12 freshness and are not normalized again.
-- Unresolved claims propagate to P16 as `CLARIFY`; P17 rejects a tampered `PLANNED` envelope that still carries unresolved claim IDs.
-- Resolver confidence never grants authorization, execution, mutation, or completion.
+- No numbered phase is active.
+- AI State Resolver v2 envelope-integrity hardening is closed through PR #44 and must not be treated as active work.
+- Any next resolver objective must begin from fresh `main` evidence and be promoted explicitly as a new bounded objective.
 
 ## Current verified capability state
+
+### AI State Resolver v2 envelope-integrity hardening — merged
+
+- PR #44 — `Harden AI State Resolver v2 envelope integrity` — merged at `a4a3413bb27802ef38a698550807e8fb0102f839`.
+- Exact final PR head: `71d93755e171da5e83e62b00baa4680a0e929f5e`.
+- Resolver status now becomes `NEEDS_EVIDENCE` whenever any resolved claim is `unknown`, including a malformed unknown claim without a usable ID.
+- Durable-state recovery/handoff/path revalidation reasons remain visible for claims already supplied as `likely`.
+- P16 validates resolver protocol, status, authority, authorization, execution, mutation, claim confidence, weakest confidence, summary counts, and unresolved consistency before planning.
+- P16 preserves the full validated resolver provenance unchanged in the plan.
+- P17 independently revalidates that preserved resolver provenance and fails closed on hidden unknown claims, inconsistent confidence summaries, or changed authority/execution state.
+- Exact final-head verification passed all triggered PR gates: Development OS Contracts `34806650522`, Development OS `34806650407`, Current-Source Evidence `34806650590`, Trust-First Audit `34806650421`, MCP Repository Create `34806650443`, Actionable Hold `34806650548`, and P13 External Managed Project `34806650599`.
+- This hardening creates no authority, authorization, execution, mutation, or production-readiness upgrade.
 
 ### GitHub Identity & Token Control Plane v1 — merged
 
@@ -118,7 +124,8 @@ Interpretation, planning, readiness, provider credentials, prior approvals, prio
 - PR #32 merge commit: `2f1740930116ab520d40d35aaa6dfcb1786a5595` — GitHub Identity & Token Control Plane v1.
 - PR #35 merge commit: `d379277af53155a2695c99b0bdf9682f43bb2d05` — GitHub provider/controller adapter slice and governed bridge.
 - PR #42 merge commit: `0a3ef4a7386e7f94cfa651eef4af75df66cc5933` — bounded GitHub mutation readback reconciliation hardening.
-- PR #39 merge commit / current checkpoint `main`: `8d7ff1cde34c0e5d324b9a30034bbf5cff178cfc` — DevOS activation handshake, merged after PR #42 without changing the controller/provider mutation semantics.
+- PR #39 merge checkpoint: `8d7ff1cde34c0e5d324b9a30034bbf5cff178cfc` — DevOS activation handshake, merged after PR #42 without changing controller/provider mutation semantics.
+- PR #44 merge commit / current reconciliation checkpoint: `a4a3413bb27802ef38a698550807e8fb0102f839` — AI State Resolver v2 envelope-integrity hardening.
 
 Historical exact-head CI remains pinned in task/session records and must not be rewritten merely because later source advances.
 
@@ -151,8 +158,7 @@ No private AI memory is authoritative project state.
 
 ## Next bounded direction
 
-- PR #42 readback-reconciliation hardening is closed and merged; do not treat it as active work.
-- Continue AI State Resolver v2 hardening only from fresh repository evidence on the current `main` lineage.
-- PRs #33 and #34 are closed obsolete replacement branches; PR #32 is the authoritative merged integration history.
+- PR #44 AI State Resolver v2 envelope-integrity hardening is closed and merged; do not treat it as active work.
 - Do not create P18/P19 merely for bookkeeping.
-- Resolver cross-claim semantic contradiction remains explicitly out of v2 scope unless promoted by a future bounded objective.
+- Resolver cross-claim semantic contradiction remains explicitly out of current v2 scope. Promote it only as a separate bounded objective after fresh source inspection defines a stable fact identity, contradiction policy, deterministic behavior, downstream propagation rules, and adversarial regression coverage.
+- Until such an objective is explicitly promoted, continuation should recover fresh `main`, inspect open PRs/CI/durable state, and avoid inventing a new active milestone.
