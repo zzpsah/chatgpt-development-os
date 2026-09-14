@@ -5,7 +5,7 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
 - **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
-- Post-PR #46 verified `main` checkpoint: `36f3001487fb7ce666bb1e7241b539645878101a`.
+- PR #46 merged at `36f3001487fb7ce666bb1e7241b539645878101a`; current reconciliation base then advanced to `f07c7c5a4afd4fd25c0da5b1ed7ee88733168baa` via `docs: harden first-contact acknowledgement`.
 - `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture index; `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable stage-history/navigation ledger.
 
 ## Core documentation law
@@ -39,6 +39,7 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 - P11 remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P12 remains owner of execution-evidence provenance and freshness.
 - P15/P16/P17 remain interpretation/planning/readiness layers respectively; none independently grants runtime authority.
+- Plain Project Context and Recovery Guide v1 remains the default first-contact path. Its optional acknowledgement reports `DevOS context recovered` or `DevOS context not verified` without requesting a host mode, changed permissions, or changed host behavior.
 
 ### AI State Resolver v2 — cross-claim contradiction handling — merged
 
