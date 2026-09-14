@@ -30,14 +30,17 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 
 ## Active bounded work
 
-### Local Disposable Delivery Proof v1
-
-- Repository-only proof objective; no P18/P19 phase is created.
-- Prove one safe local file update in a new temporary Git repository through `P15 → P16 → P17 → explicit scoped approval → controller/runtime handoff → test/readback → evidence packet → fresh recovery`.
-- The scope is exactly one low-impact marker-file update. No provider, managed repository, production, deployment, credential, database, permission, destructive, commit, or push operation is in scope.
-- Completion requires exact-head CI, durable reconciliation, and explicit retention of these limitations.
+- No bounded engineering objective is active after the local delivery proof closure.
+- Future work must be selected from fresh `main`, CI, durable state, source gaps, and current user intent. No P18/P19 phase is created for bookkeeping.
 
 ## Current verified capability state
+
+### Local Disposable Delivery Proof v1 — closed
+
+- Main commit `1f735fa11e19b9852ce9210338bc0907ab0b5b1c` proves a temporary local Git repository delivery path: P15 → P16 → P17 → exact scoped approval → controller/runtime handoff → local file update → test/readback → evidence packet → fresh evidence recovery.
+- Approval is bound to exact repository path, initial Git head, P16 step, capability, target, and low-impact ceiling. Missing preparation or mismatched approval holds without changing the target file.
+- Exact-head CI passed: Development OS `34816057996`, Contracts `34816057880`, Trust-First `34816057979`, Living Engineering Map `34816057867`, GitHub Identity/Token `34816057874`, Provider Controller Adapter `34816057869`, and Remote Permission Governance `34816057885`.
+- The proof is local and disposable only. It does not prove or authorize commit/push, managed-repository, provider, deployment, production, credential, database, permission, destructive, or general automated delivery operations.
 
 ### Automated Evidence → Durable State Reconciliation v1 — merged
 

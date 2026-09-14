@@ -15,13 +15,15 @@ This file tracks **work state**, not normative law. Current source/Git/PR/CI are
 
 ## Active bounded work
 
-### Local Disposable Delivery Proof v1
+- No bounded engineering objective is active after the local delivery proof closure.
+- Choose future work only from fresh `main`, CI, durable state, relevant source/tests, and current user intent. Do not create P18/P19 merely for bookkeeping.
 
-- Implement and prove the local-only automated delivery loop in a newly created temporary Git repository.
-- Bind explicit approval to exact repository head, target, capability, impact ceiling, and P16 step ID before the file update.
-- Require P15 interpretation, P16 read-then-write plan, P17 readiness, controller/runtime handoff, local test, readback, Git diff, evidence packet, and fresh evidence recovery.
-- Keep all provider, commit/push, deployment, credential, database, permission, destructive, and production actions out of scope.
-- Completion requires local regression, exact-head CI, merge, and durable reconciliation. No P18/P19 is created.
+## Completed — Local Disposable Delivery Proof v1
+
+- Main commit `1f735fa11e19b9852ce9210338bc0907ab0b5b1c` proves P15 → P16 → P17 → scoped approval → controller/runtime handoff → local update → test/readback → evidence persistence → fresh evidence recovery in a new temporary Git repository.
+- Missing preparation or mismatched scoped approval holds before the marker file changes.
+- Exact-head CI passed: Development OS `34816057996`; Contracts `34816057880`; Trust-First `34816057979`; Living Engineering Map `34816057867`; GitHub Identity/Token `34816057874`; Provider Controller Adapter `34816057869`; Remote Permission Governance `34816057885`.
+- The proof excludes commits, pushes, provider/managed-repository access, deployment, production, credentials, database, permission, destructive operations, and general automated delivery claims.
 
 ## Completed — Automated Evidence → Durable State Reconciliation v1
 
