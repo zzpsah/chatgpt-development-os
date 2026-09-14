@@ -1,0 +1,39 @@
+name: Verify Evidence Durable Reconciliation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify reconciliation regression corpus
+        run: python tools/test-evidence-durable-state-reconciler.py
+
+      - name: Verify contract markers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('core/evidence-durable-state-reconciliation.md').read_text(encoding='utf-8')
+          for marker in (
+              'DEVOS-EVIDENCE-DURABLE-RECONCILIATION-v1',
+              'Machine-verifiable facts may be automated. Semantic project state requires explicit review.',
+              'READY_FOR_DURABLE_RECONCILIATION',
+              'production_ready: false',
+              'Parallel AI/agent work is expected.',
+          ):
+              assert marker in text, marker
+          print('PASS: evidence durable reconciliation contract markers')
+          PY
