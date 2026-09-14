@@ -9,6 +9,7 @@ LEGACY_MASTER_MAPS = [
 ]
 REQUIRED = {
     "master_map": CANONICAL_MASTER_MAP,
+    "roadmap": ROOT / "docs/ROADMAP.md",
     "evolution_contract": ROOT / "core/devos-living-state-and-evolution.md",
     "experiment_ledger": ROOT / "docs/DEVOS-INTERPRETER-EXPERIMENT-LEDGER.md",
     "handoff": ROOT / "docs/handoff/README.md",
@@ -24,6 +25,15 @@ MARKERS = {
         "Human Language Interpreter evolution",
         "Self-maintaining knowledge model",
         "Every-AI maintenance contract",
+    ],
+    "roadmap": [
+        "# Development OS Roadmap",
+        "### P14 — Adaptive Verification & Self-Healing — COMPLETE",
+        "### P15 — Human Language Interpretation v2 — COMPLETE",
+        "### P16 — Semantic Goal-to-Plan Compiler — COMPLETE",
+        "### P17 — Step Readiness & Authorization Orchestrator — COMPLETE",
+        "No numbered feature milestone is currently active.",
+        "production_ready = false",
     ],
     "evolution_contract": [
         "# DevOS Living State & Evolution Contract",
@@ -46,6 +56,12 @@ MARKERS = {
     "tasks": ["# DevOS Tasks", "What is not written was never done.", "Core safety invariants"],
     "decisions": ["# DevOS Decisions", "What is not written was never done.", "P15 Human Language Interpretation"],
 }
+FORBIDDEN_MARKERS = {
+    "roadmap": [
+        "### P14 — Adaptive Verification & Self-Healing — PLANNED",
+        "P14 starts from the verified P13 execution-feedback boundary.",
+    ],
+}
 
 
 def main() -> int:
@@ -66,6 +82,9 @@ def main() -> int:
         for marker in MARKERS[name]:
             if marker not in text:
                 failures.append(f"{name}: missing marker {marker!r}")
+        for marker in FORBIDDEN_MARKERS.get(name, []):
+            if marker in text:
+                failures.append(f"{name}: stale/forbidden marker present {marker!r}")
 
     if failures:
         print("LIVING-DOCS: FAIL")
@@ -75,7 +94,7 @@ def main() -> int:
 
     print("LIVING-DOCS: PASS")
     print(
-        "Exactly one canonical master map is present; living-state delegation, "
+        "Exactly one canonical master map is present; roadmap stage status, living-state delegation, "
         "interpreter experiments, handoff links, and durable-state documentation law are present."
     )
     return 0
