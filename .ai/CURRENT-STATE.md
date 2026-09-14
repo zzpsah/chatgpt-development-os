@@ -3,16 +3,16 @@
 ## Current source and authority
 
 - Repository: `zzpsah/chatgpt-development-os`.
-- Source tree + current Git/PR/CI metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
+- Current source tree + Git/PR/CI metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
 - **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
-- The feature branch for the current bounded objective was created from `main` at `aa38761270ac9acdf6af90a4bae64890c766ec91`; `main` then advanced concurrently to `040c7d21b5fac6224ced1bdbfeaa7c3b71b78c78` (`docs: separate active state from historical evidence`).
-- `docs/DEVOS-MASTER-ENGINEERING-MAP.md` remains the living architecture index; `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable stage-history/navigation ledger added by the current objective.
+- PR #46 merged at `36f3001487fb7ce666bb1e7241b539645878101a`; current reconciliation base then advanced to `f07c7c5a4afd4fd25c0da5b1ed7ee88733168baa` via `docs: harden first-contact acknowledgement`.
+- `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture index; `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable stage-history/navigation ledger.
 
 ## Core documentation law
 
 > **What is not written was never done.**
 
-Material engineering work follows:
+Material work follows:
 
 `OBSERVE → ACT / CHANGE / DECIDE → VERIFY → DOCUMENT → PERSIST IN GIT`
 
@@ -26,15 +26,10 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 
 ## Active bounded work
 
-### AI State Resolver v2 — explicit cross-claim contradiction handling
-
-- Unnumbered hardening objective; no P18/P19 phase is created.
-- Adds optional stable `fact_key` + deterministic JSON `fact_value` identity.
-- Claims are compared only when they explicitly share the same valid `fact_key`; statement prose is never semantically paired by guesswork.
-- Different canonical values for the same fact make all involved claims `unknown` with `CROSS_CLAIM_CONTRADICTION`, record `contradiction_fact_keys`, and produce resolver `NEEDS_EVIDENCE`.
-- Existing unresolved-state propagation remains authoritative: P16 returns `CLARIFY`; P17 fails closed if unknown claims are hidden in a forged `PLANNED` envelope.
-- Legacy claims without fact identity remain backward compatible.
-- The objective is currently under PR #46 verification and is not complete until exact-final-head CI is green, merged, and durable post-merge state is reconciled.
+- No numbered phase is active.
+- AI State Resolver v2 cross-claim contradiction handling is **closed through PR #46** and must not remain marked active after this reconciliation.
+- No next engineering objective is promoted by this record. Future continuation must inspect fresh `main`, open PRs, CI, current durable state, and source gaps before selecting the next bounded objective.
+- Do not create P18/P19 merely for bookkeeping.
 
 ## Current verified capability state
 
@@ -43,10 +38,22 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 - P9 through P17 are complete at their recorded evidence levels.
 - P11 remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P12 remains owner of execution-evidence provenance and freshness.
-- P15/P16/P17 remain interpretation/planning/readiness layers respectively; none of them independently grants runtime authority.
-- Plain Project Context and Recovery Guide v1 remains the default first-contact path. Its optional acknowledgement reports recovered context without requesting a host mode.
+- P15/P16/P17 remain interpretation/planning/readiness layers respectively; none independently grants runtime authority.
+- Plain Project Context and Recovery Guide v1 remains the default first-contact path. Its optional acknowledgement reports `DevOS context recovered` or `DevOS context not verified` without requesting a host mode, changed permissions, or changed host behavior.
 
-### AI State Resolver v2 envelope integrity — closed
+### AI State Resolver v2 — cross-claim contradiction handling — merged
+
+- PR #46 — `Add resolver cross-claim contradiction handling` — merged at `36f3001487fb7ce666bb1e7241b539645878101a`.
+- Exact final feature head: `490eeebea69a4f4ae44657f5d94edaef35a26db4`.
+- Optional explicit `fact_key` + deterministic JSON `fact_value` identity is supported.
+- Claims are compared only when they explicitly share the same valid `fact_key`; arbitrary statement prose is not semantically paired by guesswork.
+- Same fact + different canonical values makes all involved otherwise-resolved claims `unknown`, adds `CROSS_CLAIM_CONTRADICTION`, records `contradiction_fact_keys`, and produces `NEEDS_EVIDENCE`.
+- Existing downstream path remains authoritative: resolver `NEEDS_EVIDENCE` → P16 `CLARIFY`; P17 fails closed if unknown claims are hidden in a forged `PLANNED` envelope.
+- Legacy claims without fact identity remain backward compatible.
+- Exact final-head CI passed all triggered gates: Development OS `34809630956`, Contracts `34809630926`, Current-Source Evidence `34809630993`, Trust-First Audit `34809630947`, Living Engineering Map `34809631004`, GitHub Identity/Token Control Plane `34809631046`, and MCP Repository Create `34809630925`.
+- PR #46 also reconciled the concurrent `040c7d21...` compact active/history rewrite without discarding unrelated changes, restoring the explicit account-memory boundary and already-proven live provider evidence.
+
+### AI State Resolver v2 envelope integrity — merged
 
 - PR #44 merged at `a4a3413bb27802ef38a698550807e8fb0102f839`; final source head `71d93755e171da5e83e62b00baa4680a0e929f5e`.
 - P16 validates and preserves the full resolver envelope; P17 independently revalidates it and fails closed on hidden uncertainty or changed safety invariants.
@@ -54,8 +61,8 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 
 ### Live GitHub App/provider evidence — proven, scoped
 
-- Live read-only GitHub App runtime authentication is **proven**, not pending. DevOS GitHub App Runtime Auth run `34785659043` succeeded against `zzpsah/chatgpt-development-os`, with non-secret evidence including `status: PASS`, `credential_material: NOT_INCLUDED`, `execution: NONE`, and `mutation: NONE`.
-- Live governed GitHub provider mutation through the P17/controller bridge is also **proven on dedicated isolated test resources**:
+- Live read-only GitHub App runtime authentication is **proven**, not pending. DevOS GitHub App Runtime Auth run `34785659043` succeeded against `zzpsah/chatgpt-development-os` with non-secret evidence including `status: PASS`, `credential_material: NOT_INCLUDED`, `execution: NONE`, and `mutation: NONE`.
+- Live governed GitHub provider mutation through the P17/controller bridge is **proven on dedicated isolated test resources**:
   - create provider commit `e8235f7864678a27bbf036def806a1624fb66678`;
   - update/reconciliation provider commit `27a3b3cf4f7c8c8511f3c5a8f3283d8a6a883232`;
   - delete provider commit `3f530da3ee1efd4e52baad10fe4e644d4db5d116`, followed by fresh `ABSENT` readback.
@@ -66,10 +73,10 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 
 - `production_ready = false`.
 - Proven provider capability does not authorize arbitrary or production mutation.
-- No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation has been established as an authorized/general DevOS capability by the evidence above.
+- No live repository deletion, branch deletion, force update, production mutation, credential mutation, or permission mutation has been established as general authorized capability by the evidence above.
 - Credentials are technical capability only and never DevOS authorization.
 - Uncertain mutation is never blindly replayed.
-- Historical exact-head evidence remains pinned; later source movement must not silently rewrite what a past run proved.
+- Historical exact-head evidence remains pinned and is not silently rewritten when source advances.
 
 ## Recovery and navigation
 
@@ -96,7 +103,6 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 
 ## Next action
 
-- Finish exact-head verification for PR #46 and repair any CI compatibility issue without weakening fail-closed semantics.
-- If PR #46 is green and mergeable, it may be merged under the user's current time-bounded standing authorization for normal DevOS development/PR/merge work.
-- After merge, reconcile `.ai/CURRENT-STATE.md` and `.ai/TASKS.md` so the contradiction objective is marked closed and the active/history separation remains truthful.
-- Keep `production_ready = false`; do not create P18/P19 merely for bookkeeping.
+- Complete this post-PR #46 durable-state reconciliation with exact-head CI and merge.
+- After reconciliation merge, recover fresh `main` before promoting any next bounded objective.
+- Keep `production_ready = false`; do not invent a new numbered phase solely to continue development.

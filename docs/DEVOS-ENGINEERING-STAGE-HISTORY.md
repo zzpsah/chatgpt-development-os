@@ -42,6 +42,7 @@ The following work extended the numbered architecture without creating new numbe
 - **GitHub Mutation Readback Reconciliation — PR #42:** added bounded readback-only retries after provider write races; uncertain mutation is never blindly replayed.
 - **AI State Resolver v2 Envelope Integrity — PR #44:** hardened resolver→P16→P17 provenance validation and fail-closed tamper detection.
 - **Post-PR #44 Durable-State Reconciliation — PR #45:** synchronized durable task/current-state records after resolver hardening.
+- **AI State Resolver v2 Cross-Claim Contradiction Handling — PR #46:** added explicit `fact_key` / deterministic `fact_value` identity, contradiction-to-unknown resolution, P16 `CLARIFY` propagation, P17 tamper resistance, and durable previous-stage documentation. Merged at `36f3001487fb7ce666bb1e7241b539645878101a`; exact verified feature head `490eeebea69a4f4ae44657f5d94edaef35a26db4`.
 
 ## Live GitHub provider evidence milestone
 
@@ -93,13 +94,13 @@ IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE
 
 ## Current evolution direction
 
-After PR #44/#45, the resolver envelope-integrity objective is closed. The next bounded resolver hardening is explicit cross-claim contradiction detection using stable `fact_key` / deterministic `fact_value` identity. It is an unnumbered extension and must preserve P12/P16/P17 ownership boundaries.
+PR #46 closes the currently promoted cross-claim contradiction objective. No next numbered or unnumbered engineering milestone is automatically created by this history record. Future development should recover fresh `main`, inspect current gaps and user intent, then explicitly promote the next bounded objective without manufacturing P18/P19 for bookkeeping.
 
 ## Recovery use
 
 A fresh maintainer should use this file as history/navigation only, then recover current truth in this order:
 
-1. source tree + Git/PR metadata;
+1. source tree + Git/PR/CI metadata;
 2. `.ai/CURRENT-STATE.md` and `.ai/TASKS.md`;
 3. relevant core contracts/tests;
 4. `.ai/DECISIONS.md` and session provenance;
