@@ -40,7 +40,8 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 - PR #57 — `Add universal agent runtime adapter v1` — merged at `5d0bdbc0258e898ece21f99937dc4f5b886778a0`; exact verified feature head `da57d48c1ec28eac71eff75b59f9c701e9c9c593`.
 - `tools/agent-runtime-handoff.py` compiles a P17 READY step and exact scoped approval into a SHA-256-bound, runtime-neutral handoff, then independently validates returned diff, test, and final-readback evidence.
 - It accepts only low-impact `file.create` / `file.update` scope with exact repository-head, capability, target, runtime-profile, and approval checks. It executes no action itself.
-- Exact feature-head CI passed: Agent Runtime Adapter `34816383973`; Current-Source Evidence `34816383964`; Development OS `34816383999`; Contracts `34816383990`; MCP Repository Create `34816383969`; Trust-First `34816383980`; Evidence Durable Reconciliation `34816383959`.
+- Exact feature-head CI passed: Agent Runtime Adapter `34816332410`; Current-Source Evidence `34816332392`; Development OS `34816332421`; Contracts `34816332435`; MCP Repository Create `34816332425`; Trust-First `34816332380`; Evidence Durable Reconciliation `34816332373`.
+- Structured PR #57 reconciliation evidence is persisted in `.ai/RECONCILIATION-LEDGER.jsonl`; canonical record digest `24fb54fa69b084a2b6d34b15b00241a81d3db36df0ccb54795e4ec6d53abc88d` is pinned in the post-merge reconciliation session.
 - This is a portable contract and validator, not a vendor integration or proof that the existing local delivery proof is already executed through this envelope. It does not authorize external/provider mutation, commits, pushes, deployments, production, credentials, databases, permissions, deletion, or automatic approval.
 
 ### Local Disposable Delivery Proof v1 — closed
