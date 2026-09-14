@@ -26,15 +26,17 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 
 ## Active bounded work
 
-### P15 bounded multilingual interpretation and gating
-
-- Repository-only hardening objective; no P18/P19 phase is created.
-- Preserve Devanagari Hindi Unicode during deterministic interpretation and support a bounded Hindi/Hinglish regression corpus.
-- Prove the entire `P15 → P16 → P17` path: language interpretation may select an intent and constraints, but it never grants authority, authorization, or execution.
-- High-impact Hindi phrases must remain independently classified and gated by P16/P17; explicit negative constraints must block conflicting plans.
-- This does not claim universal Hindi, regional-language, or model-level language coverage.
+- No bounded engineering objective is active after the P15 multilingual closure.
+- Future work must be selected from fresh `main`, CI, durable state, source gaps, and current user intent. No P18/P19 phase is created for bookkeeping.
 
 ## Current verified capability state
+
+### P15 bounded Devanagari Hindi/Hinglish interpretation and gating — closed
+
+- Main commit `001f48e64d3e7e6e32d9befc9bb00899b8868e03` preserves Unicode Hindi input in the deterministic P15 interpreter and adds `config/p15-multilingual-corpus.json`.
+- The corpus runs P15 output through P16 and P17. Hindi deployment remains `PRODUCTION_OR_DESTRUCTIVE` and requires approval; explicit Hindi negative deployment wording blocks a conflicting plan; contextless referents clarify.
+- Exact-head CI passed: Development OS `34812860000`, Contracts `34812859861`, Trust-First Audit `34812859744`, Living Engineering Map `34812859740`, GitHub Identity/Token `34812859825`, Provider Controller Adapter `34812859833`, and Remote Permission Governance `34812859951`.
+- This is deterministic corpus evidence only. It does not prove universal Hindi, regional-language, or host-model multilingual competence, and it creates no authority, authorization, execution, mutation, or production-readiness upgrade.
 
 ### AI State Resolver v2 detailed contradiction provenance — merged
 

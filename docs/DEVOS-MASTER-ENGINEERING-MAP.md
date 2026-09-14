@@ -226,9 +226,9 @@ Experiments record source head, input/context, baseline/candidate outputs, seman
 
 > **The interpreter may learn better language understanding; it may never learn that language itself grants authority.**
 
-### Current bounded P15 objective
+### Bounded P15 multilingual corpus — closed
 
-The active P15 objective adds bounded Devanagari Hindi/Hinglish coverage to the deterministic reference interpreter. Its corpus runs the interpreted envelope through P16 and P17, proving that translated high-impact wording remains independently classified and authorization-gated, negative constraints block conflicting plans, and unresolved referents clarify. This is corpus-level regression evidence only; it does not claim universal language or dialect coverage.
+Main commit `001f48e64d3e7e6e32d9befc9bb00899b8868e03` added bounded Devanagari Hindi/Hinglish coverage to the deterministic reference interpreter. Its corpus runs the interpreted envelope through P16 and P17, proving that translated high-impact wording remains independently classified and authorization-gated, negative constraints block conflicting plans, and unresolved referents clarify. Exact-head CI passed. This is corpus-level regression evidence only; it does not claim universal language or dialect coverage.
 
 ## Self-maintaining knowledge model
 

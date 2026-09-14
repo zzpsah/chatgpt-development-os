@@ -11,13 +11,15 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 
 ## Active bounded work
 
-### P15 bounded multilingual interpretation and gating
+- No bounded engineering objective is active after the P15 multilingual closure.
+- Select future work only from fresh `main`, current CI, source gaps, durable state, and current user intent. Do not create P18/P19 merely for bookkeeping.
 
-- Preserve Devanagari Hindi Unicode through the deterministic P15 interpreter.
-- Maintain a corpus of bounded Hindi/Hinglish examples with expected interpretation, P16 classification, and P17 outcome.
-- Prove high-impact Hindi wording remains authorization-gated and explicit negative constraints block conflicting plans.
-- Preserve `INTERPRETATION != AUTHORIZATION`, `PLAN != EXECUTION`, and `READY != EXECUTION`.
-- Completion requires local regression, exact-head CI, merge, and durable reconciliation. This does not create P18/P19.
+## Completed — P15 bounded Devanagari Hindi/Hinglish interpretation and gating
+
+- Main commit `001f48e64d3e7e6e32d9befc9bb00899b8868e03` preserves Devanagari Unicode and adds the bounded P15 corpus plus P15 → P16 → P17 flow regression.
+- Hindi deployment remains production/destructive and requires approval; explicit negative deployment wording blocks a conflicting plan; contextless referents clarify.
+- Exact-head CI passed: Development OS `34812860000`; Contracts `34812859861`; Trust-First `34812859744`; Living Engineering Map `34812859740`; GitHub Identity/Token `34812859825`; Provider Controller Adapter `34812859833`; Remote Permission Governance `34812859951`.
+- The capability remains deterministic corpus coverage only, with no universal language, authority, execution, mutation, or production-readiness claim.
 - Do not create P18/P19 merely for bookkeeping.
 
 ## Completed — AI State Resolver v2 detailed contradiction provenance

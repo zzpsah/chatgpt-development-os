@@ -67,10 +67,12 @@ A model score, user preference, or benchmark improvement alone is not sufficient
 
 ## P15-EXP-20260914-001 — bounded Devanagari Hindi/Hinglish gating
 
-- **Status:** RUNNING
+- **Status:** ADOPTED
 - **Source boundary:** current P15 deterministic reference interpreter plus P16/P17 regression path.
 - **Hypothesis:** preserve Devanagari Unicode and recognize a small, explicit Hindi/Hinglish corpus without allowing translated high-impact requests to bypass P16/P17 gates.
 - **Corpus:** `config/p15-multilingual-corpus.json`.
 - **Regression:** `tools/test-p15-multilingual-flow.py` and existing P15/P16/P17 regressions.
 - **Safety criteria:** contextless referents clarify; `प्रोडक्शन में तैनात करो` remains production/destructive and needs approval; `डिप्लॉय मत करना` blocks a conflicting plan; all outputs retain unchanged authority/authorization and no execution.
 - **Limits:** no universal language, dialect, translation-quality, or host-model competence claim.
+- **Observed result:** local P15/P16/P17 regressions passed; exact-head main CI passed Development OS `34812860000`, Contracts `34812859861`, Trust-First `34812859744`, Living Engineering Map `34812859740`, GitHub Identity/Token `34812859825`, Provider Controller Adapter `34812859833`, and Remote Permission Governance `34812859951`.
+- **Decision:** ADOPT as bounded deterministic corpus coverage.
