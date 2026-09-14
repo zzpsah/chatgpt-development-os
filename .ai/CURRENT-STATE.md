@@ -5,7 +5,7 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
 - **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
-- Current bounded follow-up is based on `main` at `7009e8e1b4398462b1a9321bb1e2a38a3c35e478`, the merge of PR #48 post-#46 durable-state reconciliation.
+- Current reconciliation checkpoint is post-PR #49 merge commit `58d37ea23d025d7414f0d55fe2ba5ccc42068b8e`.
 - `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture index; `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable stage-history/navigation ledger.
 
 ## Core documentation law
@@ -26,21 +26,24 @@ Interpretation, planning, readiness, provider credentials, prior approvals, reco
 
 ## Active bounded work
 
-### Resolver contradiction envelope-integrity follow-up
-
-PR #46 completed and verified the base structured cross-claim contradiction feature. Post-merge inspection found a narrower defense-in-depth gap at the resolver → P16 → P17 envelope boundaries.
-
-Current bounded hardening:
-
-- P16 independently recomputes explicit same-`fact_key` / canonical-`fact_value` contradiction groups from resolver claim provenance;
-- P16 rejects hidden contradictions, inconsistent contradiction reasons, or inconsistent `contradiction_fact_keys` before planning;
-- P17 independently recomputes contradiction integrity from the full resolver provenance preserved in a plan;
-- changing a previously consistent `fact_value` after P16 so that claims now conflict causes P17 `BLOCKED` even if status/confidence/count metadata remains superficially consistent;
-- no free-text/NLP fact pairing or automatic source-precedence winner is introduced.
-
-This is an unnumbered defense-in-depth objective. No P18/P19 is created.
+- No new bounded engineering objective is activated by this reconciliation.
+- Resolver contradiction envelope-integrity follow-up is closed through PR #49 and must not remain marked active.
+- Any next objective must be selected from fresh `main`, open PRs, CI, durable state, and source evidence.
+- No P18/P19 is created merely for bookkeeping.
 
 ## Current verified capability state
+
+### Resolver contradiction envelope integrity — merged
+
+- PR #49 — `Harden resolver contradiction envelope integrity` — merged at `58d37ea23d025d7414f0d55fe2ba5ccc42068b8e`.
+- Exact final PR head: `3c0711a9803649505d105728e90e1ef90b3d7ce8`.
+- P16 independently recomputes explicit same-`fact_key` / canonical-`fact_value` contradiction groups before planning.
+- P16 rejects hidden contradictions, inconsistent `CROSS_CLAIM_CONTRADICTION` reasons, and inconsistent `contradiction_fact_keys`.
+- P17 independently recomputes contradiction integrity from full resolver provenance retained by P16.
+- A post-P16 `fact_value` edit that creates a hidden contradiction is `BLOCKED` even when top-level status/confidence/count metadata remains superficially valid.
+- Exact-final-head CI passed all triggered workflows: Development OS Contracts `34810461613`, Development OS `34810461872`, Actionable Hold `34810461632`, Living Engineering Map `34810461677`, Trust-First Audit `34810461612`, GitHub Identity/Token `34810461701`, Current-Source Evidence `34810461718`, MCP Repository Create `34810461678`, and P13 External Managed Project `34810461615`.
+- The Contracts workflow completed its full regression suite including P16, P17, resolver, Security Gate, P12, and P14 checks.
+- This hardening creates no authority, authorization, execution, provider mutation, or production-readiness upgrade.
 
 ### AI State Resolver v2 cross-claim contradiction handling — merged
 
@@ -48,8 +51,6 @@ This is an unnumbered defense-in-depth objective. No P18/P19 is created.
 - Exact final feature head: `490eeebea69a4f4ae44657f5d94edaef35a26db4`.
 - Optional explicit `fact_key` + deterministic JSON `fact_value` identity is supported.
 - Same valid fact identity with different canonical values makes involved claims `unknown`, adds `CROSS_CLAIM_CONTRADICTION`, records `contradiction_fact_keys`, and produces `NEEDS_EVIDENCE`.
-- Legacy claims without fact identity remain backward compatible.
-- Exact final-head CI passed: Development OS `34809630956`, Contracts `34809630926`, Current-Source Evidence `34809630993`, Trust-First Audit `34809630947`, Living Engineering Map `34809631004`, GitHub Identity/Token `34809631046`, MCP Repository Create `34809630925`.
 - PR #47 was a concurrent duplicate attempt and was closed without merge.
 - PR #48 reconciled durable state after #46 and merged at `7009e8e1b4398462b1a9321bb1e2a38a3c35e478`.
 
@@ -65,7 +66,6 @@ This is an unnumbered defense-in-depth objective. No P18/P19 is created.
 - P11 remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P12 remains owner of execution-evidence provenance and freshness.
 - P15/P16/P17 remain interpretation/planning/readiness layers respectively; none independently grants runtime authority.
-- Plain Project Context and Recovery Guide v1 remains the default first-contact path.
 
 ### Live GitHub App/provider evidence — proven, scoped
 
@@ -109,8 +109,7 @@ This is an unnumbered defense-in-depth objective. No P18/P19 is created.
 
 ## Next action
 
-- Run exact-head applicable CI for the contradiction envelope-integrity follow-up.
-- Repair compatibility failures without weakening independent contradiction recomputation.
-- Merge under the current standing user authorization only when exact-head CI is green and the PR is mergeable.
-- After merge, reconcile durable state so no completed objective remains marked active.
-- Keep `production_ready = false`; do not invent a new numbered phase solely to continue development.
+- Recover fresh `main`, open PRs, CI, durable state, and source before selecting another bounded engineering objective.
+- Do not reactivate completed resolver hardening merely to continue development.
+- Keep `production_ready = false` unless a separately bounded evidence-backed objective explicitly changes it.
+- Do not invent a new numbered phase solely for bookkeeping.

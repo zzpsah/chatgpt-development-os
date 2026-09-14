@@ -11,16 +11,21 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 
 ## Active bounded work
 
-### Resolver contradiction envelope-integrity follow-up
-
-- Unnumbered defense-in-depth hardening after merged PR #46.
-- P16 independently recomputes explicit same-`fact_key` / canonical-`fact_value` contradictions from preserved resolver claims before planning.
-- P16 rejects hidden contradictions, inconsistent `CROSS_CLAIM_CONTRADICTION` reasons, and inconsistent `contradiction_fact_keys`.
-- P17 independently recomputes contradiction integrity from the full resolver provenance retained by P16.
-- A post-P16 `fact_value` edit that creates a contradiction must make P17 `BLOCKED` even if top-level status/confidence/count metadata remains superficially consistent.
-- No NLP/prose fact pairing, source-precedence winner selection, authority change, execution, or production-readiness upgrade is introduced.
-- Exact-final-head applicable CI is required before this follow-up is complete.
+- No bounded engineering objective is activated by the post-PR #49 reconciliation.
+- Select the next objective only after fresh inspection of `main`, open PRs, CI, durable state, and source.
 - Do not create P18/P19 merely for bookkeeping.
+
+## Completed — resolver contradiction envelope integrity
+
+- PR #49 — `Harden resolver contradiction envelope integrity` — merged at `58d37ea23d025d7414f0d55fe2ba5ccc42068b8e`.
+- Exact final source head: `3c0711a9803649505d105728e90e1ef90b3d7ce8`.
+- P16 independently recomputes explicit same-`fact_key` / canonical-`fact_value` contradictions from resolver claim provenance.
+- P16 fails closed on hidden contradictions, inconsistent contradiction reasons, or inconsistent `contradiction_fact_keys`.
+- P17 independently recomputes contradiction integrity from the full resolver provenance retained by P16.
+- Post-P16 `fact_value` tampering that creates a hidden contradiction is `BLOCKED` even when status/confidence/count metadata remains superficially consistent.
+- Adversarial integration coverage proves forged contradiction hiding is rejected by P16 and post-plan fact-value tampering is rejected by P17.
+- Exact-final-head CI passed: Development OS Contracts `34810461613`; Development OS `34810461872`; Actionable Hold `34810461632`; Living Engineering Map `34810461677`; Trust-First Audit `34810461612`; GitHub Identity/Token `34810461701`; Current-Source Evidence `34810461718`; MCP Repository Create `34810461678`; P13 External Managed Project `34810461615`.
+- No authority, authorization, execution, provider mutation, production mutation, or production-readiness upgrade was introduced.
 
 ## Completed — AI State Resolver v2 cross-claim contradiction handling
 
@@ -31,15 +36,14 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 - Arbitrary statement prose is not semantically paired by guesswork and no automatic winner is selected.
 - P16 uses the unresolved-state path and returns `CLARIFY`; P17 fails closed if unknown contradiction claims are hidden in a forged planned envelope.
 - Exact final-head CI passed: Development OS `34809630956`; Contracts `34809630926`; Current-Source `34809630993`; Trust-First `34809630947`; Living Engineering Map `34809631004`; GitHub Identity/Token `34809631046`; MCP Repository Create `34809630925`.
-- No authority, authorization, execution, provider mutation, production mutation, or production-readiness upgrade was introduced.
 - PR #47 was a concurrent duplicate attempt and was closed without merge after #46 became authoritative.
-- PR #48 reconciled post-#46 durable state and is merged on current `main` lineage.
+- PR #48 reconciled post-#46 durable state and merged at `7009e8e1b4398462b1a9321bb1e2a38a3c35e478`.
 
 ## Completed — previous-stage documentation ledger
 
 - `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` documents numbered architecture stages P9–P17 and major unnumbered proof/hardening milestones.
 - The ledger is navigation/history only; current source, Git/PR/CI, `.ai/CURRENT-STATE.md`, `.ai/TASKS.md`, core contracts, tests, and decisions remain authoritative.
-- `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md` records the contradiction contract and non-goals.
+- `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md` records the contradiction contract, downstream envelope-integrity defenses, and non-goals.
 
 ## Completed — first-contact acknowledgement hardening
 
@@ -84,6 +88,13 @@ This file tracks **work state**, not normative law. Source tree + current Git/PR
 - P11 remains the repository-first recovery/revalidation/cross-AI continuity baseline.
 - P12 remains the advisory/runtime-observability and evidence provenance/freshness substrate.
 - Later unnumbered hardening objectives must not be relabeled as P18/P19 merely for bookkeeping.
+
+## Current HOLD / limits
+
+- `production_ready = false`.
+- Resolver confidence never grants authorization, execution, mutation, or completion.
+- P12 retains execution-evidence provenance/freshness ownership; P16 retains planning; P17 retains readiness/authorization.
+- No production/deployment/credential/permission/destructive authority was introduced by the resolver hardening sequence.
 
 ## Task-map invariant
 
