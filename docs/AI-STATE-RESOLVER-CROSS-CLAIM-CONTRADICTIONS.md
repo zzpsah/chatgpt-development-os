@@ -88,6 +88,8 @@ A forged resolver envelope that changes contradictory claims back to `likely`, c
 
 P17 independently recomputes the same structured contradiction integrity from the full resolver provenance preserved in a P16 plan.
 
+P17 fails closed when preserved resolver provenance contains a hidden structured contradiction or when post-P16 tampering creates one.
+
 This closes a separate post-planning tamper path: if a previously consistent fact group is altered after P16 by changing one `fact_value` while leaving confidence/status/count metadata untouched, P17 returns `BLOCKED` with a hidden-contradiction reason rather than declaring the step READY.
 
 The checks are deliberately redundant across resolver → P16 → P17. Each governed boundary validates the evidence it consumes rather than assuming the previous boundary remained untampered.
