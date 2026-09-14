@@ -46,6 +46,7 @@ The following work extended the numbered architecture without creating new numbe
 - **Post-PR #46 Durable-State Reconciliation — PR #48:** reconciled current/task state after contradiction handling and preserved concurrent first-contact documentation hardening. Merged at `7009e8e1b4398462b1a9321bb1e2a38a3c35e478`.
 - **Resolver Contradiction Envelope Integrity — PR #49:** added independent P16/P17 recomputation of explicit structured contradictions so forged resolver status/reasons or post-plan `fact_value` tampering fail closed. Merged at `58d37ea23d025d7414f0d55fe2ba5ccc42068b8e`; exact verified source head `3c0711a9803649505d105728e90e1ef90b3d7ce8`.
 - **Post-PR #49 Durable-State Reconciliation — PR #51:** marked contradiction envelope-integrity hardening complete, pinned exact-head CI evidence, and cleared stale active-state records. Merged at `2500ddc235ce99dbe45a6cd0537d4b0d2372c4a4`.
+- **Resolver Detailed Contradiction Provenance — PR #52:** added deterministic audit-only contradiction detail (`fact_key`, sorted involved claim IDs, sorted canonical JSON values) and independent P16/P17 validation of that detail. Merged at `2a5e13ad5a46085dc6949bfbcf325f84e29f9d02`; exact verified source head `b091ef2058f3c089d3daeafb41ca9fc58568f435`.
 
 Closed PRs #47 and #50 are not completed milestones and were not merged. They are retained only as provenance for ideas later re-evaluated against fresh `main`; stale or duplicate branch state is not authoritative.
 
@@ -99,9 +100,9 @@ IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE
 
 ## Current evolution direction
 
-The latest completed historical line is PR #49 plus post-merge durable reconciliation PR #51. The currently active unnumbered objective is **AI State Resolver v2 detailed contradiction provenance** on `feat/resolver-detailed-contradiction-provenance`, selected from fresh `main` after closing stale/diverged PR #50. It is not yet a completed historical milestone: exact-head CI, merge, and post-merge durable reconciliation are still required.
+The latest completed historical line is PR #52, built on the PR #46 → #49 resolver contradiction hardening sequence and reconciled history through PR #51. No new numbered or unnumbered objective is automatically promoted by this history record.
 
-This active objective adds audit detail only; it does not create P18/P19, does not choose a truth winner, and does not alter authority, authorization, execution, provider mutation, or `production_ready = false`.
+Future development must recover fresh `main`, open PRs, CI, durable state, relevant source, and current user intent before selecting the next bounded objective. No P18/P19 bookkeeping phase is created, and `production_ready = false` remains unchanged unless a separate evidence-backed objective explicitly changes it.
 
 ## Recovery use
 
