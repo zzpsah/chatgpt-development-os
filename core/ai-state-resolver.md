@@ -205,6 +205,8 @@ Those belong to later Development OS milestones.
   grounding:
     type: execution_evidence | durable_state | none
     ref: P12-evidence-id or file-path-plus-line
+  fact_key: optional-stable-fact-identity
+  fact_value: optional-deterministic-json-value
   revalidated_at: ISO-8601 timestamp or null
   revalidate_on: [RECOVERY_BOUNDARY, HANDOFF_BOUNDARY, path-glob]
 ```
@@ -215,9 +217,31 @@ Those belong to later Development OS milestones.
 
 `durable_state` is broader semantic project context. It is capped at `likely` until independently supported by current P12 execution evidence. Recovery/handoff boundaries and configured path changes remain explicit reasons to revalidate it. The default revalidation boundaries are recovery and handoff.
 
+### Explicit fact identity and cross-claim contradictions
+
+`fact_key` and `fact_value` are optional for legacy compatibility, but they form a pair: supplying only one makes the claim unknown. `fact_key` must be non-empty text. `fact_value` must be representable as deterministic JSON.
+
+Statement text is never semantically paired by guesswork. Cross-claim comparison happens only when two or more otherwise-resolved claims explicitly use the same valid `fact_key`.
+
+Values are compared by canonical JSON. If the same `fact_key` has more than one canonical value, every involved claim becomes `unknown`, receives `CROSS_CLAIM_CONTRADICTION`, and the fact identity is listed in `contradiction_fact_keys`. The resolver does not choose a winner based on confidence, ordering, prose, or convenience.
+
+The detailed bounded contract is documented in `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md`.
+
 ### Downstream propagation
 
 P16 may receive a resolver result as `state_resolution`. If it includes unresolved claim IDs, P16 returns `CLARIFY` and preserves the named uncertainty. A `PLANNED` envelope retains resolver provenance. P17 rejects a tampered `PLANNED` envelope that contains unresolved resolver claims. `likely` remains an explicit uncertainty signal; it does not automatically block every plan. This does not change P17 authorization, Security Gate, capability, verification, or runtime gates.
+
+A cross-claim contradiction therefore follows the ordinary unresolved-state path:
+
+```text
+same fact_key + conflicting fact_value
+             ↓
+      resolver NEEDS_EVIDENCE
+             ↓
+          P16 CLARIFY
+             ↓
+      no executable plan
+```
 
 ```text
 P11 recovery -> resolver v2 -> P16 plan -> P17 readiness -> controller
@@ -231,9 +255,11 @@ P11 recovery -> resolver v2 -> P16 plan -> P17 readiness -> controller
 - No semantic truth claim from a document merely asserting success.
 - No P12 evidence re-normalization.
 - No authorization, completion marking, mutation, or execution.
-- No cross-claim semantic contradiction resolution. v2 detects duplicate identifiers only; a future bounded objective must define a stable fact identity and contradiction policy before it attempts to reconcile different claims about the same fact.
+- No arbitrary natural-language contradiction inference; explicit stable fact identity is required.
+- No automatic winner selection among contradictory claims.
+- No cross-project contradiction reconciliation.
 
-The reference continuation path (`tools/devos-continuation-path.py`) now calls resolver v2 when its caller supplies `state_claims`, `events`, or `changed_paths`. It returns the resolver result alongside P15/P16/P17 evidence. An unresolved supplied claim yields P16 `CLARIFY` and prevents P17/controller continuation.
+The reference continuation path (`tools/devos-continuation-path.py`) calls resolver v2 when its caller supplies `state_claims`, `events`, or `changed_paths`. It returns the resolver result alongside P15/P16/P17 evidence. An unresolved supplied claim yields P16 `CLARIFY` and prevents P17/controller continuation.
 
 ### Validation reasons and output
 
@@ -244,12 +270,16 @@ The resolver only preserves or downgrades caller-supplied confidence. It never u
 - `GROUNDING_TYPE_INVALID`
 - `OBSERVED_CLAIM_GROUNDING_MISSING`
 - `DUPLICATE_CLAIM_ID`
+- `FACT_IDENTITY_INCOMPLETE`
+- `FACT_KEY_INVALID`
+- `FACT_VALUE_INVALID`
+- `CROSS_CLAIM_CONTRADICTION`
 - `P12_EXECUTION_EVIDENCE_NOT_CURRENT`
 - `DURABLE_STATE_CANNOT_SELF_UPGRADE_TO_OBSERVED`
 - `REVALIDATION_BOUNDARY_REACHED`
 - `REVALIDATION_PATH_CHANGED`
 
-The result contains the protocol identifier, unchanged authority/authorization, `execution: NONE`, `mutation: NONE`, resolved claims, their reasons, a weakest-confidence summary, and unresolved claim IDs. `RESOLVED` means no claim is unknown; it does not mean a task is authorized, verified, or complete. `NEEDS_EVIDENCE` names unknown claims. `BLOCKED` means the `claims` input itself was invalid.
+The result contains the protocol identifier, unchanged authority/authorization, `execution: NONE`, `mutation: NONE`, resolved claims, their reasons, a weakest-confidence summary, unresolved claim IDs, and `contradiction_fact_keys`. `RESOLVED` means no claim is unknown; it does not mean a task is authorized, verified, or complete. `NEEDS_EVIDENCE` names unknown claims. `BLOCKED` means the `claims` input itself was invalid.
 
 ### Relationship to P12 and the continuation path
 

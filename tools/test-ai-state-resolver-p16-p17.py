@@ -55,6 +55,21 @@ clarify = p16.compile_plan("FEATURE_CHANGE", "update docs", "DEVOS", [], [], unk
 assert clarify["decision"] == "CLARIFY", clarify
 assert "C2" in " ".join(clarify["ambiguity"]), clarify
 
+contradiction = resolver.resolve({"claims": [
+    {"id": "C3", "statement": "deployment completed", "state_confidence": "likely",
+     "grounding": {"type": "durable_state", "ref": ".ai/CURRENT-STATE.md:10"},
+     "fact_key": "deployment.complete", "fact_value": True},
+    {"id": "C4", "statement": "deployment not completed", "state_confidence": "likely",
+     "grounding": {"type": "durable_state", "ref": ".ai/TASKS.md:10"},
+     "fact_key": "deployment.complete", "fact_value": False},
+]})
+assert contradiction["status"] == "NEEDS_EVIDENCE", contradiction
+assert contradiction["contradiction_fact_keys"] == ["deployment.complete"], contradiction
+contradiction_plan = p16.compile_plan("FEATURE_CHANGE", "update docs", "DEVOS", [], [], contradiction)
+assert contradiction_plan["decision"] == "CLARIFY", contradiction_plan
+assert "C3" in " ".join(contradiction_plan["ambiguity"]), contradiction_plan
+assert "C4" in " ".join(contradiction_plan["ambiguity"]), contradiction_plan
+
 unnamed_unknown = resolver.resolve({"claims": [{
     "id": "", "statement": "unnamed state", "state_confidence": "unknown",
     "grounding": {"type": "none", "ref": None},
@@ -88,6 +103,16 @@ tampered_ready = readiness(tampered_plan)
 assert tampered_ready["status"] == "BLOCKED", tampered_ready
 assert "PLAN_STATE_RESOLUTION_HIDDEN_UNKNOWN_CLAIM" in tampered_ready["reasons"], tampered_ready
 
+# A malicious PLANNED envelope cannot hide a contradiction by changing only the
+# top-level resolver status/unresolved list; P17 recomputes unknown claims.
+tampered_contradiction_plan = p16.compile_plan("FEATURE_CHANGE", "update docs", "DEVOS", [], [], observed)
+tampered_contradiction_plan["state_resolution"] = copy.deepcopy(contradiction)
+tampered_contradiction_plan["state_resolution"]["status"] = "RESOLVED"
+tampered_contradiction_plan["state_resolution"]["unresolved_claim_ids"] = []
+tampered_contradiction_ready = readiness(tampered_contradiction_plan)
+assert tampered_contradiction_ready["status"] == "BLOCKED", tampered_contradiction_ready
+assert "PLAN_STATE_RESOLUTION_HIDDEN_UNKNOWN_CLAIM" in tampered_contradiction_ready["reasons"], tampered_contradiction_ready
+
 tampered_authority_plan = copy.deepcopy(plan)
 tampered_authority_plan["state_resolution"]["authority"] = "GRANTED"
 tampered_authority_ready = readiness(tampered_authority_plan)
@@ -95,5 +120,5 @@ assert tampered_authority_ready["status"] == "BLOCKED", tampered_authority_ready
 assert "PLAN_STATE_RESOLUTION_AUTHORITY_CHANGED" in tampered_authority_ready["reasons"], tampered_authority_ready
 
 print("PASS: resolver claim confidence and full provenance propagate P16 -> P17 without creating authority")
-print("PASS: P16 rejects forged resolver status/authority/execution envelopes")
-print("PASS: P17 rejects tampered planned resolver provenance with hidden uncertainty")
+print("PASS: cross-claim contradictions propagate to P16 CLARIFY and cannot be hidden from P17")
+print("PASS: P16/P17 reject forged resolver status/authority/execution envelopes")
