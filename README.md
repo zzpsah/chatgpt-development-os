@@ -42,6 +42,7 @@ From a checked-out repository:
 python tools/devos.py version
 python tools/devos.py doctor --root .
 python tools/devos.py release-check
+python tools/devos.py project-lifecycle --path . --require-managed --json
 python tools/devos.py production-readiness --json
 ```
 
@@ -61,24 +62,31 @@ AI account memory or old chat history is supplementary only; it is never authori
 
 ## Release status
 
-Current distribution version: **0.20.0**.
+Current distribution version: **0.21.0**.
 
 ```bash
 python tools/devos.py version
 python tools/devos.py release-check
+python tools/devos.py project-lifecycle --path <project> --require-managed --json
 python tools/devos.py production-readiness --json
 python tools/devos.py production-target-evidence <packet.json> --expected-source-sha <sha> --expected-target-id <target>
 ```
 
-`0.20.0` adds Production Target Evidence Intake v1. It validates already-observed target-bound evidence for the five external Production Readiness v2 blockers while keeping evidence, readiness, and authorization separate.
+`0.21.0` adds Managed Project Lifecycle v1. A repository can no longer be treated as a DevOS-managed development target merely because it exists, was created, or was discovered. DevOS verifies repository-local management identity and minimum durable context, requires onboarding when missing, and keeps development continuation on HOLD until fresh readback returns `MANAGED`.
 
-A fully valid all-PASS packet returns `CANDIDATE_COMPLETE`, not production readiness. It still forces `production_ready=false`, `readiness_promotion_allowed=false`, `execution=NONE`, `mutation=NONE`, and requires separate semantic review plus durable readiness reconciliation.
+Permanent lifecycle invariants:
 
-The current v2 assessment itself remains intentionally **HOLD**, not READY, until direct target-specific evidence is actually observed and separately reconciled.
+```text
+REPOSITORY EXISTS != DEVOS MANAGED
+REPOSITORY CREATED != ONBOARDED
+REPOSITORY DISCOVERED != SAFE TO CONTINUE
+```
 
-**Distribution release readiness is not production readiness.** A green release gate, valid readiness assessment, or valid target-evidence packet does not authorize publication, deployment, production mutation, credentials, database changes, permission changes, destructive actions, or unscoped external execution.
+The current Production Readiness v2 assessment remains intentionally **HOLD**, not READY, until direct target-specific evidence is actually observed and separately reconciled.
 
-See [`docs/RELEASE.md`](docs/RELEASE.md), [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md), [`core/production-target-evidence-intake.md`](core/production-target-evidence-intake.md), and [`.github/SECURITY.md`](.github/SECURITY.md).
+**Distribution release readiness is not production readiness.** A green release gate, managed-project verdict, valid readiness assessment, or valid target-evidence packet does not authorize publication, deployment, production mutation, credentials, database changes, permission changes, destructive actions, or unscoped external execution.
+
+See [`docs/RELEASE.md`](docs/RELEASE.md), [`docs/AUTO-ONBOARDING.md`](docs/AUTO-ONBOARDING.md), [`core/managed-project-lifecycle.md`](core/managed-project-lifecycle.md), [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md), and [`.github/SECURITY.md`](.github/SECURITY.md).
 
 ## What DevOS provides
 
@@ -109,6 +117,29 @@ Recovery precedence is:
 4. generated indexes/evidence navigation;
 5. AI memory/chat history only as supplementary context.
 
+### Managed project lifecycle
+
+`tools/devos-project-lifecycle.py` is the mandatory boundary between repository discovery/creation and feature development.
+
+For local repositories:
+
+```bash
+python tools/devos.py project-lifecycle --path <project> --require-managed --json
+```
+
+If onboarding is required, an explicitly authorized local flow can create only missing DevOS infrastructure and immediately re-read the project:
+
+```bash
+python tools/devos.py project-lifecycle \
+  --path <project> \
+  --apply \
+  --authorization EXPLICIT \
+  --require-managed \
+  --json
+```
+
+Provider/controller integrations can submit `DEVOS-REPOSITORY-DISCOVERY-SNAPSHOT-v1` readback evidence. Unmanaged, partial, conflicting, or malformed repositories never silently become development-ready. Repository creation itself now carries a mandatory `project.onboard` postcondition.
+
 ### Human-language interpretation and governed planning
 
 - **P15 Human Language Interpretation** turns English/Hindi/Hinglish and bounded informal requests into structured intent without turning language into authorization.
@@ -128,6 +159,7 @@ DOCUMENTATION != AUTHORIZATION
 PROVIDER CREDENTIAL != DEVOS AUTHORIZATION
 PROVIDER RESPONSE != COMPLETION PROOF
 RECOVERY != AUTOMATIC MUTATION REPLAY
+REPOSITORY EXISTS != DEVOS MANAGED
 PRODUCTION READY != DEPLOYMENT AUTHORIZATION
 VALID TARGET EVIDENCE != PRODUCTION READY
 ```
@@ -205,7 +237,7 @@ See:
 
 ## Auto-onboarding and context synchronization
 
-Existing repositories can be onboarded without manually creating every context file. The project also includes GitHub-side context synchronization and Windows project-watcher helpers.
+Existing repositories can be onboarded without manually creating every context file. DevOS 0.21.0 adds the lifecycle gate so a newly created or discovered repository cannot silently bypass onboarding.
 
 Examples:
 
@@ -238,6 +270,7 @@ Important references:
 
 - `config/readiness-evidence.json` — historical v1 snapshot
 - `config/production-readiness-v2.json` — current production-readiness assessment
+- `core/managed-project-lifecycle.md` — repository-management lifecycle gate
 - `core/production-target-evidence-intake.md` — target-bound external evidence intake
 - `.ai/RECONCILIATION-LEDGER.jsonl`
 - [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md)
@@ -262,6 +295,7 @@ P9 through P17 are completed architecture stages at their recorded evidence leve
 - Prefer exact expected-state anchors and fresh readback after mutation.
 - Never blindly replay an uncertain mutation.
 - Never claim tests, deployment, provider results, or completion without actual evidence.
+- Never continue DevOS feature development on a repository whose managed-project lifecycle is not verified.
 - Keep `production_ready = false` until the v2 production-readiness criteria are all directly evidenced and independently verified.
 
 See [`.github/SECURITY.md`](.github/SECURITY.md).
@@ -292,4 +326,4 @@ chatgpt-development-os/
 
 ## Version
 
-**0.20.0** — P17-complete distribution line plus blocker-exact Production Readiness Evidence v2 and target-bound external Production Target Evidence Intake v1. The production verdict remains HOLD until valid target-specific evidence is separately semantically reviewed and durably reconciled.
+**0.21.0** — P17-complete distribution line plus managed-project lifecycle enforcement, blocker-exact Production Readiness Evidence v2, and target-bound external Production Target Evidence Intake v1. Repository creation/discovery now remains HOLD until DevOS management is verified; the production verdict remains HOLD until valid target-specific evidence is separately semantically reviewed and durably reconciled.
