@@ -86,9 +86,9 @@ Materiality conclusion:
 
 Protocol: `DEVOS-DURABLE-RECONCILIATION-RECORD-v1`.
 
-Record digest:
+Canonical record digest:
 
-`1201a502fe62eae4733c922ad8d70eae429039c119205493eb68618ef54d02c3`
+`8a8ce6db2bccbe211030ab681577736717e978cab8760c074e65faca09c8d49f`
 
 The record preserves:
 
