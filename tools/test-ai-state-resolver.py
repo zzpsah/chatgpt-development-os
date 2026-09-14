@@ -30,12 +30,25 @@ def main():
     assert boundary["claims"][0]["state_confidence"] == "likely", boundary
     assert "REVALIDATION_BOUNDARY_REACHED" in boundary["claims"][0]["reasons"], boundary
 
+    likely_boundary_claim = claim(confidence="likely")
+    likely_boundary = module.resolve({"claims": [likely_boundary_claim], "events": [{"type": "RECOVERY_BOUNDARY"}]})
+    assert likely_boundary["claims"][0]["state_confidence"] == "likely", likely_boundary
+    assert "REVALIDATION_BOUNDARY_REACHED" in likely_boundary["claims"][0]["reasons"], likely_boundary
+
     changed = module.resolve({"claims": [claim()], "changed_paths": ["core/controller.py"]})
     assert changed["claims"][0]["state_confidence"] == "likely", changed
+    likely_changed = module.resolve({"claims": [claim(confidence="likely")], "changed_paths": ["core/controller.py"]})
+    assert "REVALIDATION_PATH_CHANGED" in likely_changed["claims"][0]["reasons"], likely_changed
 
     malformed = module.resolve({"claims": [claim(ref=None)]})
     assert malformed["status"] == "NEEDS_EVIDENCE", malformed
     assert "OBSERVED_CLAIM_GROUNDING_MISSING" in malformed["claims"][0]["reasons"], malformed
+
+    missing_id = claim(claim_id="", confidence="unknown", grounding_type="none", ref=None)
+    missing_id_result = module.resolve({"claims": [missing_id]})
+    assert missing_id_result["status"] == "NEEDS_EVIDENCE", missing_id_result
+    assert missing_id_result["weakest_state_confidence"] == "unknown", missing_id_result
+    assert missing_id_result["unresolved_claim_ids"] == [], missing_id_result
 
     duplicate = module.resolve({"claims": [claim(), claim()]})
     assert duplicate["unresolved_claim_ids"] == ["C1", "C1"], duplicate
@@ -57,9 +70,11 @@ def main():
         "only preserves or downgrades caller-supplied confidence",
         "`likely` remains an explicit uncertainty signal",
         "No cross-claim semantic contradiction resolution.",
+        "fail closed on an internally inconsistent or authority-changing resolver envelope",
     ):
         assert marker in document, marker
     print("PASS: AI State Resolver v2 rejects uncited/conflicting claims and decays at revalidation boundaries")
+    print("PASS: durable-state revalidation reasons remain visible for already-likely claims")
     print("PASS: resolver preserves P12 evidence ownership and never grants authority or execution")
 
 
