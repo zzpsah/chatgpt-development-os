@@ -65,13 +65,17 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
         if claim_id in duplicate_ids:
             confidence = "unknown"; reasons.append("DUPLICATE_CLAIM_ID")
         if grounding_type == "execution_evidence" and item.get("p12_freshness") not in {"current", "fresh"}:
-            if confidence == "observed": confidence = "likely"
+            if confidence == "observed":
+                confidence = "likely"
             reasons.append("P12_EXECUTION_EVIDENCE_NOT_CURRENT")
-        if grounding_type == "durable_state" and confidence == "observed":
+        if grounding_type == "durable_state":
             # A durable record proves that the assertion was recorded, not that
             # its underlying implementation/result was freshly established.
             # Only current P12 execution evidence may retain `observed`.
-            confidence = "likely"; reasons.append("DURABLE_STATE_CANNOT_SELF_UPGRADE_TO_OBSERVED")
+            if confidence == "observed":
+                confidence = "likely"; reasons.append("DURABLE_STATE_CANNOT_SELF_UPGRADE_TO_OBSERVED")
+            # Revalidation markers describe why durable-state support needs a
+            # fresh check; they apply to already-likely durable claims as well.
             if BOUNDARY_EVENTS.intersection(rules).intersection(events):
                 reasons.append("REVALIDATION_BOUNDARY_REACHED")
             elif _changed([rule for rule in rules if rule not in BOUNDARY_EVENTS], changed_paths):
@@ -86,9 +90,10 @@ def resolve(payload: dict[str, Any]) -> dict[str, Any]:
         })
 
     unresolved = sorted(str(item["id"]) for item in resolved if item["id"] and item["state_confidence"] == "unknown")
+    has_unknown = any(item["state_confidence"] == "unknown" for item in resolved)
     weakest = min((item["state_confidence"] for item in resolved), key=lambda value: CONFIDENCE[value], default="unknown")
     out.update({
-        "status": "NEEDS_EVIDENCE" if unresolved else "RESOLVED",
+        "status": "NEEDS_EVIDENCE" if has_unknown else "RESOLVED",
         "claims": resolved,
         "weakest_state_confidence": weakest,
         "unresolved_claim_ids": unresolved,
