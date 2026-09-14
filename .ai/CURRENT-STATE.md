@@ -5,11 +5,10 @@
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI/release-artifact metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
 - **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
-- Latest fully merged/reconciled source before the active objective: PR #65 at `b221a240a41426b200a9235eacfa5300042936c0`.
-- Active feature branch: `feature/production-readiness-evidence-v2`, created from exact `b221a240a41426b200a9235eacfa5300042936c0`.
-- Candidate distribution version on the active branch: `0.19.0`.
+- DevOS `0.19.0` Production Readiness Evidence v2 implementation merged through PR #66 at `8cd731b7b91ca9e67983b6deca8646b38e078e33` from exact verified feature head `f81184975ffbb02a3e58466459e12858fdd8294a`.
 - Historical `config/readiness-evidence.json` remains pinned v1 evidence and is not rewritten as current proof.
 - Current production-readiness model: `config/production-readiness-v2.json`.
+- `docs/DEVOS-MASTER-ENGINEERING-MAP.md` remains the living architecture index; no P18/P19 was created for this unnumbered hardening milestone.
 
 ## Core documentation law
 
@@ -31,38 +30,34 @@ Interpretation, planning, readiness, credentials, CI, generated facts, reconcili
 
 ## Active bounded work
 
-### DevOS 0.19.0 Production Readiness Evidence v2
+- No numbered feature milestone is active.
+- No unreconciled repo-side DevOS `0.19.0` implementation objective remains after PR #66 reconciliation.
+- Future development must begin from fresh `main`, current CI/issues/PRs, relevant source/tests, direct runtime/provider evidence, concurrent AI work, and current user intent.
+- Do not create P18/P19 merely for bookkeeping.
 
-The historical v1 readiness protocol intentionally rejects live/production claims, so it cannot truthfully represent the later bounded live-provider evidence or derive a current production verdict. The active objective introduces a separate v2 current-source assessment rather than relabeling v1 history.
+## DevOS 0.19.0 Production Readiness Evidence v2 — closed / engineering-distribution release-ready
 
-Implemented on the active branch:
+- PR #66 title: `Add Production Readiness Evidence v2 for DevOS 0.19.0`.
+- Exact verified feature head: `f81184975ffbb02a3e58466459e12858fdd8294a`.
+- Merge commit: `8cd731b7b91ca9e67983b6deca8646b38e078e33`; GitHub signature verified.
+- Feature-head applicable workflow set: **14/14 success**.
+- Dedicated Production Readiness Evidence v2 workflow `34845941978`: Python 3.11 + 3.12 success.
+- Feature-head release workflow `34845941874`: success; Ubuntu/Windows × Python 3.11/3.12 release matrix **4/4 success**.
+- Post-merge exact-main push workflow set: **11/11 success**.
+- Post-merge Production Readiness Evidence v2 workflow `34846071705`: success.
+- Post-merge distribution release workflow `34846071713`: success; release matrix **4/4 success**.
+- Exact merged-source artifact: ID `10348113380`; name `devos-source-8cd731b7b91ca9e67983b6deca8646b38e078e33`; digest `sha256:fd07fcebcaebca703c11787e634940de904e85be5e3115894808b6a7955307f0`; size `744297` bytes; not expired when verified.
+- Durable reconciliation record digest: `8a8ce6db2bccbe211030ab681577736717e978cab8760c074e65faca09c8d49f`.
 
-- closed ten-criterion production-readiness schema;
-- exact blocker derivation;
-- current-source / current-live-read / bounded-live / external-required evidence classes;
-- fail-closed verifier and adversarial regression corpus;
-- Python 3.11/3.12 dedicated CI;
-- `devos production-readiness` CLI and `--require-production` mode;
-- coherent candidate version `0.19.0` and release-manifest binding;
-- current README/changelog/readiness/status documentation.
+The repo-side readiness-modeling objective is complete. The model now distinguishes historical/current source, bounded live-read/live-mutation evidence, and direct external production evidence without allowing evidence to manufacture authority.
 
-Pending before this objective can close:
-
-1. exact feature-head CI;
-2. expected-head PR merge;
-3. fresh merged-main CI;
-4. exact-source 0.19.0 artifact + SHA-256 evidence;
-5. final durable reconciliation/history update.
-
-No numbered architecture stage is created for this work. Do not invent P18/P19 for bookkeeping.
-
-## Current Production Readiness v2 assessment
+## Current Production Readiness v2 verdict
 
 Current deterministic verdict: **HOLD**.
 
 `production_ready = false`
 
-### Criteria currently PROVEN at bounded scopes
+### Criteria PROVEN at bounded scopes
 
 - `source_integrity` — current source/release machinery.
 - `authorization_security` — current governance/security source.
@@ -70,7 +65,7 @@ Current deterministic verdict: **HOLD**.
 - `provider_read` — bounded current live-read evidence.
 - `remote_mutation` — bounded historical live GitHub create/update/delete + readback evidence.
 
-### Required production blockers
+### Required production blockers still needing direct external evidence
 
 - `runtime_direct_conformance` — no production runtime has direct observed conformance durably promoted from declaration-only state.
 - `recovery_disaster` — no production backup/storage target with measured restore RPO/RTO evidence.
@@ -78,7 +73,7 @@ Current deterministic verdict: **HOLD**.
 - `deployment_target` — no explicit production target with environment contract, rollout, rollback, and production readback evidence.
 - `high_impact_governance` — production-scoped high-impact operations remain separately authorization-gated and unproven.
 
-These are evidence requirements, not authorization to perform the operations.
+These HOLD criteria are future target-specific evidence objectives, not unfinished repository implementation and not authorization to execute production/high-impact actions merely to make the matrix green.
 
 ## Readiness v2 authority boundary
 
@@ -98,63 +93,25 @@ Therefore:
 - `PRODUCTION READY != PUBLICATION AUTHORIZATION`
 - `PRODUCTION READY != DEPLOYMENT AUTHORIZATION`
 - `EVIDENCE != AUTHORIZATION`
+- `CONTINUE != BLANKET AUTHORIZATION`
+- `PLAN != EXECUTION`
+- `READY != EXECUTION`
 
-## Latest completed release-ready milestone
-
-### DevOS 0.18.0 Runtime Conformance Evidence Intake v1 — closed
-
-- PR #64 merged at `a8f19687c177359bd5f646e10913ebdae0851a53` from exact feature head `f59fad07b6f7708cfc79f173625f9ddafa7bc5ae`.
-- PR #65 durable reconciliation merged at `b221a240a41426b200a9235eacfa5300042936c0`.
-- PR #65 post-merge exact-source release workflow `34842611047` succeeded.
-- Exact-source artifact after PR #65: ID `10346418633`; digest `sha256:61e8bc4a4b20c326d2286fc619d202265b9bdd3edbf3feddc70316249cd010f6`.
-- No vendor runtime was promoted and no public release/deployment was performed.
-
-## Current verified capability state
-
-### Agent Runtime Profile Registry + Conformance v1 — closed
-
-- `reference-local-agent` is verified only for recorded static repository-contract conformance.
-- `codex`, `claude-code`, and `openhands` remain declaration-only templates until separate direct evidence is observed and durably promoted.
-- `EVIDENCE_PACKET_VALID != VERIFIED RUNTIME` remains enforced.
-
-### Universal Agent Runtime Adapter v1 — closed
-
-A P17 READY step plus exact scoped approval can be compiled into a runtime-neutral SHA-256-bound handoff and returned diff/test/readback evidence can be independently validated. The adapter itself does not invoke a vendor runtime or create authority.
-
-### Safe delivery proof line — closed at recorded scopes
-
-- Local disposable delivery proof.
-- Managed-repository read-only preflight.
-- Isolated managed-repository scoped write proof.
-- Governed live GitHub file create/update/delete proof with readback at the recorded scope.
-
-These do not imply unrestricted production delivery authority.
-
-### Numbered architecture
+## Retained verified capability state
 
 - P9 through P17 remain complete at their recorded evidence levels.
 - P11 remains repository-first recovery/cross-AI continuity baseline.
 - P12 remains evidence provenance/freshness owner.
-- P15/P16/P17 remain interpretation/planning/readiness layers respectively; none independently grants runtime authority.
+- P15/P16/P17 remain interpretation/planning/readiness layers; none independently grants runtime authority.
 - AI State Resolver v2 contradiction/envelope hardening remains closed through its recorded sequence.
+- `reference-local-agent` remains verified only for recorded static repository-contract conformance.
+- `codex`, `claude-code`, and `openhands` remain declaration-only templates until separate direct evidence is observed, reviewed, and durably promoted.
+- `EVIDENCE_PACKET_VALID != VERIFIED RUNTIME` remains enforced.
+- Governed GitHub create/update/delete + readback proof remains valid only at its recorded bounded scope; uncertain mutation is never blindly replayed.
 
-## Current boundaries
+## Explicit non-actions for 0.19.0 closure
 
-- `production_ready = false` while any required v2 criterion remains HOLD.
-- `CONTINUE != BLANKET AUTHORIZATION`.
-- `INTERPRETATION != AUTHORIZATION`.
-- `PLAN != EXECUTION`.
-- `READY != EXECUTION`.
-- `CI PASS != AUTHORIZATION`.
-- `DOCUMENTATION != AUTHORIZATION`.
-- `DISTRIBUTION RELEASE READY != PRODUCTION READY`.
-- `DISTRIBUTION RELEASE READY != PUBLICATION AUTHORIZATION`.
-- `PROVIDER CREDENTIAL != DEVOS AUTHORIZATION`.
-- `DECLARED RUNTIME != VERIFIED RUNTIME CAPABILITY`.
-- `EVIDENCE_PACKET_VALID != VERIFIED RUNTIME`.
-- Historical exact-head evidence remains pinned rather than silently rewritten.
-- Uncertain provider mutation is never blindly replayed.
-- Parallel AI work must revalidate against fresh `main` before integration.
+No public Git tag, GitHub Release, package publication, production deployment, credential/secret change, database mutation, permission change, destructive action, production-scoped high-impact operation, or vendor-runtime promotion was performed to close this objective.
 
 ## Recovery precedence
 
@@ -169,6 +126,9 @@ These do not imply unrestricted production delivery authority.
 
 - `AGENTS.md`
 - `.ai/manifest.yaml`
+- `.ai/CURRENT-STATE.md`
+- `.ai/TASKS.md`
+- `.ai/RECONCILIATION-LEDGER.jsonl`
 - `docs/DEVOS-MASTER-ENGINEERING-MAP.md`
 - `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md`
 - `docs/PRODUCTION-READINESS-EVIDENCE.md`
@@ -179,4 +139,4 @@ These do not imply unrestricted production delivery authority.
 
 ## Next action
 
-Verify the exact active feature head. Fix all CI failures without weakening safety semantics. Merge only through an exact expected-head guard after all applicable CI is green. Then verify exact merged-main CI/artifact evidence and perform final durable reconciliation.
+No implementation objective is automatically active after this reconciliation. Any attempt to move Production Readiness v2 from HOLD to READY must start as a separately scoped target-specific evidence objective and preserve the independent authorization/publication/deployment boundaries.
