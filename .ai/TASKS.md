@@ -18,25 +18,31 @@ This file tracks **work state**, not normative law. Current source/Git/PR/CI/rel
 - provider credentials/capability never manufacture DevOS authority.
 - candidate evidence never self-promotes readiness or runtime status.
 
-## Active bounded work — DevOS 0.20.0 Production Target Evidence Intake v1
+## Active bounded work
 
-- [x] Recover fresh `main` at `69b06853d5f360659ce42d5cf2c5ec7c8dccc04d`.
-- [x] Confirm 0 open PRs and 0 open issues before selecting the objective.
-- [x] Identify the missing common intake boundary for the five external Production Readiness v2 blockers.
-- [x] Add exact target/source/timestamp/observer/evidence binding.
-- [x] Require exactly the five external blocker criteria.
-- [x] Model `PASS | FAIL | UNOBSERVED` with fail-closed evidence rules.
-- [x] Make all-PASS output `CANDIDATE_COMPLETE` while keeping `production_ready=false` and `readiness_promotion_allowed=false`.
-- [x] Add adversarial regression coverage for source/target mismatch, missing/duplicate/unknown criteria, evidence omissions, invalid digests/timestamps, and boundary tampering.
-- [x] Add Python 3.11/3.12 CI.
-- [x] Add `devos production-target-evidence` CLI dispatch and CLI regression coverage.
-- [x] Advance distribution identity coherently to `0.20.0`.
-- [x] Update release manifest, README, changelog, Production Readiness v2 source identity, core contract, current state, and task state.
-- [ ] Open feature PR and verify exact feature-head CI.
-- [ ] Fix all CI failures without weakening target/evidence/authorization semantics.
-- [ ] Merge through exact expected-head protection only after clean concurrency/readiness checks.
-- [ ] Verify fresh merged-main CI and exact-source 0.20.0 artifact/digest.
-- [ ] Reconcile final PR/CI/artifact evidence into durable state/history/ledger.
+- No bounded implementation objective is active after DevOS 0.20.0 durable reconciliation.
+- Select future work only after fresh recovery of `main`, open PRs/issues, CI, relevant source/tests, direct external evidence, concurrent AI work, and current user intent.
+- Do not create P18/P19 merely for bookkeeping.
+
+## Completed — DevOS 0.20.0 Production Target Evidence Intake v1
+
+- [x] Recover fresh pre-objective `main` at `69b06853d5f360659ce42d5cf2c5ec7c8dccc04d` and confirm 0 open PRs/issues.
+- [x] Add exact production target/source/timestamp/observer/evidence binding for the five external Production Readiness v2 blockers.
+- [x] Require the exact closed criterion set and `PASS | FAIL | UNOBSERVED` semantics.
+- [x] Keep all-PASS output at `CANDIDATE_COMPLETE` with `production_ready=false`, `readiness_promotion_allowed=false`, and mandatory semantic review.
+- [x] Add adversarial target/source/schema/digest/timestamp/boundary tamper coverage.
+- [x] Add Python 3.11/3.12 CI and `devos production-target-evidence` CLI dispatch.
+- [x] Advance distribution identity coherently to `0.20.0` and update release/readiness/docs state.
+- [x] Open PR #68 and use exact feature-head CI as source of truth.
+- [x] Repair the fresh-AI recovery regression by restoring retained P11 context markers without weakening target-evidence semantics.
+- [x] Verify final feature head `40957dfaf2965d16dc1159f1fca1aca183a4110c`: 15/15 applicable workflows success.
+- [x] Merge PR #68 through expected-head protection at `b9f4c6023aa4bc12111c713b6b262012ed3e51c4`.
+- [x] Verify post-merge exact-main push workflows: 12/12 success.
+- [x] Verify exact-source 0.20.0 artifact ID `10361816279`, digest `sha256:94f7b68abea833ff1a9814ca96e1f0ff017b5b75a5df6c1fde852e461d6f03cf`.
+- [x] Perform semantic review and append the durable reconciliation record with digest `c38edd8818a313ed6cd9fdeaa1367e8491ea212db89ae8b00b038c3de3fd5171`.
+- [ ] Merge this docs-only reconciliation through exact-head CI and perform final readback.
+
+Repository-side feature implementation is complete. This reconciliation merge is the final durable closure step; it does not activate another feature objective.
 
 ## Current Production Readiness v2 HOLD criteria
 
@@ -48,13 +54,12 @@ This file tracks **work state**, not normative law. Current source/Git/PR/CI/rel
 - `deployment_target`
 - `high_impact_governance`
 
-The 0.20.0 intake validates already-existing evidence only. It is not permission to execute production/high-impact operations in order to obtain that evidence.
+The 0.20.0 intake validates already-existing evidence only. It is not permission to execute production/high-impact operations in order to obtain evidence.
 
 ## Completed — DevOS 0.19.0 Production Readiness Evidence v2
 
 - PR #66 implementation merged at `8cd731b7b91ca9e67983b6deca8646b38e078e33` from exact feature head `f81184975ffbb02a3e58466459e12858fdd8294a`.
 - PR #67 durable reconciliation merged at `69b06853d5f360659ce42d5cf2c5ec7c8dccc04d`.
-- PR #67 exact-main push workflows: 11/11 success.
 - Final 0.19.0 exact-source artifact ID `10355742368`, digest `sha256:8de1daa8c592c5a3a2128493a1ba6c728ce975d45662253d783cf6aa8ff40bbf`.
 - Production Readiness v2 remains blocker-exact and authority-neutral.
 
@@ -64,8 +69,8 @@ The 0.20.0 intake validates already-existing evidence only. It is not permission
 - P11 remains repository-first recovery/revalidation/cross-AI continuity baseline.
 - P12 remains evidence provenance/freshness owner.
 - P15 remains language interpretation; P16 planning; P17 readiness/authorization.
-- AI State Resolver v2 envelope/contradiction hardening remains closed through its recorded PR sequence.
-- GitHub governed provider capability, readback reconciliation, multi-project isolation, Actionable HOLD, current-source evidence, onboarding, recovery, adaptive verification/self-healing, trust-first auditing, runtime-neutral handoff, runtime-profile registry, runtime-conformance evidence intake, distribution release machinery, production-readiness evidence v2, and evidence/durable-state reconciliation remain retained foundations.
+- AI State Resolver v2 envelope/contradiction hardening remains closed through its recorded sequence.
+- GitHub governed provider capability, readback reconciliation, multi-project isolation, Actionable HOLD, current-source evidence, onboarding, recovery, adaptive verification/self-healing, trust-first auditing, runtime-neutral handoff, runtime-profile registry, runtime-conformance evidence intake, distribution release machinery, Production Readiness Evidence v2, Production Target Evidence Intake v1, and evidence/durable-state reconciliation remain retained foundations.
 - `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable milestone ledger.
 - `docs/DEVOS-MASTER-ENGINEERING-MAP.md` remains the living architecture map.
 
@@ -78,7 +83,6 @@ The 0.20.0 intake validates already-existing evidence only. It is not permission
 - Historical evidence remains pinned to its source head.
 - Uncertain provider mutation is never blindly replayed.
 - Parallel AI branches must revalidate against fresh `main` before integration.
-- Do not create P18/P19 merely for bookkeeping.
 
 ## Task-map invariant
 
