@@ -1,7 +1,7 @@
 {
   "protocol": "DEVOS-PRODUCTION-READINESS-EVIDENCE-v2",
   "repository": "zzpsah/chatgpt-development-os",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "assessment_scope": "CURRENT_SOURCE_PRODUCTION_READINESS",
   "authority": "UNCHANGED",
   "authorization": "UNCHANGED",
@@ -18,15 +18,8 @@
       "required_for_production": true,
       "status": "PROVEN",
       "evidence_class": "current_source",
-      "evidence_refs": [
-        "VERSION",
-        "config/release-manifest.json",
-        "tools/devos-release-check.py",
-        ".github/workflows/verify-release-readiness.yml"
-      ],
-      "limitations": [
-        "Exact-source CI/artifact evidence must be re-established for every new merged source head."
-      ],
+      "evidence_refs": ["VERSION", "config/release-manifest.json", "tools/devos-release-check.py", ".github/workflows/verify-release-readiness.yml"],
+      "limitations": ["Exact-source CI/artifact evidence must be re-established for every new merged source head."],
       "blocker": null
     },
     {
@@ -34,14 +27,8 @@
       "required_for_production": true,
       "status": "PROVEN",
       "evidence_class": "current_source",
-      "evidence_refs": [
-        "tools/step-readiness-orchestrator.py",
-        "tools/verify-security-gate.py",
-        "core/remote-resource-permission-governance.md"
-      ],
-      "limitations": [
-        "Readiness and credentials never manufacture authorization."
-      ],
+      "evidence_refs": ["tools/step-readiness-orchestrator.py", "tools/verify-security-gate.py", "core/remote-resource-permission-governance.md"],
+      "limitations": ["Readiness and credentials never manufacture authorization."],
       "blocker": null
     },
     {
@@ -49,14 +36,8 @@
       "required_for_production": true,
       "status": "PROVEN",
       "evidence_class": "current_source",
-      "evidence_refs": [
-        "tools/verify-verification-engine.py",
-        "tools/test-production-readiness-v2.py",
-        ".github/workflows/verify-production-readiness-v2.yml"
-      ],
-      "limitations": [
-        "A green verification suite is evidence, not execution or deployment authority."
-      ],
+      "evidence_refs": ["tools/verify-verification-engine.py", "tools/test-production-readiness-v2.py", ".github/workflows/verify-production-readiness-v2.yml"],
+      "limitations": ["A green verification suite is evidence, not execution or deployment authority."],
       "blocker": null
     },
     {
@@ -64,14 +45,8 @@
       "required_for_production": true,
       "status": "PROVEN",
       "evidence_class": "current_live_read",
-      "evidence_refs": [
-        "tools/devos-github-actions-auth.py",
-        "tools/devos-github-proven-auth-read.py",
-        ".github/workflows/verify-github-provider-controller-adapter.yml"
-      ],
-      "limitations": [
-        "The live GitHub App read path proves bounded provider access only."
-      ],
+      "evidence_refs": ["tools/devos-github-actions-auth.py", "tools/devos-github-proven-auth-read.py", ".github/workflows/verify-github-provider-controller-adapter.yml"],
+      "limitations": ["The live GitHub App read path proves bounded provider access only."],
       "blocker": null
     },
     {
@@ -79,15 +54,8 @@
       "required_for_production": true,
       "status": "PROVEN",
       "evidence_class": "bounded_live_historical",
-      "evidence_refs": [
-        "docs/DEVOS-ENGINEERING-STAGE-HISTORY.md",
-        "tools/devos-github-provider-adapter.py",
-        "tools/devos-github-controller-bridge.py"
-      ],
-      "limitations": [
-        "The recorded live proof is scoped create/update/delete with readback; it is not arbitrary or production mutation authority.",
-        "Uncertain mutation must never be blindly replayed."
-      ],
+      "evidence_refs": ["docs/DEVOS-ENGINEERING-STAGE-HISTORY.md", "tools/devos-github-provider-adapter.py", "tools/devos-github-controller-bridge.py"],
+      "limitations": ["The recorded live proof is scoped create/update/delete with readback; it is not arbitrary or production mutation authority.", "Uncertain mutation must never be blindly replayed."],
       "blocker": null
     },
     {
@@ -95,13 +63,8 @@
       "required_for_production": true,
       "status": "HOLD",
       "evidence_class": "external_required",
-      "evidence_refs": [
-        "config/agent-runtime-profile-registry.json",
-        "core/agent-runtime-conformance-evidence.md"
-      ],
-      "limitations": [
-        "Candidate evidence packets cannot self-promote a runtime."
-      ],
+      "evidence_refs": ["config/agent-runtime-profile-registry.json", "core/agent-runtime-conformance-evidence.md", "core/production-target-evidence-intake.md"],
+      "limitations": ["Candidate evidence packets cannot self-promote a runtime."],
       "blocker": "No production runtime has a separately observed direct conformance proof durably promoted from declaration-only state."
     },
     {
@@ -109,14 +72,8 @@
       "required_for_production": true,
       "status": "HOLD",
       "evidence_class": "external_required",
-      "evidence_refs": [
-        "tools/failure-recovery-proof.py",
-        "tools/recovery-friction.py",
-        "tools/verify-recovery-precedence.py"
-      ],
-      "limitations": [
-        "Repository recovery proofs do not establish production backup/restore RPO/RTO guarantees."
-      ],
+      "evidence_refs": ["tools/failure-recovery-proof.py", "tools/recovery-friction.py", "tools/verify-recovery-precedence.py", "core/production-target-evidence-intake.md"],
+      "limitations": ["Repository recovery proofs do not establish production backup/restore RPO/RTO guarantees."],
       "blocker": "No production storage/backup target and measured restore RPO/RTO evidence are defined."
     },
     {
@@ -124,14 +81,8 @@
       "required_for_production": true,
       "status": "HOLD",
       "evidence_class": "external_required",
-      "evidence_refs": [
-        "tools/devos-health.py",
-        "tools/devos-doctor.py",
-        "tools/operational-intelligence.py"
-      ],
-      "limitations": [
-        "Repository health checks are not a production SLO, alerting, incident-response, or telemetry deployment."
-      ],
+      "evidence_refs": ["tools/devos-health.py", "tools/devos-doctor.py", "tools/operational-intelligence.py", "core/production-target-evidence-intake.md"],
+      "limitations": ["Repository health checks are not a production SLO, alerting, incident-response, or telemetry deployment."],
       "blocker": "No production service target, SLOs, alert routing, or incident-response evidence are defined."
     },
     {
@@ -139,13 +90,8 @@
       "required_for_production": true,
       "status": "HOLD",
       "evidence_class": "external_required",
-      "evidence_refs": [
-        "docs/RELEASE.md",
-        "config/release-manifest.json"
-      ],
-      "limitations": [
-        "Distribution release readiness deliberately stops before deployment."
-      ],
+      "evidence_refs": ["docs/RELEASE.md", "config/release-manifest.json", "core/production-target-evidence-intake.md"],
+      "limitations": ["Distribution release readiness deliberately stops before deployment."],
       "blocker": "No explicit production deployment target, environment contract, rollout, rollback, or production readback evidence exists."
     },
     {
@@ -153,21 +99,10 @@
       "required_for_production": true,
       "status": "HOLD",
       "evidence_class": "external_required",
-      "evidence_refs": [
-        "core/remote-resource-permission-governance.md",
-        "tools/verify-security-gate.py"
-      ],
-      "limitations": [
-        "High-impact capability must not be exercised merely to satisfy a readiness matrix."
-      ],
+      "evidence_refs": ["core/remote-resource-permission-governance.md", "tools/verify-security-gate.py", "core/production-target-evidence-intake.md"],
+      "limitations": ["High-impact capability must not be exercised merely to satisfy a readiness matrix."],
       "blocker": "Production-scoped high-impact operations remain intentionally unproven and require separate explicit authorization plus target-specific evidence."
     }
   ],
-  "production_blockers": [
-    "deployment_target",
-    "high_impact_governance",
-    "operational_observability",
-    "recovery_disaster",
-    "runtime_direct_conformance"
-  ]
+  "production_blockers": ["deployment_target", "high_impact_governance", "operational_observability", "recovery_disaster", "runtime_direct_conformance"]
 }
