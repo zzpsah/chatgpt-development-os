@@ -17,20 +17,27 @@ def main():
     assert ready["capability"] == "repository.create"
     assert ready["execution"] == "NONE"
     assert ready["authorization"] == "UNCHANGED"
+    lifecycle = ready["lifecycle_postcondition"]
+    assert lifecycle["managed_project_required"] is True
+    assert lifecycle["required_next_capability"] == "project.onboard"
+    assert lifecycle["lifecycle_protocol"] == "DEVOS-MANAGED-PROJECT-LIFECYCLE-v1"
+    assert lifecycle["fresh_repository_readback_required"] is True
+    assert lifecycle["development_continuation_allowed"] is False
 
     bad = mod.plan("", "test-project", False)
     assert bad["status"] == "BLOCKED"
+    assert bad["lifecycle_postcondition"]["managed_project_required"] is True
 
     script = Path(__file__).with_name("devos-create-repository.py")
-    # Plan mode must not require credentials or make network calls.
     result = __import__("subprocess").run(
         ["python", str(script), "--owner", "@me", "--name", "plan-only"],
         capture_output=True, text=True, check=False,
     )
     assert result.returncode == 0, result.stderr
     assert "Status: READY" in result.stdout
+    assert "Managed-project postcondition: REQUIRED" in result.stdout
+    assert "Development continuation: HOLD until lifecycle state MANAGED" in result.stdout
 
-    # Apply requires explicit authorization and the local safety switch.
     result = __import__("subprocess").run(
         ["python", str(script), "--owner", "@me", "--name", "no-auth", "--apply"],
         capture_output=True, text=True, check=False,
@@ -67,6 +74,7 @@ def main():
         assert "SUPERSECRET" not in repr(result)
 
     print("PASS: repository creation capability regression corpus")
+    print("PASS: repository creation cannot imply DevOS managed-project completion")
 
 if __name__ == "__main__":
     main()

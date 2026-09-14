@@ -66,11 +66,25 @@ Release-readiness CI does **not** automatically:
 
 Those remain separate, explicit operations with their own evidence and authorization requirements.
 
+## Managed-project lifecycle support
+
+DevOS `0.21.0` adds Managed Project Lifecycle v1.
+
+A repository selected for DevOS work is not considered managed merely because the provider or filesystem says it exists. The lifecycle must verify repository-local DevOS identity and minimum durable context. If the repository is unmanaged or partial, development continuation remains HOLD until onboarding is explicitly authorized, applied within scope, and fresh readback returns `MANAGED`.
+
+```text
+REPOSITORY EXISTS != DEVOS MANAGED
+REPOSITORY CREATED != ONBOARDED
+REPOSITORY DISCOVERED != SAFE TO CONTINUE
+```
+
+Release/distribution readiness of DevOS itself does not authorize onboarding arbitrary external repositories. Local/provider discovery and onboarding still depend on selected project scope, provider capability, and authorization.
+
 ## Runtime support statement
 
 The merged runtime profile registry is authoritative for DevOS conformance claims. `reference-local-agent` is only verified for its recorded static contract evidence. `codex`, `claude-code`, and `openhands` remain declaration-only until a separate evidence-backed conformance proof is merged. A familiar runtime name is not capability evidence.
 
-DevOS `0.18.0` adds a challenge-bound conformance evidence intake. It can validate that a candidate packet matches one exact runtime ID, adapter version, Git head, nonce, required capability set, provenance shape, and SHA-256 evidence digests. `EVIDENCE_PACKET_VALID` is not a verified runtime and cannot mutate or promote the registry; separate directly observed invocation evidence, semantic review, durable registry change, and verification remain mandatory.
+DevOS `0.18.0` introduced challenge-bound conformance evidence intake. It can validate that a candidate packet matches one exact runtime ID, adapter version, Git head, nonce, required capability set, provenance shape, and SHA-256 evidence digests. `EVIDENCE_PACKET_VALID` is not a verified runtime and cannot mutate or promote the registry; separate directly observed invocation evidence, semantic review, durable registry change, and verification remain mandatory.
 
 ## Security and integrity
 
@@ -78,9 +92,9 @@ Before publication, the exact candidate must have green applicable CI and no unr
 
 ## Version policy
 
-DevOS uses semantic versioning for distribution metadata. `0.18.0` is a backward-compatible capability increment over the `0.17.0` P17-complete release-ready line, adding runtime conformance evidence intake while preserving all authority, authorization, execution, mutation, publication, and production-readiness boundaries. Remaining `0.x` communicates that production-grade external execution/deployment guarantees are intentionally not claimed.
+DevOS uses semantic versioning for distribution metadata. `0.21.0` is a backward-compatible capability increment over the `0.20.0` line, adding managed-project lifecycle enforcement so repository creation/discovery cannot silently bypass onboarding. It preserves all authority, authorization, publication, deployment, and production-readiness boundaries. Remaining `0.x` communicates that production-grade external execution/deployment guarantees are intentionally not claimed.
 
-A new capability that changes the exact source distribution must not silently reuse an already release-ready version identifier; the canonical `VERSION`, release manifest, README, changelog, and exact-source CI artifact must move together.
+A new capability that changes the exact source distribution must not silently reuse an already release-ready version identifier; the canonical `VERSION`, release manifest, README, changelog, current production-readiness assessment version, and exact-source CI artifact must move together.
 
 ## Release completion evidence
 

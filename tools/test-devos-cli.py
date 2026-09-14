@@ -43,6 +43,28 @@ def main() -> None:
     assert payload["execution"] == "NONE"
     assert payload["mutation"] == "NONE"
 
+    with tempfile.TemporaryDirectory() as temp_dir:
+        unmanaged = Path(temp_dir) / "unmanaged"
+        unmanaged.mkdir()
+        lifecycle = run("project-lifecycle", "--path", str(unmanaged), "--require-managed", "--json")
+        assert lifecycle.returncode == 2, lifecycle.stdout + lifecycle.stderr
+        lifecycle_payload = json.loads(lifecycle.stdout)
+        assert lifecycle_payload["status"] == "ONBOARDING_REQUIRED", lifecycle_payload
+        assert lifecycle_payload["development_continuation_allowed"] is False
+
+        managed = run(
+            "project-lifecycle",
+            "--path", str(unmanaged),
+            "--apply",
+            "--authorization", "EXPLICIT",
+            "--require-managed",
+            "--json",
+        )
+        assert managed.returncode == 0, managed.stdout + managed.stderr
+        managed_payload = json.loads(managed.stdout)
+        assert managed_payload["status"] == "MANAGED", managed_payload
+        assert managed_payload["development_continuation_allowed"] is True
+
     readiness = run("production-readiness", "--json")
     assert readiness.returncode == 0, readiness.stdout + readiness.stderr
     readiness_payload = json.loads(readiness.stdout)
@@ -109,7 +131,7 @@ def main() -> None:
     assert "subprocess.run([sys.executable" in source
 
     print(
-        f"PASS: DevOS CLI version={canonical_version}, release-check, production-readiness, and production-target-evidence dispatch are deterministic and shell-free"
+        f"PASS: DevOS CLI version={canonical_version}, project-lifecycle, release-check, production-readiness, and production-target-evidence dispatch are deterministic and shell-free"
     )
 
 
