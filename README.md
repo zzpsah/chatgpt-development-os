@@ -1,69 +1,83 @@
 # ChatGPT Development OS
 
-## AI handoff and independent verification
+A repository-first, human-language development operating system for safely continuing software work across AI models, accounts, coding tools, Git providers, and machines.
 
-For a new AI or a full project review, start at [docs/handoff/README.md](docs/handoff/README.md). It links the master history/status handoff, pinned evidence, limitations and verification checklist. Recover current `.ai` state and Git first; the handoff is a dated snapshot, not execution authority.
-
-A portable, human-language development operating system for working across projects, AI accounts, AI coding tools, and machines.
-
-## Core idea
-
-The Development OS defines **how AI develops software**. Each project owns its own durable `.ai` memory. The project must not depend on ChatGPT Memory, a particular AI account, or a particular GitHub account.
-
-**Understand → Inspect → Plan → Implement → Verify → Review → Security → Document → Persist**
-
-Not every request requires every stage; the workflow scales to the task.
-
-## P12 Operational Intelligence
-
-P12 adds a deterministic, evidence-backed **decision-support layer** to the Development Task Controller. It reads the current task inventory and exposes dependency readiness, advisory prioritization, checkpoint signals, failure/evidence analysis, and a bounded advisory next-action signal.
+DevOS defines **how AI develops software** while keeping source, durable project state, authorization, verification, and execution evidence separate.
 
 ```text
-Repository + durable .ai state
-          ↓
-      Task inventory
-          ↓
-   Dependency graph
-          ↓
- Readiness / blockers
-          ↓
- Priority + checkpoint signals
-          ↓
- Failure + evidence analysis
-          ↓
- Evidence-backed advisory next action
+human request
+  → P15 interpretation
+  → state resolution
+  → P16 bounded plan
+  → P17 readiness
+  → scoped approval / HOLD
+  → bounded runtime
+  → verification + readback
+  → evidence reconciliation
+  → durable repository state
 ```
 
-The P12 implementation provides:
+Core law:
 
-- explicit dependency graph validation, including missing references and cycles;
-- `READY`, `WAITING`, `BLOCKED`, `UNAUTHORIZED`, and `COMPLETE` readiness states;
-- deterministic priority scoring using explicit priority plus bounded dependency, status, age, deadline, and effort signals;
-- transparent scoring reasons rather than silent reprioritization;
-- checkpoint signals for repository changes, work-unit outcomes, blocked transitions, authorization changes, verification/security results, and session/handoff boundaries;
-- deterministic failure classification with confidence and raw-evidence preservation;
-- evidence provenance/freshness normalization with a strict execution-evidence boundary;
-- deterministic advisory next-action generation with explicit `ADVISORY_ONLY` semantics and safe `no_action` behavior;
-- controller integration that treats OI output as a candidate, never as authorization or execution authority.
+> **What is not written was never done.**
 
-Operational Intelligence is **advisory**. It cannot grant authorization, bypass Security Gate, fabricate execution evidence, mutate semantic state, or turn a recommendation into an action. The existing Controller, Runtime, Verification Engine, Security Gate, and P11 recovery contracts remain authoritative.
+Material work follows:
 
-See [`core/operational-intelligence.md`](core/operational-intelligence.md), [`tools/operational-intelligence.py`](tools/operational-intelligence.py), and [`core/development-task-controller.md`](core/development-task-controller.md).
+`OBSERVE → ACT / CHANGE / DECIDE → VERIFY → DOCUMENT → PERSIST IN GIT`
 
-## P13 Autonomous Development Orchestration
+Completion requires:
 
-P13 composes one human goal, the recovered task inventory, P12 advisory analysis, independent controller gates, and the runtime-handoff boundary into one safe control decision:
+`IMPLEMENTED + VERIFIED + DOCUMENTED + DURABLE STATE`
 
-```text
-Goal -> task graph -> independent gates -> one next work-unit candidate
-                                      -> CONTINUE | STOP | ESCALATE
+## Quick start
+
+Requirements for the distribution release line:
+
+- Git
+- Python 3.11+
+
+From a checked-out repository:
+
+```bash
+python tools/devos.py version
+python tools/devos.py doctor --root .
+python tools/devos.py release-check
 ```
 
-`tools/autonomous-orchestrator.py` never executes a candidate. `CONTINUE` only means a bounded work unit is ready for the existing runtime; `STOP` preserves no-action or budget exhaustion; `ESCALATE` preserves the blocking controller evidence. See [`core/autonomous-development-orchestration.md`](core/autonomous-development-orchestration.md).
+For a fresh AI or a full project recovery, start with:
 
-## Portable project memory
+1. `AGENTS.md`
+2. `.ai/manifest.yaml`
+3. `.ai/CURRENT-STATE.md`
+4. `.ai/TASKS.md`
+5. current source tree + Git/PR/CI evidence
 
-Every managed software project should contain:
+A normal fresh-AI instruction is:
+
+> Open this project, read `AGENTS.md` and `.ai/manifest.yaml`, recover the current project state, revalidate it against current source/Git, and tell me the next safe action.
+
+AI account memory or old chat history is supplementary only; it is never authoritative project state.
+
+## Release status
+
+Current distribution version: **0.17.0**.
+
+```bash
+python tools/devos.py version
+python tools/devos.py release-check
+```
+
+`0.17.0` represents the P17-complete architecture line plus subsequently merged resolver, provider, multilingual, local-delivery, evidence-reconciliation, runtime-adapter, and runtime-profile hardening.
+
+**Distribution release readiness is not production readiness.** `production_ready = false` remains deliberate. A green release gate does not authorize deployment, production mutation, credentials, database changes, permission changes, destructive actions, or unscoped external execution.
+
+See [`docs/RELEASE.md`](docs/RELEASE.md) for the exact-source ZIP/checksum process and release boundaries, and [`.github/SECURITY.md`](.github/SECURITY.md) for vulnerability reporting.
+
+## What DevOS provides
+
+### Repository-first durable project memory
+
+Each managed project can carry portable `.ai` state:
 
 ```text
 project/
@@ -80,252 +94,171 @@ project/
     └── SESSIONS/
 ```
 
-This makes project context portable between ChatGPT, Codex, Claude, Gemini, Cursor, other AI tools, GitHub accounts, Git providers, and local machines.
+Recovery precedence is:
 
-## P11 Federation & Self-Healing Context
+1. current source tree + Git/PR/CI metadata;
+2. explicit requirements and durable decisions;
+3. durable `.ai` state;
+4. generated indexes/evidence navigation;
+5. AI memory/chat history only as supplementary context.
 
-P11 makes project continuity resilient to AI-account changes, lost chats, stale generated files, and cross-AI handoffs.
+### Human-language interpretation and governed planning
 
-```text
-AI / Account / Chat
-        ↓
-Bootstrap + Project Identity
-        ↓
-Repository-First Recovery
-        ↓
-Freshness / Integrity Check
-        ↓
-Safe Reconciliation / Bounded Self-Healing
-        ↓
-Current State
-        ↓
-Provenance-Aware AI Handoff
-```
+- **P15 Human Language Interpretation** turns English/Hindi/Hinglish and bounded informal requests into structured intent without turning language into authorization.
+- **AI State Resolver** resolves evidence/provenance and fails closed on unknown or contradictory claims.
+- **P16 Semantic Goal-to-Plan Compiler** creates bounded dependency-aware plan candidates.
+- **P17 Step Readiness & Authorization Orchestrator** evaluates exact-step readiness, capability, authorization, security, dependencies, verification expectations, and evidence gates.
 
-Recovery precedence is explicit:
-
-1. **Source tree + Git** — exact implementation state.
-2. **Requirements + decisions** — intentional project state.
-3. **Durable `.ai` state** — project context and handoff.
-4. **Generated indexes** — navigation/evidence only.
-5. **AI memory/chat history** — supplementary, never authoritative.
-
-P11 self-healing can recreate only deterministic derived context. It must never silently overwrite semantic requirements, decisions, task state, or architecture. Ambiguous or semantic conflicts escalate for review.
-
-P11 also defines composable operating codes such as `DEVOS::GOD::DESI`: execution stance and communication style are separate layers, and neither layer changes authorization, security, or verification requirements.
-
-The P11 recovery/revalidation and self-healing rules are integrated into the Development Task Controller lifecycle, so task resumption revalidates repository state rather than blindly trusting an old handoff or replaying actions.
-
-See [`docs/P11-FEDERATION-SELF-HEALING.md`](docs/P11-FEDERATION-SELF-HEALING.md), [`docs/DEVOS-STANCE-CODES.md`](docs/DEVOS-STANCE-CODES.md), and [`core/development-task-controller.md`](core/development-task-controller.md).
-
-## Automatic context synchronization
-
-The Development OS supports automatic GitHub-side `.ai/` synchronization:
-
-- `.github/workflows/context-sync.yml` — reusable workflow that records repository changes in `.ai/CHANGELOG.md` and updates `.ai/CURRENT-STATE.md` for meaningful application changes.
-- `templates/project/.github/workflows/devos-context-sync.yml` — ready-to-copy caller workflow for managed projects.
-- `templates/project/.ai/CHANGELOG.md` — portable change-record template.
-- `tools/init-project.ps1` — idempotent initializer for an existing local project.
-- `tools/onboard-project.ps1` — safe existing-repository onboarding wrapper with dry-run support.
-- `tools/check-project.ps1` — context health check.
-- `tools/watch-projects.ps1` — Windows recursive watcher that detects project activity and initializes missing `.ai/` context.
-- `tools/install-windows.ps1` — installs the watcher at Windows logon for configured project roots.
-
-The automatic GitHub sync records verified repository facts. It does **not** invent architecture or decisions from a commit. AI agents remain responsible for updating semantic context such as architecture, decisions, requirements, and task state after meaningful work.
-
-## Auto-Onboarding
-
-Existing repositories can be brought under Development OS management without manually creating every context file.
-
-```powershell
-.\tools\onboard-project.ps1 -Path 'D:\Projects\MyApp'
-```
-
-Use `-DryRun` to preview the operation. Onboarding preserves existing `.ai` files and existing project files, creates only missing context/integration infrastructure, and does not modify application source. After onboarding, commit and push the generated files so GitHub-side synchronization can begin.
-
-Full design and automation boundaries: [`docs/AUTO-ONBOARDING.md`](docs/AUTO-ONBOARDING.md).
-
-## Human-language first
-
-You should not need to know which agent, workflow, or command is required.
-
-- “Something is wrong with the registration page.” → investigate/debug.
-- “Make the page more professional.” → UI analysis/improvement.
-- “Can you check whether this is secure?” → security review.
-- “Continue where we stopped.” → recover project state and resume.
-- “Go ahead and do it.” → execute the agreed plan.
-
-## Agent Orchestration
-
-For larger work, DevOS can coordinate internal engineering responsibilities rather than treating the whole job as one undifferentiated task.
+Invariants:
 
 ```text
-User objective
-    ↓
-State + scope resolution
-    ↓
-Work decomposition
-    ↓
-Role selection
-    ↓
-Ordered / safe parallel work units
-    ↓
-Evidence handoff
-    ↓
-Integration + review
-    ↓
-Verification + Security Gate
-    ↓
-Durable project state
+INTERPRETATION != AUTHORIZATION
+PLAN != EXECUTION
+READY != EXECUTION
+CONTINUE != BLANKET AUTHORIZATION
+CI PASS != AUTHORIZATION
+DOCUMENTATION != AUTHORIZATION
+PROVIDER CREDENTIAL != DEVOS AUTHORIZATION
+PROVIDER RESPONSE != COMPLETION PROOF
+RECOVERY != AUTOMATIC MUTATION REPLAY
 ```
 
-Orchestration selects only the roles needed for the work, respects dependencies, prevents conflicting shared-state operations from running concurrently, preserves failed/blocked units, and never creates authorization. It does not claim unrestricted autonomy or automatic production deployment.
+### Autonomous development, runtime, and verification
 
-See [`core/agent-orchestration.md`](core/agent-orchestration.md) and [`workflows/orchestration.md`](workflows/orchestration.md).
+DevOS includes bounded autonomy rather than unrestricted execution:
 
-## Autonomous Development Loop
+- P12 Operational Intelligence — dependency/readiness analysis and advisory prioritization;
+- P13 Autonomous Development Orchestration — one evidence-backed next work-unit candidate;
+- Development Task Controller — independent task/control gates;
+- Autonomous Development Loop — bounded iterate/checkpoint/continue-or-escalate behavior;
+- Executable Development Runtime — execution boundary for already-authorized work;
+- Verification / Test Engine — evidence-based deterministic/integration/E2E/security verification;
+- Security Gate — independent risk/security gating;
+- failure recovery and no-blind-replay rules;
+- durable reconciliation after verified work.
 
-P4 adds a controlled execution loop on top of the existing DevOS contracts:
+### Safe software-delivery proof line
 
-```text
-Objective
-  ↓
-State resolution
-  ↓
-Plan / orchestrate
-  ↓
-Capability + authorization check
-  ↓
-Bounded iteration
-  ↓
-Checkpoint + verification
-  ↓
-Review / Security Gate
-  ↓
-Persist evidence + state
-  ↓
-CONTINUE / STOP / ESCALATE
-```
+The current repository contains bounded proof slices for:
 
-Each iteration has an execution bound, concrete scope, capability state, authorization state, evidence, verification result, and checkpoint. A resumed loop re-checks current repository state rather than blindly replaying actions. Missing capabilities may be explicitly delegated, but tool execution and external results are never simulated. High-risk, destructive, irreversible, production-impacting, security-sensitive, and data-affecting actions still require the applicable approval.
+- local disposable Git-repository delivery;
+- managed-repository read-only preflight;
+- isolated managed-repository safe file update proof;
+- exact diff/test/readback evidence;
+- runtime-neutral P17 + scoped-approval handoff;
+- evidence → durable-state reconciliation.
 
-P4 is **bounded autonomy**, not unrestricted autonomous deployment or permission bypass.
+These proofs do **not** imply general production deployment authority.
 
-See [`core/autonomous-development-loop.md`](core/autonomous-development-loop.md) and [`workflows/autonomous-loop.md`](workflows/autonomous-loop.md).
+### Runtime portability
 
-## Executable Development Runtime
+`tools/agent-runtime-handoff.py` defines a vendor-neutral handoff/result-validation contract.
 
-P5 adds the controlled execution boundary beneath the autonomous loop. The runtime receives an already-authorized work unit, checks capabilities and approval requirements, creates pre/post checkpoints, performs only the bounded action through a supported host/tool adapter, captures actual execution evidence, invokes applicable verification, and returns a factual outcome.
+`config/agent-runtime-profile-registry.json` separates runtime identity from verified capability. A runtime must have evidence-backed required capabilities before it can be exported as a handoff-compatible profile. Vendor names such as Codex, Claude Code, or OpenHands are not treated as verified merely because they are recognized.
 
-```text
-Authorized work unit
-      ↓
-Capability check
-      ↓
-Authorization / Security Gate
-      ↓
-Pre-action checkpoint
-      ↓
-Execute bounded action
-      ↓
-Capture actual evidence
-      ↓
-Post-action checkpoint
-      ↓
-Verification
-      ↓
-Persist + return outcome
-```
+### Provider governance
 
-The runtime separates **AI decision from execution evidence**. A plan is not proof that an action happened. Missing capabilities are reported or explicitly delegated; they are never simulated. Resume compares current repository state with the checkpoint and never blindly replays an uncertain action.
-
-See [`core/execution-runtime.md`](core/execution-runtime.md) and [`workflows/execution-runtime.md`](workflows/execution-runtime.md).
-
-## Verification / Test Engine
-
-The Verification / Test Engine makes verification an evidence-based stage rather than an assumption. It:
-
-- selects applicable checks from the changed scope and project tooling;
-- supports static, unit, integration, E2E, runtime, deployment, and security verification levels;
-- executes supported checks or delegates them to CI/project tooling;
-- records actual evidence and limitations;
-- reports `VERIFIED`, `PARTIAL`, `UNVERIFIED`, or `FAILED` honestly;
-- prevents claims such as “tests passed” when tests were not actually run.
-
-See [`core/verification-engine.md`](core/verification-engine.md) and [`workflows/verification.md`](workflows/verification.md).
+DevOS includes bounded GitHub provider/controller integration, identity/token controls, scope-aware capability discovery, current-state anchors, readback verification, and uncertain-mutation reconciliation. Proven provider capability never becomes blanket authorization.
 
 ## Multi-AI portability
 
-The project repository is the durable continuity layer. A new AI should not need the previous chat history or account memory to recover the project.
+The acceptance invariant is:
 
-The portable adapter contract defines the minimum capabilities for a compatible AI: bootstrap project context, inspect source/Git, route human intent, resolve evidence and unfinished work, execute authorized workflows, verify with evidence, and persist meaningful state.
+`AI A + Account A → repository → AI B + Account B → correct recovery → safe continuation`
 
-Host-specific capabilities belong in `adapters/`. The adapter is an integration boundary, not a second project-memory system.
+The repository—not a model/vendor/account/chat—is the continuity layer.
 
-Any host can publish a vendor-neutral `DEVOS-HOST-PROFILE-v1` capability declaration and validate it with `tools/verify-host-profile.py`. The profile reports only `AVAILABLE`, `DELEGATABLE`, or `MISSING` capabilities; it never grants authority or claims execution.
+See:
 
-See [`adapters/adapter-contract.md`](adapters/adapter-contract.md), [`docs/MULTI-AI-PORTABILITY.md`](docs/MULTI-AI-PORTABILITY.md), and [`docs/HOST-PROFILES.md`](docs/HOST-PROFILES.md).
+- [`docs/MULTI-AI-PORTABILITY.md`](docs/MULTI-AI-PORTABILITY.md)
+- [`docs/NEW-AI-ONBOARDING.md`](docs/NEW-AI-ONBOARDING.md)
+- [`docs/P11-FEDERATION-SELF-HEALING.md`](docs/P11-FEDERATION-SELF-HEALING.md)
+- [`docs/CROSS-AI-HANDSHAKE.md`](docs/CROSS-AI-HANDSHAKE.md)
 
-## Moving to a new AI
+## Auto-onboarding and context synchronization
 
-A new AI does **not** need the old chat history. The project carries its own durable context.
+Existing repositories can be onboarded without manually creating every context file. The project also includes GitHub-side context synchronization and Windows project-watcher helpers.
 
-### Normal command
+Examples:
 
-Open the project and say:
+```powershell
+.\tools\onboard-project.ps1 -Path 'D:\Projects\MyApp' -DryRun
+.\tools\onboard-project.ps1 -Path 'D:\Projects\MyApp'
+```
 
-> **Open this project, read `AGENTS.md` and `.ai/manifest.yaml`, recover the current project state, and tell me what we should do next.**
+Portable Python onboarding/recovery tools are also available under `tools/`.
 
-Then continue naturally: `Continue`, `Fix this`, `Make it professional`, `Check it`, `Go ahead`, etc.
+See [`docs/AUTO-ONBOARDING.md`](docs/AUTO-ONBOARDING.md).
 
-Full onboarding guidance: [`docs/NEW-AI-ONBOARDING.md`](docs/NEW-AI-ONBOARDING.md).
+## Health and doctor
 
-## Flow and architecture
+Machine-derived foundation health is implemented in `tools/devos-health.py`. Human-readable read-only presentation is provided by:
 
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the Development OS flow, layered architecture, portable-context model, new-AI onboarding sequence, agent orchestration, autonomous development loop, executable runtime, and automation boundaries.
+```bash
+python tools/devos.py doctor --root .
+```
 
-## Architecture
+Doctor/health output never upgrades evidence, creates authorization, or converts historical evidence into current proof. WARN and UNKNOWN are not PASS.
 
-- **Development OS** — reusable methodology, workflows, roles, rules, and adapters.
-- **Project `.ai`** — authoritative portable project context.
-- **Source code** — actual implementation.
-- **Git history** — durable change history when version control is used.
-- **AI account memory** — optional personal/contextual assistance, never the sole project memory.
-- **GitHub/Supabase/local workers** — infrastructure used when appropriate.
+## Evidence and durable reconciliation
 
-## Safety
+DevOS distinguishes historical evidence from current-source evidence. Old evidence is pinned to its original source head rather than silently rewritten when source changes.
 
-- Never commit secrets, tokens, passwords, private keys, or session cookies.
-- Preserve existing behavior unless a change is intentional.
-- Treat production/database/destructive changes as high-risk.
-- Verify assumptions before changing important systems.
-- Prefer small, reviewable changes.
-- Test and report verification evidence before declaring work complete.
-- Keep project-specific knowledge separate from global rules.
-- Do not watch entire drives by default; configure dedicated project roots.
-- Autonomous looping must remain bounded and must stop or escalate when authority, capability, evidence, or security conditions require it.
-- The executable runtime must not claim execution or external results without actual host evidence.
+After feature completion, the Evidence → Durable State Reconciliation path can normalize machine-verifiable facts while requiring semantic review for architecture/roadmap/current-state meaning.
+
+Important references:
+
+- `config/readiness-evidence.json`
+- `.ai/RECONCILIATION-LEDGER.jsonl`
+- [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md)
+- [`core/evidence-durable-state-reconciliation.md`](core/evidence-durable-state-reconciliation.md)
+
+## Architecture and history
+
+- Living architecture: [`docs/DEVOS-MASTER-ENGINEERING-MAP.md`](docs/DEVOS-MASTER-ENGINEERING-MAP.md)
+- Completed numbered/unnumbered milestones: [`docs/DEVOS-ENGINEERING-STAGE-HISTORY.md`](docs/DEVOS-ENGINEERING-STAGE-HISTORY.md)
+- General architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+- AI handoff / independent verification: [`docs/handoff/README.md`](docs/handoff/README.md)
+
+P9 through P17 are completed architecture stages at their recorded evidence levels. Later hardening/proof work is deliberately unnumbered; new P18/P19 labels are not created merely for bookkeeping.
+
+## Security
+
+- Never commit secrets, tokens, passwords, private keys, cookies, or private user/school documents.
+- Preserve existing behavior unless a change is intentional and verified.
+- Treat production, database, permission, destructive, and security-sensitive changes as high impact.
+- Keep approvals scoped to the exact project/workflow/capability/target/state they cover.
+- Prefer exact expected-state anchors and fresh readback after mutation.
+- Never blindly replay an uncertain mutation.
+- Never claim tests, deployment, provider results, or completion without actual evidence.
+- Keep `production_ready = false` unless a separately bounded evidence-backed objective explicitly changes it.
+
+See [`.github/SECURITY.md`](.github/SECURITY.md).
 
 ## Repository structure
 
 ```text
 chatgpt-development-os/
 ├── README.md
+├── VERSION
 ├── AGENTS.md
-├── core/
+├── .ai/
+├── .github/workflows/
+├── adapters/
 ├── agents/
-├── workflows/
-├── rules/
+├── automation/
+├── config/
+├── core/
+├── docs/
+├── memory/
 ├── project-context-spec/
+├── projects/
+├── rules/
 ├── templates/
 ├── tools/
-├── projects/
-├── memory/
-├── adapters/
-├── docs/
-└── .github/workflows/
+└── workflows/
 ```
 
 ## Version
 
-0.12 — P12 Operational Intelligence: deterministic dependency graph/readiness, advisory prioritization, checkpoint intelligence, failure/evidence analysis, advisory next-action generation, and Development Task Controller integration.
+**0.17.0** — P17-complete distribution line with repository-first recovery, bounded multilingual interpretation, semantic planning/readiness, contradiction hardening, governed provider controls, bounded delivery proofs, runtime-neutral handoff/profile conformance, evidence reconciliation, and release-readiness gates.

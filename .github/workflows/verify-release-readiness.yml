@@ -1,0 +1,81 @@
+name: Verify DevOS Distribution Release Readiness
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release-gate:
+    name: Release Gate (${{ matrix.os }} / Python ${{ matrix.python }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Verify canonical version through CLI
+        run: python tools/devos.py version
+
+      - name: Run fail-closed release gate
+        run: python tools/devos-release-check.py --json
+
+      - name: Run release-gate adversarial regression corpus
+        run: python tools/test-devos-release-check.py
+
+      - name: Run CLI regression checks
+        run: python tools/test-devos-cli.py
+
+  source-artifact:
+    name: Build exact-source release artifact
+    needs: release-gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact source before packaging
+        run: python tools/devos-release-check.py --json
+
+      - name: Build source ZIP and SHA-256
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(tr -d '\r\n' < VERSION)"
+          mkdir -p dist
+          artifact="dist/chatgpt-development-os-${version}.zip"
+          git archive --format=zip --prefix="chatgpt-development-os-${version}/" HEAD -o "$artifact"
+          sha256sum "$artifact" > "${artifact}.sha256"
+          unzip -t "$artifact"
+          test -s "${artifact}.sha256"
+          cat "${artifact}.sha256"
+
+      - name: Upload exact-source distribution artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: devos-source-${{ github.sha }}
+          path: |
+            dist/chatgpt-development-os-*.zip
+            dist/chatgpt-development-os-*.zip.sha256
+          if-no-files-found: error
+          retention-days: 14
