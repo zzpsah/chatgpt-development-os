@@ -37,10 +37,11 @@ observed = resolver.resolve({"claims": [{
 }]})
 plan = p16.compile_plan("FEATURE_CHANGE", "update docs", "DEVOS", [], [], observed)
 assert plan["decision"] == "PLANNED", plan
+assert plan["state_resolution"] == observed, plan
 assert plan["state_resolution"]["status"] == "RESOLVED", plan
 assert plan["state_resolution"]["weakest_state_confidence"] == "likely", plan
 assert plan["state_resolution"]["authority"] == "UNCHANGED", plan
-assert plan["state_resolution"]["claim_count"] == 1, plan
+assert len(plan["state_resolution"]["claims"]) == 1, plan
 
 ready = readiness(plan)
 assert ready["status"] == "READY", ready
@@ -93,6 +94,6 @@ tampered_authority_ready = readiness(tampered_authority_plan)
 assert tampered_authority_ready["status"] == "BLOCKED", tampered_authority_ready
 assert "PLAN_STATE_RESOLUTION_AUTHORITY_CHANGED" in tampered_authority_ready["reasons"], tampered_authority_ready
 
-print("PASS: resolver claim confidence propagates P16 -> P17 without creating authority")
+print("PASS: resolver claim confidence and full provenance propagate P16 -> P17 without creating authority")
 print("PASS: P16 rejects forged resolver status/authority/execution envelopes")
-print("PASS: P17 rejects tampered planned resolver summaries with hidden uncertainty")
+print("PASS: P17 rejects tampered planned resolver provenance with hidden uncertainty")
