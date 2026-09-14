@@ -4,6 +4,7 @@ Date: 2026-09-14
 Repository: `zzpsah/chatgpt-development-os`
 Base `main`: `67663bfedd9d15fed9d2acc2fd80063b0688d5d1`
 Branch: `fix/ai-state-resolver-envelope-integrity`
+PR: #44
 
 ## Trigger
 
@@ -21,12 +22,18 @@ Fresh inspection also found that durable-state boundary/path revalidation reason
 - `tools/semantic-goal-to-plan.py`
   - validates complete resolver safety/integrity invariants before planning;
   - rejects inconsistent confidence/status/unresolved metadata;
-  - preserves a compact normalized resolver summary for downstream validation.
+  - preserves the full validated resolver provenance exactly for downstream validation.
 - `tools/step-readiness-orchestrator.py`
-  - validates the compact resolver summary in a `PLANNED` envelope;
+  - independently validates the full P16-preserved resolver provenance in a `PLANNED` envelope;
   - fails closed on hidden unknown claims or changed resolver authority/execution state.
 - Resolver/P16/P17 regression tests extended with adversarial cases.
 - Added `docs/AI-STATE-RESOLVER-V2-INTEGRITY-HARDENING.md`.
+
+## CI-discovered compatibility repair
+
+The first PR head correctly triggered repository CI and exposed an existing P16 contract expectation: a valid resolver result must be retained unchanged in `plan.state_resolution`. The first implementation had normalized that result into a compact summary, which caused the P16 regression suite to fail.
+
+The repair preserves the full resolver result after validation and makes P17 validate that full provenance directly. This is both backward-compatible with the existing P16 contract and stronger for P17 because it can recompute the confidence/unresolved invariants from the preserved claims rather than trusting a reduced summary.
 
 ## Boundaries
 
@@ -34,4 +41,4 @@ No authority is created. No authorization is created. No execution/provider muta
 
 ## Verification state
 
-Implementation and deterministic regression coverage are committed on the candidate branch. Exact-head CI evidence must be checked after the pull request is opened. Merge requires explicit authorization.
+The initial PR head produced mixed CI with a P16 compatibility failure; that finding was repaired on the same branch. Fresh exact-head CI after the repair is required before completion or merge readiness can be claimed. Merge requires explicit authorization.
