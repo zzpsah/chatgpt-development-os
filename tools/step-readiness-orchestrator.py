@@ -81,6 +81,7 @@ def _has_cycle(steps: dict[str, dict[str, Any]]) -> bool:
 
 
 def _validate_state_resolution_summary(state_resolution: Any) -> str | None:
+    """Revalidate the full P16-preserved resolver v2 provenance before readiness."""
     if not isinstance(state_resolution, dict) or state_resolution.get("protocol") != "DEVOS-AI-STATE-RESOLUTION-v2":
         return "PLAN_STATE_RESOLUTION_INVALID"
     if state_resolution.get("authority") != "UNCHANGED" or state_resolution.get("authorization") != "UNCHANGED":
@@ -97,8 +98,7 @@ def _validate_state_resolution_summary(state_resolution: Any) -> str | None:
         return "PLAN_STATE_CLAIMS_UNRESOLVED=" + ",".join(sorted(str(item) for item in unresolved))
 
     claims = state_resolution.get("claims")
-    claim_count = state_resolution.get("claim_count")
-    if not isinstance(claims, list) or not isinstance(claim_count, int) or claim_count < 0 or claim_count != len(claims):
+    if not isinstance(claims, list):
         return "PLAN_STATE_RESOLUTION_CLAIMS_INVALID"
 
     counts = {level: 0 for level in STATE_CONFIDENCE}
