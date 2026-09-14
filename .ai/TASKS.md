@@ -11,19 +11,30 @@ This file tracks **work state**, not normative law. Durable principles and autho
 
 ## Active bounded work
 
-### AI State Resolver v2
-- Unnumbered resolver-hardening objective on current `main`.
-- Upgrade the existing P0 documentation contract into a deterministic, read-only claim resolver.
-- Preserve P12 ownership of execution-evidence normalization and freshness.
-- `observed` requires current P12 execution evidence with citable provenance; durable-state grounding is capped at `likely`.
-- Propagate unresolved claim identifiers through P16 as `CLARIFY`; P17 rejects a tampered `PLANNED` envelope that still carries unresolved claims.
-- Resolver confidence never grants authorization, execution, mutation, or completion.
-- No P18/P19 phase is created for this hardening work.
+- No numbered phase or resolver implementation objective is active at this reconciliation checkpoint.
+- AI State Resolver v2 envelope-integrity hardening is completed and merged through PR #44.
+- Any next resolver work must be promoted as a separate bounded objective from fresh `main` evidence.
 
 ### Next bounded integration/cleanup work
+
 - Treat GitHub Identity & Token Control Plane v1 as merged through PR #32, not as an open implementation objective.
+- Treat GitHub mutation readback reconciliation as merged through PR #42, not as active work.
+- Treat AI State Resolver v2 envelope-integrity hardening as merged through PR #44, not as active work.
 - PRs #33 and #34 are obsolete replacement PRs and have been closed.
 - Continue only after inspecting fresh `main`, open PRs, CI, and durable state.
+- Resolver cross-claim semantic contradiction remains out of current v2 scope unless explicitly promoted as a new bounded objective with a stable fact identity and deterministic contradiction policy.
+- Do not create P18/P19 merely for bookkeeping.
+
+## Completed — AI State Resolver v2 envelope-integrity hardening
+
+- PR #44 — `Harden AI State Resolver v2 envelope integrity` — merged at `a4a3413bb27802ef38a698550807e8fb0102f839`.
+- Exact final PR head: `71d93755e171da5e83e62b00baa4680a0e929f5e`.
+- Resolver now returns `NEEDS_EVIDENCE` whenever any claim resolves to `unknown`, including malformed unknown claims without usable IDs.
+- Durable-state revalidation reasons remain explicit for already-`likely` claims.
+- P16 validates resolver protocol/status/authority/execution/mutation/confidence/unresolved consistency before planning and retains full validated resolver provenance unchanged.
+- P17 independently revalidates the preserved resolver envelope and fails closed on hidden uncertainty or changed resolver safety invariants.
+- Exact final-head CI passed all triggered gates: Contracts `34806650522`; Full DevOS `34806650407`; Current-Source `34806650590`; Trust-First `34806650421`; MCP Repository Create `34806650443`; Actionable Hold `34806650548`; P13 External Managed Project `34806650599`.
+- No authority, authorization, execution, provider mutation, production mutation, or production-readiness upgrade was introduced.
 
 ## Completed — GitHub Identity & Token Control Plane v1
 
@@ -37,7 +48,7 @@ This file tracks **work state**, not normative law. Durable principles and autho
 - Added deterministic regression coverage and dedicated CI for auth, capability discovery, and hosted runtime behavior.
 - Added `.github/workflows/devos-github-app-runtime.yml` as a read-only live provider-authentication verification workflow.
 - Live read-only GitHub App Runtime Auth run `34785659043` succeeded against `zzpsah/chatgpt-development-os`; evidence reported `credential_material: NOT_INCLUDED`, `execution: NONE`, and `mutation: NONE`.
-- Live authentication/capability proof does **not** authorize or prove live provider mutation, deployment, permission change, or production readiness.
+- Live authentication/capability proof does **not** authorize deployment, permission change, destructive mutation, or production readiness.
 - No raw credentials, OAuth secrets, App private keys, refresh tokens, or JWT signing material are persisted in Git or durable AI state.
 
 ## Completed — Plain Project Context and Recovery Guide v1
@@ -87,6 +98,8 @@ This file tracks **work state**, not normative law. Durable principles and autho
 - MCP/App Permission Control Plane + Multi-Project Agent Isolation — PR #27.
 - Actionable HOLD + Scoped Approval + Governed Continuation — PR #23.
 - GitHub Identity & Token Control Plane v1 — PR #32.
+- GitHub mutation readback reconciliation hardening — PR #42.
+- AI State Resolver v2 envelope-integrity hardening — PR #44.
 
 ## Retained platform foundations
 
