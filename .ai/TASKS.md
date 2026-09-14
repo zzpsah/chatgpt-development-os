@@ -8,65 +8,65 @@ This file tracks **work state**, not normative law. Current source/Git/PR/CI are
 
 - **What is not written was never done.**
 - `CONTINUE != BLANKET AUTHORIZATION`.
+- `INTERPRETATION != AUTHORIZATION`.
+- `PLAN != EXECUTION`.
 - `READY != EXECUTION`.
 - `CI PASS != AUTHORIZATION`.
 - provider credentials/capability never manufacture DevOS authority.
 - declared runtime identity never manufactures verified runtime capability.
+- distribution release readiness never manufactures production or publication authority.
 - `production_ready = false` unless a separately bounded evidence-backed decision changes it.
 
 ## Active bounded work
 
-- No bounded engineering objective is active after Agent Runtime Profile Registry + Conformance v1 closure.
-- Concurrent software-delivery/managed-repository work must be rediscovered from fresh source before continuation.
-- Choose future work only from fresh `main`, open PRs, current CI, durable state, relevant source/tests, and current user intent. Do not create P18/P19 merely for bookkeeping.
+- No feature-development objective remains active after DevOS `0.17.0` Distribution Release Readiness v1 closure.
+- The post-PR #61 reconciliation branch is the bounded durable-state closure; no recursive reconciliation PR is required solely to record its own merge SHA.
+- Future work must be selected only from fresh `main`, open issues/PRs, CI, durable state, relevant source/tests, and current user intent.
+- Do not create P18/P19 merely for bookkeeping.
+
+## Completed — DevOS 0.17.0 Distribution Release Readiness v1
+
+- PR #61 — `Add DevOS 0.17.0 distribution release readiness` — merged at `ecee10168b43d13430dd71c2e8d85556956f56a6`.
+- Exact verified feature head: `b4f46eb7919177e3a0dc19d902401630cd6c12ec`.
+- Canonical distribution version is `0.17.0` in `VERSION` and `config/release-manifest.json`.
+- Adds cross-platform `tools/devos.py`, fail-closed `tools/devos-release-check.py`, release/security docs, changelog, current README, adversarial release tests, and dedicated distribution CI.
+- Release CI passes on Ubuntu/Windows with Python 3.11/3.12 and produces an exact Git source ZIP plus SHA-256 checksum without creating a tag, GitHub Release, or deployment.
+- Exact feature-head workflows all succeeded: Release Readiness `34822126832`; Development OS `34822126813`; Contracts `34822126730`; Trust-First `34822126734`; Current-Source `34822126644`; Evidence Reconciliation `34822126599`; Runtime Adapter `34822126770`; Runtime Profile Registry `34822126715`; Managed Preflight `34822126677`; Isolated Write Proof `34822126827`; MCP Repository Create `34822126759`.
+- Exact merged-source main workflows all succeeded: Isolated Write Proof `34822341488`; Provider Controller Adapter `34822341489`; Managed Preflight `34822341626`; Contracts `34822341505`; Development OS `34822341560`; Release Readiness `34822341533`; Remote Permission Governance `34822341509`; Trust-First `34822341478`.
+- Exact merged-source artifact from main `ecee10168b43d13430dd71c2e8d85556956f56a6`: artifact ID `10338323248`; name `devos-source-ecee10168b43d13430dd71c2e8d85556956f56a6`; digest `sha256:4a44fbaa6d9df23afb538afe27b2b38595b3c0aa1632292a43f26b2dea3a2091`; 719498 bytes; not expired when verified.
+- Machine reconciliation record digest: `80154dd84d9e6bd7cdfac0d379a708d25455a9542565feb0edcb117bf6362af6`.
+- Status is **engineering/distribution release-ready**, not production-ready.
+- No tag, GitHub Release, package publication, deployment, credentials/secrets, database, permission, destructive operation, provider-scope expansion, or public-license change was performed.
 
 ## Completed — Agent Runtime Profile Registry + Conformance v1
 
-- PR #59 — `Add agent runtime profile registry v1` — merged at `d426ccf480e48544e8078ab7b61065ffd6b18f48`.
-- Exact verified feature head: `447e8fbaee96eb0be22e9a59d75da147dbcbb8ac`.
-- Adds `config/agent-runtime-profile-registry.json`, deterministic validator/exporter `tools/agent-runtime-profile-registry.py`, adversarial regression corpus, normative contract, dedicated CI, and session evidence.
+- PR #59 merged at `d426ccf480e48544e8078ab7b61065ffd6b18f48`; exact verified feature head `447e8fbaee96eb0be22e9a59d75da147dbcbb8ac`.
 - Required verified capabilities are `filesystem.read`, `filesystem.write_scoped`, `git.inspect`, and `verification.run`.
-- `reference-local-agent` is verified only for repository static-contract conformance.
-- `codex`, `claude-code`, and `openhands` remain `DECLARED` templates and HOLD for runtime handoff until separate evidence-backed conformance proof exists.
-- A forged status change to `VERIFIED` without complete capabilities/evidence fails closed; unknown capabilities, duplicate IDs, missing required capabilities, revoked profiles, and unregistered runtimes also fail closed.
-- Exact feature-head successful runs: Runtime Profile Registry `34818246952`; Agent Runtime Adapter `34818246907`; Current-Source Evidence `34818246910`; MCP Repository Create `34818246875`; Trust-First Audit `34818246940`; Development OS `34818246896`; Contracts `34818246842`; Evidence Durable Reconciliation `34818246846`; Isolated Managed Repository Write Proof `34818246855`; Managed Repository Preflight `34818246913`.
-- Reconciliation ledger record digest: `4a613b466092c9c1e811ab16e6fe8af41dfc08668b74312e8c69b3b9d909d7e1`.
-- No agent invocation, target-repository mutation, provider operation, approval grant, deployment, credential, database, permission, destructive action, or production-readiness upgrade was introduced.
-
-## Completed — Isolated Managed-Repository Write Proof v1
-
-- Main feature head `2ef6b6e3df832ca132123b85caa69f7eda67d1f3` proves one actual file update in a newly created isolated local Git fixture after read-only preflight and exact derived approval.
-- Diff, test, final readback, runtime validation, and external evidence packet agree; no commit or push occurs.
-- This is not proof of an existing managed-repository write or provider mutation.
-
-## Completed — Managed-Repository Delivery v1 Read-Only Preflight
-
-- Main feature head `fda3e3a6db624d69d6d651cd531c537ad579c9cd` adds deterministic clean-worktree/HEAD/path preflight through P15 → P16 → P17.
-- It returns an exact scoped approval request and `HOLD`; external evidence output is forbidden inside the inspected checkout.
-- No managed-repository mutation, provider operation, commit, push, deployment, production, credential, database, permission, destructive action, or approval grant was performed.
+- `reference-local-agent` is verified only for recorded static conformance; `codex`, `claude-code`, and `openhands` remain `DECLARED` and HOLD without separate evidence.
+- Forged VERIFIED state, missing/unknown capabilities, duplicate IDs, revoked profiles, and unregistered runtimes fail closed.
 
 ## Completed — Universal Agent Runtime Adapter v1
 
-- PR #57 merged at `5d0bdbc0258e898ece21f99937dc4f5b886778a0`; exact verified feature head `da57d48c1ec28eac71eff75b59f9c701e9c9c593`.
-- Adds a vendor-neutral P17 READY + exact-approval handoff compiler and result validator.
-- Validation binds repository head, scope, runtime profile, targets, allowed operations, diff/test/readback evidence, and permanent safety boundaries.
-- The adapter is side-effect-free and does not itself wire a vendor runtime or mutate a managed repository.
+- PR #57 merged at `5d0bdbc0258e898ece21f99937dc4f5b886778a0`.
+- Adds a vendor-neutral P17 READY + exact-approval handoff compiler and independent result validator.
+- The adapter is side-effect-free and does not itself invoke a vendor runtime or mutate a managed repository.
 
-## Completed — Local Disposable Delivery Proof v1
+## Completed — Safe delivery proof line
 
-- Main commit `1f735fa11e19b9852ce9210338bc0907ab0b5b1c` proves P15 → P16 → P17 → scoped approval → local update → test/readback → durable evidence → fresh recovery in a temporary Git repository.
-- The proof excludes commit/push/provider/deployment/production/credential/database/permission/destructive operations.
+- Local Disposable Delivery Proof v1 proves bounded local Git update/test/readback/evidence in a temporary repository.
+- Managed-Repository Delivery v1 Read-Only Preflight binds clean worktree/head/path evidence and returns HOLD before mutation.
+- Isolated Managed-Repository Write Proof v1 proves one safe scoped file update in a newly created isolated fixture with diff/test/readback/evidence and no commit/push/provider/deploy action.
 
 ## Completed — Automated Evidence → Durable State Reconciliation v1
 
-- PR #54 merged at `e31c2099b5d9ce88ee4a20c225fe70b424dffa3d`; exact feature head `a2da0eaf2a5464d4a716859168bf0ba4d87659a6`.
+- PR #54 merged at `e31c2099b5d9ce88ee4a20c225fe70b424dffa3d`.
 - Machine-verifiable facts can be normalized deterministically; semantic CURRENT/TASKS/roadmap meaning still requires review.
 - Reconciliation records remain authority-neutral and `production_ready=false`.
 
-## Completed — P15 bounded Devanagari Hindi/Hinglish interpretation and gating
+## Completed — P15 bounded multilingual interpretation and gating
 
-- Main commit `001f48e64d3e7e6e32d9befc9bb00899b8868e03` preserves Unicode Hindi and adds bounded multilingual corpus plus P15 → P16 → P17 regression.
-- High-impact Hindi remains independently production/destructive and authorization-gated; negative deployment wording blocks conflicting plans; unresolved referents clarify.
+- Bounded English/Hindi/Hinglish/informal corpus evidence preserves Unicode and proves P15 → P16 → P17 safety behavior for high-impact, negative, and unresolved language cases.
+- Coverage is bounded corpus evidence, not universal language competence or authorization.
 
 ## Completed — AI State Resolver v2 hardening sequence
 
@@ -74,15 +74,6 @@ This file tracks **work state**, not normative law. Current source/Git/PR/CI are
 - PR #46 — explicit cross-claim contradiction identity/handling.
 - PR #49 — downstream P16/P17 independent contradiction recomputation and tamper defense.
 - PR #52 — detailed contradiction provenance and downstream detail validation.
-- Closed/stale duplicate PRs remain historical provenance only and are never substituted for merged current source.
-
-## Completed — previous-stage documentation ledger
-
-- `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable navigation ledger for P9–P17 and major unnumbered milestones.
-- `docs/DEVOS-MASTER-ENGINEERING-MAP.md` is the living architecture/future-flow map.
-- `core/agent-runtime-profile-registry.md` is the runtime declaration/conformance contract.
-- `core/evidence-durable-state-reconciliation.md` is the evidence-to-durable-state contract.
-- `docs/AI-STATE-RESOLVER-CROSS-CLAIM-CONTRADICTIONS.md` is the resolver contradiction contract.
 
 ## Retained platform foundations
 
@@ -91,13 +82,17 @@ This file tracks **work state**, not normative law. Current source/Git/PR/CI are
 - P12 remains evidence provenance/freshness owner.
 - P15 remains language interpretation; P16 planning; P17 readiness/authorization.
 - GitHub governed provider capability, readback reconciliation, multi-project isolation, Actionable HOLD, current-source evidence, onboarding, recovery, adaptive verification/self-healing, and trust-first auditing remain retained foundations.
+- `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable navigation ledger for numbered and major unnumbered milestones.
+- `docs/DEVOS-MASTER-ENGINEERING-MAP.md` remains the living architecture/future-flow map.
 
 ## Current HOLD / limits
 
 - `production_ready = false`.
-- Machine evidence and reconciliation records never grant authorization, execution, completion authority, or provider permission.
+- Distribution release readiness is not publication or production authorization.
+- No public Git tag/GitHub Release/package publication has been created by the release-readiness objective.
+- Machine evidence and reconciliation records never grant authorization, execution, completion authority, provider permission, or production readiness.
 - A `DECLARED` runtime profile is not a verified integration.
-- Semantic CURRENT/TASKS/roadmap changes require review; commit messages are not semantic truth.
+- Historical readiness evidence remains pinned to its source head.
 - Uncertain provider mutation is never blindly replayed.
 - Parallel AI branches must revalidate against fresh `main` before integration.
 
