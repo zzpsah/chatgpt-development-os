@@ -43,6 +43,7 @@ python tools/devos.py version
 python tools/devos.py doctor --root .
 python tools/devos.py release-check
 python tools/devos.py project-lifecycle --path . --require-managed --json
+python tools/devos.py project-fleet --snapshot fleet.json --json
 python tools/devos.py production-readiness --json
 ```
 
@@ -62,31 +63,36 @@ AI account memory or old chat history is supplementary only; it is never authori
 
 ## Release status
 
-Current distribution version: **0.21.0**.
+Current distribution version: **0.22.0**.
 
 ```bash
 python tools/devos.py version
 python tools/devos.py release-check
 python tools/devos.py project-lifecycle --path <project> --require-managed --json
+python tools/devos.py project-fleet --snapshot <fleet.json> --json
+python tools/devos.py project-fleet --github-owner @me --limit 100 --json
 python tools/devos.py production-readiness --json
 python tools/devos.py production-target-evidence <packet.json> --expected-source-sha <sha> --expected-target-id <target>
 ```
 
-`0.21.0` adds Managed Project Lifecycle v1. A repository can no longer be treated as a DevOS-managed development target merely because it exists, was created, or was discovered. DevOS verifies repository-local management identity and minimum durable context, requires onboarding when missing, and keeps development continuation on HOLD until fresh readback returns `MANAGED`.
+`0.22.0` adds Project Fleet Watch v1. Managed Project Lifecycle still governs one repository; Fleet Watch adds read-only visibility across many repositories so a newly created or newly accessible repository cannot silently remain outside DevOS awareness. Fleet Watch classifies each active repository through the lifecycle gate, reports `HEALTHY | ATTENTION | HOLD | EMPTY | BLOCKED`, and can compare current versus previous snapshots to identify `new_unmanaged`, `newly_managed`, and management regressions.
 
-Permanent lifecycle invariants:
+Permanent project-management invariants:
 
 ```text
 REPOSITORY EXISTS != DEVOS MANAGED
 REPOSITORY CREATED != ONBOARDED
 REPOSITORY DISCOVERED != SAFE TO CONTINUE
+REPOSITORY ACCESSIBLE != DEVOS MANAGED
+FLEET DISCOVERY != ONBOARDING AUTHORIZATION
+FLEET HEALTHY != APPLICATION VERIFIED
 ```
 
 The current Production Readiness v2 assessment remains intentionally **HOLD**, not READY, until direct target-specific evidence is actually observed and separately reconciled.
 
-**Distribution release readiness is not production readiness.** A green release gate, managed-project verdict, valid readiness assessment, or valid target-evidence packet does not authorize publication, deployment, production mutation, credentials, database changes, permission changes, destructive actions, or unscoped external execution.
+**Distribution release readiness is not production readiness.** A green release gate, managed-project/fleet verdict, valid readiness assessment, or valid target-evidence packet does not authorize publication, deployment, production mutation, credentials, database changes, permission changes, destructive actions, or unscoped external execution.
 
-See [`docs/RELEASE.md`](docs/RELEASE.md), [`docs/AUTO-ONBOARDING.md`](docs/AUTO-ONBOARDING.md), [`core/managed-project-lifecycle.md`](core/managed-project-lifecycle.md), [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md), and [`.github/SECURITY.md`](.github/SECURITY.md).
+See [`docs/RELEASE.md`](docs/RELEASE.md), [`docs/AUTO-ONBOARDING.md`](docs/AUTO-ONBOARDING.md), [`docs/PROJECT-FLEET-WATCH.md`](docs/PROJECT-FLEET-WATCH.md), [`core/managed-project-lifecycle.md`](core/managed-project-lifecycle.md), [`core/project-fleet-watch.md`](core/project-fleet-watch.md), [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md), and [`.github/SECURITY.md`](.github/SECURITY.md).
 
 ## What DevOS provides
 
@@ -138,7 +144,35 @@ python tools/devos.py project-lifecycle \
   --json
 ```
 
-Provider/controller integrations can submit `DEVOS-REPOSITORY-DISCOVERY-SNAPSHOT-v1` readback evidence. Unmanaged, partial, conflicting, or malformed repositories never silently become development-ready. Repository creation itself now carries a mandatory `project.onboard` postcondition.
+Provider/controller integrations can submit `DEVOS-REPOSITORY-DISCOVERY-SNAPSHOT-v1` readback evidence. Unmanaged, partial, conflicting, or malformed repositories never silently become development-ready. Repository creation itself carries a mandatory `project.onboard` postcondition.
+
+### Project Fleet Watch
+
+`tools/devos-project-fleet.py` extends lifecycle visibility across a repository fleet without creating another authority layer.
+
+Deterministic snapshot assessment:
+
+```bash
+python tools/devos.py project-fleet --snapshot fleet.json --json
+```
+
+Drift/watch comparison:
+
+```bash
+python tools/devos.py project-fleet \
+  --snapshot current.json \
+  --previous previous.json \
+  --require-clean \
+  --json
+```
+
+Bounded read-only GitHub discovery:
+
+```bash
+GITHUB_TOKEN=... python tools/devos.py project-fleet --github-owner @me --limit 100 --json
+```
+
+The GitHub token is environment-only and is never printed or persisted by Fleet Watch. The adapter performs reads only. Fleet discovery cannot onboard, edit, deploy, publish, grant credentials, change permissions/databases, or manufacture authorization. `--require-clean` fails closed unless every active repository is `MANAGED`.
 
 ### Human-language interpretation and governed planning
 
@@ -160,6 +194,7 @@ PROVIDER CREDENTIAL != DEVOS AUTHORIZATION
 PROVIDER RESPONSE != COMPLETION PROOF
 RECOVERY != AUTOMATIC MUTATION REPLAY
 REPOSITORY EXISTS != DEVOS MANAGED
+FLEET DISCOVERY != ONBOARDING AUTHORIZATION
 PRODUCTION READY != DEPLOYMENT AUTHORIZATION
 VALID TARGET EVIDENCE != PRODUCTION READY
 ```
@@ -202,7 +237,7 @@ These proofs do **not** imply general production deployment authority.
 
 ### Provider governance
 
-DevOS includes bounded GitHub provider/controller integration, identity/token controls, scope-aware capability discovery, current-state anchors, readback verification, and uncertain-mutation reconciliation. Proven provider capability never becomes blanket authorization.
+DevOS includes bounded GitHub provider/controller integration, identity/token controls, scope-aware capability discovery, current-state anchors, readback verification, uncertain-mutation reconciliation, managed-project lifecycle classification, and read-only fleet observation. Proven provider capability never becomes blanket authorization.
 
 ### Production-readiness assessment and target evidence
 
@@ -237,7 +272,7 @@ See:
 
 ## Auto-onboarding and context synchronization
 
-Existing repositories can be onboarded without manually creating every context file. DevOS 0.21.0 adds the lifecycle gate so a newly created or discovered repository cannot silently bypass onboarding.
+Existing repositories can be onboarded without manually creating every context file. Managed Project Lifecycle prevents newly created/discovered repositories from silently bypassing onboarding, and Project Fleet Watch adds read-only multi-repository visibility so unmanaged additions/regressions can be surfaced before development continuation.
 
 Examples:
 
@@ -248,7 +283,7 @@ Examples:
 
 Portable Python onboarding/recovery tools are also available under `tools/`.
 
-See [`docs/AUTO-ONBOARDING.md`](docs/AUTO-ONBOARDING.md).
+See [`docs/AUTO-ONBOARDING.md`](docs/AUTO-ONBOARDING.md) and [`docs/PROJECT-FLEET-WATCH.md`](docs/PROJECT-FLEET-WATCH.md).
 
 ## Health and doctor
 
@@ -271,6 +306,7 @@ Important references:
 - `config/readiness-evidence.json` — historical v1 snapshot
 - `config/production-readiness-v2.json` — current production-readiness assessment
 - `core/managed-project-lifecycle.md` — repository-management lifecycle gate
+- `core/project-fleet-watch.md` — read-only multi-repository management visibility
 - `core/production-target-evidence-intake.md` — target-bound external evidence intake
 - `.ai/RECONCILIATION-LEDGER.jsonl`
 - [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md)
@@ -296,6 +332,7 @@ P9 through P17 are completed architecture stages at their recorded evidence leve
 - Never blindly replay an uncertain mutation.
 - Never claim tests, deployment, provider results, or completion without actual evidence.
 - Never continue DevOS feature development on a repository whose managed-project lifecycle is not verified.
+- Never treat fleet discovery as onboarding authorization or provider mutation permission.
 - Keep `production_ready = false` until the v2 production-readiness criteria are all directly evidenced and independently verified.
 
 See [`.github/SECURITY.md`](.github/SECURITY.md).
@@ -326,4 +363,4 @@ chatgpt-development-os/
 
 ## Version
 
-**0.21.0** — P17-complete distribution line plus managed-project lifecycle enforcement, blocker-exact Production Readiness Evidence v2, and target-bound external Production Target Evidence Intake v1. Repository creation/discovery now remains HOLD until DevOS management is verified; the production verdict remains HOLD until valid target-specific evidence is separately semantically reviewed and durably reconciled.
+**0.22.0** — P17-complete distribution line plus managed-project lifecycle enforcement and read-only Project Fleet Watch v1, blocker-exact Production Readiness Evidence v2, and target-bound external Production Target Evidence Intake v1. New/unmanaged repositories and management regressions can now be surfaced across a fleet without granting onboarding or mutation authority; the production verdict remains HOLD until valid target-specific evidence is separately semantically reviewed and durably reconciled.
