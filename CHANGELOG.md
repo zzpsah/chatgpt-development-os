@@ -2,6 +2,39 @@
 
 All notable DevOS distribution changes are summarized here. Exact implementation truth remains in source/Git/PR/CI and durable `.ai` records; this file is release navigation, not execution authority.
 
+## 0.23.0 — 2026-09-17
+
+Project Remediation Planner v1 release line.
+
+### Added / completed
+
+- `tools/devos-project-remediation.py` for deterministic, read-only remediation planning from Project Fleet Watch evidence.
+- Priority-ordered remediation actions for managed-state regression, management conflicts, blocked lifecycle evidence, partial onboarding, and newly accessible unmanaged repositories.
+- Every action requires explicit authorization, is marked `safe_apply=false`, and routes through `P17_READINESS_AND_SCOPED_APPROVAL` before any execution.
+- Duplicate repositories, unsupported fleet states, malformed drift, and drift references to unknown repositories fail closed with no remediation actions.
+- `devos project-remediation` CLI dispatch plus `--require-clean` fail-closed mode.
+- Dedicated Python 3.11/3.12 remediation-planner CI and deterministic/adversarial regression corpus.
+
+### Security / integrity invariants
+
+- `REMEDIATION PLAN != AUTHORIZATION`.
+- `REMEDIATION PRIORITY != EXECUTION ORDER AUTHORIZATION`.
+- `FLEET ATTENTION != AUTOMATIC MUTATION`.
+- `PLAN READY != SAFE TO APPLY`.
+- `authority = UNCHANGED`.
+- `authorization = UNCHANGED`.
+- `execution = NONE`.
+- `mutation = NONE`.
+- `provider_mutation = NONE`.
+- `production_ready = false` remains unchanged.
+
+### Known limitations
+
+- The planner proposes the next safe governance action; it does not execute onboarding or provider writes.
+- Remediation priority is deterministic policy ordering, not authorization or automatic scheduling.
+- Remote remediation still requires an authorized provider/controller capability plus exact P17 readiness/readback evidence.
+- A clean remediation plan proves only that the supplied Fleet Watch evidence requires no management repair; it does not prove application correctness, deployment readiness, runtime conformance, or production readiness.
+
 ## 0.22.0 — 2026-09-17
 
 Project Fleet Watch v1 release line.
@@ -105,7 +138,7 @@ Current-source production-readiness evidence v2 release line.
 
 - `config/production-readiness-v2.json` with an explicit closed set of ten production-required criteria.
 - `tools/verify-production-readiness-v2.py` with exact schema, evidence-path, blocker, verdict, version, and authorization-boundary validation.
-- `tools/test-production-readiness-v2.py` adversarial corpus covering fake READY states, concealed blockers, duplicate/missing criteria, missing evidence, version mismatch, altered authority boundaries, and invalid evidence classes.
+- `tools/test-production-readiness-v2.py` adversarial corpus covering fake READY states, concealed blockers, duplicate/missing criteria, missing version mismatch, altered authority boundaries, and invalid evidence classes.
 - Dedicated Python 3.11/3.12 production-readiness CI.
 - `devos production-readiness` CLI dispatch and `--require-production` fail-closed mode.
 - Current readiness documentation that distinguishes source/live evidence already proved from production-only evidence that still requires direct external observation.

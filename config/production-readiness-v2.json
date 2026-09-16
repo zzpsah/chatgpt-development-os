@@ -1,7 +1,7 @@
 {
   "protocol": "DEVOS-PRODUCTION-READINESS-EVIDENCE-v2",
   "repository": "zzpsah/chatgpt-development-os",
-  "version": "0.22.0",
+  "version": "0.23.0",
   "assessment_scope": "CURRENT_SOURCE_PRODUCTION_READINESS",
   "authority": "UNCHANGED",
   "authorization": "UNCHANGED",
