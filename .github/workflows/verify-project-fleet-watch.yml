@@ -1,0 +1,46 @@
+name: Verify Project Fleet Watch
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.11', '3.12']
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Verify fleet watch regression corpus
+        run: python tools/test-devos-project-fleet.py
+
+      - name: Verify fleet contract markers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('core/project-fleet-watch.md').read_text(encoding='utf-8')
+          for marker in (
+              'DEVOS-PROJECT-FLEET-WATCH-v1',
+              'REPOSITORY ACCESSIBLE != DEVOS MANAGED',
+              'FLEET DISCOVERY != ONBOARDING AUTHORIZATION',
+              'management_regressions',
+              'external_mutation = NONE',
+              'production_ready = false',
+          ):
+              assert marker in text, marker
+          print('PASS: Project Fleet Watch v1 contract markers')
+          PY
