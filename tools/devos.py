@@ -20,6 +20,7 @@ COMMANDS = {
     "release-check": ROOT / "tools" / "devos-release-check.py",
     "project-lifecycle": ROOT / "tools" / "devos-project-lifecycle.py",
     "project-fleet": ROOT / "tools" / "devos-project-fleet.py",
+    "project-remediation": ROOT / "tools" / "devos-project-remediation.py",
     "production-readiness": ROOT / "tools" / "verify-production-readiness-v2.py",
     "production-target-evidence": ROOT / "tools" / "production-target-evidence.py",
 }
