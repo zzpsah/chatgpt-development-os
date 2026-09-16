@@ -44,6 +44,7 @@ python tools/devos.py doctor --root .
 python tools/devos.py release-check
 python tools/devos.py project-lifecycle --path . --require-managed --json
 python tools/devos.py project-fleet --snapshot fleet.json --json
+python tools/devos.py project-remediation fleet-assessment.json --json
 python tools/devos.py production-readiness --json
 ```
 
@@ -63,7 +64,7 @@ AI account memory or old chat history is supplementary only; it is never authori
 
 ## Release status
 
-Current distribution version: **0.22.0**.
+Current distribution version: **0.23.0**.
 
 ```bash
 python tools/devos.py version
@@ -71,11 +72,14 @@ python tools/devos.py release-check
 python tools/devos.py project-lifecycle --path <project> --require-managed --json
 python tools/devos.py project-fleet --snapshot <fleet.json> --json
 python tools/devos.py project-fleet --github-owner @me --limit 100 --json
+python tools/devos.py project-remediation <fleet-assessment.json> --json
 python tools/devos.py production-readiness --json
 python tools/devos.py production-target-evidence <packet.json> --expected-source-sha <sha> --expected-target-id <target>
 ```
 
-`0.22.0` adds Project Fleet Watch v1. Managed Project Lifecycle still governs one repository; Fleet Watch adds read-only visibility across many repositories so a newly created or newly accessible repository cannot silently remain outside DevOS awareness. Fleet Watch classifies each active repository through the lifecycle gate, reports `HEALTHY | ATTENTION | HOLD | EMPTY | BLOCKED`, and can compare current versus previous snapshots to identify `new_unmanaged`, `newly_managed`, and management regressions.
+`0.23.0` adds Project Remediation Planner v1 on top of Managed Project Lifecycle and Project Fleet Watch. Fleet Watch tells DevOS which repositories need attention; the remediation planner turns that observed state into a deterministic priority queue such as restore a regressed managed repository, resolve a management conflict, complete partial onboarding, or onboard a newly accessible repository.
+
+The planner is advisory only: every proposed action still requires P17 readiness and separately scoped explicit authorization. It never mutates a repository or provider by itself.
 
 Permanent project-management invariants:
 
@@ -85,14 +89,17 @@ REPOSITORY CREATED != ONBOARDED
 REPOSITORY DISCOVERED != SAFE TO CONTINUE
 REPOSITORY ACCESSIBLE != DEVOS MANAGED
 FLEET DISCOVERY != ONBOARDING AUTHORIZATION
+FLEET ATTENTION != AUTOMATIC MUTATION
+REMEDIATION PLAN != AUTHORIZATION
+PLAN READY != SAFE TO APPLY
 FLEET HEALTHY != APPLICATION VERIFIED
 ```
 
 The current Production Readiness v2 assessment remains intentionally **HOLD**, not READY, until direct target-specific evidence is actually observed and separately reconciled.
 
-**Distribution release readiness is not production readiness.** A green release gate, managed-project/fleet verdict, valid readiness assessment, or valid target-evidence packet does not authorize publication, deployment, production mutation, credentials, database changes, permission changes, destructive actions, or unscoped external execution.
+**Distribution release readiness is not production readiness.** A green release gate, managed-project/fleet/remediation verdict, valid readiness assessment, or valid target-evidence packet does not authorize publication, deployment, production mutation, credentials, database changes, permission changes, destructive actions, or unscoped external execution.
 
-See [`docs/RELEASE.md`](docs/RELEASE.md), [`docs/AUTO-ONBOARDING.md`](docs/AUTO-ONBOARDING.md), [`docs/PROJECT-FLEET-WATCH.md`](docs/PROJECT-FLEET-WATCH.md), [`core/managed-project-lifecycle.md`](core/managed-project-lifecycle.md), [`core/project-fleet-watch.md`](core/project-fleet-watch.md), [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md), and [`.github/SECURITY.md`](.github/SECURITY.md).
+See [`docs/RELEASE.md`](docs/RELEASE.md), [`docs/AUTO-ONBOARDING.md`](docs/AUTO-ONBOARDING.md), [`docs/PROJECT-FLEET-WATCH.md`](docs/PROJECT-FLEET-WATCH.md), [`core/managed-project-lifecycle.md`](core/managed-project-lifecycle.md), [`core/project-fleet-watch.md`](core/project-fleet-watch.md), [`core/project-remediation-planner.md`](core/project-remediation-planner.md), [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md), and [`.github/SECURITY.md`](.github/SECURITY.md).
 
 ## What DevOS provides
 
@@ -174,6 +181,24 @@ GITHUB_TOKEN=... python tools/devos.py project-fleet --github-owner @me --limit 
 
 The GitHub token is environment-only and is never printed or persisted by Fleet Watch. The adapter performs reads only. Fleet discovery cannot onboard, edit, deploy, publish, grant credentials, change permissions/databases, or manufacture authorization. `--require-clean` fails closed unless every active repository is `MANAGED`.
 
+### Project Remediation Planner
+
+`tools/devos-project-remediation.py` converts a Fleet Watch assessment into a deterministic, priority-ordered remediation proposal.
+
+```bash
+python tools/devos.py project-remediation fleet-assessment.json --json
+```
+
+Priority order is:
+
+1. restore a previously managed repository that regressed;
+2. resolve management identity/conflict HOLDs;
+3. investigate blocked/malformed lifecycle evidence;
+4. complete partial onboarding;
+5. onboard a newly accessible unmanaged repository.
+
+The planner is strictly read-only. Every emitted action has `requires_explicit_authorization=true`, `safe_apply=false`, and `next_gate=P17_READINESS_AND_SCOPED_APPROVAL`. `--require-clean` can fail closed when any remediation remains, but it still performs no mutation.
+
 ### Human-language interpretation and governed planning
 
 - **P15 Human Language Interpretation** turns English/Hindi/Hinglish and bounded informal requests into structured intent without turning language into authorization.
@@ -195,6 +220,7 @@ PROVIDER RESPONSE != COMPLETION PROOF
 RECOVERY != AUTOMATIC MUTATION REPLAY
 REPOSITORY EXISTS != DEVOS MANAGED
 FLEET DISCOVERY != ONBOARDING AUTHORIZATION
+REMEDIATION PLAN != AUTHORIZATION
 PRODUCTION READY != DEPLOYMENT AUTHORIZATION
 VALID TARGET EVIDENCE != PRODUCTION READY
 ```
@@ -237,7 +263,7 @@ These proofs do **not** imply general production deployment authority.
 
 ### Provider governance
 
-DevOS includes bounded GitHub provider/controller integration, identity/token controls, scope-aware capability discovery, current-state anchors, readback verification, uncertain-mutation reconciliation, managed-project lifecycle classification, and read-only fleet observation. Proven provider capability never becomes blanket authorization.
+DevOS includes bounded GitHub provider/controller integration, identity/token controls, scope-aware capability discovery, current-state anchors, readback verification, uncertain-mutation reconciliation, managed-project lifecycle classification, read-only fleet observation, and read-only remediation planning. Proven provider capability never becomes blanket authorization.
 
 ### Production-readiness assessment and target evidence
 
@@ -272,7 +298,7 @@ See:
 
 ## Auto-onboarding and context synchronization
 
-Existing repositories can be onboarded without manually creating every context file. Managed Project Lifecycle prevents newly created/discovered repositories from silently bypassing onboarding, and Project Fleet Watch adds read-only multi-repository visibility so unmanaged additions/regressions can be surfaced before development continuation.
+Existing repositories can be onboarded without manually creating every context file. Managed Project Lifecycle prevents newly created/discovered repositories from silently bypassing onboarding, Project Fleet Watch adds read-only multi-repository visibility, and Project Remediation Planner prioritizes the exact next governance action without executing it.
 
 Examples:
 
@@ -307,6 +333,7 @@ Important references:
 - `config/production-readiness-v2.json` — current production-readiness assessment
 - `core/managed-project-lifecycle.md` — repository-management lifecycle gate
 - `core/project-fleet-watch.md` — read-only multi-repository management visibility
+- `core/project-remediation-planner.md` — deterministic read-only fleet remediation planning
 - `core/production-target-evidence-intake.md` — target-bound external evidence intake
 - `.ai/RECONCILIATION-LEDGER.jsonl`
 - [`docs/PRODUCTION-READINESS-EVIDENCE.md`](docs/PRODUCTION-READINESS-EVIDENCE.md)
@@ -332,7 +359,7 @@ P9 through P17 are completed architecture stages at their recorded evidence leve
 - Never blindly replay an uncertain mutation.
 - Never claim tests, deployment, provider results, or completion without actual evidence.
 - Never continue DevOS feature development on a repository whose managed-project lifecycle is not verified.
-- Never treat fleet discovery as onboarding authorization or provider mutation permission.
+- Never treat fleet discovery or a remediation plan as onboarding authorization or provider mutation permission.
 - Keep `production_ready = false` until the v2 production-readiness criteria are all directly evidenced and independently verified.
 
 See [`.github/SECURITY.md`](.github/SECURITY.md).
@@ -363,4 +390,4 @@ chatgpt-development-os/
 
 ## Version
 
-**0.22.0** — P17-complete distribution line plus managed-project lifecycle enforcement and read-only Project Fleet Watch v1, blocker-exact Production Readiness Evidence v2, and target-bound external Production Target Evidence Intake v1. New/unmanaged repositories and management regressions can now be surfaced across a fleet without granting onboarding or mutation authority; the production verdict remains HOLD until valid target-specific evidence is separately semantically reviewed and durably reconciled.
+**0.23.0** — P17-complete distribution line plus managed-project lifecycle enforcement, read-only Project Fleet Watch v1, and deterministic Project Remediation Planner v1, alongside blocker-exact Production Readiness Evidence v2 and target-bound external Production Target Evidence Intake v1. Fleet problems can now be surfaced and priority-ordered without manufacturing onboarding, provider mutation, execution, deployment, publication, or production authority.
