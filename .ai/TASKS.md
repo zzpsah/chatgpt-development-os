@@ -15,7 +15,12 @@ This file tracks **work state**, not normative law. Current source/Git/PR/CI/rel
 - `REPOSITORY EXISTS != DEVOS MANAGED`.
 - `REPOSITORY CREATED != ONBOARDED`.
 - `REPOSITORY DISCOVERED != SAFE TO CONTINUE`.
+- `REPOSITORY ACCESSIBLE != DEVOS MANAGED`.
 - `ONBOARDING != APPLICATION VERIFIED`.
+- `FLEET DISCOVERY != ONBOARDING AUTHORIZATION`.
+- `FLEET ATTENTION != AUTOMATIC MUTATION`.
+- `FLEET HEALTHY != APPLICATION VERIFIED`.
+- `FLEET HEALTHY != PRODUCTION READY`.
 - `VALID TARGET EVIDENCE != PRODUCTION READY`.
 - `PRODUCTION READY != PUBLICATION AUTHORIZATION`.
 - `PRODUCTION READY != DEPLOYMENT AUTHORIZATION`.
@@ -24,10 +29,35 @@ This file tracks **work state**, not normative law. Current source/Git/PR/CI/rel
 
 ## Active bounded work
 
-- No DevOS core implementation objective remains active after Managed Project Lifecycle v1 closure.
-- `zzpsah/Devos-Browser` is now a managed DevOS project; its next application work is requirement/source recovery, not automatic browser implementation.
-- Select future DevOS work only after fresh recovery of `main`, open PRs/issues, CI, relevant source/tests, direct external evidence, concurrent AI work, and current user intent.
+- No DevOS core implementation objective remains active after Project Fleet Watch v1 closure.
+- No next feature is promoted automatically by this reconciliation.
+- `zzpsah/Devos-Browser` remains a managed DevOS project; its next application work is requirement/source recovery, not automatic browser implementation.
+- Select future DevOS work only after fresh recovery of `main`, open PRs/issues, CI, relevant source/tests, direct external/fleet evidence where applicable, concurrent AI work, and current user intent.
 - Do not create P18/P19 merely for bookkeeping.
+
+## Completed — DevOS 0.22.0 Project Fleet Watch v1
+
+- [x] Recover fresh pre-objective `main` at `cffd26b4e1ae8d9e0977e5e530e8f5f5f12ac0f7`.
+- [x] Confirm no conflicting open DevOS PR/issue before starting the bounded objective.
+- [x] Add `DEVOS-PROJECT-FLEET-WATCH-v1` and `DEVOS-PROJECT-FLEET-SNAPSHOT-v1`.
+- [x] Delegate each active repository to Managed Project Lifecycle v1 for management classification.
+- [x] Add fleet verdicts `HEALTHY`, `ATTENTION`, `HOLD`, `EMPTY`, and `BLOCKED`.
+- [x] Add previous/current drift detection for `new_repositories`, `removed_repositories`, `new_unmanaged`, `newly_managed`, `management_regressions`, and `newly_attention_required`.
+- [x] Force fleet `HOLD` when a previously managed repository regresses to a non-managed state.
+- [x] Keep archived repositories visible while excluding them from active fleet cleanliness.
+- [x] Add bounded read-only GitHub discovery with environment-only `GITHUB_TOKEN` for `--github-owner @me`.
+- [x] Ensure Fleet Watch performs no onboarding/provider mutation and creates no authorization.
+- [x] Add `devos project-fleet` CLI dispatch and `--require-clean` fail-closed mode.
+- [x] Add Python 3.11/3.12 dedicated Fleet Watch CI plus adversarial regression coverage.
+- [x] Advance distribution identity coherently to `0.22.0`.
+- [x] Verify exact feature head `fff8ace4be2e8c1b69c606a0572bf697f5b47998`: **15/15 workflows success**.
+- [x] Merge PR #73 at `fbb2f334ede3f58018b8d67f337152fd9796fb67` using exact-head protection; GitHub merge signature verified.
+- [x] Verify exact-main push workflows: **12/12 success**.
+- [x] Verify post-merge distribution release workflow `35140653277`: success.
+- [x] Verify exact-source artifact ID `10464578232`, name `devos-source-fbb2f334ede3f58018b8d67f337152fd9796fb67`, digest `sha256:f31ca7d322cfe39fedd2b00e2c6a521d2f968cf04583934d3128c7a86ae139b5`, size `791983` bytes.
+- [x] Preserve `production_ready=false` and all onboarding/provider/deployment/publication authority boundaries.
+
+This objective closes the multi-repository visibility gap. It does **not** auto-onboard projects and does **not** claim application correctness, runtime conformance, deployment readiness, or production readiness.
 
 ## Completed — DevOS 0.21.0 Managed Project Lifecycle v1
 
@@ -51,7 +81,7 @@ This file tracks **work state**, not normative law. Current source/Git/PR/CI/rel
 - [x] Verify final observed browser main `a19b3794822bfd0c035a144ef020ee979e700bef` and fresh manifest identity.
 - [x] Record browser lifecycle verdict: **MANAGED**.
 
-This objective closes the control-plane gap and proves one real remediation case. It does **not** claim browser/runtime application implementation is complete.
+This objective closes the one-repository control-plane gap and proves one real remediation case. It does **not** claim browser/runtime application implementation is complete.
 
 ## Current Production Readiness v2 HOLD criteria
 
@@ -63,7 +93,7 @@ This objective closes the control-plane gap and proves one real remediation case
 - `deployment_target`
 - `high_impact_governance`
 
-Managed Project Lifecycle does not change these production blockers.
+Project Fleet Watch and Managed Project Lifecycle do not change these production blockers.
 
 ## Completed — DevOS 0.20.0 Production Target Evidence Intake v1
 
@@ -84,13 +114,14 @@ Managed Project Lifecycle does not change these production blockers.
 - P12 remains evidence provenance/freshness owner.
 - P15 remains language interpretation; P16 planning; P17 readiness/authorization.
 - AI State Resolver v2 envelope/contradiction hardening remains closed through its recorded sequence.
-- GitHub governed provider capability, readback reconciliation, multi-project isolation, Actionable HOLD, current-source evidence, universal onboarding, Managed Project Lifecycle, recovery, adaptive verification/self-healing, trust-first auditing, runtime-neutral handoff, runtime-profile registry, runtime-conformance evidence intake, distribution release machinery, Production Readiness Evidence v2, Production Target Evidence Intake v1, and evidence/durable-state reconciliation remain retained foundations.
+- GitHub governed provider capability, readback reconciliation, multi-project isolation, Actionable HOLD, current-source evidence, universal onboarding, Managed Project Lifecycle, Project Fleet Watch, recovery, adaptive verification/self-healing, trust-first auditing, runtime-neutral handoff, runtime-profile registry, runtime-conformance evidence intake, distribution release machinery, Production Readiness Evidence v2, Production Target Evidence Intake v1, and evidence/durable-state reconciliation remain retained foundations.
 - `docs/DEVOS-ENGINEERING-STAGE-HISTORY.md` is the durable milestone ledger.
 - `docs/DEVOS-MASTER-ENGINEERING-MAP.md` remains the living architecture map.
 
 ## Current HOLD / limits
 
 - Distribution release readiness is not production or publication authorization.
+- Fleet visibility is not onboarding authorization.
 - Project onboarding is not application verification.
 - No public Git tag/GitHub Release/package publication/deployment is authorized by this objective.
 - Machine evidence never grants authority, execution, provider permission, or production readiness.
