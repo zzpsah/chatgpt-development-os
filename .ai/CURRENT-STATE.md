@@ -4,7 +4,7 @@
 
 - Repository: `zzpsah/chatgpt-development-os`.
 - Current source tree + Git/PR/CI/release-artifact metadata are authoritative for exact implementation/integration state; `.ai` records carry durable semantic context.
-- ChatGPT/model/account memory is supplementary only and never authoritative project state.
+- **ChatGPT Memory/chat history and any model/account memory are supplementary only and never authoritative project state.**
 - Canonical distribution version: `0.23.0`.
 - Project Remediation Planner v1 implementation merged through PR #75 at `958c8b69464acbe09493866ddbe7c2e6bb06905d` from exact verified feature head `5e889374df31f85ed005866c4d8a5f43d9e41b63`.
 - PR #75 exact feature head completed **16/16 workflows successfully**.
