@@ -65,6 +65,34 @@ def main() -> None:
         assert managed_payload["status"] == "MANAGED", managed_payload
         assert managed_payload["development_continuation_allowed"] is True
 
+    fleet_packet = {
+        "protocol": "DEVOS-PROJECT-FLEET-SNAPSHOT-v1",
+        "provider": "cli-test",
+        "observed_at": "2026-09-17T00:00:00+05:30",
+        "repositories": [
+            {
+                "repository": "zzpsah/unmanaged-cli-test",
+                "default_branch": "main",
+                "observed_head": "a" * 40,
+                "archived": False,
+                "files": ["README.md"],
+                "manifest": None,
+            }
+        ],
+    }
+    with tempfile.TemporaryDirectory() as temp_dir:
+        fleet_path = Path(temp_dir) / "fleet.json"
+        fleet_path.write_text(json.dumps(fleet_packet), encoding="utf-8")
+        fleet = run("project-fleet", "--snapshot", str(fleet_path), "--json")
+        assert fleet.returncode == 0, fleet.stdout + fleet.stderr
+        fleet_payload = json.loads(fleet.stdout)
+        assert fleet_payload["fleet_status"] == "ATTENTION", fleet_payload
+        assert fleet_payload["summary"]["onboarding_required"] == 1
+        assert fleet_payload["external_mutation"] == "NONE"
+
+        fleet_clean = run("project-fleet", "--snapshot", str(fleet_path), "--require-clean", "--json")
+        assert fleet_clean.returncode == 2, fleet_clean.stdout + fleet_clean.stderr
+
     readiness = run("production-readiness", "--json")
     assert readiness.returncode == 0, readiness.stdout + readiness.stderr
     readiness_payload = json.loads(readiness.stdout)
@@ -131,7 +159,7 @@ def main() -> None:
     assert "subprocess.run([sys.executable" in source
 
     print(
-        f"PASS: DevOS CLI version={canonical_version}, project-lifecycle, release-check, production-readiness, and production-target-evidence dispatch are deterministic and shell-free"
+        f"PASS: DevOS CLI version={canonical_version}, project-lifecycle, project-fleet, release-check, production-readiness, and production-target-evidence dispatch are deterministic and shell-free"
     )
 
 

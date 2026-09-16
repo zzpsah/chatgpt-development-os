@@ -68,7 +68,7 @@ Those remain separate, explicit operations with their own evidence and authoriza
 
 ## Managed-project lifecycle support
 
-DevOS `0.21.0` adds Managed Project Lifecycle v1.
+DevOS `0.21.0` added Managed Project Lifecycle v1.
 
 A repository selected for DevOS work is not considered managed merely because the provider or filesystem says it exists. The lifecycle must verify repository-local DevOS identity and minimum durable context. If the repository is unmanaged or partial, development continuation remains HOLD until onboarding is explicitly authorized, applied within scope, and fresh readback returns `MANAGED`.
 
@@ -79,6 +79,22 @@ REPOSITORY DISCOVERED != SAFE TO CONTINUE
 ```
 
 Release/distribution readiness of DevOS itself does not authorize onboarding arbitrary external repositories. Local/provider discovery and onboarding still depend on selected project scope, provider capability, and authorization.
+
+## Project Fleet Watch support
+
+DevOS `0.22.0` adds Project Fleet Watch v1 as a read-only visibility layer across many repositories.
+
+Fleet Watch reuses Managed Project Lifecycle for every active repository and can compare previous/current fleet observations to surface newly created unmanaged repositories and management regressions.
+
+```text
+REPOSITORY ACCESSIBLE != DEVOS MANAGED
+FLEET DISCOVERY != ONBOARDING AUTHORIZATION
+FLEET ATTENTION != AUTOMATIC MUTATION
+FLEET HEALTHY != APPLICATION VERIFIED
+FLEET HEALTHY != PRODUCTION READY
+```
+
+The optional GitHub adapter performs bounded provider reads only. A `GITHUB_TOKEN` used for `--github-owner @me` is read from the environment and is never printed or persisted by the tool. Fleet Watch never onboards a repository and never performs provider mutation. Organization/account-wide scheduling requires a separately authorized worker, connector, GitHub App, or token with sufficient read scope.
 
 ## Runtime support statement
 
@@ -92,7 +108,7 @@ Before publication, the exact candidate must have green applicable CI and no unr
 
 ## Version policy
 
-DevOS uses semantic versioning for distribution metadata. `0.21.0` is a backward-compatible capability increment over the `0.20.0` line, adding managed-project lifecycle enforcement so repository creation/discovery cannot silently bypass onboarding. It preserves all authority, authorization, publication, deployment, and production-readiness boundaries. Remaining `0.x` communicates that production-grade external execution/deployment guarantees are intentionally not claimed.
+DevOS uses semantic versioning for distribution metadata. `0.22.0` is a backward-compatible capability increment over the `0.21.0` line, adding read-only Project Fleet Watch so multiple accessible repositories can be classified and compared without silently treating discovery as onboarding or mutation authorization. It preserves all authority, authorization, publication, deployment, and production-readiness boundaries. Remaining `0.x` communicates that production-grade external execution/deployment guarantees are intentionally not claimed.
 
 A new capability that changes the exact source distribution must not silently reuse an already release-ready version identifier; the canonical `VERSION`, release manifest, README, changelog, current production-readiness assessment version, and exact-source CI artifact must move together.
 

@@ -2,6 +2,39 @@
 
 All notable DevOS distribution changes are summarized here. Exact implementation truth remains in source/Git/PR/CI and durable `.ai` records; this file is release navigation, not execution authority.
 
+## 0.22.0 — 2026-09-17
+
+Project Fleet Watch v1 release line.
+
+### Added / completed
+
+- `tools/devos-project-fleet.py` for read-only multi-repository DevOS management visibility.
+- `DEVOS-PROJECT-FLEET-SNAPSHOT-v1` deterministic snapshot format.
+- Fleet verdicts: `HEALTHY`, `ATTENTION`, `HOLD`, `EMPTY`, and `BLOCKED`.
+- Per-repository classification delegates to Managed Project Lifecycle v1 rather than inventing a second authority model.
+- Previous/current snapshot drift detection for `new_repositories`, `new_unmanaged`, `newly_managed`, `removed_repositories`, `management_regressions`, and `newly_attention_required`.
+- Managed-to-unmanaged regression forces fleet `HOLD`.
+- Bounded read-only GitHub discovery for authenticated accessible repositories through `--github-owner @me` and environment-only `GITHUB_TOKEN`.
+- `devos project-fleet` CLI dispatch plus `--require-clean` fail-closed mode.
+- Dedicated Python 3.11/3.12 Fleet Watch CI and adversarial regression corpus.
+
+### Security / integrity invariants
+
+- `REPOSITORY ACCESSIBLE != DEVOS MANAGED`.
+- `FLEET DISCOVERY != ONBOARDING AUTHORIZATION`.
+- `FLEET ATTENTION != AUTOMATIC MUTATION`.
+- `FLEET HEALTHY != APPLICATION VERIFIED`.
+- `FLEET HEALTHY != PRODUCTION READY`.
+- `external_mutation = NONE`.
+- `production_ready = false` remains unchanged.
+
+### Known limitations
+
+- Fleet Watch is an observation/control-plane feature; it does not auto-onboard repositories.
+- Account/organization-wide discovery requires a separately authorized provider token, GitHub App, connector, or worker with sufficient read scope.
+- A `HEALTHY` fleet proves management context only; it does not prove application correctness, deployment readiness, runtime conformance, or production readiness.
+- GitHub live discovery is bounded by provider visibility, rate limits, and the configured repository cap.
+
 ## 0.21.0 — 2026-09-15
 
 Managed Project Lifecycle v1 release line.
